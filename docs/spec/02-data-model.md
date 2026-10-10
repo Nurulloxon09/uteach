@@ -24,6 +24,10 @@ Tags: 🟩 MVP (M0–M7) · 🟨 v2 (M8–M13) · ⬜ Later (M14–M18). The mil
 - **Naming:** tables are plural snake_case; foreign keys are `<singular>_id`; booleans are `is_*` or `has_*`.
 - Extensions: `pgcrypto`, `btree_gist`, `pg_cron`, `citext`.
 
+> PROPOSED (M0): when a child row must belong to the same center as its parent, a **composite foreign key** `(center_id, parent_id) → parent(center_id, id)` enforces it (e.g. `rooms → branches`), instead of a trigger. Parents get `unique (center_id, id)` for this.
+
+> PROPOSED (M0): SQL functions and triggers report business errors as `raise exception '<code>'` (e.g. `last_owner`, `invite_expired`). The list lives in `packages/db` (`DB_ERROR_CODES`) and each code has an i18n message under `errors.db.*`.
+
 ## RLS conventions
 
 > PROPOSED: all helper functions and shorthands, "tables with no policies = service role only", students/parents reaching data only via the service role. Canvas: RLS on every table; tenant = `center_id`.
@@ -98,6 +102,8 @@ create type invoice_status    as enum ('draft','issued','paid','void');
 
 ### `profiles` 🟩 [M0]
 
+> PROPOSED (M0): RLS is **own row only**. The `staff_directory` view is not built; staff lists use `memberships.display_name`. Add the view when a feature needs other people's profiles.
+
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
 
 One row per `auth.users` row, created by trigger on sign-up.
@@ -131,6 +137,8 @@ Global (not tenant). The uteach subscription plans.
 RLS: select for `authenticated`; writes by service role only.
 
 ### `centers` 🟩 [M0]
+
+> PROPOSED (M0): the M0 migration creates only the columns M0 uses: `id, name, slug, country_code, currency, default_locale, timezone, status, trial_ends_at, settings, archived_at`. The others arrive with the milestone that needs them: `attendance_edit_hours`, `absence_alert_delay_min` (M2); `rounding_unit_amount`, `billing_day`, `payment_due_days` (M3); `reminder_every_days`, `quiet_hours_*` (M4); `plan_id`, `past_due_since` (M7); `logo_path` (M1 wizard).
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name. Exception: the 48 h edit window and 10 min absence delay values come from the canvas.
 
@@ -216,6 +224,8 @@ A staff user's role in a center. One row per (center, person).
 
 Constraints: unique (center_id, profile_id) where profile_id is not null; at least one active owner per center (deferred trigger); `permissions <@ allowed_flags`.
 RLS: select **MBR** (staff see colleagues); insert/update/disable **OWN** (W). An admin with PERM(staff) may manage **teacher** memberships in their branches. No one can change their own role.
+
+> PROPOSED (M0), replacing "select MBR" above: owners and admins see all memberships of the center; **teachers see only their own row**, so they can't read colleagues' permissions (M0 "done when"). Invites are created only by `create_invite()`, activated only by `accept_invite()`. A deferred constraint trigger keeps at least one active owner.
 
 ### `platform_invoices` 🟩 [M7]
 

@@ -42,6 +42,9 @@ First market: Uzbekistan (uz/ru, UZS, Click/Payme/Uzum, Eskiz SMS). Code must st
 - You may follow them, but list every PROPOSED decision your plan depends on, so the owner can confirm it.
 - If a task depends on an item in "Open questions" in `02-data-model.md`, stop and ask before building it.
 - Never add a new decision silently. Add it to the spec marked `> PROPOSED:` and mention it in `progress.md`.
+- Update 2026-10-10: the owner confirmed every PROPOSED item and gave standing approval for future
+  proposals. Keep marking new decisions `> PROPOSED:` and logging them in `progress.md` so they stay
+  reviewable, but don't stop to ask for approval of design choices.
 
 ## Stack (fixed, details in 01-tech-stack.md)
 
@@ -65,4 +68,21 @@ First market: Uzbekistan (uz/ru, UZS, Click/Payme/Uzum, Eskiz SMS). Code must st
 
 ## Commands
 
-Fill this in during M0, once the monorepo exists (install, dev, test, lint, typecheck, db reset, gen types).
+- Install: `pnpm install`
+- Dev: `pnpm dev` (web at http://localhost:3000; needs `pnpm db:start` and `apps/web/.env.local`)
+- Typecheck / lint / format: `pnpm typecheck`, `pnpm lint`, `pnpm format:check`
+- Unit tests: `pnpm test`; i18n catalog check: `pnpm check:i18n`
+- DB: `pnpm db:start`, `pnpm db:reset` (re-applies migrations), `pnpm db:types` (regenerate types)
+- DB tests: `pnpm db:test` (real Supabase, needs Docker); `pnpm db:test:lite` (PGlite, no Docker)
+- E2E: `pnpm e2e` (Playwright; test phones `+99899000000x` use code `123456`)
+- Before saying a change is done, run: `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite`
+- If Next commands fail with `ERR_SWC_NATIVE_CACHE`, set `SWC_NATIVE_BINDING_CACHE=<repo>/node_modules/.cache/swc`.
+
+## Conventions learned in M0
+
+- New table → migration with RLS + explicit grants (revoke from anon/authenticated, then grant only what's needed)
+  + pgTAP tests in `supabase/tests/database/` + hand-update `packages/db/src/database.types.ts` if `pnpm db:types` can't run.
+- SQL business errors: `raise exception '<code>'`, add the code to `DB_ERROR_CODES` in `packages/db` and a
+  message under `errors.db.<code>` in all three catalogs.
+- Server Actions return `ActionState` (`apps/web/src/lib/actions.ts`); zod error messages are i18n keys
+  (`validation.*`); pass `form` to `fail()` / `fieldErrorsFrom()` so forms refill after an error.
