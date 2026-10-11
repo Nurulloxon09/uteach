@@ -8,6 +8,9 @@ export default defineConfig({
   testDir: "./e2e",
   fullyParallel: false,
   workers: 1,
+  // next dev compiles each route on first visit, which can take several seconds.
+  timeout: 120_000,
+  expect: { timeout: 20_000 },
   retries: process.env.CI ? 1 : 0,
   reporter: process.env.CI ? [["github"], ["html", { open: "never" }]] : "list",
   use: {

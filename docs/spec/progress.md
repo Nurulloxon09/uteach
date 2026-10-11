@@ -7,7 +7,7 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M0 · Foundation**: ◐ in progress. All code is written and the checks that run without Docker pass. The items that need a real Supabase (Docker or CI) are still open; see the checklist below.
+**M0 · Foundation**: ◐ in progress. Every "done when" item is verified locally against real Supabase except **CI on PRs**, which needs the GitHub repo (`gh auth login` is still pending).
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -38,22 +38,27 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 | Item (30-milestones) | Status | Evidence |
 |---|---|---|
-| Fresh clone: `pnpm i && supabase start && pnpm dev` | ◐ | install + dev verified; `supabase start` not run (no Docker on the dev machine) |
-| Sign up with phone + OTP, set password, log in, log out, reset | ◐ | built; validation, translations and the SMS hook (signed 200 / bad signature 401, code printed via console adapter) checked in the browser; full flow needs Supabase (e2e covers sign-up + OTP) |
-| `create_center` atomic, rollback proven | ☑* | pgTAP tests 4–10 |
-| Owner CRUD branches (timezone) and rooms, archive | ◐ | built; RLS tests pass; UI flow covered by e2e, not yet run |
-| Invites: once, 7 days, exact role | ☑* | pgTAP tests 11–20 |
-| Disabled member loses access next request | ☑* | pgTAP tests 51–54 |
-| RLS: other center sees nothing; admin branch scope; teacher limits | ☑* | pgTAP tests 21–48 (63 checks total, mutation-checked) |
-| CI fails if a public table has RLS off | ☑* | pgTAP test 1 |
+| Fresh clone: `pnpm i && supabase start && pnpm dev` | ☑ | Clean `pnpm install` on D:, `supabase start`, `pnpm dev` (2026-10-11) |
+| Sign up with phone + OTP, set password, log in, log out, reset | ☑ | e2e tests 1–2 (sign-up + OTP; log out; log in; forgot → code → new password; old password rejected). Real SMS path checked: Auth → `/api/auth/sms-hook` → console adapter, text in the user's locale |
+| `create_center` atomic, rollback proven | ☑ | pgTAP tests 4–10 on real Supabase |
+| Owner CRUD branches (timezone) and rooms, archive | ☑ | e2e tests 1 and 3 (add branch, add room, archive room) + RLS tests |
+| Invites: once, 7 days, exact role | ☑ | pgTAP tests 11–20; e2e test 1 (teacher accepts via link) |
+| Disabled member loses access next request | ☑ | pgTAP tests 51–54; e2e test 3 (disabled teacher lands on onboarding) |
+| RLS: other center sees nothing; admin branch scope; teacher limits | ☑ | pgTAP tests 21–48 (63 checks; all pass on real Supabase and in PGlite; mutation-checked) |
+| CI fails if a public table has RLS off | ☑ | pgTAP test 1 |
 | UI in uz/ru/en; no hard-coded strings | ☑ | `react/jsx-no-literals` lint rule (verified it fires); `pnpm check:i18n`; uz/ru pages checked in the browser |
 | `packages/core` money/phone/tz helpers tested | ☑ | 26 unit tests incl. the 15-payments worked example and DST |
-| CI on PRs | ◐ | `.github/workflows/ci.yml` written; never run (no GitHub remote yet) |
-| E2E happy path | ◐ | `apps/web/e2e/m0-foundation.spec.ts` written; needs Supabase |
-
-\* verified in PGlite (`pnpm db:test:lite`). Still to confirm with `supabase test db` against real Supabase (CI `database` job, or locally once Docker is installed).
+| CI on PRs | ◐ | `.github/workflows/ci.yml` written; not run yet: no GitHub repo (`gh auth login` pending) |
+| E2E happy path | ☑ | `pnpm e2e`: 3 tests pass against local Supabase (2026-10-11) |
 
 ## Log
+
+### 2026-10-11 · M0 verified on real Supabase
+- Docker Desktop installed; its disk moved to `D:\Docker` after C: filled up and the old disk went read-only. Project moved to `D:\uteach\uteach`; pnpm store at `D:\.pnpm-store`; Playwright browsers at `D:\ms-playwright`.
+- `supabase test db`: 63/63 pass. Types regenerated from the live schema (`pnpm db:types`); one fix (the `create_center` address argument is optional, not nullable).
+- e2e extended to 3 tests (sign-up/invite; log in/out/reset; archive + disable); all pass. `pnpm e2e` now resets the local DB first.
+- Local `supabase/config.toml`: placeholder Twilio provider enabled, because the CLI turns phone login off unless a provider is on (the Send-SMS hook still does all sending); SMS resend limit 5 s locally (hosted: 60 s).
+- `next dev` adds `apps/web/AGENTS.md` (pointer to the bundled Next docs); committed.
 
 ### 2026-10-10 · M0 build
 - Monorepo: `apps/web` (Next.js 16.4, next-intl, shadcn/ui), `apps/worker` (skeleton), `packages/{core,db,i18n,adapters,config}`; pnpm 12, TypeScript 5.9.
@@ -82,8 +87,7 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
   - Charges are per enrollment per month; unexcused absences are still billed.
 
 ## Known gaps / follow-ups
-- Run `supabase test db` and the e2e test against real Supabase (Docker locally, or CI after the GitHub repo exists).
-- `packages/db/src/database.types.ts` is hand-written; regenerate with `pnpm db:types` once Docker runs and diff.
-- Check that Supabase's `test_otp` numbers skip the Send-SMS hook in CI (Linux runners may not resolve `host.docker.internal`).
+- Create the GitHub repo and get CI green (needs `gh auth login`). That is the last open M0 item.
+- CI's e2e job uses only `test_otp` numbers, which skip the Send-SMS hook, so `host.docker.internal` on Linux runners doesn't matter.
 - Verify the SAT / CEFR / Milliy sertifikat score ranges and grade mappings against official sources before M6.
 - "Upcoming events page" (from brainstorm) has no milestone yet; decide in M15 planning.

@@ -32,7 +32,7 @@ export async function createCenterAction(_prev: ActionState, form: FormData): Pr
     p_locale: parsed.data.locale,
     p_timezone: parsed.data.timezone,
     p_branch_name: parsed.data.branchName,
-    p_branch_address: parsed.data.branchAddress,
+    p_branch_address: parsed.data.branchAddress ?? undefined,
   });
   if (error || !centerId) return fail(dbErrorKey(error), form);
 

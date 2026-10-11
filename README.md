@@ -24,22 +24,22 @@ The numbers `+998 99 000 00 01` … `09` always use the code `123456` and never 
 
 ## Commands
 
-| Command                             | What it does                                                         |
-| ----------------------------------- | -------------------------------------------------------------------- |
-| `pnpm dev`                          | Web app in dev mode                                                  |
-| `pnpm --filter @uteach/worker dev`  | Worker in watch mode (skeleton until M4)                             |
-| `pnpm build`                        | Build every app                                                      |
-| `pnpm typecheck`                    | TypeScript in every package (web runs `next typegen` first)          |
-| `pnpm lint`                         | ESLint (bans hard-coded UI strings in JSX)                           |
-| `pnpm format` / `pnpm format:check` | Prettier                                                             |
-| `pnpm test`                         | Unit tests (Vitest)                                                  |
-| `pnpm check:i18n`                   | uz/ru catalogs have exactly the keys of en                           |
-| `pnpm db:start` / `pnpm db:stop`    | Local Supabase                                                       |
-| `pnpm db:reset`                     | Recreate the local DB from `supabase/migrations`                     |
-| `pnpm db:test`                      | pgTAP tests against local Supabase (needs Docker)                    |
-| `pnpm db:test:lite`                 | Same tests in PGlite, no Docker needed (lower fidelity)              |
-| `pnpm db:types`                     | Regenerate `packages/db/src/database.types.ts` from the local DB     |
-| `pnpm e2e`                          | Playwright end-to-end tests (needs `pnpm db:start` and `.env.local`) |
+| Command                             | What it does                                                       |
+| ----------------------------------- | ------------------------------------------------------------------ |
+| `pnpm dev`                          | Web app in dev mode                                                |
+| `pnpm --filter @uteach/worker dev`  | Worker in watch mode (skeleton until M4)                           |
+| `pnpm build`                        | Build every app                                                    |
+| `pnpm typecheck`                    | TypeScript in every package (web runs `next typegen` first)        |
+| `pnpm lint`                         | ESLint (bans hard-coded UI strings in JSX)                         |
+| `pnpm format` / `pnpm format:check` | Prettier                                                           |
+| `pnpm test`                         | Unit tests (Vitest)                                                |
+| `pnpm check:i18n`                   | uz/ru catalogs have exactly the keys of en                         |
+| `pnpm db:start` / `pnpm db:stop`    | Local Supabase                                                     |
+| `pnpm db:reset`                     | Recreate the local DB from `supabase/migrations`                   |
+| `pnpm db:test`                      | pgTAP tests against local Supabase (needs Docker)                  |
+| `pnpm db:test:lite`                 | Same tests in PGlite, no Docker needed (lower fidelity)            |
+| `pnpm db:types`                     | Regenerate `packages/db/src/database.types.ts` from the local DB   |
+| `pnpm e2e`                          | Resets the local DB, then runs Playwright e2e (needs `.env.local`) |
 
 ## Layout
 

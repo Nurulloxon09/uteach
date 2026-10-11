@@ -264,7 +264,8 @@ enable_confirmations = true
 # Unused: the send_sms hook below renders the text from the i18n catalogs (sms.otp).
 template = "{{ .Code }}"
 # Controls the minimum amount of time that must pass before sending another sms otp.
-max_frequency = "60s"
+# Local value, short so e2e tests can send several codes in a row. Hosted projects use 60s (dashboard).
+max_frequency = "5s"
 
 # Fixed codes for e2e tests and local demos: these numbers never trigger an SMS.
 # Local only; hosted projects are configured in the dashboard.
@@ -304,12 +305,13 @@ secrets = "v1,whsec_1+qqtIntNTfgrrK8q3OAyOC+OIELxbxjMkBFqCbl2UU="
 # uri = "pg-functions://<database>/<schema>/<hook_name>"
 
 # Configure one of the supported SMS providers: `twilio`, `twilio_verify`, `messagebird`, `textlocal`, `vonage`.
+# Placeholder provider: the CLI turns phone login off unless a provider is enabled, even though
+# [auth.hook.send_sms] above does the sending (Auth always prefers the hook). Nothing is sent via Twilio.
 [auth.sms.twilio]
-enabled = false
-account_sid = ""
-message_service_sid = ""
-# DO NOT commit your Twilio auth token to git. Use environment variable substitution instead:
-auth_token = "env(SUPABASE_AUTH_SMS_TWILIO_AUTH_TOKEN)"
+enabled = true
+account_sid = "unused-sms-goes-through-hook"
+message_service_sid = "unused-sms-goes-through-hook"
+auth_token = "unused-sms-goes-through-hook"
 
 # Multi-factor-authentication is available to Supabase Pro plan.
 [auth.mfa]

@@ -19,7 +19,7 @@
     "db:reset": "supabase db reset",
     "db:test": "supabase test db",
     "db:types": "supabase gen types typescript --local --schema public > packages/db/src/database.types.ts",
-    "e2e": "pnpm --filter @uteach/web e2e",
+    "e2e": "supabase db reset && pnpm --filter @uteach/web e2e",
     "db:test:lite": "node scripts/db-test-lite.mjs supabase"
   },
   "devDependencies": {

@@ -74,7 +74,7 @@ First market: Uzbekistan (uz/ru, UZS, Click/Payme/Uzum, Eskiz SMS). Code must st
 - Unit tests: `pnpm test`; i18n catalog check: `pnpm check:i18n`
 - DB: `pnpm db:start`, `pnpm db:reset` (re-applies migrations), `pnpm db:types` (regenerate types)
 - DB tests: `pnpm db:test` (real Supabase, needs Docker); `pnpm db:test:lite` (PGlite, no Docker)
-- E2E: `pnpm e2e` (Playwright; test phones `+99899000000x` use code `123456`)
+- E2E: `pnpm e2e` (resets the local DB first, then Playwright; test phones `+99899000000x` use code `123456`)
 - Before saying a change is done, run: `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite`
 - If Next commands fail with `ERR_SWC_NATIVE_CACHE`, set `SWC_NATIVE_BINDING_CACHE=<repo>/node_modules/.cache/swc`.
 
