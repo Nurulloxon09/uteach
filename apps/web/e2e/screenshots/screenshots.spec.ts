@@ -166,6 +166,7 @@ test("capture uteach", async ({ browser }) => {
       .getByRole("link", { name: /^Open IELTS/ })
       .first()
       .click();
+    await expect(page).toHaveURL(/\/groups\/[0-9a-f-]{36}$/);
     await shoot(page, `group-detail-${w}`);
     await page.getByRole("tab", { name: en.groups.tabSchedule }).click();
     await shoot(page, `group-schedule-${w}`);
