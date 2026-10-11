@@ -36,6 +36,15 @@ Steps, each skippable and resumable (progress stored in `centers.settings.onboar
 6. **Staff**: invite admins and teachers by phone.
 Done → dashboard with a checklist (create first group, connect the Telegram bot, record the first payment).
 
+> PROPOSED (M1d, as built): steps 1–2 are two sections of one form (center with optional logo, language,
+> currency shown as UZS, time zone; then the first branch), saved together. Step 3 adds rooms to the first
+> branch, step 4 creates preset courses (each level linked to the next) and/or one custom course, step 5 links to
+> the import page, step 6 invites staff with the Staff page's dialog. Every step page has "Skip this step" and
+> "Finish later". An enrollments row without a start date starts today (past months go into opening balances in
+> M3). Template files have a second sheet with filling hints; files up to 5 000 rows, `.xlsx` or `.csv`.
+> The import RPCs (`import_students`, `import_groups`, `import_enrollments`) need the `import` flag and branch
+> scope; prices in a groups file also need `billing`.
+
 > PROPOSED (M1): steps 1–2 are one client-side form pair; the center (with its first branch) is created through
 > `create_center()` when step 2 is submitted, and the logo is uploaded right after to `center-assets/{center_id}/`.
 > Before that there is nothing to resume. Steps 3–6 live at `/onboarding/{rooms|courses|import|staff}`; finishing or

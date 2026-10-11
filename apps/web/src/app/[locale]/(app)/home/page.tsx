@@ -1,4 +1,13 @@
-import { Building2, DoorOpen, UserPlus, Users } from "lucide-react";
+import {
+  ArrowRight,
+  Building2,
+  DoorOpen,
+  GraduationCap,
+  Sparkles,
+  UserPlus,
+  Users,
+  UsersRound,
+} from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
 import {
   ActivityList,
@@ -7,7 +16,10 @@ import {
   StatusChip,
   type ActivityItem,
 } from "@/components/patterns";
+import { buttonVariants } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import { requireAdminContext } from "@/lib/center";
+import { LATER_STEPS, nextStep, readProgress } from "@/lib/onboarding";
 import { createClient } from "@/lib/supabase/server";
 
 export async function generateMetadata() {
@@ -22,7 +34,7 @@ export default async function HomePage() {
   const format = await getFormatter();
   const supabase = await createClient();
 
-  const [branches, rooms, staff] = await Promise.all([
+  const [branches, rooms, staff, students, groups, center] = await Promise.all([
     supabase
       .from("branches")
       .select("id", { count: "exact", head: true })
@@ -38,12 +50,29 @@ export default async function HomePage() {
       .select("id", { count: "exact", head: true })
       .eq("center_id", ctx.center.id)
       .eq("status", "active"),
+    supabase
+      .from("students")
+      .select("id", { count: "exact", head: true })
+      .eq("center_id", ctx.center.id)
+      .is("archived_at", null),
+    supabase
+      .from("groups")
+      .select("id", { count: "exact", head: true })
+      .eq("center_id", ctx.center.id)
+      .is("archived_at", null),
+    supabase.from("centers").select("settings").eq("id", ctx.center.id).single(),
   ]);
   const counts = {
     branches: branches.count ?? 0,
     rooms: rooms.count ?? 0,
     staff: staff.count ?? 0,
+    students: students.count ?? 0,
+    groups: groups.count ?? 0,
   };
+  // The owner is never forced back into the wizard; Home offers to continue it (10).
+  const progress = readProgress(center.data?.settings);
+  const resume = ctx.membership.role === "owner" ? nextStep(progress) : null;
+  const doneSteps = LATER_STEPS.filter((s) => progress[s]).length;
 
   const stepMeta = (done: boolean) => (
     <StatusChip tone={done ? "success" : "muted"}>{done ? t("done") : t("todo")}</StatusChip>
@@ -67,6 +96,24 @@ export default async function HomePage() {
       meta: stepMeta(counts.rooms > 0),
       href: "/settings/branches",
     },
+    {
+      key: "group",
+      icon: UsersRound,
+      tone: "purple",
+      title: t("addGroup"),
+      description: t("addGroupHint"),
+      meta: stepMeta(counts.groups > 0),
+      href: "/groups",
+    },
+    {
+      key: "students",
+      icon: GraduationCap,
+      tone: "green",
+      title: t("addStudents"),
+      description: t("addStudentsHint"),
+      meta: stepMeta(counts.students > 0),
+      href: "/students",
+    },
     ...(ctx.can.manageStaff
       ? [
           {
@@ -84,6 +131,25 @@ export default async function HomePage() {
 
   return (
     <>
+      {resume ? (
+        <Section className="bg-primary-soft/60 shadow-none">
+          <div className="flex flex-wrap items-center gap-4" data-testid="continue-setup">
+            <span className="grid size-11 place-items-center rounded-xl bg-card text-primary">
+              <Sparkles className="size-5" />
+            </span>
+            <div className="min-w-0 flex-1">
+              <p className="text-[17px] font-bold text-foreground">{t("continueSetup")}</p>
+              <p className="text-[15px] text-secondary-foreground">
+                {t("continueSetupHint", { done: doneSteps + 2, total: LATER_STEPS.length + 2 })}
+              </p>
+            </div>
+            <Link href={`/onboarding/${resume}`} className={buttonVariants()}>
+              {t("continueSetupButton")}
+              <ArrowRight />
+            </Link>
+          </div>
+        </Section>
+      ) : null}
       <Section
         title={t("greeting", { name: ctx.user.fullName })}
         titleSize="dashboard"
@@ -101,18 +167,26 @@ export default async function HomePage() {
         <StatTiles
           items={[
             {
+              key: "students",
+              label: t("students"),
+              value: format.number(counts.students),
+              icon: GraduationCap,
+              tone: "green",
+              href: "/students",
+            },
+            {
+              key: "groups",
+              label: t("groups"),
+              value: format.number(counts.groups),
+              icon: UsersRound,
+              tone: "purple",
+              href: "/groups",
+            },
+            {
               key: "branches",
               label: t("branches"),
               value: format.number(counts.branches),
               icon: Building2,
-              tone: "purple",
-              href: "/settings/branches",
-            },
-            {
-              key: "rooms",
-              label: t("rooms"),
-              value: format.number(counts.rooms),
-              icon: DoorOpen,
               tone: "blue",
               href: "/settings/branches",
             },

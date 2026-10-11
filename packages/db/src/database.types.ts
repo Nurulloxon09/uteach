@@ -720,6 +720,15 @@ isOneToOne: false
               "end_date": string,"enrollment_id": string,"full_name": string,"start_date": string,"status": Database["public"]['Enums']["enrollment_status"],"student_id": string
             }[]
                            },
+"import_enrollments":
+{ Args: { "p_job_id": string,"p_rows": Json }; Returns: Json
+                           },
+"import_groups":
+{ Args: { "p_job_id": string,"p_rows": Json }; Returns: Json
+                           },
+"import_students":
+{ Args: { "p_job_id": string,"p_rows": Json }; Returns: Json
+                           },
 "lesson_move_conflicts":
 { Args: { "p_lesson_id": string,"p_room_id"?: string,"p_starts_at": string }; Returns: {
               "conflict_kind": string,"other_group_name": string,"other_starts_at": string

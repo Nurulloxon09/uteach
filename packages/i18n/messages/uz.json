@@ -152,7 +152,8 @@
       "transfer_same_group": "Boshqa guruhni tanlang.",
       "transfer_before_start": "Oʻtkazish sanasi roʻyxatga olish boshlanganidan keyin boʻlishi kerak.",
       "use_transfer": "Oʻquvchini boshqa guruhga oʻtkazish uchun «Oʻtkazish»dan foydalaning.",
-      "student_has_active_enrollments": "Arxivlashdan oldin oʻquvchining guruhlardagi oʻqishini tugating."
+      "student_has_active_enrollments": "Arxivlashdan oldin oʻquvchining guruhlardagi oʻqishini tugating.",
+      "import_done": "Bu fayl allaqachon import qilingan."
     },
     "groupHasStudents": "Arxivlashdan oldin guruh oʻquvchilarining oʻqishini tugating yoki ularni oʻtkazing.",
     "duplicateStudent": "Bunday ism yoki telefonli oʻquvchi allaqachon bor. Roʻyxatni tekshiring yoki baribir qoʻshish uchun yana saqlang."
@@ -213,7 +214,82 @@
     "branchName": "Filial nomi",
     "branchNamePlaceholder": "masalan, Chilonzor",
     "branchAddress": "Manzil",
-    "submit": "Markaz yaratish"
+    "submit": "Markazni yaratish va davom etish",
+    "stepCenter": "1 · Markaz",
+    "stepBranch": "2 · Birinchi filial",
+    "logo": "Logotip (ixtiyoriy)",
+    "logoHint": "Rasm tanlang: PNG, JPG, WebP yoki SVG",
+    "logoTooBig": "Logotip 2 MB dan kichik boʻlishi kerak.",
+    "currency": "Valyuta",
+    "stepsLabel": "Sozlash bosqichlari",
+    "steps": {
+      "center": "Markaz",
+      "branch": "Filial",
+      "rooms": "Xonalar",
+      "courses": "Kurslar",
+      "import": "Import",
+      "staff": "Xodimlar"
+    },
+    "skip": "Bu bosqichni oʻtkazish",
+    "finishLater": "Keyinroq tugatish",
+    "continue": "Saqlash va davom etish",
+    "finish": "Sozlashni yakunlash",
+    "titles": {
+      "rooms": "Xonalar",
+      "courses": "Oʻqitadigan kurslaringiz",
+      "import": "Oʻquvchilaringizni olib keling",
+      "staff": "Jamoangizni taklif qiling"
+    },
+    "hints": {
+      "rooms": "Birinchi filialingiz xonalarini qoʻshing. Bir xonadagi darslar ustma-ust tushmaydi.",
+      "courses": "Tayyor kurslarni (darajalari bilan) tanlang yoki oʻzingiznikini qoʻshing. Keyin tahrirlash mumkin.",
+      "import": "Oʻquvchilarni Exceldan yuklang yoki keyin qoʻlda qoʻshing.",
+      "staff": "Administrator va oʻqituvchilarni telefon orqali taklif qiling. Har biri bir martalik havola oladi."
+    },
+    "existingRooms": "Qoʻshilgan: {names}",
+    "roomName": "{n}-xona",
+    "roomPlaceholder": "masalan, {n}-xona",
+    "roomCapacity": "Oʻrinlar",
+    "addRoomRow": "Yana xona",
+    "presetsLegend": "Tayyor kurslar",
+    "customCourse": "Oʻz kursingiz (ixtiyoriy)",
+    "customCoursePlaceholder": "masalan, Koreys tili",
+    "openImport": "Oʻquvchilarni Exceldan import qilish",
+    "invitedCount": "{count, plural, =0 {Hali hech kim taklif qilinmagan.} other {# kishi taklif qilingan.}}",
+    "presets": {
+      "general_english": {
+        "name": "General English",
+        "levels": "Beginner, Elementary, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced"
+      },
+      "kids_english": {
+        "name": "Bolalar uchun ingliz tili",
+        "levels": "Starters, Movers, Flyers"
+      },
+      "ielts": {
+        "name": "IELTS",
+        "levels": "5.5, 6.0, 6.5, 7.0+"
+      },
+      "sat": {
+        "name": "SAT",
+        "levels": "1200+, 1400+, 1500+"
+      },
+      "cefr": {
+        "name": "CEFR imtihoniga tayyorlov",
+        "levels": "B1, B2, C1"
+      },
+      "milliy": {
+        "name": "Milliy sertifikat",
+        "levels": "B1, B2, C1"
+      },
+      "russian": {
+        "name": "Rus tili",
+        "levels": "A1, A2, B1, B2"
+      },
+      "math": {
+        "name": "Matematika",
+        "levels": "5–6-sinflar, 7–8-sinflar, 9–11-sinflar"
+      }
+    }
   },
   "invite": {
     "title": "Sizni taklif qilishdi",
@@ -242,7 +318,16 @@
     "addRoomsHint": "Xonalar dars jadvali uchun kerak",
     "inviteStaffHint": "Administrator va oʻqituvchilar havola orqali qoʻshiladi",
     "done": "Bajarildi",
-    "todo": "Qilish kerak"
+    "todo": "Qilish kerak",
+    "students": "Oʻquvchilar",
+    "groups": "Guruhlar",
+    "addGroup": "Birinchi guruhni yarating",
+    "addGroupHint": "Kurs, oʻqituvchi, xona va haftalik vaqtlar",
+    "addStudents": "Oʻquvchilarni qoʻshing",
+    "addStudentsHint": "Birma-bir yoki Exceldan",
+    "continueSetup": "Markazni sozlashni yakunlang",
+    "continueSetupHint": "{total} bosqichdan {done} tasi bajarildi. Toʻxtagan joyingizdan davom eting.",
+    "continueSetupButton": "Sozlashni davom ettirish"
   },
   "today": {
     "title": "Bugun",
@@ -839,7 +924,8 @@
       "editTitle": "Izohni tahrirlash",
       "deleteTitle": "Bu izoh oʻchirilsinmi?",
       "deleted": "Izoh oʻchirildi"
-    }
+    },
+    "importButton": "Exceldan import"
   },
   "enrollments": {
     "search": "Qidirish…",
@@ -916,5 +1002,161 @@
     "addStudent": "Oʻquvchi qoʻshish",
     "rosterEmpty": "Bu guruhda hali oʻquvchi yoʻq",
     "rosterEmptyHint": "Roʻyxatingizdan oʻquvchi qoʻshing."
+  },
+  "import": {
+    "title": "Exceldan import",
+    "setup": "Sozlash",
+    "stepsLabel": "Import bosqichlari",
+    "stages": {
+      "pick": "Fayl",
+      "map": "Ustunlar",
+      "check": "Tekshiruv",
+      "done": "Tayyor"
+    },
+    "pickTitle": "Nimani import qilishni tanlang",
+    "pickHint": "Shu tartibda import qiling: oʻquvchilar, keyin guruhlar, keyin guruhlarga yozilishlar. Tasdiqlamaguningizcha hech narsa saqlanmaydi.",
+    "kindLabel": "Nimani import qilish",
+    "kinds": {
+      "students": "Oʻquvchilar",
+      "groups": "Guruhlar",
+      "enrollments": "Yozilishlar"
+    },
+    "dropLabel": "Excel yoki CSV faylni shu yerga tashlang yoki tanlash uchun bosing",
+    "dropHint": ".xlsx yoki .csv, 5 000 qatorgacha. Birinchi qator — ustun nomlari.",
+    "template": "{kind} shablonini yuklab olish",
+    "templateHelp": "Qanday toʻldirish",
+    "templateIntro": "Birinchi varaqda har bir yozuv uchun bitta qator toʻldiring. Birinchi qatorni (ustun nomlari) qoldiring. Kerakmas ustunlar boʻsh qolishi mumkin.",
+    "mapTitle": "Ustunlarni moslang",
+    "mapHint": "{count} ta qator topildi. Har bir maydon qaysi ustunda ekanini tekshiring; * majburiy.",
+    "notInFile": "Faylda yoʻq",
+    "columnN": "{n}-ustun",
+    "another": "Boshqa fayl",
+    "check": "Faylni tekshirish",
+    "checkTitle": "Tekshiruv",
+    "rows": "{count} qator",
+    "willCreate": "{count} yangi",
+    "willSkip": "{count} tasi allaqachon bor",
+    "problems": "{count} ta muammo",
+    "fixHint": "Bularni faylda tuzating va qayta yuklang. Hech narsa saqlanmadi.",
+    "row": "Qator",
+    "column": "Ustun",
+    "problem": "Muammo",
+    "uploadFixed": "Tuzatilgan faylni yuklash",
+    "back": "Orqaga",
+    "run": "{count, plural, =0 {Import qilish uchun yangi narsa yoʻq} other {# qatorni import qilish}}",
+    "doneTitle": "{created, plural, =0 {Yangi hech narsa qoʻshilmadi} other {# ta yozuv qoʻshildi}}",
+    "doneHint": "{skipped} ta qator allaqachon bor edi va oʻzgartirilmadi.",
+    "openGroups": "Guruhlarni ochish",
+    "openStudents": "Oʻquvchilarni ochish",
+    "fields": {
+      "students": {
+        "fullName": "F.I.Sh.",
+        "phone": "Telefon",
+        "birthDate": "Tugʻilgan sana",
+        "gender": "Jinsi",
+        "school": "Maktab",
+        "branch": "Filial",
+        "externalRef": "Eski tizimdagi ID",
+        "guardianName": "Vasiy ismi",
+        "guardianPhone": "Vasiy telefoni",
+        "relation": "Qarindoshligi"
+      },
+      "groups": {
+        "name": "Guruh nomi",
+        "course": "Kurs",
+        "level": "Daraja",
+        "branch": "Filial",
+        "teacher": "Oʻqituvchi",
+        "room": "Xona",
+        "weekdays": "Kunlar",
+        "startTime": "Boshlanish vaqti",
+        "duration": "Daqiqa",
+        "startDate": "Boshlanish sanasi",
+        "endDate": "Tugash sanasi",
+        "capacity": "Sigʻim",
+        "price": "Sikl narxi",
+        "cycleLessons": "Sikldagi darslar"
+      },
+      "enrollments": {
+        "studentRef": "Oʻquvchining eski tizimdagi ID",
+        "studentPhone": "Oʻquvchi telefoni",
+        "studentName": "Oʻquvchi ismi",
+        "group": "Guruh",
+        "branch": "Filial",
+        "startDate": "Boshlanish sanasi"
+      }
+    },
+    "hints": {
+      "students": {
+        "fullName": "Majburiy.",
+        "phone": "Har qanday odatiy shakl: 90 123 45 67 yoki +998901234567.",
+        "birthDate": "Sana, masalan 25.03.2012.",
+        "gender": "Erkak yoki ayol (istalgan tilda yoki M/F).",
+        "school": "Erkin matn.",
+        "branch": "Filial nomi; boʻsh = birinchi filial.",
+        "externalRef": "Oʻz ID raqamingiz; qayta importda takrorlanishning oldini oladi.",
+        "guardianName": "Ota-ona yoki boshqa vasiy.",
+        "guardianPhone": "Tanish telefon oʻsha vasiyni bogʻlaydi (aka-ukalar).",
+        "relation": "Ona, ota, ota-ona yoki boshqa."
+      },
+      "groups": {
+        "name": "Majburiy; filial ichida takrorlanmaydi.",
+        "course": "Majburiy; mavjud kurs.",
+        "level": "Shu kursning darajasi.",
+        "branch": "Filial nomi; boʻsh = birinchi filial.",
+        "teacher": "Xodim ismi; boʻlmasa, oʻqituvchi tanlanganda darslar yaratiladi.",
+        "room": "Shu filial xonasi.",
+        "weekdays": "masalan Du/Chor/Ju, Mon/Wed/Fri, Пн/Ср/Пт yoki 1,3,5.",
+        "startTime": "masalan 18:00.",
+        "duration": "Dars davomiyligi daqiqada; boʻsh = kurs standarti.",
+        "startDate": "Majburiy; sana.",
+        "endDate": "Sana; boʻsh = tugashsiz.",
+        "capacity": "Butun son.",
+        "price": "Bitta toʻliq sikl narxi, masalan 600 000.",
+        "cycleLessons": "Sikldagi darslar; boʻsh = 12."
+      },
+      "enrollments": {
+        "studentRef": "Oʻquvchilar faylidagi ID.",
+        "studentPhone": "ID boʻlmasa ishlatiladi.",
+        "studentName": "ID yoki telefon boʻlmasa ishlatiladi; takrorlanmasligi kerak.",
+        "group": "Majburiy; guruh nomi.",
+        "branch": "Faqat ikki filialda shu nomli guruh boʻlsa kerak.",
+        "startDate": "Sana; boʻsh = bugun."
+      }
+    },
+    "errors": {
+      "invalid": "Bu importda xatolik bor. Qaytadan boshlang.",
+      "fileType": ".xlsx yoki .csv fayldan foydalaning.",
+      "upload": "Faylni yuklab boʻlmadi. Qayta urinib koʻring.",
+      "unreadable": "Faylni oʻqib boʻlmadi. Uni .xlsx sifatida saqlang va qayta urining.",
+      "tooMany": "Faylda 5 000 dan ortiq qator bor. Kichikroq fayllarga boʻling.",
+      "hasIssues": "Faylda muammolar bor. Qayta tekshiring.",
+      "columnMissing": "Bu ustun majburiy. Yuqorida tanlang.",
+      "empty": "Faylda qatorlar yoʻq.",
+      "required": "Boʻsh, lekin majburiy.",
+      "tooLong": "Juda uzun.",
+      "phone": "Telefon raqami notoʻgʻri.",
+      "date": "Sana emas (25.03.2026 yoki 2026-03-25).",
+      "gender": "Erkak yoki ayol deb yozing.",
+      "branchUnknown": "Bunday nomli filial yoʻq.",
+      "guardianPhoneRequired": "Vasiy uchun telefon kerak.",
+      "relation": "Ona, ota, ota-ona yoki boshqa deb yozing.",
+      "duplicateInFile": "Oldingi qatorda allaqachon bor.",
+      "courseUnknown": "Bunday nomli kurs yoʻq. Avval uni qoʻshing.",
+      "levelUnknown": "Bu kursda bunday daraja yoʻq.",
+      "teacherUnknown": "Bu filialda bunday ismli xodim yoʻq.",
+      "roomUnknown": "Bu filialda bunday xona yoʻq.",
+      "weekdays": "Kunlarni oʻqib boʻlmadi (masalan Du/Chor/Ju).",
+      "time": "Vaqt emas (masalan 18:00).",
+      "number": "Ruxsat etilgan oraliqdagi butun son emas.",
+      "endBeforeStart": "Boshlanishidan oldin tugaydi.",
+      "priceNeedsBilling": "Narx belgilay olmaysiz (hisob-kitob ruxsati kerak).",
+      "amount": "Summa emas (masalan 600 000).",
+      "studentRequired": "Oʻquvchining ID, telefoni yoki ismini kiriting.",
+      "studentUnknown": "Bunday oʻquvchi yoʻq. Avval oʻquvchilarni import qiling.",
+      "studentAmbiguous": "Bir nechta oʻquvchi mos keladi. ID yoki telefondan foydalaning.",
+      "groupUnknown": "Bunday nomli guruh yoʻq.",
+      "groupAmbiguous": "Bunday nomli guruh bir nechta filialda bor. Filialni koʻrsating."
+    }
   }
 }

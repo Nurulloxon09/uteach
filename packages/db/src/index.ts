@@ -89,6 +89,7 @@ export const DB_ERROR_CODES = [
   "transfer_before_start",
   "use_transfer",
   "student_has_active_enrollments",
+  "import_done",
 ] as const;
 
 export type DbErrorCode = (typeof DB_ERROR_CODES)[number];

@@ -13,7 +13,7 @@ import {
   type KeyboardCoordinateGetter,
 } from "@dnd-kit/core";
 import { useTranslations } from "next-intl";
-import { useMemo, useState, type ReactNode } from "react";
+import { useId, useMemo, useState, type ReactNode } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { PALETTE_BLOCK, type PaletteKey } from "@/lib/palette";
 import { cn } from "@/lib/utils";
@@ -99,6 +99,8 @@ export function Timetable({
   testId?: string;
 }) {
   const t = useTranslations("timetable");
+  // A stable id keeps dnd-kit's accessibility ids the same on the server and in the browser (hydration).
+  const dndId = useId();
   const byId = useMemo(() => new Map(lessons.map((l) => [l.id, l])), [lessons]);
   const columnLabel = useMemo(() => new Map(columns.map((c) => [c.key, c.label])), [columns]);
   const lanes = useMemo(() => {
@@ -166,6 +168,7 @@ export function Timetable({
 
   return (
     <DndContext
+      id={dndId}
       sensors={sensors}
       onDragEnd={handleDragEnd}
       accessibility={{

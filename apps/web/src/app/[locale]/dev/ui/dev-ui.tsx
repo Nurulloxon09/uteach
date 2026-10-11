@@ -53,8 +53,10 @@ import {
   StatusToggleGroup,
   TableSearch,
   TimezoneField,
+  FileDrop,
   LessonList,
   PaletteField,
+  Stepper,
   SegmentedControl,
   Timetable,
   WeeklySlotsField,
@@ -760,6 +762,30 @@ export function DevUi() {
               <PaletteField name="kitColor" label={text.patterns} defaultValue="sky" />
             </form>
           </Section>
+        </Kit>
+      </div>
+      <div className="grid gap-5 lg:grid-cols-2">
+        <Kit id="stepper" name="Stepper (onboarding wizard)">
+          <Section>
+            <Stepper
+              label={text.kit}
+              steps={[
+                { key: "a", label: t("nav.center"), state: "done" },
+                { key: "b", label: t("nav.branches"), state: "done" },
+                { key: "c", label: t("nav.courses"), state: "skipped" },
+                { key: "d", label: t("nav.staff"), state: "current" },
+                { key: "e", label: t("nav.students"), state: "todo" },
+              ]}
+            />
+          </Section>
+        </Kit>
+        <Kit id="file-drop" name="FileDrop (Excel import)">
+          <FileDrop
+            label={t("import.dropLabel")}
+            hint={t("import.dropHint")}
+            accept=".xlsx,.csv"
+            onFile={(file) => toast(file.name)}
+          />
         </Kit>
       </div>
     </AppShell>

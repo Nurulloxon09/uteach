@@ -10,6 +10,8 @@ const nextConfig: NextConfig = {
   output: "standalone",
   outputFileTracingRoot: repoRoot,
   transpilePackages: ["@uteach/adapters", "@uteach/core", "@uteach/db", "@uteach/i18n"],
+  // Excel import reads and writes .xlsx on the server with Node streams; keep it out of the bundle.
+  serverExternalPackages: ["exceljs"],
   turbopack: {
     root: repoRoot,
     rules: {

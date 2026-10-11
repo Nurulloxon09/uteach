@@ -22,6 +22,10 @@ The stack is **fixed**. Don't add frameworks, ORMs or services without changing 
 
 No Vercel Hobby: its terms are non-commercial.
 
+> PROPOSED (M1d): storage buckets `center-assets` (public read; owners write `{center_id}/…`) and `imports`
+> (private; staff with `import` read/write `{center_id}/…`) are created by the M1d migration. `receipts` and
+> `attachments` arrive with M3 and M11. `exceljs` is a server external package in `next.config.ts`.
+
 > PROPOSED (M1): two libraries join the web app: **exceljs** (reads `.xlsx`/`.csv` for Excel import and writes the
 > localized template files) and **@dnd-kit/core** (accessible drag and drop with keyboard support for the timetable).
 

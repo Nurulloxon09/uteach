@@ -42,7 +42,10 @@ export async function logOut(page: Page) {
   await expect(page).toHaveURL(/\/en\/login$/);
 }
 
-/** Sign up a new owner and create a center with one branch; ends on /home. */
+/**
+ * Sign up a new owner and create a center with one branch (wizard steps 1–2), then leave the rest of the
+ * wizard for later ("Finish later"); ends on /home.
+ */
 export async function createCenter(page: Page, owner: Person, center: string, branch: string) {
   await page.goto("/en/signup");
   await signUp(page, owner);
@@ -51,6 +54,8 @@ export async function createCenter(page: Page, owner: Person, center: string, br
   await page.getByLabel(en.onboarding.centerName).fill(center);
   await page.getByLabel(en.onboarding.branchName).fill(branch);
   await page.getByRole("button", { name: en.onboarding.submit }).click();
+  await expect(page).toHaveURL(/\/en\/onboarding\/rooms$/);
+  await page.getByTestId("finish-later").click();
   await expect(page).toHaveURL(/\/en\/home$/);
 }
 
