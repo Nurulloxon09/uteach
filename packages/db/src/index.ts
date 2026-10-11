@@ -90,6 +90,11 @@ export const DB_ERROR_CODES = [
   "use_transfer",
   "student_has_active_enrollments",
   "import_done",
+  "lesson_cancelled",
+  "attendance_too_early",
+  "attendance_window_closed",
+  "student_not_expected",
+  "invalid_attendance",
 ] as const;
 
 export type DbErrorCode = (typeof DB_ERROR_CODES)[number];

@@ -72,7 +72,8 @@ Tables: `attendance`, `lead_trials`, `risk_flags`, `notification_outbox`.
 > guardians with `receives_notifications`; if there are none, the student. Marking absent again after a change
 > revives the cancelled outbox row (same dedupe key, new `send_after`); a row that was already sent is never
 > re-sent. `late_alert` follows the same rules when `centers.late_alert_enabled`. Payload: `student`, `group`,
-> `date` (ISO), `time` (HH:MM, branch tz), `center`, plus `late_minutes` for late alerts; M4 formats them per locale.
+> `date` (ISO), `time` (HH:MM, branch tz), `center`, `lessonId`, `studentId`, plus `minutes` for late alerts (0 when
+> not entered); M4 formats them per locale. Changing a mark only re-queues when the status changes.
 
 ## At-risk detection 🟨
 

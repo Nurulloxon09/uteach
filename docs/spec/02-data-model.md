@@ -726,8 +726,9 @@ RLS:
 - delete: none (change status instead).
 
 > PROPOSED (M2 plan):
-> - Trial guests come in **M5**: until then `student_id` is `not null` and there is no `lead_trial_id`. M5 adds the
->   column (fk `lead_trials`), drops the `not null`, and adds the `num_nonnulls` check and `unique (lesson_id, lead_trial_id)`.
+> - Trial guests come in **M5**: until then `student_id` and `enrollment_id` are `not null` and there is no
+>   `lead_trial_id`. M5 adds the column (fk `lead_trials`), drops both `not null`s, and adds the `num_nonnulls` check
+>   and `unique (lesson_id, lead_trial_id)`.
 > - `group_id` is denormalised from the lesson (composite fk `(center_id, group_id, lesson_id)` →
 >   `lessons (center_id, group_id, id)`), so RLS and the month matrix need no join. `enrollment_id` is a composite
 >   fk to `enrollments`. `late_minutes` is null unless `status = 'late'` (then 1–240).

@@ -7,9 +7,9 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M2 · Attendance**: ◐ planned 2026-10-11, not started. Three PRs: M2a data layer → M2b sheet, Today and
-notify prompts → M2c matrix and export. The plan and its decisions are in `30-milestones.md` (M2) and the
-`PROPOSED (M2 plan)` notes in 02, 13, 14, 17 and 05-ui.
+**M2 · Attendance**: ◐ in progress. Plan (2026-10-11, PR #7): three PRs, M2a data layer → M2b sheet, Today and
+notify prompts → M2c matrix and export. M2a (data layer) is built and in review; the database side of five
+"done when" items is proven by pgTAP. The sheet (375 px, one request) and the matrix/export come with M2b and M2c.
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -17,7 +17,7 @@ notify prompts → M2c matrix and export. The plan and its decisions are in `30-
 | M0 | Foundation | ☑ done | 2026-10-11 |
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
 | M1 | Academic core | ☑ done | 2026-10-11 |
-| M2 | Attendance | ◐ planned (M2a, M2b, M2c) | |
+| M2 | Attendance | ◐ in progress (M2a built; M2b, M2c) | |
 | M3 | Billing | ☐ | |
 | M4 | Telegram & SMS | ☐ | |
 | M5 | Leads CRM | ☐ | |
@@ -59,12 +59,12 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Item (30-milestones) | Status | Evidence |
 |---|---|---|
 | 375 px: 15 students in < 30 s ("all present" + 2 exceptions); a save is one request | ☐ | |
-| Expected students = active on the date minus freezes (start/end/freeze edge tests) | ☐ | |
-| Teacher edits until `ends_at + 48h`, denied after at the DB level; admin late edits audited | ☐ | |
-| First save sets the lesson `held` | ☐ | |
+| Expected students = active on the date minus freezes (start/end/freeze edge tests) | ☑ | pgTAP `m2_attendance` (start day, end day, freeze day, day before/after, ended status ignored); matrix day states |
+| Teacher edits until `ends_at + 48h`, denied after at the DB level; admin late edits audited | ☑ | pgTAP: 47 h ok, after 48 h `attendance_window_closed`, no direct insert/update grants, admin edits after the window write `audit_log` (changed columns); mutation-checked |
+| First save sets the lesson `held` | ◐ | pgTAP (held + topic in the same call); e2e comes with the sheet (M2b) |
 | Matrix: month with correct % (excused excluded); Excel export | ☐ | |
-| Absent → one outbox row per notifiable guardian, +10 min, dedupe; re-save no duplicate; change cancels; 22:00 → quiet-hours end | ☐ | |
-| Attendance unique (lesson, student) enforced | ☐ | |
+| Absent → one outbox row per notifiable guardian, +10 min, dedupe; re-save no duplicate; change cancels; 22:00 → quiet-hours end | ☑ | pgTAP: opted-out guardian skipped, no guardians → student, `send_after = +10 min`, key `absence:{lesson}:{student}:{guardian}`, re-save no duplicate, present cancels, absent again revives, sent never re-sent, quiet hours (22:00 → 08:00, wrap, DST) |
+| Attendance unique (lesson, student) enforced | ☑ | pgTAP: duplicate insert → 23505; re-saves update the same row |
 
 ## M1 "done when" status
 
@@ -97,6 +97,22 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-12 · M2a attendance data layer
+- Migration `20261015090000_m2_attendance.sql`: centers settings (`attendance_edit_hours`, `absence_alert_delay_min`,
+  `late_alert_enabled`, quiet hours), `attendance`, `telegram_links` (empty), `notification_templates` (+ Telegram
+  seed in uz/ru/en for `absence_alert`, `late_alert`, `lesson_cancelled`, `lesson_moved`, `lesson_added`),
+  `notification_outbox`; helpers `expected_students`, `day_state`, `attendance_mode`, `apply_quiet_hours`,
+  `enqueue_notification`, `cancel_pending_notifications`, `notify_lesson`; RPCs `save_attendance`,
+  `attendance_lesson`, `attendance_sheet`, `attendance_matrix`, `lesson_attendance_stats`.
+- M1 RPCs re-created with "notify students?": `cancel_lesson`, `move_lesson`, `create_makeup_lesson` (default on),
+  `add_holiday` (opt-in); regeneration and holidays skip lessons with attendance.
+- pgTAP `m2_attendance.test.sql` (140 checks; 324 in total, real Supabase and PGlite); three mutations of the
+  window, revive and quiet-hours rules each make tests fail. `packages/core/attendance` (`countMarks`,
+  `attendanceRateBp`) + tests. 5 new SQL error codes with uz/ru/en messages. DB types regenerated.
+- Spec synced: `enrollment_id` is `not null` until M5; the late payload key is `minutes`.
+- Locally the M1 schedule e2e passes against the new RPCs; the long M1 students test times out on the slow dev
+  server here (≈2 s per page), so CI's production-build run is the check for it.
 
 ### 2026-10-11 · M2 planned
 - Plan: three PRs (M2a data layer → M2b sheet, Today and notify prompts → M2c matrix and export); see
