@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./attendance": "./src/attendance.ts",
     "./money": "./src/money.ts",
     "./phone": "./src/phone.ts",
     "./schedule": "./src/schedule.ts",

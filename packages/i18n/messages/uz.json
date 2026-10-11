@@ -153,7 +153,12 @@
       "transfer_before_start": "Oʻtkazish sanasi roʻyxatga olish boshlanganidan keyin boʻlishi kerak.",
       "use_transfer": "Oʻquvchini boshqa guruhga oʻtkazish uchun «Oʻtkazish»dan foydalaning.",
       "student_has_active_enrollments": "Arxivlashdan oldin oʻquvchining guruhlardagi oʻqishini tugating.",
-      "import_done": "Bu fayl allaqachon import qilingan."
+      "import_done": "Bu fayl allaqachon import qilingan.",
+      "lesson_cancelled": "Dars bekor qilingan, davomatni belgilab boʻlmaydi.",
+      "attendance_too_early": "Davomatni dars boshlanishidan 30 daqiqa oldin belgilash mumkin.",
+      "attendance_window_closed": "Bu davomatni tuzatish muddati oʻtgan. Administratordan soʻrang.",
+      "student_not_expected": "Dars kunida bu oʻquvchi guruhda emas.",
+      "invalid_attendance": "Baʼzi belgilar notoʻgʻri. Holatlar va kechikish daqiqalarini (1–240) tekshiring."
     },
     "groupHasStudents": "Arxivlashdan oldin guruh oʻquvchilarining oʻqishini tugating yoki ularni oʻtkazing.",
     "duplicateStudent": "Bunday ism yoki telefonli oʻquvchi allaqachon bor. Roʻyxatni tekshiring yoki baribir qoʻshish uchun yana saqlang."

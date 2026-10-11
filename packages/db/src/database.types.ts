@@ -5,7 +5,63 @@ export type Database = {
   
   "public": {
           Tables: {
-            "audit_log": {
+            "attendance": {
+                  Row: {
+                    "center_id": string,"created_at": string,"enrollment_id": string,"group_id": string,"id": string,"last_edited_at": string | null,"last_edited_by": string | null,"late_minutes": number | null,"lesson_id": string,"marked_at": string,"marked_by": string,"note": string | null,"status": Database["public"]['Enums']["attendance_status"],"student_id": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "center_id": string,"created_at"?: string,"enrollment_id": string,"group_id": string,"id"?: string,"last_edited_at"?: string | null,"last_edited_by"?: string | null,"late_minutes"?: number | null,"lesson_id": string,"marked_at"?: string,"marked_by": string,"note"?: string | null,"status": Database["public"]['Enums']["attendance_status"],"student_id": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "center_id"?: string,"created_at"?: string,"enrollment_id"?: string,"group_id"?: string,"id"?: string,"last_edited_at"?: string | null,"last_edited_by"?: string | null,"late_minutes"?: number | null,"lesson_id"?: string,"marked_at"?: string,"marked_by"?: string,"note"?: string | null,"status"?: Database["public"]['Enums']["attendance_status"],"student_id"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "attendance_center_id_enrollment_id_fkey"
+      columns: ["center_id","enrollment_id"]
+isOneToOne: false
+      referencedRelation: "enrollments"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "attendance_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "attendance_center_id_group_id_lesson_id_fkey"
+      columns: ["center_id","group_id","lesson_id"]
+isOneToOne: false
+      referencedRelation: "lessons"
+      referencedColumns: ["center_id","group_id","id"]
+    },{
+      foreignKeyName: "attendance_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "attendance_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "attendance_last_edited_by_fkey"
+      columns: ["last_edited_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "attendance_marked_by_fkey"
+      columns: ["marked_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"audit_log": {
                   Row: {
                     "action": string,"actor_kind": string,"actor_profile_id": string | null,"after": Json | null,"at": string,"before": Json | null,"center_id": string | null,"id": number,"row_id": string | null,"table_name": string | null
                   }
@@ -47,14 +103,14 @@ isOneToOne: false
                   ]
                 },"centers": {
                   Row: {
-                    "archived_at": string | null,"country_code": string,"created_at": string,"currency": string,"default_locale": string,"id": string,"logo_path": string | null,"name": string,"settings": NonNullable<Json>,"slug": string,"status": Database["public"]['Enums']["center_status"],"timezone": string,"trial_ends_at": string | null,"updated_at": string
+                    "absence_alert_delay_min": number,"archived_at": string | null,"attendance_edit_hours": number,"country_code": string,"created_at": string,"currency": string,"default_locale": string,"id": string,"late_alert_enabled": boolean,"logo_path": string | null,"name": string,"quiet_hours_end": string,"quiet_hours_start": string,"settings": NonNullable<Json>,"slug": string,"status": Database["public"]['Enums']["center_status"],"timezone": string,"trial_ends_at": string | null,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "archived_at"?: string | null,"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"id"?: string,"logo_path"?: string | null,"name": string,"settings"?: NonNullable<Json>,"slug": string,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
+                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"id"?: string,"late_alert_enabled"?: boolean,"logo_path"?: string | null,"name": string,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"settings"?: NonNullable<Json>,"slug": string,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
                   }
                   Update: {
-                    "archived_at"?: string | null,"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"id"?: string,"logo_path"?: string | null,"name"?: string,"settings"?: NonNullable<Json>,"slug"?: string,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
+                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"id"?: string,"late_alert_enabled"?: boolean,"logo_path"?: string | null,"name"?: string,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"settings"?: NonNullable<Json>,"slug"?: string,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -455,6 +511,76 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"notification_outbox": {
+                  Row: {
+                    "attempts": number,"center_id": string,"channel": Database["public"]['Enums']["notification_channel"] | null,"created_at": string,"dedupe_key": string | null,"fallback_of_id": string | null,"guardian_id": string | null,"id": string,"last_error": string | null,"locale": string,"locked_at": string | null,"membership_id": string | null,"payload": NonNullable<Json>,"phone": string | null,"provider_message_id": string | null,"send_after": string,"sent_at": string | null,"status": Database["public"]['Enums']["outbox_status"],"student_id": string | null,"telegram_chat_id": number | null,"template_key": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "attempts"?: number,"center_id": string,"channel"?: Database["public"]['Enums']["notification_channel"] | null,"created_at"?: string,"dedupe_key"?: string | null,"fallback_of_id"?: string | null,"guardian_id"?: string | null,"id"?: string,"last_error"?: string | null,"locale": string,"locked_at"?: string | null,"membership_id"?: string | null,"payload"?: NonNullable<Json>,"phone"?: string | null,"provider_message_id"?: string | null,"send_after"?: string,"sent_at"?: string | null,"status"?: Database["public"]['Enums']["outbox_status"],"student_id"?: string | null,"telegram_chat_id"?: number | null,"template_key": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "attempts"?: number,"center_id"?: string,"channel"?: Database["public"]['Enums']["notification_channel"] | null,"created_at"?: string,"dedupe_key"?: string | null,"fallback_of_id"?: string | null,"guardian_id"?: string | null,"id"?: string,"last_error"?: string | null,"locale"?: string,"locked_at"?: string | null,"membership_id"?: string | null,"payload"?: NonNullable<Json>,"phone"?: string | null,"provider_message_id"?: string | null,"send_after"?: string,"sent_at"?: string | null,"status"?: Database["public"]['Enums']["outbox_status"],"student_id"?: string | null,"telegram_chat_id"?: number | null,"template_key"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "notification_outbox_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "notification_outbox_center_id_guardian_id_fkey"
+      columns: ["center_id","guardian_id"]
+isOneToOne: false
+      referencedRelation: "guardians"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "notification_outbox_center_id_membership_id_fkey"
+      columns: ["center_id","membership_id"]
+isOneToOne: false
+      referencedRelation: "memberships"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "notification_outbox_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "notification_outbox_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "notification_outbox_fallback_of_id_fkey"
+      columns: ["fallback_of_id"]
+isOneToOne: false
+      referencedRelation: "notification_outbox"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"notification_templates": {
+                  Row: {
+                    "body": string,"center_id": string | null,"channel": Database["public"]['Enums']["notification_channel"],"created_at": string,"id": string,"is_enabled": boolean,"key": string,"locale": string,"sms_provider_template_id": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "body": string,"center_id"?: string | null,"channel": Database["public"]['Enums']["notification_channel"],"created_at"?: string,"id"?: string,"is_enabled"?: boolean,"key": string,"locale": string,"sms_provider_template_id"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "body"?: string,"center_id"?: string | null,"channel"?: Database["public"]['Enums']["notification_channel"],"created_at"?: string,"id"?: string,"is_enabled"?: boolean,"key"?: string,"locale"?: string,"sms_provider_template_id"?: string | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "notification_templates_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"profiles": {
                   Row: {
                     "created_at": string,"full_name": string,"id": string,"is_super_admin": boolean,"locale": string,"phone": string,"updated_at": string
@@ -635,6 +761,50 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"telegram_links": {
+                  Row: {
+                    "center_id": string,"chat_id": number,"created_at": string,"guardian_id": string | null,"id": string,"linked_at": string,"locale": string,"membership_id": string | null,"phone": string,"student_id": string | null,"telegram_user_id": number,"unlinked_at": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "center_id": string,"chat_id": number,"created_at"?: string,"guardian_id"?: string | null,"id"?: string,"linked_at"?: string,"locale"?: string,"membership_id"?: string | null,"phone": string,"student_id"?: string | null,"telegram_user_id": number,"unlinked_at"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "center_id"?: string,"chat_id"?: number,"created_at"?: string,"guardian_id"?: string | null,"id"?: string,"linked_at"?: string,"locale"?: string,"membership_id"?: string | null,"phone"?: string,"student_id"?: string | null,"telegram_user_id"?: number,"unlinked_at"?: string | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "telegram_links_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "telegram_links_center_id_guardian_id_fkey"
+      columns: ["center_id","guardian_id"]
+isOneToOne: false
+      referencedRelation: "guardians"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "telegram_links_center_id_membership_id_fkey"
+      columns: ["center_id","membership_id"]
+isOneToOne: false
+      referencedRelation: "memberships"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "telegram_links_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "telegram_links_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["center_id","id"]
+    }
+                  ]
                 }
           }
           Views: {
@@ -671,10 +841,25 @@ isOneToOne: false
 { Args: { "p_token": string }; Returns: string
                            },
 "add_holiday":
-{ Args: { "p_branch_id"?: string,"p_center_id": string,"p_date": string,"p_name": string }; Returns: number
+{ Args: { "p_branch_id"?: string,"p_center_id": string,"p_date": string,"p_name": string,"p_notify"?: boolean }; Returns: number
+                           },
+"attendance_lesson":
+{ Args: { "p_lesson_id": string }; Returns: {
+              "branch_id": string,"closes_at": string,"ends_at": string,"group_id": string,"group_name": string,"is_substitute": boolean,"lesson_id": string,"local_date": string,"mode": string,"opens_at": string,"room_name": string,"starts_at": string,"status": Database["public"]['Enums']["lesson_status"],"teacher_name": string,"timezone": string,"topic": string
+            }[]
+                           },
+"attendance_matrix":
+{ Args: { "p_from": string,"p_group_id": string,"p_to": string }; Returns: {
+              "day_state": string,"full_name": string,"late_minutes": number,"lesson_id": string,"note": string,"status": Database["public"]['Enums']["attendance_status"],"student_id": string
+            }[]
+                           },
+"attendance_sheet":
+{ Args: { "p_lesson_id": string }; Returns: {
+              "enrollment_id": string,"full_name": string,"is_expected": boolean,"late_minutes": number,"marked_at": string,"note": string,"status": Database["public"]['Enums']["attendance_status"],"student_id": string
+            }[]
                            },
 "cancel_lesson":
-{ Args: { "p_center_fault"?: boolean,"p_lesson_id": string,"p_reason": string }; Returns: undefined
+{ Args: { "p_center_fault"?: boolean,"p_lesson_id": string,"p_notify"?: boolean,"p_reason": string }; Returns: undefined
                            },
 "check_schedule_conflicts":
 { Args: { "p_group_id": string,"p_rules": Json }; Returns: {
@@ -696,7 +881,7 @@ isOneToOne: false
 { Args: { "p_branch_ids"?: (string)[],"p_center_id": string,"p_color"?: string,"p_display_name": string,"p_permissions"?: (string)[],"p_phone": string,"p_role": Database["public"]['Enums']["membership_role"] }; Returns: string
                            },
 "create_makeup_lesson":
-{ Args: { "p_duration_minutes": number,"p_for_lesson_id"?: string,"p_group_id": string,"p_is_billable"?: boolean,"p_room_id"?: string,"p_starts_at": string,"p_teacher_membership_id"?: string }; Returns: string
+{ Args: { "p_duration_minutes": number,"p_for_lesson_id"?: string,"p_group_id": string,"p_is_billable"?: boolean,"p_notify"?: boolean,"p_room_id"?: string,"p_starts_at": string,"p_teacher_membership_id"?: string }; Returns: string
                            },
 "end_enrollment":
 { Args: { "p_end_date": string,"p_enrollment_id": string,"p_reason": Database["public"]['Enums']["enrollment_end_reason"] }; Returns: undefined
@@ -729,13 +914,18 @@ isOneToOne: false
 "import_students":
 { Args: { "p_job_id": string,"p_rows": Json }; Returns: Json
                            },
+"lesson_attendance_stats":
+{ Args: { "p_lesson_ids": (string)[] }; Returns: {
+              "absent": number,"excused": number,"expected": number,"late": number,"lesson_id": string,"marked": number,"present": number
+            }[]
+                           },
 "lesson_move_conflicts":
 { Args: { "p_lesson_id": string,"p_room_id"?: string,"p_starts_at": string }; Returns: {
               "conflict_kind": string,"other_group_name": string,"other_starts_at": string
             }[]
                            },
 "move_lesson":
-{ Args: { "p_lesson_id": string,"p_room_id"?: string,"p_starts_at": string }; Returns: undefined
+{ Args: { "p_lesson_id": string,"p_notify"?: boolean,"p_room_id"?: string,"p_starts_at": string }; Returns: undefined
                            },
 "next_lesson_date":
 { Args: { "p_group_id": string }; Returns: string
@@ -748,6 +938,9 @@ isOneToOne: false
                            },
 "resolve_conflict":
 { Args: { "p_conflict_id": string,"p_resolution": string,"p_room_id"?: string,"p_starts_at"?: string }; Returns: string
+                           },
+"save_attendance":
+{ Args: { "p_lesson_id": string,"p_rows": Json,"p_topic"?: string }; Returns: Json
                            },
 "save_schedule_rules":
 { Args: { "p_group_id": string,"p_rules": Json }; Returns: Json
@@ -775,7 +968,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "center_status": "trial"|"active"|"past_due"|"read_only"|"cancelled","enrollment_end_reason": "completed"|"dropped"|"transferred"|"moved_level","enrollment_status": "active"|"frozen"|"ended","group_status": "forming"|"active"|"finished","lesson_status": "scheduled"|"held"|"cancelled","membership_role": "owner"|"admin"|"teacher","membership_status": "invited"|"active"|"disabled"
+            "attendance_status": "present"|"late"|"absent"|"excused","center_status": "trial"|"active"|"past_due"|"read_only"|"cancelled","enrollment_end_reason": "completed"|"dropped"|"transferred"|"moved_level","enrollment_status": "active"|"frozen"|"ended","group_status": "forming"|"active"|"finished","lesson_status": "scheduled"|"held"|"cancelled","membership_role": "owner"|"admin"|"teacher","membership_status": "invited"|"active"|"disabled","notification_channel": "telegram"|"sms"|"whatsapp"|"email","outbox_status": "pending"|"sending"|"sent"|"failed"|"cancelled"|"skipped"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -891,7 +1084,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "center_status": ["trial", "active", "past_due", "read_only", "cancelled"],"enrollment_end_reason": ["completed", "dropped", "transferred", "moved_level"],"enrollment_status": ["active", "frozen", "ended"],"group_status": ["forming", "active", "finished"],"lesson_status": ["scheduled", "held", "cancelled"],"membership_role": ["owner", "admin", "teacher"],"membership_status": ["invited", "active", "disabled"]
+            "attendance_status": ["present", "late", "absent", "excused"],"center_status": ["trial", "active", "past_due", "read_only", "cancelled"],"enrollment_end_reason": ["completed", "dropped", "transferred", "moved_level"],"enrollment_status": ["active", "frozen", "ended"],"group_status": ["forming", "active", "finished"],"lesson_status": ["scheduled", "held", "cancelled"],"membership_role": ["owner", "admin", "teacher"],"membership_status": ["invited", "active", "disabled"],"notification_channel": ["telegram", "sms", "whatsapp", "email"],"outbox_status": ["pending", "sending", "sent", "failed", "cancelled", "skipped"]
           }
         }
 } as const

@@ -153,7 +153,12 @@
       "transfer_before_start": "The transfer date must be after the enrollment starts.",
       "use_transfer": "Use Transfer to move a student to another group.",
       "student_has_active_enrollments": "End the student's enrollments before archiving them.",
-      "import_done": "This file was already imported."
+      "import_done": "This file was already imported.",
+      "lesson_cancelled": "This lesson is cancelled, so attendance can't be marked.",
+      "attendance_too_early": "Attendance opens 30 minutes before the lesson starts.",
+      "attendance_window_closed": "The time to edit this attendance has passed. Ask an admin to change it.",
+      "student_not_expected": "This student isn't in the group on the lesson's date.",
+      "invalid_attendance": "Some marks are invalid. Check the statuses and late minutes (1–240)."
     },
     "groupHasStudents": "End or transfer the group's students before archiving it.",
     "duplicateStudent": "A student with this name or phone already exists. Check the list, or save again to add anyway."
