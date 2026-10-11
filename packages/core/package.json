@@ -1,0 +1,27 @@
+{
+  "name": "@uteach/core",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts",
+    "./money": "./src/money.ts",
+    "./phone": "./src/phone.ts",
+    "./time": "./src/time.ts"
+  },
+  "scripts": {
+    "typecheck": "tsc -p .",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@date-fns/tz": "1.5.0",
+    "libphonenumber-js": "1.13.15"
+  },
+  "devDependencies": {
+    "@uteach/config": "workspace:*",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3",
+    "vitest": "5.0.3"
+  }
+}

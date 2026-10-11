@@ -1,0 +1,41 @@
+# Production-shaped stack for the VPS (01-tech-stack: web + worker + caddy).
+# M0 only checks that the images build; deploying is M7.
+#   docker compose -f docker/compose.yaml --env-file docker/.env up -d --build
+services:
+  web:
+    build:
+      context: ..
+      dockerfile: docker/web.Dockerfile
+      args:
+        NEXT_PUBLIC_SUPABASE_URL: ${NEXT_PUBLIC_SUPABASE_URL}
+        NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: ${NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY}
+    environment:
+      SEND_SMS_HOOK_SECRET: ${SEND_SMS_HOOK_SECRET}
+      SMS_PROVIDER: ${SMS_PROVIDER:-console}
+      SITE_URL: https://${SITE_DOMAIN}
+    restart: unless-stopped
+
+  worker:
+    build:
+      context: ..
+      dockerfile: docker/worker.Dockerfile
+    restart: unless-stopped
+
+  caddy:
+    image: caddy:2.10-alpine
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      SITE_DOMAIN: ${SITE_DOMAIN}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      - web
+    restart: unless-stopped
+
+volumes:
+  caddy_data:
+  caddy_config:

@@ -22,6 +22,13 @@ The stack is **fixed**. Don't add frameworks, ORMs or services without changing 
 
 No Vercel Hobby: its terms are non-commercial.
 
+> PROPOSED (M0): the GitHub repo is linked to a Vercel project (team "student-union"), which deploys every push by default. `vercel.json` sets `git.deploymentEnabled: false` so only our own CI runs on PRs. Remove it if Vercel previews are wanted later.
+
+
+> PROPOSED (M0): build tooling not in the table above: **tsup** bundles the worker (workspace packages inlined), **tsx** runs it in dev, **Prettier** formats. `cacheComponents` in Next 16 stays **off** because every staff page reads the user's cookies. Next 16 renamed middleware to `src/proxy.ts`.
+
+> PROPOSED (M0): **`pnpm db:test:lite`** runs the migrations and pgTAP tests in PGlite (Postgres in WebAssembly) with a small stand-in for Supabase's `auth` schema. It needs no Docker, so it runs on any laptop and as a fast CI step. It is lower-fidelity than `supabase test db`, which stays the real check in CI (`database` job).
+
 ## Repo layout
 
 > PROPOSED: the whole layout except `apps/web` and `apps/worker` (the `packages/*`, `supabase/`, `docker/` folders), and the rule that pure business logic lives in `packages/core` with SQL mirrors tested against the same fixtures.
@@ -86,6 +93,8 @@ Pure business logic (money maths, proration, schedule expansion, rounding, payro
 - Runs as a single instance at first. SKIP LOCKED makes running two safe.
 
 ### Supabase
+
+> PROPOSED (M0): OTP texts go through Supabase Auth's **Send SMS hook (HTTP)** → `apps/web` `/api/auth/sms-hook` (Standard Webhooks signature) → `SmsProvider` adapter. The text comes from the i18n catalogs in the user's locale. The console adapter prints codes in dev; Eskiz plugs in at M4. Locally, `supabase/config.toml` lists fixed test codes for `+99899000000x` numbers (e2e tests); they never trigger an SMS.
 
 > PROPOSED: Auth = phone + password with OTP only for sign-up/reset; the four storage buckets and the `{center_id}/…` path rule; what is kept in Vault.
 

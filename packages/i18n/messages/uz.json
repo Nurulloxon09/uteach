@@ -1,0 +1,294 @@
+{
+  "meta": {
+    "title": "uteach",
+    "description": "Oʻquv markazingizni boshqaring: oʻquvchilar, guruhlar, dars jadvali, davomat va toʻlovlar."
+  },
+  "locale": {
+    "label": "Til",
+    "uz": "Oʻzbekcha",
+    "ru": "Русский",
+    "en": "English"
+  },
+  "roles": {
+    "owner": "Egasi",
+    "admin": "Administrator",
+    "teacher": "Oʻqituvchi"
+  },
+  "memberStatus": {
+    "invited": "Taklif qilingan",
+    "active": "Faol",
+    "disabled": "Oʻchirilgan"
+  },
+  "centerStatus": {
+    "trial": "Sinov davri",
+    "active": "Faol",
+    "past_due": "Toʻlov muddati oʻtgan",
+    "read_only": "Faqat koʻrish",
+    "cancelled": "Bekor qilingan"
+  },
+  "common": {
+    "save": "Saqlash",
+    "saved": "Saqlandi.",
+    "archived": "Arxivda",
+    "archive": "Arxivlash",
+    "restore": "Qayta tiklash",
+    "archiveConfirm": "Arxivlansinmi? Roʻyxatlarda koʻrinmaydi, lekin tarixda saqlanadi."
+  },
+  "nav": {
+    "home": "Bosh sahifa",
+    "today": "Bugun",
+    "staff": "Xodimlar",
+    "branches": "Filiallar va xonalar",
+    "center": "Markaz",
+    "switchCenter": "Markazni almashtirish",
+    "newCenter": "Yana bir markaz yaratish",
+    "logout": "Chiqish"
+  },
+  "errors": {
+    "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
+    "validation": {
+      "required": "Majburiy maydon.",
+      "tooLong": "Juda uzun.",
+      "phone": "Toʻgʻri telefon raqamini kiriting.",
+      "passwordShort": "Kamida 8 ta belgi.",
+      "passwordWeak": "Harf va raqamlardan foydalaning.",
+      "passwordMismatch": "Parollar mos kelmadi.",
+      "otp": "6 xonali kodni kiriting.",
+      "timezone": "Vaqt mintaqasini tanlang.",
+      "invalid": "Notoʻgʻri qiymat.",
+      "branchRequired": "Kamida bitta filialni tanlang.",
+      "capacity": "1 dan 1000 gacha butun son kiriting."
+    },
+    "auth": {
+      "invalidCredentials": "Telefon raqami yoki parol notoʻgʻri.",
+      "phoneTaken": "Bu raqam bilan akkaunt allaqachon bor. Tizimga kiring.",
+      "otpInvalid": "Kod notoʻgʻri yoki muddati tugagan.",
+      "rateLimited": "Urinishlar juda koʻp. Bir necha daqiqadan soʻng qayta urinib koʻring.",
+      "smsFailed": "SMS yuborib boʻlmadi. Keyinroq urinib koʻring.",
+      "otpSessionExpired": "Bu bosqich muddati tugadi. Qaytadan boshlang."
+    },
+    "db": {
+      "not_authenticated": "Iltimos, qaytadan tizimga kiring.",
+      "profile_missing": "Profilingiz topilmadi. Chiqib, qayta kiring.",
+      "forbidden": "Bu amal uchun ruxsatingiz yoʻq.",
+      "center_read_only": "Obuna toʻlanmaguncha markaz faqat koʻrish rejimida.",
+      "already_member": "Bu odam allaqachon markaz xodimi.",
+      "already_invited": "Bu raqamga taklif allaqachon yuborilgan. Xodimlar roʻyxatidan yangi havola yarating.",
+      "invite_invalid": "Bu taklif havolasi endi yaroqsiz.",
+      "invite_expired": "Taklif havolasining muddati tugagan. Yangisini soʻrang.",
+      "invite_phone_mismatch": "Bu taklif boshqa telefon raqami uchun.",
+      "cannot_change_own_role": "Oʻz rolingizni oʻzgartira olmaysiz.",
+      "use_accept_invite": "Taklif qilingan odam taklifni oʻzi qabul qilishi kerak.",
+      "last_owner": "Markazda kamida bitta egasi qolishi kerak.",
+      "invalid_branch": "Filiallardan biri bu markazga tegishli emas.",
+      "duplicate": "Bu nom allaqachon ishlatilgan."
+    }
+  },
+  "auth": {
+    "fields": {
+      "phone": "Telefon raqami",
+      "phonePlaceholder": "90 123 45 67",
+      "password": "Parol",
+      "passwordHint": "Kamida 8 ta belgi, harf va raqamlar bilan.",
+      "fullName": "Ism va familiya",
+      "code": "SMS kod",
+      "newPassword": "Yangi parol",
+      "confirmPassword": "Yangi parolni takrorlang"
+    },
+    "login": {
+      "title": "Kirish",
+      "description": "Oʻquv markazi xodimlari telefon va parol bilan kiradi.",
+      "submit": "Kirish",
+      "forgot": "Parolni unutdingizmi?",
+      "toSignup": "Akkauntingiz yoʻqmi? Roʻyxatdan oʻting"
+    },
+    "signup": {
+      "title": "Akkaunt yaratish",
+      "description": "Markaz egalari va taklif qilingan xodimlar uchun.",
+      "submit": "Davom etish",
+      "toLogin": "Akkauntingiz bormi? Kirish",
+      "phoneHint": "Tasdiqlash kodini SMS orqali yuboramiz."
+    },
+    "verify": {
+      "title": "Kodni kiriting",
+      "description": "{phone} raqamiga 6 xonali kod yubordik.",
+      "expired": "Bu bosqich muddati tugadi. Qaytadan boshlang.",
+      "backToLogin": "Kirish sahifasiga qaytish",
+      "submit": "Tasdiqlash",
+      "resend": "Yangi kod yuborish",
+      "resent": "Yangi kod yuborildi."
+    },
+    "forgot": {
+      "title": "Parolni tiklash",
+      "description": "Telefon raqamingizni kiriting, sizga kod yuboramiz.",
+      "submit": "Kod yuborish"
+    },
+    "reset": {
+      "title": "Yangi parol oʻrnating",
+      "description": "Bundan buyon shu parol bilan kirasiz.",
+      "submit": "Parolni saqlash"
+    }
+  },
+  "onboarding": {
+    "title": "Markazingizni sozlang",
+    "description": "Xush kelibsiz, {name}! Oʻquv markazingiz haqida maʼlumot bering. Hammasini keyin oʻzgartirish mumkin.",
+    "centerName": "Markaz nomi",
+    "centerNamePlaceholder": "masalan, Bright English",
+    "language": "Asosiy til",
+    "timezone": "Vaqt mintaqasi",
+    "firstBranchHint": "Birinchi filialingiz (manzil). Keyinroq yana filial qoʻshishingiz mumkin.",
+    "branchName": "Filial nomi",
+    "branchNamePlaceholder": "masalan, Chilonzor",
+    "branchAddress": "Manzil",
+    "submit": "Markaz yaratish"
+  },
+  "invite": {
+    "title": "Sizni taklif qilishdi",
+    "description": "{center} {name}ni {role} sifatida taklif qildi.",
+    "phoneHint": "Taklif qilingan raqam bilan kiring ({phone}).",
+    "invalidTitle": "Taklif yaroqsiz",
+    "invalidDescription": "Havola muddati tugagan yoki allaqachon ishlatilgan. Markazdan yangisini soʻrang.",
+    "signupToAccept": "Qabul qilish uchun akkaunt yarating",
+    "loginToAccept": "Menda akkaunt bor",
+    "accept": "Taklifni qabul qilish"
+  },
+  "home": {
+    "title": "Bosh sahifa",
+    "greeting": "Salom, {name}",
+    "trialEnds": "Bepul sinov davri {date} kuni tugaydi.",
+    "branches": "Filiallar",
+    "rooms": "Xonalar",
+    "staff": "Faol xodimlar",
+    "manage": "Boshqarish",
+    "nextSteps": "Keyingi qadamlar",
+    "nextStepsHint": "Asosiylarini sozlang: filiallar, xonalar va jamoangiz.",
+    "addBranch": "Filial qoʻshish",
+    "inviteStaff": "Xodim taklif qilish"
+  },
+  "today": {
+    "title": "Bugun",
+    "emptyTitle": "Bugun dars yoʻq",
+    "emptyDescription": "Guruhlar sozlangach, darslaringiz va davomat varaqlari shu yerda chiqadi."
+  },
+  "staff": {
+    "title": "Xodimlar",
+    "inviteTitle": "Xodim taklif qilish",
+    "inviteDescription": "Unga yuborish uchun havola olasiz. Havola bir marta, uning raqami uchun, 7 kun ishlaydi.",
+    "listTitle": "Jamoa",
+    "columns": {
+      "name": "Ism",
+      "role": "Rol",
+      "branches": "Filiallar",
+      "status": "Holat",
+      "actions": "Amallar"
+    },
+    "flagCount": "{count, plural, one {# qoʻshimcha ruxsat} other {# ta qoʻshimcha ruxsat}}",
+    "allBranches": "Barcha filiallar",
+    "fields": {
+      "name": "Ism",
+      "phone": "Telefon raqami",
+      "phoneHint": "U shu raqam bilan kirishi kerak.",
+      "role": "Rol",
+      "branches": "Filiallar",
+      "permissions": "Ruxsatlar",
+      "permissionsHint": "Administratorlar faqat oʻz filiallarini koʻradi. Ruxsatlar qoʻshimcha huquq beradi."
+    },
+    "inviteSubmit": "Taklif havolasini yaratish",
+    "linkReady": "Taklif havolasi tayyor",
+    "linkHint": "Havolani odamga yuboring (masalan, Telegramda). U faqat hozir koʻrsatiladi.",
+    "copy": "Nusxalash",
+    "copied": "Nusxalandi",
+    "newLink": "Yangi havola",
+    "disable": "Oʻchirish",
+    "enable": "Yoqish"
+  },
+  "flags": {
+    "students": {
+      "label": "Oʻquvchilar",
+      "hint": "Oʻquvchi va ota-onalarni qoʻshish; guruhga yozish, muzlatish, koʻchirish."
+    },
+    "leads": { "label": "Lidlar", "hint": "Lidlar voronkasi bilan ishlash." },
+    "attendance": {
+      "label": "Davomat",
+      "hint": "Davomatni istalgan vaqtda belgilash va tuzatish."
+    },
+    "payments": { "label": "Toʻlovlar", "hint": "Toʻlovlarni qabul qilish va chek chiqarish." },
+    "billing": {
+      "label": "Hisob-kitob",
+      "hint": "Narxlar, hisoblar, balanslar va qarzdorlarni koʻrish."
+    },
+    "broadcasts": {
+      "label": "Xabarnomalar",
+      "hint": "Ota-onalar va oʻquvchilarga xabar yuborish."
+    },
+    "academics": { "label": "Oʻquv jarayoni", "hint": "Kurslar, guruhlar, jadvallar va narxlar." },
+    "adjustments": {
+      "label": "Tuzatishlar",
+      "hint": "Balanslarni kechish, hisobdan chiqarish va tuzatish."
+    },
+    "discounts": {
+      "label": "Chegirmalar",
+      "hint": "10% dan ortiq chegirma berish va promokodlar."
+    },
+    "void": { "label": "Bekor qilish", "hint": "Toʻlov va hisoblarni bekor qilish." },
+    "refunds": { "label": "Qaytarishlar", "hint": "Toʻlovlarni qaytarish." },
+    "import": { "label": "Import", "hint": "Excel dan maʼlumot yuklash." },
+    "staff": {
+      "label": "Xodimlar",
+      "hint": "Oʻz filiallariga oʻqituvchi taklif qilish va oʻchirish."
+    },
+    "settings": { "label": "Sozlamalar", "hint": "Xonalar, shablonlar va markaz sozlamalari." },
+    "cash_closing": { "label": "Kassani yopish", "hint": "Kun oxirida kassani yopish." },
+    "finance": { "label": "Moliya", "hint": "Hisoblar, xarajatlar va foyda." },
+    "payroll": { "label": "Ish haqi", "hint": "Oʻqituvchi ish haqi qoidalari va hisob-kitobi." },
+    "analytics": { "label": "Analitika", "hint": "Bosh sahifadan tashqari hisobotlar." }
+  },
+  "settings": {
+    "center": {
+      "title": "Markaz",
+      "detailsTitle": "Markaz maʼlumotlari",
+      "detailsHint": "Xodimlar, ota-onalar va oʻquvchilarga koʻrsatiladi.",
+      "readOnlyHint": "Buni faqat egasi oʻzgartira oladi.",
+      "name": "Nomi",
+      "defaultLocale": "Asosiy til",
+      "timezone": "Standart vaqt mintaqasi",
+      "timezoneHint": "Yangi filiallar uchun ishlatiladi. Har bir filialning oʻz vaqt mintaqasi bor."
+    },
+    "branches": {
+      "title": "Filiallar va xonalar",
+      "columns": {
+        "name": "Filial",
+        "address": "Manzil",
+        "timezone": "Vaqt mintaqasi",
+        "rooms": "Xonalar"
+      },
+      "addTitle": "Filial qoʻshish",
+      "addHint": "Filial — markazingizning jismoniy manzili.",
+      "fields": {
+        "name": "Nomi",
+        "address": "Manzil",
+        "phone": "Telefon raqami",
+        "timezone": "Vaqt mintaqasi",
+        "timezoneHint": "Bu filialning barcha darslari shu vaqt mintaqasida rejalashtiriladi."
+      },
+      "addSubmit": "Filial qoʻshish",
+      "added": "Filial qoʻshildi.",
+      "back": "Barcha filiallar",
+      "detailsTitle": "Filial maʼlumotlari"
+    },
+    "rooms": {
+      "title": "Xonalar",
+      "hint": "Xonalar dars jadvali uchun va bir vaqtda ikki band qilishning oldini olish uchun kerak.",
+      "readOnlyHint": "Xonalarni koʻrishingiz mumkin, lekin oʻzgartira olmaysiz.",
+      "empty": "Hali xona yoʻq.",
+      "fields": {
+        "name": "Xona",
+        "capacity": "Oʻrinlar"
+      },
+      "add": "Xona qoʻshish"
+    }
+  },
+  "sms": {
+    "otp": "uteach kodi: {code}. Uni hech kimga bermang."
+  }
+}

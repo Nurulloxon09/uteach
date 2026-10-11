@@ -1,0 +1,32 @@
+{
+  "name": "uteach",
+  "private": true,
+  "packageManager": "pnpm@12.10.1",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "dev": "pnpm --filter @uteach/web dev",
+    "build": "pnpm -r build",
+    "typecheck": "pnpm -r typecheck",
+    "lint": "pnpm -r lint",
+    "test": "pnpm -r test",
+    "check:i18n": "pnpm --filter @uteach/i18n check",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "supabase db reset",
+    "db:test": "supabase test db",
+    "db:types": "supabase gen types typescript --local --schema public > packages/db/src/database.types.ts",
+    "e2e": "supabase db reset && pnpm --filter @uteach/web e2e",
+    "db:test:lite": "node scripts/db-test-lite.mjs supabase"
+  },
+  "devDependencies": {
+    "@electric-sql/pglite": "0.5.8",
+    "@electric-sql/pglite-pgtap": "0.0.9",
+    "prettier": "3.9.9",
+    "supabase": "2.120.0",
+    "typescript": "5.9.3"
+  }
+}

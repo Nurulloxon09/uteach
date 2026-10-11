@@ -1,0 +1,282 @@
+{
+  "meta": {
+    "title": "uteach",
+    "description": "Run your learning center: students, groups, schedule, attendance and payments."
+  },
+  "locale": {
+    "label": "Language",
+    "uz": "Oʻzbekcha",
+    "ru": "Русский",
+    "en": "English"
+  },
+  "roles": {
+    "owner": "Owner",
+    "admin": "Admin",
+    "teacher": "Teacher"
+  },
+  "memberStatus": {
+    "invited": "Invited",
+    "active": "Active",
+    "disabled": "Disabled"
+  },
+  "centerStatus": {
+    "trial": "Trial",
+    "active": "Active",
+    "past_due": "Payment overdue",
+    "read_only": "Read-only",
+    "cancelled": "Cancelled"
+  },
+  "common": {
+    "save": "Save",
+    "saved": "Saved.",
+    "archived": "Archived",
+    "archive": "Archive",
+    "restore": "Restore",
+    "archiveConfirm": "Archive this? It will be hidden from lists but kept in history."
+  },
+  "nav": {
+    "home": "Home",
+    "today": "Today",
+    "staff": "Staff",
+    "branches": "Branches & rooms",
+    "center": "Center",
+    "switchCenter": "Switch center",
+    "newCenter": "Create another center",
+    "logout": "Log out"
+  },
+  "errors": {
+    "generic": "Something went wrong. Please try again.",
+    "validation": {
+      "required": "Required.",
+      "tooLong": "Too long.",
+      "phone": "Enter a valid phone number.",
+      "passwordShort": "At least 8 characters.",
+      "passwordWeak": "Use letters and numbers.",
+      "passwordMismatch": "Passwords don't match.",
+      "otp": "Enter the 6-digit code.",
+      "timezone": "Choose a time zone.",
+      "invalid": "Invalid value.",
+      "branchRequired": "Choose at least one branch.",
+      "capacity": "Enter a whole number from 1 to 1000."
+    },
+    "auth": {
+      "invalidCredentials": "Wrong phone number or password.",
+      "phoneTaken": "This phone number already has an account. Log in instead.",
+      "otpInvalid": "The code is wrong or has expired.",
+      "rateLimited": "Too many attempts. Wait a few minutes and try again.",
+      "smsFailed": "We couldn't send the SMS. Try again later.",
+      "otpSessionExpired": "This step has expired. Start again."
+    },
+    "db": {
+      "not_authenticated": "Please log in again.",
+      "profile_missing": "Your profile is missing. Log out and in again.",
+      "forbidden": "You don't have permission to do that.",
+      "center_read_only": "This center is read-only until the subscription is paid.",
+      "already_member": "This person is already a member of the center.",
+      "already_invited": "This phone number already has a pending invite. Create a new link from the staff list.",
+      "invite_invalid": "This invite link is not valid anymore.",
+      "invite_expired": "This invite link has expired. Ask for a new one.",
+      "invite_phone_mismatch": "This invite is for a different phone number.",
+      "cannot_change_own_role": "You can't change your own role.",
+      "use_accept_invite": "The invited person has to accept the invite themselves.",
+      "last_owner": "A center must keep at least one owner.",
+      "invalid_branch": "One of the branches doesn't belong to this center.",
+      "duplicate": "That name is already used."
+    }
+  },
+  "auth": {
+    "fields": {
+      "phone": "Phone number",
+      "phonePlaceholder": "90 123 45 67",
+      "password": "Password",
+      "passwordHint": "At least 8 characters, with letters and numbers.",
+      "fullName": "Full name",
+      "code": "SMS code",
+      "newPassword": "New password",
+      "confirmPassword": "Repeat the new password"
+    },
+    "login": {
+      "title": "Log in",
+      "description": "Staff of a learning center log in with phone and password.",
+      "submit": "Log in",
+      "forgot": "Forgot your password?",
+      "toSignup": "No account yet? Sign up"
+    },
+    "signup": {
+      "title": "Create an account",
+      "description": "For center owners and invited staff.",
+      "submit": "Continue",
+      "toLogin": "Already have an account? Log in",
+      "phoneHint": "We'll send a confirmation code by SMS."
+    },
+    "verify": {
+      "title": "Enter the code",
+      "description": "We sent a 6-digit code to {phone}.",
+      "expired": "This step has expired. Start again.",
+      "backToLogin": "Back to log in",
+      "submit": "Confirm",
+      "resend": "Send a new code",
+      "resent": "A new code is on its way."
+    },
+    "forgot": {
+      "title": "Reset your password",
+      "description": "Enter your phone number and we'll send you a code.",
+      "submit": "Send code"
+    },
+    "reset": {
+      "title": "Choose a new password",
+      "description": "You'll use it to log in from now on.",
+      "submit": "Save password"
+    }
+  },
+  "onboarding": {
+    "title": "Set up your center",
+    "description": "Welcome, {name}! Tell us about your learning center. You can change all of this later.",
+    "centerName": "Center name",
+    "centerNamePlaceholder": "e.g. Bright English",
+    "language": "Main language",
+    "timezone": "Time zone",
+    "firstBranchHint": "Your first branch (location). You can add more branches later.",
+    "branchName": "Branch name",
+    "branchNamePlaceholder": "e.g. Chilonzor",
+    "branchAddress": "Address",
+    "submit": "Create center"
+  },
+  "invite": {
+    "title": "You're invited",
+    "description": "{center} invited {name} to join as {role}.",
+    "phoneHint": "Sign in with the invited phone number ({phone}).",
+    "invalidTitle": "Invite not valid",
+    "invalidDescription": "This link has expired or was already used. Ask the center for a new one.",
+    "signupToAccept": "Create an account to accept",
+    "loginToAccept": "I already have an account",
+    "accept": "Accept invite"
+  },
+  "home": {
+    "title": "Home",
+    "greeting": "Hello, {name}",
+    "trialEnds": "Your free trial ends on {date}.",
+    "branches": "Branches",
+    "rooms": "Rooms",
+    "staff": "Active staff",
+    "manage": "Manage",
+    "nextSteps": "Next steps",
+    "nextStepsHint": "Set up the basics: branches, rooms and your team.",
+    "addBranch": "Add a branch",
+    "inviteStaff": "Invite staff"
+  },
+  "today": {
+    "title": "Today",
+    "emptyTitle": "No lessons today",
+    "emptyDescription": "Your lessons and attendance sheets will appear here once groups are set up."
+  },
+  "staff": {
+    "title": "Staff",
+    "inviteTitle": "Invite a staff member",
+    "inviteDescription": "You get a link to send them. It works once, for their phone number, for 7 days.",
+    "listTitle": "Team",
+    "columns": {
+      "name": "Name",
+      "role": "Role",
+      "branches": "Branches",
+      "status": "Status",
+      "actions": "Actions"
+    },
+    "flagCount": "{count, plural, one {# extra permission} other {# extra permissions}}",
+    "allBranches": "All branches",
+    "fields": {
+      "name": "Name",
+      "phone": "Phone number",
+      "phoneHint": "They must sign in with this number.",
+      "role": "Role",
+      "branches": "Branches",
+      "permissions": "Permissions",
+      "permissionsHint": "Admins only see their branches. Permissions add extra rights."
+    },
+    "inviteSubmit": "Create invite link",
+    "linkReady": "Invite link created",
+    "linkHint": "Send this link to the person (e.g. in Telegram). It is shown only now.",
+    "copy": "Copy",
+    "copied": "Copied",
+    "newLink": "New link",
+    "disable": "Disable",
+    "enable": "Enable"
+  },
+  "flags": {
+    "students": {
+      "label": "Students",
+      "hint": "Add students and guardians; enroll, freeze, transfer."
+    },
+    "leads": { "label": "Leads", "hint": "Work with the leads pipeline." },
+    "attendance": { "label": "Attendance", "hint": "Mark and correct attendance at any time." },
+    "payments": { "label": "Payments", "hint": "Record payments and print receipts." },
+    "billing": { "label": "Billing", "hint": "See prices, charges, balances and debtors." },
+    "broadcasts": { "label": "Broadcasts", "hint": "Send messages to parents and students." },
+    "academics": { "label": "Academics", "hint": "Courses, groups, schedules and prices." },
+    "adjustments": { "label": "Adjustments", "hint": "Waive, write off and correct balances." },
+    "discounts": {
+      "label": "Discounts",
+      "hint": "Give discounts above 10% and manage promo codes."
+    },
+    "void": { "label": "Voids", "hint": "Void payments and charges." },
+    "refunds": { "label": "Refunds", "hint": "Refund payments." },
+    "import": { "label": "Import", "hint": "Import data from Excel." },
+    "staff": { "label": "Staff", "hint": "Invite and disable teachers in their branches." },
+    "settings": { "label": "Settings", "hint": "Rooms, templates and center settings." },
+    "cash_closing": {
+      "label": "Cash closing",
+      "hint": "Close the cash desk at the end of the day."
+    },
+    "finance": { "label": "Finance", "hint": "Accounts, expenses and profit." },
+    "payroll": { "label": "Payroll", "hint": "Teacher pay rules and payroll runs." },
+    "analytics": { "label": "Analytics", "hint": "Reports beyond the dashboard." }
+  },
+  "settings": {
+    "center": {
+      "title": "Center",
+      "detailsTitle": "Center details",
+      "detailsHint": "Shown to your staff, parents and students.",
+      "readOnlyHint": "Only owners can change these.",
+      "name": "Name",
+      "defaultLocale": "Main language",
+      "timezone": "Default time zone",
+      "timezoneHint": "Used for new branches. Each branch keeps its own time zone."
+    },
+    "branches": {
+      "title": "Branches & rooms",
+      "columns": {
+        "name": "Branch",
+        "address": "Address",
+        "timezone": "Time zone",
+        "rooms": "Rooms"
+      },
+      "addTitle": "Add a branch",
+      "addHint": "A branch is a physical location of your center.",
+      "fields": {
+        "name": "Name",
+        "address": "Address",
+        "phone": "Phone number",
+        "timezone": "Time zone",
+        "timezoneHint": "All lessons of this branch are scheduled in this time zone."
+      },
+      "addSubmit": "Add branch",
+      "added": "Branch added.",
+      "back": "All branches",
+      "detailsTitle": "Branch details"
+    },
+    "rooms": {
+      "title": "Rooms",
+      "hint": "Rooms are used for scheduling and to prevent double bookings.",
+      "readOnlyHint": "You can view rooms but not change them.",
+      "empty": "No rooms yet.",
+      "fields": {
+        "name": "Room",
+        "capacity": "Seats"
+      },
+      "add": "Add room"
+    }
+  },
+  "sms": {
+    "otp": "uteach code: {code}. Do not share it with anyone."
+  }
+}

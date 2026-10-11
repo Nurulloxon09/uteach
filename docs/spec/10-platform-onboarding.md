@@ -17,6 +17,8 @@ Tables: `profiles`, `centers`, `branches`, `rooms`, `memberships`, `plans`, `pla
 
 ## Create center (M0)
 
+> PROPOSED (M0): until the full wizard (M1), a first-run **Create center** form asks for the center name, language, time zone and first branch. During the SMS-code step the phone number is kept in a 15-minute httpOnly cookie, never in the URL. The center shown in the app is remembered in the `uteach_center` cookie; switching it never grants access (RLS decides). The per-phone OTP limit (5/hour) moves to M4 with Eskiz; M0 relies on Supabase's limits (one SMS per 60 s per user, 30 per hour per project locally).
+
 > PROPOSED: the whole section (`create_center()` RPC, what it seeds, one cash account per branch).
 
 Signing up as a new owner leads to the onboarding wizard. `create_center()` RPC creates, in one transaction: the center (status `trial`, `trial_ends_at = now()+14d`), the owner membership (`active`), the first branch (timezone = center timezone), and seed data (lost reasons, system templates are global, one cash account per branch).
@@ -35,6 +37,8 @@ Steps, each skippable and resumable (progress stored in `centers.settings.onboar
 Done → dashboard with a checklist (create first group, connect the Telegram bot, record the first payment).
 
 ## Staff & permissions (M0)
+
+> PROPOSED (M0): the teacher's timetable colour picker moves to M1 (the column exists; the timetable that uses it is M1). The invite link is shown once after creating it; "New link" issues a fresh token and kills the old one.
 
 > PROPOSED: invite mechanics (hashed token, 7-day expiry, single use, phone must match), branch + flag choices, colour, disable behaviour, last-owner rule. Canvas: invites by link; owner / admin (+flags, branches) / teacher.
 

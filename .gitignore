@@ -1,0 +1,36 @@
+# dependencies
+node_modules/
+.pnpm-store/
+
+# builds
+.next/
+out/
+dist/
+build/
+*.tsbuildinfo
+next-env.d.ts
+
+# tests
+coverage/
+test-results/
+playwright-report/
+playwright/.cache/
+
+# env
+.env
+.env.*
+!.env.example
+
+# supabase local state
+supabase/.branches/
+supabase/.temp/
+
+# os / editors
+.DS_Store
+Thumbs.db
+*.pem
+.vscode/*
+!.vscode/extensions.json
+
+# logs
+*.log

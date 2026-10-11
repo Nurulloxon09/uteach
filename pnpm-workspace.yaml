@@ -1,0 +1,11 @@
+packages:
+  - apps/*
+  - packages/*
+
+allowBuilds:
+  supabase: true
+  sharp: false
+  unrs-resolver: false
+  "@parcel/watcher": false
+  "@swc/core": true
+  esbuild: true

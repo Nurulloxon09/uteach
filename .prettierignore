@@ -1,0 +1,8 @@
+pnpm-lock.yaml
+docs/
+supabase/migrations/
+supabase/tests/
+packages/db/src/database.types.ts
+.next/
+dist/
+CLAUDE.md
