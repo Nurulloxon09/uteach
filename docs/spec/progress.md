@@ -7,15 +7,15 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M1 · Academic core**: ☐ not started (plan first). M0.5 is done: screenshots approved by the owner and PR #2
-merged into `main` on 2026-10-11 once CI was green.
+**M1 · Academic core**: ◐ in progress. Plan approved 2026-10-11: four PRs (M1a data layer → M1b courses, groups and
+schedule screens → M1c students and enrollments → M1d onboarding wizard and import). M1a (data layer) is built.
 
 ## Milestones
 | # | Milestone | Status | Finished |
 |---|---|---|---|
 | M0 | Foundation | ☑ done | 2026-10-11 |
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
-| M1 | Academic core | ☐ | |
+| M1 | Academic core | ◐ in progress (M1a) | |
 | M2 | Attendance | ☐ | |
 | M3 | Billing | ☐ | |
 | M4 | Telegram & SMS | ☐ | |
@@ -53,6 +53,23 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | CI on PRs | ☑ | GitHub Actions on PR #1: checks, Supabase DB tests, e2e and Docker build all green |
 | E2E happy path | ☑ | `pnpm e2e`: 3 tests pass against local Supabase (2026-10-11) |
 
+## M1 "done when" status
+
+| Item (30-milestones) | Status | Evidence |
+|---|---|---|
+| Mon/Wed/Fri 18:00 → exactly the right lessons for 8 weeks (branch tz); 2nd run = 0 rows | ◐ DB | pgTAP (`m1_academic.test.sql`) + Vitest; UI in M1b |
+| Holidays skipped; adding one cancels that day's generated lesson | ◐ DB | pgTAP; UI in M1b |
+| Room/teacher clash: DB rejects the 2nd lesson; conflict in the inbox | ◐ DB | pgTAP (exclusion constraints, `schedule_conflicts`); inbox UI in M1b |
+| Rule edits regenerate only future, untouched lessons | ◐ DB | pgTAP (held, moved, cancelled, substituted lessons survive) |
+| Timetable week/day by room/teacher; drag; conflicting drop refused | ☐ | M1b (`move_lesson` refuses clashes: pgTAP) |
+| Cancel, makeup, substitute; substitute sees it in Today | ◐ DB | pgTAP; Today in M1b |
+| Guardian with existing phone is linked; "also guardian of" | ◐ DB | pgTAP; profile in M1c |
+| Enroll / freeze / transfer / end with date rules + `audit_log` | ◐ DB | pgTAP; dialogs in M1c |
+| Teachers see only their groups and rosters (names; no phones, no prices) | ☑ | pgTAP negatives (students, guardians, enrollments, prices, other rosters) |
+| Import: 300 rows, mapping, re-import without duplicates, row/column errors | ☐ | M1d |
+| Onboarding wizard steps 1–6 resumable | ☐ | M1d |
+| `expandRules()` tests: validity windows, group start/end, holidays, DST | ☑ | Vitest (`schedule.test.ts`) + SQL parity test on the same fixtures |
+
 ## M0.5 "done when" status
 
 | Item (30-milestones) | Status | Evidence |
@@ -67,6 +84,20 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-11 · M1a data layer
+- Migration `20261012090000_m1_academic.sql`: courses, levels, groups, group_prices, group_schedule_rules, lessons
+  (room/teacher exclusion constraints), holidays, schedule_conflicts, students, guardians, student_guardians,
+  student_notes, enrollments, enrollment_freezes, import_jobs; RLS helpers; RPCs for groups, rules, lessons,
+  holidays, guardians, rosters and enroll/freeze/transfer/end; pg_cron jobs `generate_lessons` (daily) and
+  `refresh_enrollment_statuses` (hourly). Billing hook is a no-op until M3.
+- `packages/core/schedule`: `expandRules`, `generationRange`, `parseWeekdays`, `suggestGroupName`, shared fixtures.
+- Tests: pgTAP `m1_academic.test.sql` (99 checks; 162 in total, real Supabase and PGlite), SQL/TS parity test in
+  `packages/db` (PGlite), Vitest. `scripts/pglite.mjs` shares the PGlite setup (now with `btree_gist`).
+- DB types regenerated; 25 new SQL error codes with uz/ru/en messages.
+- Decisions recorded as PROPOSED (M1) in 01, 02, 05-ui, 10, 12, 13 and 30, including: teachers read rosters only
+  through `group_roster()`; `lessons.rule_date` as the idempotency key (moves don't regenerate the old day);
+  palette keys for teacher colors; course default price readable only with `billing`; opening-balance import in M3.
 
 ### 2026-10-11 · M0.5 done
 - Owner approved the side-by-side screenshots; PR #2 set to merge when CI is green.

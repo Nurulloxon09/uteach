@@ -36,6 +36,14 @@ Steps, each skippable and resumable (progress stored in `centers.settings.onboar
 6. **Staff**: invite admins and teachers by phone.
 Done → dashboard with a checklist (create first group, connect the Telegram bot, record the first payment).
 
+> PROPOSED (M1): steps 1–2 are one client-side form pair; the center (with its first branch) is created through
+> `create_center()` when step 2 is submitted, and the logo is uploaded right after to `center-assets/{center_id}/`.
+> Before that there is nothing to resume. Steps 3–6 live at `/onboarding/{rooms|courses|import|staff}`; finishing or
+> skipping a step records it in `centers.settings.onboarding`. The owner is never forced back into the wizard:
+> Home shows "Continue setup" until every step is done or skipped. The M1 checklist has "create the first group"
+> and "add students"; the Telegram and payment items appear with M4 and M3. Course presets create courses with
+> levels in the center's language; exam presets get linked to `exam_types` in M6.
+
 ## Staff & permissions (M0)
 
 > PROPOSED (M0): the teacher's timetable colour picker moves to M1 (the column exists; the timetable that uses it is M1). The invite link is shown once after creating it; "New link" issues a fresh token and kills the old one.
@@ -64,6 +72,14 @@ CRUD screens. Archiving a branch requires no active groups. Changing a branch ti
 - Matching: students by `external_ref`, else phone + name; groups by name within branch. Re-running the same file doesn't duplicate rows.
 - Downloadable template files per kind, in each locale.
 - Opening balances create `balance_adjustments(kind='opening_balance')`.
+
+> PROPOSED (M1): opening balances are imported in **M3** (with `balance_adjustments`). The file is uploaded by the
+> browser straight to Storage (`imports/{center_id}/{job_id}.xlsx`), so no large request goes through a Server
+> Action; validation re-reads it with the saved column mapping. Matched rows (by `external_ref`, else phone +
+> normalised name; groups by name in branch) are **skipped**, not overwritten, so a re-import never undoes edits
+> made in the app. In the groups file, teachers are matched by staff name; a group whose teacher isn't on staff yet
+> gets its rules but no lessons until a teacher is set. Template headers come from the i18n catalogs; header
+> auto-guessing accepts the template headers of all three languages plus common aliases.
 
 ## Plans & trial (M7)
 

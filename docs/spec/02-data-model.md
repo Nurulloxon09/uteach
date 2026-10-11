@@ -222,6 +222,10 @@ A staff user's role in a center. One row per (center, person).
 | permissions | text[] not null default '{}' | admin flags (see 03); ignored for owner and teacher |
 | color | text | timetable color for teachers |
 
+> PROPOSED (M1): `color` is a **palette key** (`violet`, `sky`, `orange`, `green`, `rose`, `amber`, `teal`, `indigo`),
+> not a hex value. Each key maps to theme tokens (`--palette-*` in `globals.css`), so the timetable never shows a raw
+> color (05-ui). M0 allowed `#rrggbb` but no row used it; the M1 migration swaps the check.
+
 Constraints: unique (center_id, profile_id) where profile_id is not null; at least one active owner per center (deferred trigger); `permissions <@ allowed_flags`.
 RLS: select **MBR** (staff see colleagues); insert/update/disable **OWN** (W). An admin with PERM(staff) may manage **teacher** memberships in their branches. No one can change their own role.
 
@@ -268,6 +272,12 @@ RLS: select **OWN**; writes service role (super-admin) only.
 | archived_at | timestamptz | |
 
 RLS: select **MBR**; write PERM(academics) or OWN (W).
+
+> PROPOSED (M1): `default_price_amount` is money, and teachers can read courses, so the column is **not granted**
+> to `authenticated`. Staff with `billing` read it through `course_default_prices(center_id)`.
+
+> PROPOSED (M1): `exam_type_id` is added in **M6** together with `exam_types` (the column can't reference a table
+> that doesn't exist yet). Course presets of kind `exam_prep` get linked then.
 
 ### `levels` 🟩 [M1]
 
@@ -340,6 +350,10 @@ Weekly recurring slots of a group.
 
 RLS: select like `groups`; write PERM(academics) (W).
 
+> PROPOSED (M1): rules have no `branch_id`; policies find the branch with `private.group_branch(group_id)`
+> (security definer, stable). Rules are written only through `save_schedule_rules()`, which regenerates lessons.
+> Removing a rule sets `valid_to` (past lessons still point at it) instead of deleting it.
+
 ### `lessons` 🟩 [M1]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name. Exception: the room and teacher exclusion constraints are on the canvas.
@@ -371,6 +385,16 @@ Constraints:
 
 RLS: select **ADM(branch_id)** or teacher_membership_id = my membership or TCH(group_id), or OWN; insert/update PERM(academics) (W). Teachers may update only `topic` (column grant through the `set_lesson_topic` RPC).
 
+> PROPOSED (M1): a `rule_date date` column holds the rule occurrence a lesson came from, and the idempotency key is
+> `unique (rule_id, rule_date)` instead of `(rule_id, local_date)`. `local_date` stays the day the lesson actually
+> happens. Without this, dragging a Monday lesson to Tuesday would free "Monday" and the next generation would
+> create it again. `check ((rule_id is null) = (rule_date is null))`.
+
+> PROPOSED (M1): generation never creates lessons in the past (before today in the branch timezone). Until M2 adds
+> `attendance`, "a lesson with no attendance" means `status = 'scheduled'`; M2 adds the attendance check to
+> regeneration and holiday cancelling. Lessons change only through RPCs (`generate_lessons`, `move_lesson`,
+> `cancel_lesson`, `create_makeup_lesson`, `substitute_teacher`); there is no direct insert/update grant.
+
 ### `holidays` 🟩 [M1]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
@@ -397,6 +421,7 @@ Lessons that generation could not create because of an exclusion violation.
 | center_id, group_id | uuid fk | |
 | rule_id | uuid fk | |
 | local_date | date not null | |
+| branch_id | uuid fk | PROPOSED (M1): denormalised from the group, so RLS needs no join |
 | conflict_kind | text not null | `check in ('room','teacher')` |
 | conflicting_lesson_id | uuid references lessons | |
 | detected_at | timestamptz not null default now() | |
@@ -424,12 +449,18 @@ RLS: select/update PERM(academics) and ADM(branch of group).
 | birth_date | date | |
 | gender | text | `check in ('male','female')` or null |
 | school | text | |
-| lead_id | uuid references leads | source lead, if converted |
+| lead_id | uuid references leads | source lead, if converted. PROPOSED (M1): added in **M5** with `leads` |
 | external_ref | text | id from imported file |
 | archived_at | timestamptz | |
 
 Index: (center_id, phone). The duplicate check uses phone + normalised name.
 RLS: select **ADM(branch_id)** or OWN, or teacher where the student has an enrollment in a group they teach (via `private.teaches_student(student_id)`); write PERM(students) and ADM (W). Teachers can't see `phone` (they read through the `group_roster` view, which omits contact fields).
+
+> PROPOSED (M1), replacing the teacher part above: teachers get **no** select on `students` (or `enrollments`),
+> because RLS filters rows, not columns, so a teacher could read `phone` through the API. Teachers read rosters
+> only through `public.group_roster(group_id)`, a security-definer function that checks `private.teaches_group()`
+> and returns names and dates only (no contacts, discounts or prices). `unique (center_id, external_ref)` where not
+> null, so imports can match rows. The duplicate check **warns** ("Create anyway"); it doesn't block.
 
 ### `guardians` 🟩 [M1]
 
@@ -521,6 +552,13 @@ RLS: select ADM (to show "linked ✓"); writes service role (worker) only.
 | price_override_amount | bigint | replaces group price for this student |
 
 Constraints: one non-ended enrollment per (student_id, group_id) (partial unique index); `end_date >= start_date`.
+
+> PROPOSED (M1): without the `discounts` flag an admin gives at most 10% (`discount_bp ≤ 1000`) and no fixed
+> `discount_amount` or `price_override_amount` (both can exceed 10%); a price override also needs `billing`.
+
+> PROPOSED (M1): `status` follows the dates. `end_enrollment` with an end date before today (branch tz) sets `ended`
+> at once; a later end date keeps `active` until the nightly `refresh_enrollment_statuses` job. Freezes flip
+> `active ↔ frozen` the same way. The billing hook (`private.on_enrollment_change`) is a no-op until M3.
 RLS: select ADM(branch of group) or OWN; teachers select through `group_roster` (no discount or price columns); write PERM(students) (W). **Enroll, freeze, transfer and end go through RPCs** that create the first cycle charge, void future cycles and apply unused-lesson credits (see 15).
 
 ### `enrollment_freezes` 🟩 [M1]

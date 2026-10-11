@@ -62,6 +62,13 @@ Global "done when" for every milestone:
 > PROPOSED: scope additions: levels, group prices, holidays, conflicts inbox, timetable, cancel/makeup/substitute, guardians, notes, freeze/transfer/end, onboarding wizard, billing-hook stub, opening balances deferred to M3.
 
 **Scope:** courses, levels, groups, group prices, schedule rules, lesson generation (8 weeks, idempotent, holidays skipped), conflict detection + inbox, timetable (week/day by room/teacher, drag to move), cancel/makeup/substitute (notifications enqueue comes in M2), students, guardians (shared by phone), notes, enrollments with enroll/freeze/transfer/end (the billing hook is a no-op stub until M3), onboarding wizard, Excel import (students, groups, enrollments; opening balances are parsed and validated but saved in M3).
+
+> PROPOSED (M1 plan, 2026-10-11): delivered as four PRs (M1a data layer, M1b courses/groups/schedule screens,
+> M1c students & enrollments, M1d onboarding wizard & import). **Opening-balance import moves wholly to M3**
+> (parse, validate and save together; validating without saving gives the owner nothing). The plan's student
+> limit check on enroll comes with plans in **M7**. "Notify students?" prompts on cancel/move come in **M2** with
+> the outbox. Also in M1: an "Edit member" dialog (branches, flags, timetable color), because teachers' branches
+> must be editable before groups use them.
 **Tables:** courses, levels, groups, group_prices, group_schedule_rules, lessons, holidays, schedule_conflicts, students, guardians, student_guardians, student_notes, enrollments, enrollment_freezes, import_jobs.
 **Done when:**
 - [ ] Creating a group with rules Mon/Wed/Fri 18:00 generates exactly the right lessons for 8 weeks in the branch timezone; running generation again creates 0 new rows.

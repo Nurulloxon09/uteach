@@ -22,6 +22,9 @@ The stack is **fixed**. Don't add frameworks, ORMs or services without changing 
 
 No Vercel Hobby: its terms are non-commercial.
 
+> PROPOSED (M1): two libraries join the web app: **exceljs** (reads `.xlsx`/`.csv` for Excel import and writes the
+> localized template files) and **@dnd-kit/core** (accessible drag and drop with keyboard support for the timetable).
+
 > PROPOSED (M0): the GitHub repo is linked to a Vercel project (team "student-union"), which deploys every push by default. `vercel.json` sets `git.deploymentEnabled: false` so only our own CI runs on PRs. Remove it if Vercel previews are wanted later.
 
 

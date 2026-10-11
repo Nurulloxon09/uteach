@@ -52,3 +52,9 @@ Rules:
 - Dates in the past are allowed (backdating); cycles are counted the same way. Money fixes are voids, reissues or `balance_adjustments`, never edits.
 - Two non-ended enrollments of the same student in the same group are not allowed.
 - Every action writes `audit_log`.
+
+> PROPOSED (M1): in M1 the billing side (first cycle charge, voiding cycles, unused-lesson credits) is the no-op
+> hook `private.on_enrollment_change`; M3 fills it in. The plan's student limit check comes with plans in M7.
+> Default start date = the group's next scheduled lesson on or after today (branch tz), else the group's start date.
+> An end date in the future keeps the enrollment `active` until a nightly job sets `ended`; freezes flip
+> `active ↔ frozen` the same way. Student archive checks active enrollments now; the balance check joins in M3.
