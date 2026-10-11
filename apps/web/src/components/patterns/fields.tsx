@@ -121,7 +121,7 @@ export function Field({ name, label, hint, state, className, ...input }: FieldPr
         aria-invalid={error ? true : undefined}
         aria-describedby={error ? `${id}-error` : undefined}
         {...input}
-        defaultValue={echoed ?? input.defaultValue}
+        defaultValue={input.value === undefined ? (echoed ?? input.defaultValue) : undefined}
       />
     </FieldShell>
   );

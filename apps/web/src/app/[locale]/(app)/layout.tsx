@@ -23,6 +23,8 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
   const nav: NavEntry[] = ctx.can.seeAdminPages
     ? [
         { key: "home", label: t("home"), href: "/home", icon: "home" },
+        { key: "groups", label: t("groups"), href: "/groups", icon: "groups" },
+        { key: "schedule", label: t("schedule"), href: "/schedule", icon: "schedule" },
         ...(ctx.can.manageStaff
           ? [{ key: "staff", label: t("staff"), href: "/staff", icon: "staff" } as const]
           : []),
@@ -33,10 +35,15 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
           children: [
             { key: "center", label: t("center"), href: "/settings/center" },
             { key: "branches", label: t("branches"), href: "/settings/branches" },
+            { key: "courses", label: t("courses"), href: "/settings/courses" },
+            { key: "holidays", label: t("holidays"), href: "/settings/holidays" },
           ],
         },
       ]
-    : [{ key: "today", label: t("today"), href: "/today", icon: "today" }];
+    : [
+        { key: "today", label: t("today"), href: "/today", icon: "today" },
+        { key: "groups", label: t("myGroups"), href: "/groups", icon: "groups" },
+      ];
 
   const tone = STATUS_TONE[ctx.center.status];
 

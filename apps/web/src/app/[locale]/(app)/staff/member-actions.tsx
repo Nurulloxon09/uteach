@@ -1,6 +1,6 @@
 "use client";
 
-import { Link2, UserCheck, UserX } from "lucide-react";
+import { Link2, Pencil, UserCheck, UserX } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useActionState, useState, useTransition } from "react";
 import { toast } from "sonner";
@@ -22,6 +22,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { regenerateInviteAction, setMemberStatusAction } from "./actions";
+import { EditMemberDialog, type EditableMember } from "./edit-member-dialog";
 import { InviteLink } from "./invite-link";
 
 /** Row actions on the staff list: new invite link (invited), disable (with confirmation) or enable. */
@@ -29,17 +30,37 @@ export function MemberActions({
   membershipId,
   name,
   status,
+  edit,
 }: {
   membershipId: string;
   name: string;
   status: "invited" | "active" | "disabled";
+  /** Present when the viewer may edit this member. */
+  edit?: {
+    member: EditableMember;
+    branches: { id: string; name: string }[];
+    flags: string[];
+    canEditFlags: boolean;
+  };
 }) {
   const t = useTranslations("staff");
+  const tc = useTranslations("common");
+  const [editOpen, setEditOpen] = useState(false);
   const [linkOpen, setLinkOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pending, startTransition] = useTransition();
 
-  const actions: RowAction[] =
+  const editAction: RowAction[] = edit
+    ? [
+        {
+          key: "edit",
+          label: tc("rowEdit", { name }),
+          icon: Pencil,
+          onSelect: () => setEditOpen(true),
+        },
+      ]
+    : [];
+  const statusActions: RowAction[] =
     status === "invited"
       ? [
           {
@@ -76,9 +97,21 @@ export function MemberActions({
             },
           ];
 
+  const actions = [...editAction, ...statusActions];
+
   return (
     <>
       <RowActions actions={actions} />
+      {edit ? (
+        <EditMemberDialog
+          member={edit.member}
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          branches={edit.branches}
+          flags={edit.flags}
+          canEditFlags={edit.canEditFlags}
+        />
+      ) : null}
       {status === "invited" ? (
         <Dialog open={linkOpen} onOpenChange={setLinkOpen}>
           <DialogContent>

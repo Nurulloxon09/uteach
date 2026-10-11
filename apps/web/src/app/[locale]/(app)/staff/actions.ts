@@ -7,8 +7,11 @@ import { headers } from "next/headers";
 import { z } from "zod";
 import { dbErrorKey, fail, fieldErrorsFrom, str, type ActionState } from "@/lib/actions";
 import { getCenterContext } from "@/lib/center";
+import { PALETTE } from "@/lib/palette";
 import { createClient } from "@/lib/supabase/server";
 import { phoneField, requiredText, uuidField } from "@/lib/validation";
+
+const colorField = z.union([z.enum(PALETTE), z.literal("")]).transform((v) => v || null);
 
 async function inviteUrl(token: string): Promise<string> {
   const h = await headers();
@@ -26,6 +29,7 @@ export async function inviteAction(_prev: ActionState, form: FormData): Promise<
     role: z.enum(["admin", "teacher"], { error: "validation.invalid" }),
     branchIds: z.array(uuidField).min(1, { error: "validation.branchRequired" }),
     permissions: z.array(z.enum(PERMISSION_FLAGS)),
+    color: colorField,
   });
   const parsed = schema.safeParse({
     displayName: str(form, "displayName"),
@@ -33,6 +37,7 @@ export async function inviteAction(_prev: ActionState, form: FormData): Promise<
     role: str(form, "role"),
     branchIds: form.getAll("branchIds").map(String),
     permissions: form.getAll("permissions").map(String),
+    color: str(form, "color"),
   });
   if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
 
@@ -44,6 +49,7 @@ export async function inviteAction(_prev: ActionState, form: FormData): Promise<
     p_phone: parsed.data.phone,
     p_branch_ids: parsed.data.branchIds,
     p_permissions: parsed.data.role === "admin" ? parsed.data.permissions : [],
+    ...(parsed.data.color ? { p_color: parsed.data.color } : {}),
   });
   if (error || !token) return fail(dbErrorKey(error), form);
 
@@ -86,5 +92,56 @@ export async function setMemberStatusAction(
   if (!data?.length) return fail("db.forbidden");
 
   revalidatePath("/[locale]/staff", "page");
+  return { ok: true };
+}
+
+/** Name, branches, admin flags (owners only) and timetable color of a staff member. RLS decides who may. */
+export async function updateMemberAction(_prev: ActionState, form: FormData): Promise<ActionState> {
+  const ctx = await getCenterContext();
+  const parsed = z
+    .object({
+      membershipId: uuidField,
+      displayName: requiredText(),
+      branchIds: z.array(uuidField),
+      permissions: z.array(z.enum(PERMISSION_FLAGS)),
+      color: colorField,
+    })
+    .safeParse({
+      membershipId: str(form, "membershipId"),
+      displayName: str(form, "displayName"),
+      branchIds: form.getAll("branchIds").map(String),
+      permissions: form.getAll("permissions").map(String),
+      color: str(form, "color"),
+    });
+  if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
+
+  const supabase = await createClient();
+  const { data: member } = await supabase
+    .from("memberships")
+    .select("role")
+    .eq("id", parsed.data.membershipId)
+    .maybeSingle();
+  if (!member) return fail("db.not_found", form);
+  if (member.role !== "owner" && parsed.data.branchIds.length === 0) {
+    return { ok: false, fieldErrors: { branchIds: "validation.branchRequired" } };
+  }
+
+  const { data, error } = await supabase
+    .from("memberships")
+    .update({
+      display_name: parsed.data.displayName,
+      color: parsed.data.color,
+      ...(member.role !== "owner" ? { branch_ids: parsed.data.branchIds } : {}),
+      ...(member.role === "admin" && ctx.membership.role === "owner"
+        ? { permissions: parsed.data.permissions }
+        : {}),
+    })
+    .eq("id", parsed.data.membershipId)
+    .select("id");
+  if (error) return fail(dbErrorKey(error), form);
+  if (!data?.length) return fail("db.forbidden", form);
+
+  revalidatePath("/[locale]/staff", "page");
+  revalidatePath("/[locale]/schedule", "page");
   return { ok: true };
 }

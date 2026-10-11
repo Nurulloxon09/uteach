@@ -74,7 +74,7 @@ test.describe.serial("M0.5 UI foundation", () => {
     }
   });
 
-  test("teacher on a phone: drawer menu with only Today", async ({ browser }) => {
+  test("teacher on a phone: drawer menu with Today and My groups", async ({ browser }) => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await context.newPage();
     await logIn(page, TEACHER.phone, TEACHER.password);
@@ -88,8 +88,8 @@ test.describe.serial("M0.5 UI foundation", () => {
     const drawer = page.getByRole("dialog", { name: en.nav.menu });
     await expect(drawer).toBeVisible();
     const links = drawer.getByRole("navigation").getByRole("link");
-    await expect(links).toHaveCount(1);
-    await expect(links).toHaveText(en.nav.today);
+    await expect(links).toHaveCount(2);
+    await expect(links).toHaveText([en.nav.today, en.nav.myGroups]);
 
     // Esc closes it and focus goes back to the menu button.
     await page.keyboard.press("Escape");

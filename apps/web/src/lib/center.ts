@@ -1,5 +1,6 @@
 import "server-only";
 import type { CenterStatus, MembershipRole, PermissionFlag } from "@uteach/db";
+import { isLocale, type Locale } from "@uteach/i18n";
 import { getLocale } from "next-intl/server";
 import { cookies } from "next/headers";
 import { cache } from "react";
@@ -19,6 +20,8 @@ export type MembershipSummary = {
 
 export type CenterContext = {
   user: CurrentUser;
+  /** UI language of this request. */
+  locale: Locale;
   memberships: MembershipSummary[];
   center: {
     id: string;
@@ -28,6 +31,7 @@ export type CenterContext = {
     status: CenterStatus;
     trialEndsAt: string | null;
     countryCode: string;
+    currency: string;
   };
   membership: {
     id: string;
@@ -41,6 +45,16 @@ export type CenterContext = {
     manageStaff: boolean;
     manageRooms: (branchId: string) => boolean;
     seeAdminPages: boolean;
+    /** Courses, levels, groups, schedule rules, lessons, holidays (03). */
+    academics: boolean;
+    /** Prices, charges, balances. */
+    billing: boolean;
+    /** Students, guardians, enrollments. */
+    students: boolean;
+    discounts: boolean;
+    import: boolean;
+    /** Is this branch in the user's scope (owners: every branch). */
+    inBranch: (branchId: string) => boolean;
   };
 };
 
@@ -84,7 +98,7 @@ export const getCenterContext = cache(async (): Promise<CenterContext> => {
   const [{ data: center }, { data: membership }] = await Promise.all([
     supabase
       .from("centers")
-      .select("id, name, timezone, default_locale, status, trial_ends_at, country_code")
+      .select("id, name, timezone, default_locale, status, trial_ends_at, country_code, currency")
       .eq("id", current.centerId)
       .single(),
     supabase
@@ -106,6 +120,7 @@ export const getCenterContext = cache(async (): Promise<CenterContext> => {
 
   return {
     user,
+    locale: isLocale(locale) ? locale : "uz",
     memberships,
     center: {
       id: center.id,
@@ -115,6 +130,7 @@ export const getCenterContext = cache(async (): Promise<CenterContext> => {
       status: center.status,
       trialEndsAt: center.trial_ends_at,
       countryCode: center.country_code,
+      currency: center.currency,
     },
     membership: {
       id: membership.id,
@@ -128,6 +144,12 @@ export const getCenterContext = cache(async (): Promise<CenterContext> => {
       manageStaff: has("staff"),
       manageRooms: (branchId) => has("settings") && inBranch(branchId),
       seeAdminPages: role === "owner" || role === "admin",
+      academics: has("academics"),
+      billing: has("billing"),
+      students: has("students"),
+      discounts: has("discounts"),
+      import: has("import"),
+      inBranch,
     },
   };
 });

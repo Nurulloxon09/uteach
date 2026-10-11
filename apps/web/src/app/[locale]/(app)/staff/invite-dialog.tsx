@@ -8,6 +8,7 @@ import {
   Field,
   FormDialog,
   PageAction,
+  PaletteField,
   SelectField,
 } from "@/components/patterns";
 import { inviteAction } from "./actions";
@@ -78,6 +79,7 @@ export function InviteDialog({
               />
             ))}
           </CheckboxGroup>
+          {role === "teacher" ? <PaletteField name="color" label={t("fields.color")} /> : null}
           {role === "admin" ? (
             <CheckboxGroup legend={t("fields.permissions")} name="permissions" state={state}>
               <p className="mb-2 text-sm text-muted-foreground">{t("fields.permissionsHint")}</p>

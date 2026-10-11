@@ -1,4 +1,4 @@
-import { isValidTimeZone, normalizePhone } from "@uteach/core";
+import { isValidTimeZone, normalizePhone, parseMajorUnits } from "@uteach/core";
 import { locales } from "@uteach/i18n";
 import { z } from "zod";
 import { publicEnv } from "@/lib/env";
@@ -66,3 +66,82 @@ export const timezoneField = z
 export const localeField = z.enum(locales, { error: "validation.invalid" });
 
 export const uuidField = z.uuid({ error: "validation.invalid" });
+
+/** An amount typed in major units ("600 000") → minor units as a decimal string (04-rules §2). */
+export const moneyField = z
+  .string()
+  .trim()
+  .min(1, { error: "validation.required" })
+  .transform((value, ctx) => {
+    try {
+      const minor = parseMajorUnits(value);
+      if (minor < 0n) throw new RangeError("negative");
+      return minor.toString();
+    } catch {
+      ctx.addIssue({ code: "custom", message: "validation.amount" });
+      return z.NEVER;
+    }
+  });
+
+export const optionalMoneyField = z
+  .string()
+  .trim()
+  .transform((value, ctx) => {
+    if (value === "") return null;
+    try {
+      const minor = parseMajorUnits(value);
+      if (minor < 0n) throw new RangeError("negative");
+      return minor.toString();
+    } catch {
+      ctx.addIssue({ code: "custom", message: "validation.amount" });
+      return z.NEVER;
+    }
+  });
+
+/** Minor units → what a money input shows ("600000" for 60 000 000 tiyin, "1250.5" keeps decimals). */
+export function minorToInput(minor: string | number | bigint | null | undefined): string {
+  if (minor === null || minor === undefined || minor === "") return "";
+  const value = BigInt(minor);
+  const whole = value / 100n;
+  const cents = value % 100n;
+  return cents === 0n
+    ? whole.toString()
+    : `${whole}.${cents.toString().padStart(2, "0").replace(/0$/, "")}`;
+}
+
+export const dateField = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, { error: "validation.date" });
+
+export const optionalDateField = z
+  .string()
+  .trim()
+  .transform((value, ctx) => {
+    if (value === "") return null;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+      ctx.addIssue({ code: "custom", message: "validation.date" });
+      return z.NEVER;
+    }
+    return value;
+  });
+
+export const timeField = z.string().regex(/^\d{2}:\d{2}$/, { error: "validation.time" });
+
+export const intField = (min: number, max: number) =>
+  z.coerce
+    .number({ error: "validation.number" })
+    .int({ error: "validation.number" })
+    .min(min, { error: "validation.number" })
+    .max(max, { error: "validation.number" });
+
+export const optionalIntField = (min: number, max: number) =>
+  z
+    .string()
+    .trim()
+    .transform((value, ctx) => {
+      if (value === "") return null;
+      const n = Number(value);
+      if (!Number.isInteger(n) || n < min || n > max) {
+        ctx.addIssue({ code: "custom", message: "validation.number" });
+        return z.NEVER;
+      }
+      return n;
+    });

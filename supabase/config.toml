@@ -279,6 +279,17 @@ max_frequency = "5s"
 998990000007 = "123456"
 998990000008 = "123456"
 998990000009 = "123456"
+998990000010 = "123456"
+998990000011 = "123456"
+998990000012 = "123456"
+998990000013 = "123456"
+998990000014 = "123456"
+998990000015 = "123456"
+998990000016 = "123456"
+998990000017 = "123456"
+998990000018 = "123456"
+998990000019 = "123456"
+998990000020 = "123456"
 
 # Auth sends OTP texts through the web app, which uses the SMS adapter (console in dev, Eskiz from M4).
 # The secret below is for local development only. Staging/prod set their own in the dashboard.
