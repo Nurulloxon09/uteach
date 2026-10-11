@@ -1,6 +1,7 @@
 import type { CenterStatus } from "@uteach/db";
 import { getTranslations } from "next-intl/server";
 import { AppShell, type NavEntry, type ShellChip } from "@/components/patterns";
+import { teachesLessons } from "@/lib/academics";
 import { getCenterContext } from "@/lib/center";
 import { logoutAction } from "../(auth)/actions";
 import { switchCenterAction } from "./actions";
@@ -13,19 +14,27 @@ const STATUS_TONE: Record<CenterStatus, ShellChip["tone"] | null> = {
   cancelled: "muted",
 };
 
-/** Signed-in pages: AppShell with the nav items this role and these permission flags allow (05-ui §4). */
+/**
+ * Signed-in pages: AppShell with the nav items this role and these permission flags allow (05-ui §4).
+ * Owners and admins who teach also get Today (M2).
+ */
 export default async function AppLayout({ children }: LayoutProps<"/[locale]">) {
   const ctx = await getCenterContext();
   const t = await getTranslations("nav");
   const tr = await getTranslations("roles");
   const ts = await getTranslations("centerStatus");
+  const teaches = ctx.can.seeAdminPages && (await teachesLessons(ctx));
 
   const nav: NavEntry[] = ctx.can.seeAdminPages
     ? [
         { key: "home", label: t("home"), href: "/home", icon: "home" },
+        ...(teaches
+          ? [{ key: "today", label: t("today"), href: "/today", icon: "today" } as const]
+          : []),
         { key: "students", label: t("students"), href: "/students", icon: "students" },
         { key: "groups", label: t("groups"), href: "/groups", icon: "groups" },
         { key: "schedule", label: t("schedule"), href: "/schedule", icon: "schedule" },
+        { key: "attendance", label: t("attendance"), href: "/attendance", icon: "attendance" },
         ...(ctx.can.manageStaff
           ? [{ key: "staff", label: t("staff"), href: "/staff", icon: "staff" } as const]
           : []),

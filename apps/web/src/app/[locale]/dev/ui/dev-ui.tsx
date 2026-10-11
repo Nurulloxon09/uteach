@@ -24,6 +24,8 @@ import { toast } from "sonner";
 import {
   ActivityList,
   AppShell,
+  AttendanceRow,
+  type AttendanceRowValue,
   CheckboxField,
   CheckboxGroup,
   ComboboxField,
@@ -66,6 +68,7 @@ import {
 } from "@/components/patterns";
 import { Button } from "@/components/ui/button";
 import type { ActionState } from "@/lib/actions";
+import { attendanceOptions } from "@/lib/attendance";
 import { weekdayLabels } from "@/lib/dates";
 import {
   DEV_TEXT,
@@ -180,6 +183,18 @@ export function DevUi() {
   ]);
   const [selected, setSelected] = useState<Set<string>>(new Set(["3", "7"]));
   const [attendance, setAttendance] = useState("present");
+  const [sheet, setSheet] = useState<Record<string, AttendanceRowValue>>({
+    a: { status: "present", lateMinutes: "", note: "" },
+    b: { status: "late", lateMinutes: "10", note: "Bus was late" },
+    c: { status: null, lateMinutes: "", note: "" },
+  });
+  const attendanceLabels = {
+    lateMinutes: t("attendance.lateMinutes"),
+    minutesShort: t("attendance.minutesShort"),
+    note: t("attendance.note"),
+    addNote: t("attendance.addNote", { name: "…" }),
+    notePlaceholder: t("attendance.notePlaceholder"),
+  };
 
   const nav: NavEntry[] = [
     { key: "home", label: t("nav.home"), href: "/home", icon: "home" },
@@ -507,6 +522,32 @@ export function DevUi() {
                     />
                   </div>
                 </MobileCard>
+              ))}
+            </MobileList>
+          </div>
+        </Kit>
+
+        <Kit id="attendance-row" name="AttendanceRow (attendance sheet, 375 px)">
+          <div className="mx-auto max-w-[375px]">
+            <MobileList>
+              {[
+                { id: "a", name: "Ali Valiyev" },
+                { id: "b", name: "Анна Смирнова" },
+                { id: "c", name: "Madina Karimova", badge: t("attendance.notExpected") },
+              ].map((s) => (
+                <AttendanceRow
+                  key={s.id}
+                  name={s.name}
+                  value={sheet[s.id]!}
+                  onChange={(v) => setSheet((m) => ({ ...m, [s.id]: v }))}
+                  options={attendanceOptions(
+                    (k) => t(`attendance.statusShort.${k}`),
+                    (k) => t(`attendance.status.${k}`),
+                  )}
+                  legend={t("attendance.legend", { name: s.name })}
+                  labels={attendanceLabels}
+                  badge={s.badge ? <StatusChip tone="muted">{s.badge}</StatusChip> : undefined}
+                />
               ))}
             </MobileList>
           </div>

@@ -113,16 +113,24 @@ test.describe.serial("M1 · courses, groups and the timetable", () => {
     // 4rem time column, then 7 equal day columns.
     const columnWidth = ((await page.getByTestId("timetable").boundingBox())!.width - 64) / 7;
 
+    // A new day asks "notify students?" (M2) before moving.
+    const dropDialog = page.getByTestId("drop-dialog");
+
     // Wednesday → Monday 18:00 clashes with Monday's lesson (same teacher and room): refused.
     const wednesday = blocks.nth(1);
     await drag(page, wednesday, -2 * columnWidth, 0);
+    await expect(dropDialog.getByRole("checkbox", { name: en.lessons.notify })).toBeChecked();
+    await dropDialog.getByRole("button", { name: en.lessons.move }).click();
     await expect(
       page.getByText(/The (room is taken|teacher already has a lesson) at that time\./),
     ).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(dropDialog).toBeHidden();
 
     // Friday → Saturday is free: moved.
     const friday = blocks.nth(2);
     await drag(page, friday, columnWidth, 0);
+    await dropDialog.getByRole("button", { name: en.lessons.move }).click();
     await expect(page.getByText(en.lessons.moved)).toBeVisible();
   });
 
@@ -173,8 +181,16 @@ test.describe.serial("M1 · courses, groups and the timetable", () => {
     const lesson = teacherPage.getByTestId("today-lesson").filter({ hasText: "07:00" });
     await expect(lesson).toContainText("IELTS · Mon/Wed/Fri 18:00");
     await expect(lesson).toContainText(en.lessons.substituteChip);
-    // Teachers never see prices: no Price tab on the group page.
+    // Tapping it opens its attendance sheet (M2).
     await lesson.click();
+    await expect(teacherPage).toHaveURL(/\/en\/attendance\/[0-9a-f-]{36}$/);
+    // Teachers never see prices: no Price tab on the group page.
+    await teacherPage.goto("/en/groups");
+    await settled(teacherPage);
+    await teacherPage
+      .getByRole("link", { name: en.common.rowOpen.replace("{name}", "IELTS · Mon/Wed/Fri 18:00") })
+      .first()
+      .click();
     await expect(teacherPage.getByRole("tab", { name: en.groups.tabLessons })).toBeVisible();
     await expect(teacherPage.getByRole("tab", { name: en.groups.tabPrice })).toHaveCount(0);
     await context.close();

@@ -13,6 +13,7 @@ export type {
   ShellChip,
   ShellUser,
 } from "./app-shell/nav";
+export { AttendanceRow, type AttendanceRowValue } from "./attendance-row";
 export { AuthCard, AuthLayout } from "./auth-layout";
 export { Combobox, type ComboboxOption } from "./combobox";
 export { ConfirmDialog } from "./confirm-dialog";

@@ -81,7 +81,8 @@
     "schedule": "Schedule",
     "courses": "Courses",
     "holidays": "Holidays",
-    "students": "Students"
+    "students": "Students",
+    "attendance": "Attendance"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -475,7 +476,17 @@
       "defaultLocale": "Main language",
       "timezone": "Default time zone",
       "timezoneHint": "Used for new branches. Each branch keeps its own time zone.",
-      "breadcrumb": "Settings"
+      "breadcrumb": "Settings",
+      "attendanceTitle": "Attendance & notifications",
+      "attendanceHint": "When teachers can mark attendance and how parents are alerted.",
+      "editHours": "Teachers can edit for (hours after the lesson)",
+      "editHoursHint": "After that only admins with the attendance right can change marks.",
+      "alertDelay": "Absence alert delay (minutes)",
+      "alertDelayHint": "A correction within this time sends nothing.",
+      "lateAlerts": "Also alert parents when a student is late",
+      "quietStart": "Quiet hours from",
+      "quietEnd": "Quiet hours until",
+      "quietHint": "Messages that fall in quiet hours wait until they end. The same time in both fields turns quiet hours off."
     },
     "branches": {
       "title": "Branches & rooms",
@@ -667,7 +678,8 @@
       "name": "Name",
       "namePlaceholder": "e.g. Independence Day",
       "branch": "Branch"
-    }
+    },
+    "notify": "Tell students and parents about the cancelled lessons"
   },
   "groups": {
     "title": "Groups",
@@ -800,7 +812,11 @@
     "past": "Past",
     "noUpcoming": "No upcoming lessons",
     "noPast": "No past lessons yet",
-    "openGroup": "Open group"
+    "openGroup": "Open group",
+    "notify": "Notify students and parents",
+    "notifyMoveHint": "Only when the date or time changes.",
+    "dropTitle": "Move this lesson?",
+    "dropHint": "{group} moves to {date} at {time}. The weekly times stay the same."
   },
   "schedule": {
     "title": "Schedule",
@@ -1162,6 +1178,83 @@
       "studentAmbiguous": "Several students match. Use the ID or phone.",
       "groupUnknown": "No group with this name.",
       "groupAmbiguous": "Groups with this name exist in several branches. Add the branch."
+    }
+  },
+  "attendance": {
+    "title": "Attendance",
+    "status": {
+      "present": "Present",
+      "late": "Late",
+      "absent": "Absent",
+      "excused": "Excused"
+    },
+    "statusShort": {
+      "present": "Present",
+      "late": "Late",
+      "absent": "Absent",
+      "excused": "Excused"
+    },
+    "legend": "Attendance of {name}",
+    "allPresent": "All present",
+    "restPresent": "Mark the rest present",
+    "topic": "Topic",
+    "topicPlaceholder": "What did you cover?",
+    "lateMinutes": "Minutes late",
+    "minutesShort": "min",
+    "note": "Note",
+    "addNote": "Add a note for {name}",
+    "notePlaceholder": "Optional note",
+    "notExpected": "Not in the group that day",
+    "counter": "{marked} of {total} marked",
+    "save": "Save",
+    "saving": "Saving…",
+    "saved": "Saved",
+    "savedToast": "{alerts, plural, =0 {Attendance saved} one {Attendance saved · # absence alert queued} other {Attendance saved · # absence alerts queued}}",
+    "retrying": "Not saved yet, trying again ({attempt} of {total})…",
+    "offline": "Not saved. Check your connection and try again.",
+    "retry": "Try again",
+    "draftRestored": "Unsaved marks from this device were restored.",
+    "unsaved": "Unsaved changes",
+    "mode": {
+      "tooEarly": "You can mark attendance from {time}.",
+      "closed": "The time to edit this attendance has passed. Ask an admin to change it.",
+      "none": "You can view this attendance but not change it.",
+      "cancelled": "This lesson is cancelled.",
+      "adminLate": "The teachers' edit window has closed. Your changes are recorded in the audit log."
+    },
+    "substitute": "Substitute lesson",
+    "emptyTitle": "No students",
+    "emptyHint": "Nobody is in this group on the lesson's day.",
+    "chip": {
+      "toMark": "To mark",
+      "marked": "{marked}/{expected} marked",
+      "absent": "{count} absent",
+      "upcoming": "Upcoming",
+      "notMarked": "Not marked"
+    },
+    "list": {
+      "dayTitle": "Lessons on {date}",
+      "unmarkedTitle": "Not marked in the last 7 days",
+      "viewLabel": "Show",
+      "viewDay": "One day",
+      "viewUnmarked": "Not marked",
+      "branch": "Branch",
+      "allBranches": "All branches",
+      "previousDay": "Previous day",
+      "nextDay": "Next day",
+      "today": "Today",
+      "time": "Time",
+      "date": "Date",
+      "group": "Group",
+      "teacher": "Teacher",
+      "room": "Room",
+      "state": "Attendance",
+      "open": "Open attendance of {name}",
+      "noRoom": "No room",
+      "emptyTitle": "No lessons",
+      "emptyHint": "There are no lessons on this day in your branches.",
+      "unmarkedEmptyTitle": "Everything is marked",
+      "unmarkedEmptyHint": "Every lesson of the last 7 days has attendance."
     }
   }
 }

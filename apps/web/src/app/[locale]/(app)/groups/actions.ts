@@ -303,12 +303,19 @@ async function branchTimezone(table: "lessons" | "groups", id: string): Promise<
 
 export async function moveLessonAction(_prev: ActionState, form: FormData): Promise<ActionState> {
   const parsed = z
-    .object({ lessonId: uuidField, date: dateField, time: timeField, roomId: optionalUuid })
+    .object({
+      lessonId: uuidField,
+      date: dateField,
+      time: timeField,
+      roomId: optionalUuid,
+      notify: z.boolean(),
+    })
     .safeParse({
       lessonId: str(form, "lessonId"),
       date: str(form, "date"),
       time: str(form, "time"),
       roomId: str(form, "roomId"),
+      notify: form.get("notify") === "on",
     });
   if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
   const tz = await branchTimezone("lessons", parsed.data.lessonId);
@@ -318,6 +325,7 @@ export async function moveLessonAction(_prev: ActionState, form: FormData): Prom
   const { error } = await supabase.rpc("move_lesson", {
     p_lesson_id: parsed.data.lessonId,
     p_starts_at: toInstant(parsed.data.date, parsed.data.time, tz).toISOString(),
+    p_notify: parsed.data.notify,
     ...(parsed.data.roomId ? { p_room_id: parsed.data.roomId } : {}),
   });
   if (error) return fail(dbErrorKey(error), form);
@@ -328,11 +336,17 @@ export async function moveLessonAction(_prev: ActionState, form: FormData): Prom
 
 export async function cancelLessonAction(_prev: ActionState, form: FormData): Promise<ActionState> {
   const parsed = z
-    .object({ lessonId: uuidField, reason: requiredText(200), centerFault: z.boolean() })
+    .object({
+      lessonId: uuidField,
+      reason: requiredText(200),
+      centerFault: z.boolean(),
+      notify: z.boolean(),
+    })
     .safeParse({
       lessonId: str(form, "lessonId"),
       reason: str(form, "reason"),
       centerFault: form.get("centerFault") === "on",
+      notify: form.get("notify") === "on",
     });
   if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
 
@@ -341,6 +355,7 @@ export async function cancelLessonAction(_prev: ActionState, form: FormData): Pr
     p_lesson_id: parsed.data.lessonId,
     p_reason: parsed.data.reason,
     p_center_fault: parsed.data.centerFault,
+    p_notify: parsed.data.notify,
   });
   if (error) return fail(dbErrorKey(error), form);
 
@@ -358,6 +373,7 @@ export async function makeupLessonAction(_prev: ActionState, form: FormData): Pr
       durationMinutes: intField(15, 480),
       roomId: optionalUuid,
       billable: z.boolean(),
+      notify: z.boolean(),
     })
     .safeParse({
       groupId: str(form, "groupId"),
@@ -367,6 +383,7 @@ export async function makeupLessonAction(_prev: ActionState, form: FormData): Pr
       durationMinutes: str(form, "durationMinutes"),
       roomId: str(form, "roomId"),
       billable: form.get("billable") === "on",
+      notify: form.get("notify") === "on",
     });
   if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
   const tz = await branchTimezone("groups", parsed.data.groupId);
@@ -378,6 +395,7 @@ export async function makeupLessonAction(_prev: ActionState, form: FormData): Pr
     p_starts_at: toInstant(parsed.data.date, parsed.data.time, tz).toISOString(),
     p_duration_minutes: parsed.data.durationMinutes,
     p_is_billable: parsed.data.billable,
+    p_notify: parsed.data.notify,
     ...(parsed.data.forLessonId ? { p_for_lesson_id: parsed.data.forLessonId } : {}),
     ...(parsed.data.roomId ? { p_room_id: parsed.data.roomId } : {}),
   });
@@ -404,12 +422,16 @@ export async function substituteAction(_prev: ActionState, form: FormData): Prom
   return { ok: true };
 }
 
-/** Drag-and-drop move from the timetable: date + minutes after midnight (branch time). */
+/**
+ * Drag-and-drop move from the timetable: date + minutes after midnight (branch time). A new date or time
+ * asks "notify students?" first (13); a room-only drop notifies nobody anyway.
+ */
 export async function dropLessonAction(
   lessonId: string,
   date: string,
   minutes: number,
   roomId: string | null,
+  notify: boolean,
 ): Promise<{ ok: true } | { ok: false; error: string }> {
   const parsed = z
     .object({
@@ -428,6 +450,7 @@ export async function dropLessonAction(
   const { error } = await supabase.rpc("move_lesson", {
     p_lesson_id: parsed.data.lessonId,
     p_starts_at: toInstant(parsed.data.date, time, tz).toISOString(),
+    p_notify: notify === true,
     ...(parsed.data.roomId ? { p_room_id: parsed.data.roomId } : {}),
   });
   if (error) return { ok: false, error: dbErrorKey(error) };

@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { toast } from "sonner";
 import {
+  CheckboxField,
   ConfirmDialog,
   Field,
   FormDialog,
@@ -74,6 +75,7 @@ export function AddHolidayDialog({
             defaultValue={options[0]?.value}
             options={options}
           />
+          <CheckboxField name="notify" value="on" label={t("notify")} />
         </>
       )}
     </FormDialog>

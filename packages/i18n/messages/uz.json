@@ -81,7 +81,8 @@
     "schedule": "Jadval",
     "courses": "Kurslar",
     "holidays": "Bayramlar",
-    "students": "Oʻquvchilar"
+    "students": "Oʻquvchilar",
+    "attendance": "Davomat"
   },
   "errors": {
     "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
@@ -475,7 +476,17 @@
       "defaultLocale": "Asosiy til",
       "timezone": "Standart vaqt mintaqasi",
       "timezoneHint": "Yangi filiallar uchun ishlatiladi. Har bir filialning oʻz vaqt mintaqasi bor.",
-      "breadcrumb": "Sozlamalar"
+      "breadcrumb": "Sozlamalar",
+      "attendanceTitle": "Davomat va xabarnomalar",
+      "attendanceHint": "Oʻqituvchilar davomatni qachon belgilashi va ota-onalar qanday ogohlantirilishi.",
+      "editHours": "Oʻqituvchilar tuzatishi mumkin (darsdan keyin necha soat)",
+      "editHoursHint": "Undan keyin belgilarni faqat davomat huquqi bor administratorlar oʻzgartiradi.",
+      "alertDelay": "Kelmaganlik xabarini kechiktirish (daqiqa)",
+      "alertDelayHint": "Shu vaqt ichida tuzatilsa, hech narsa yuborilmaydi.",
+      "lateAlerts": "Kechikish haqida ham ota-onalarga xabar berish",
+      "quietStart": "Tinch soatlar boshlanishi",
+      "quietEnd": "Tinch soatlar tugashi",
+      "quietHint": "Tinch soatlarga toʻgʻri kelgan xabarlar ular tugaguncha kutadi. Ikkala maydonda bir xil vaqt — tinch soatlar yoʻq."
     },
     "branches": {
       "title": "Filiallar va xonalar",
@@ -667,7 +678,8 @@
       "name": "Nomi",
       "namePlaceholder": "masalan, Mustaqillik kuni",
       "branch": "Filial"
-    }
+    },
+    "notify": "Bekor qilingan darslar haqida oʻquvchi va ota-onalarga xabar berish"
   },
   "groups": {
     "title": "Guruhlar",
@@ -800,7 +812,11 @@
     "past": "Oʻtgan",
     "noUpcoming": "Kelgusi darslar yoʻq",
     "noPast": "Hali oʻtgan darslar yoʻq",
-    "openGroup": "Guruhni ochish"
+    "openGroup": "Guruhni ochish",
+    "notify": "Oʻquvchi va ota-onalarga xabar berish",
+    "notifyMoveHint": "Faqat sana yoki vaqt oʻzgarsa.",
+    "dropTitle": "Dars koʻchirilsinmi?",
+    "dropHint": "{group} darsi {date} kuni soat {time} ga koʻchiriladi. Haftalik jadval oʻzgarmaydi."
   },
   "schedule": {
     "title": "Jadval",
@@ -1162,6 +1178,83 @@
       "studentAmbiguous": "Bir nechta oʻquvchi mos keladi. ID yoki telefondan foydalaning.",
       "groupUnknown": "Bunday nomli guruh yoʻq.",
       "groupAmbiguous": "Bunday nomli guruh bir nechta filialda bor. Filialni koʻrsating."
+    }
+  },
+  "attendance": {
+    "title": "Davomat",
+    "status": {
+      "present": "Keldi",
+      "late": "Kechikdi",
+      "absent": "Kelmadi",
+      "excused": "Sababli"
+    },
+    "statusShort": {
+      "present": "Keldi",
+      "late": "Kechikdi",
+      "absent": "Kelmadi",
+      "excused": "Sababli"
+    },
+    "legend": "{name} davomati",
+    "allPresent": "Hammasi keldi",
+    "restPresent": "Qolganlari keldi",
+    "topic": "Mavzu",
+    "topicPlaceholder": "Darsda nima oʻtildi?",
+    "lateMinutes": "Necha daqiqa kechikdi",
+    "minutesShort": "daq",
+    "note": "Izoh",
+    "addNote": "{name} uchun izoh",
+    "notePlaceholder": "Ixtiyoriy",
+    "notExpected": "Bu kuni guruhda emas",
+    "counter": "{total} tadan {marked} tasi belgilandi",
+    "save": "Saqlash",
+    "saving": "Saqlanmoqda…",
+    "saved": "Saqlandi",
+    "savedToast": "{alerts, plural, =0 {Davomat saqlandi} other {Davomat saqlandi · # ta kelmaganlik xabari navbatda}}",
+    "retrying": "Hali saqlanmadi, qayta urinilmoqda ({total} tadan {attempt})…",
+    "offline": "Saqlanmadi. Internetni tekshirib, qayta urinib koʻring.",
+    "retry": "Qayta urinish",
+    "draftRestored": "Bu qurilmadagi saqlanmagan belgilar tiklandi.",
+    "unsaved": "Saqlanmagan oʻzgarishlar bor",
+    "mode": {
+      "tooEarly": "Davomatni soat {time} dan belgilash mumkin.",
+      "closed": "Bu davomatni tuzatish muddati oʻtgan. Administratordan soʻrang.",
+      "none": "Davomatni koʻrishingiz mumkin, lekin oʻzgartira olmaysiz.",
+      "cancelled": "Bu dars bekor qilingan.",
+      "adminLate": "Oʻqituvchilar uchun tahrirlash muddati tugagan. Oʻzgarishlaringiz jurnalga yoziladi."
+    },
+    "substitute": "Oʻrinbosar darsi",
+    "emptyTitle": "Oʻquvchilar yoʻq",
+    "emptyHint": "Dars kunida guruhda hech kim yoʻq.",
+    "chip": {
+      "toMark": "Belgilash kerak",
+      "marked": "{marked}/{expected} belgilandi",
+      "absent": "{count} ta kelmadi",
+      "upcoming": "Kutilmoqda",
+      "notMarked": "Belgilanmagan"
+    },
+    "list": {
+      "dayTitle": "{date} darslari",
+      "unmarkedTitle": "Oxirgi 7 kunda belgilanmaganlar",
+      "viewLabel": "Koʻrsatish",
+      "viewDay": "Bir kun",
+      "viewUnmarked": "Belgilanmaganlar",
+      "branch": "Filial",
+      "allBranches": "Barcha filiallar",
+      "previousDay": "Oldingi kun",
+      "nextDay": "Keyingi kun",
+      "today": "Bugun",
+      "time": "Vaqt",
+      "date": "Sana",
+      "group": "Guruh",
+      "teacher": "Oʻqituvchi",
+      "room": "Xona",
+      "state": "Davomat",
+      "open": "{name} davomatini ochish",
+      "noRoom": "Xonasiz",
+      "emptyTitle": "Darslar yoʻq",
+      "emptyHint": "Bu kuni filiallaringizda darslar yoʻq.",
+      "unmarkedEmptyTitle": "Hammasi belgilangan",
+      "unmarkedEmptyHint": "Oxirgi 7 kundagi barcha darslarda davomat bor."
     }
   }
 }

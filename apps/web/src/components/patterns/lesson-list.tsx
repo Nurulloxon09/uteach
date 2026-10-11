@@ -48,8 +48,10 @@ export function LessonList({ items, testId }: { items: LessonListItem[]; testId?
               {item.subtitle ? (
                 <p className="truncate text-sm text-muted-foreground">{item.subtitle}</p>
               ) : null}
+              {item.status ? (
+                <div className="mt-1.5 flex flex-wrap gap-1.5">{item.status}</div>
+              ) : null}
             </div>
-            {item.status}
             {item.actions}
             {item.href ? <ChevronRight className="size-5 shrink-0 text-muted-foreground" /> : null}
           </div>
