@@ -7,14 +7,14 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M0.5 · UI foundation**: ◐ built and all checks pass (branch `m0.5-ui`); waiting for the owner to approve the
-side-by-side screenshots (`docs/design/screenshots/compare/`). M0 is done: PR #1 merged into `main` on 2026-10-11.
+**M1 · Academic core**: ☐ not started (plan first). M0.5 is done: screenshots approved by the owner and PR #2
+merged into `main` on 2026-10-11 once CI was green.
 
 ## Milestones
 | # | Milestone | Status | Finished |
 |---|---|---|---|
 | M0 | Foundation | ☑ done | 2026-10-11 |
-| M0.5 | UI foundation | ◐ built, awaiting screenshot approval | |
+| M0.5 | UI foundation | ☑ done | 2026-10-11 |
 | M1 | Academic core | ☐ | |
 | M2 | Attendance | ☐ | |
 | M3 | Billing | ☐ | |
@@ -60,13 +60,16 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Tokens equal 05-ui §2; no raw colors in `apps/web/src` | ☑ | `globals.css`; `uteach/no-raw-colors` lint rule (unit tested, verified it fires; runs in CI via `pnpm lint`) |
 | Plus Jakarta Sans + Manrope for Cyrillic; `ru` pages consistent | ☑ | `staff-ru-*.png`, `/dev/ui` typography block (uz/ru/en specimens) |
 | `/dev/ui` shows every pattern, uz/ru/en, 404 in production | ☑ | `dev-ui-*.png`; e2e "/dev/ui is available in development and 404 in production" (404 branch runs in CI on `pnpm start`); `next build` prerenders it as the 404 page |
-| Side-by-side screenshots 1440/390 saved; owner approves | ◐ | `docs/design/screenshots/compare/` (9 pairs); **owner approval pending** |
+| Side-by-side screenshots 1440/390 saved; owner approves | ☑ | `docs/design/screenshots/compare/` (9 pairs); approved by the owner 2026-10-11 |
 | All M0 screens on `AppShell` + patterns; Staff is a `ListPage`; invite is a `FormDialog` | ☑ | Auth, onboarding, invite, home, today, staff, center, branches, branch detail + rooms |
 | Sidebar shows only allowed items (teacher: Today only) | ☑ | e2e: owner sees Home/Staff/Settings; teacher drawer has exactly one link (Today) |
 | Keyboard: dialog traps focus, Esc closes; drawer opens/closes with keyboard | ☑ | e2e: 12 Tabs stay in the invite dialog, Esc closes and focus returns; drawer Esc closes, focus returns to the menu button |
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-11 · M0.5 done
+- Owner approved the side-by-side screenshots; PR #2 set to merge when CI is green.
 
 ### 2026-10-11 · M0.5 built
 - Tokens, radius scale, shadows and fonts from the reference in `globals.css`; shadcn primitives (button, input,
