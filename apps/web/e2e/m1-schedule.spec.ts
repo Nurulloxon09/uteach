@@ -104,6 +104,8 @@ test.describe.serial("M1 · courses, groups and the timetable", () => {
       .click();
     await expect(page.getByTestId("conflict-item")).toHaveCount(7);
     await page.keyboard.press("Escape");
+    // Wait for the panel (and its overlay) to close before dragging: the overlay would swallow the drag.
+    await expect(page.getByRole("dialog")).toBeHidden();
 
     // Next week's timetable: Mon, Wed, Fri.
     const blocks = page.getByTestId("timetable-lesson");
