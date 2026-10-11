@@ -15,6 +15,11 @@ Tables: `group_schedule_rules`, `lessons`, `holidays`, `schedule_conflicts`.
 - **Rule edits** (time, weekday, room, teacher): future lessons from that rule with status `scheduled`, **no attendance**, and `is_manually_edited = false` are deleted and regenerated. Past lessons and lessons with attendance are never touched.
 - The pure function `expandRules(rules, holidays, range, tz)` lives in `packages/core/schedule` and is unit tested, including across DST (Uzbekistan has none, but the code must not assume that).
 
+> PROPOSED (M1): the SQL generator is built on `private.expand_rules()`, a pure SQL function with the same inputs.
+> A parity test runs both on the same fixtures (`packages/core/src/schedule/fixtures.json`) in PGlite. Lessons are
+> never generated in the past. A rule with no teacher (neither its own nor the group's) generates nothing; saving
+> such a rule is refused (`rule_needs_teacher`). Until M2, "no attendance" means `status = 'scheduled'`.
+
 ## Conflict detection
 
 > PROPOSED: UI pre-check and the conflicts inbox with its resolutions. DB exclusion constraints on room & teacher are from the canvas.
@@ -30,6 +35,10 @@ Tables: `group_schedule_rules`, `lessons`, `holidays`, `schedule_conflicts`.
 - Views: **week** and **day**; by **room** (columns = rooms) or by **teacher** (columns = teachers). Filter by branch.
 - **Drag to reschedule** one lesson: updates `starts_at/ends_at` and sets `is_manually_edited = true`. Changing the date or time asks "notify students?" (default yes). This one-off move doesn't change the rule.
 - Teacher's own view (mobile): today's and the week's lessons as a list, and tapping a lesson opens the attendance sheet.
+
+> PROPOSED (M1): the "notify students?" prompt arrives in M2 with the outbox. Until the attendance sheet exists
+> (M2), tapping a lesson in Today opens its group. Drag uses `@dnd-kit` (keyboard support); every lesson also has a
+> "Move" dialog, so moving never depends on a mouse. Below `md` the timetable is a day list, never a sideways grid.
 
 ## Cancel / makeup / substitute
 

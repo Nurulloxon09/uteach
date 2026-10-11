@@ -7,6 +7,8 @@
     ".": "./src/index.ts",
     "./money": "./src/money.ts",
     "./phone": "./src/phone.ts",
+    "./schedule": "./src/schedule.ts",
+    "./schedule.fixtures.json": "./src/schedule.fixtures.json",
     "./time": "./src/time.ts"
   },
   "scripts": {

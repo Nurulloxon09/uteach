@@ -1,0 +1,221 @@
+[
+  {
+    "name": "Mon/Wed/Fri 18:00 for 8 weeks in Tashkent",
+    "timeZone": "Asia/Tashkent",
+    "range": { "from": "2026-10-12", "to": "2026-12-06" },
+    "holidays": [],
+    "rules": [
+      {
+        "id": "00000000-0000-4000-8000-000000000001",
+        "weekday": 1,
+        "startTime": "18:00",
+        "durationMinutes": 90,
+        "validFrom": "2026-09-01",
+        "validTo": null
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000003",
+        "weekday": 3,
+        "startTime": "18:00",
+        "durationMinutes": 90,
+        "validFrom": "2026-09-01",
+        "validTo": null
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000005",
+        "weekday": 5,
+        "startTime": "18:00",
+        "durationMinutes": 90,
+        "validFrom": "2026-09-01",
+        "validTo": null
+      }
+    ]
+  },
+  {
+    "name": "a rule's validity window limits the days",
+    "timeZone": "Asia/Tashkent",
+    "range": { "from": "2026-10-12", "to": "2026-10-31" },
+    "holidays": [],
+    "rules": [
+      {
+        "id": "00000000-0000-4000-8000-000000000010",
+        "weekday": 3,
+        "startTime": "09:30",
+        "durationMinutes": 60,
+        "validFrom": "2026-10-14",
+        "validTo": "2026-10-23"
+      }
+    ],
+    "expected": [
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000010",
+        "localDate": "2026-10-14",
+        "startsAt": "2026-10-14T04:30:00.000Z",
+        "endsAt": "2026-10-14T05:30:00.000Z"
+      },
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000010",
+        "localDate": "2026-10-21",
+        "startsAt": "2026-10-21T04:30:00.000Z",
+        "endsAt": "2026-10-21T05:30:00.000Z"
+      }
+    ]
+  },
+  {
+    "name": "holidays are skipped",
+    "timeZone": "Asia/Tashkent",
+    "range": { "from": "2026-10-12", "to": "2026-10-26" },
+    "holidays": ["2026-10-19"],
+    "rules": [
+      {
+        "id": "00000000-0000-4000-8000-000000000020",
+        "weekday": 1,
+        "startTime": "14:00",
+        "durationMinutes": 80,
+        "validFrom": "2026-01-01",
+        "validTo": null
+      }
+    ],
+    "expected": [
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000020",
+        "localDate": "2026-10-12",
+        "startsAt": "2026-10-12T09:00:00.000Z",
+        "endsAt": "2026-10-12T10:20:00.000Z"
+      },
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000020",
+        "localDate": "2026-10-26",
+        "startsAt": "2026-10-26T09:00:00.000Z",
+        "endsAt": "2026-10-26T10:20:00.000Z"
+      }
+    ]
+  },
+  {
+    "name": "wall-clock time stays fixed across a DST change (New York, autumn)",
+    "timeZone": "America/New_York",
+    "range": { "from": "2026-10-27", "to": "2026-11-10" },
+    "holidays": [],
+    "rules": [
+      {
+        "id": "00000000-0000-4000-8000-000000000030",
+        "weekday": 2,
+        "startTime": "18:00",
+        "durationMinutes": 60,
+        "validFrom": "2026-01-01",
+        "validTo": null
+      }
+    ],
+    "expected": [
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000030",
+        "localDate": "2026-10-27",
+        "startsAt": "2026-10-27T22:00:00.000Z",
+        "endsAt": "2026-10-27T23:00:00.000Z"
+      },
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000030",
+        "localDate": "2026-11-03",
+        "startsAt": "2026-11-03T23:00:00.000Z",
+        "endsAt": "2026-11-04T00:00:00.000Z"
+      },
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000030",
+        "localDate": "2026-11-10",
+        "startsAt": "2026-11-10T23:00:00.000Z",
+        "endsAt": "2026-11-11T00:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "name": "a time skipped by spring-forward moves to the first valid instant (New York)",
+    "timeZone": "America/New_York",
+    "range": { "from": "2026-03-01", "to": "2026-03-15" },
+    "holidays": [],
+    "rules": [
+      {
+        "id": "00000000-0000-4000-8000-000000000040",
+        "weekday": 7,
+        "startTime": "02:30",
+        "durationMinutes": 45,
+        "validFrom": "2026-01-01",
+        "validTo": null
+      }
+    ],
+    "expected": [
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000040",
+        "localDate": "2026-03-01",
+        "startsAt": "2026-03-01T07:30:00.000Z",
+        "endsAt": "2026-03-01T08:15:00.000Z"
+      },
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000040",
+        "localDate": "2026-03-08",
+        "startsAt": "2026-03-08T07:30:00.000Z",
+        "endsAt": "2026-03-08T08:15:00.000Z"
+      },
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000040",
+        "localDate": "2026-03-15",
+        "startsAt": "2026-03-15T06:30:00.000Z",
+        "endsAt": "2026-03-15T07:15:00.000Z"
+      }
+    ]
+  },
+  {
+    "name": "two rules on the same day come out in time order",
+    "timeZone": "Asia/Tashkent",
+    "range": { "from": "2026-10-12", "to": "2026-10-12" },
+    "holidays": [],
+    "rules": [
+      {
+        "id": "00000000-0000-4000-8000-000000000051",
+        "weekday": 1,
+        "startTime": "16:00",
+        "durationMinutes": 60,
+        "validFrom": "2026-01-01",
+        "validTo": null
+      },
+      {
+        "id": "00000000-0000-4000-8000-000000000052",
+        "weekday": 1,
+        "startTime": "09:00",
+        "durationMinutes": 60,
+        "validFrom": "2026-01-01",
+        "validTo": null
+      }
+    ],
+    "expected": [
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000052",
+        "localDate": "2026-10-12",
+        "startsAt": "2026-10-12T04:00:00.000Z",
+        "endsAt": "2026-10-12T05:00:00.000Z"
+      },
+      {
+        "ruleId": "00000000-0000-4000-8000-000000000051",
+        "localDate": "2026-10-12",
+        "startsAt": "2026-10-12T11:00:00.000Z",
+        "endsAt": "2026-10-12T12:00:00.000Z"
+      }
+    ]
+  },
+  {
+    "name": "a rule that ended before the range generates nothing",
+    "timeZone": "Asia/Tashkent",
+    "range": { "from": "2026-10-12", "to": "2026-12-06" },
+    "holidays": [],
+    "rules": [
+      {
+        "id": "00000000-0000-4000-8000-000000000060",
+        "weekday": 4,
+        "startTime": "10:00",
+        "durationMinutes": 60,
+        "validFrom": "2026-01-01",
+        "validTo": "2026-10-11"
+      }
+    ],
+    "expected": []
+  }
+]
