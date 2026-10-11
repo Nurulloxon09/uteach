@@ -166,11 +166,16 @@ RLS: select for `authenticated`; writes by service role only.
 | quiet_hours_end | time not null default '08:00' | |
 | attendance_edit_hours | smallint not null default 48 | teacher edit window |
 | absence_alert_delay_min | smallint not null default 10 | |
+| late_alert_enabled | boolean not null default false | PROPOSED (M2): late marks also alert (14) |
 | logo_path | text | storage `center-assets/{center_id}/…` |
 | settings | jsonb not null default '{}' | non-critical UI settings only; anything logic depends on gets a real column |
 | archived_at | timestamptz | |
 
 RLS: select **MBR**; update **OWN** (W) except `status`, `plan_id`, `trial_ends_at`, `past_due_since` (service role only). Insert via the `create_center()` RPC only (creates center + owner membership + first branch atomically).
+
+> PROPOSED (M2 plan): M2 adds `attendance_edit_hours` (1–720), `absence_alert_delay_min` (0–240),
+> `late_alert_enabled`, and `quiet_hours_start` / `quiet_hours_end` (moved here from M4, because enqueue applies
+> quiet hours). Equal start and end mean no quiet hours.
 
 ### `branches` 🟩 [M0]
 
@@ -720,6 +725,19 @@ RLS:
 - update: the lesson's teacher **only while `now() < lesson.ends_at + centers.attendance_edit_hours`**; admins with PERM(attendance) at any time. Admin edits after the window write `audit_log`.
 - delete: none (change status instead).
 
+> PROPOSED (M2 plan):
+> - Trial guests come in **M5**: until then `student_id` is `not null` and there is no `lead_trial_id`. M5 adds the
+>   column (fk `lead_trials`), drops the `not null`, and adds the `num_nonnulls` check and `unique (lesson_id, lead_trial_id)`.
+> - `group_id` is denormalised from the lesson (composite fk `(center_id, group_id, lesson_id)` →
+>   `lessons (center_id, group_id, id)`), so RLS and the month matrix need no join. `enrollment_id` is a composite
+>   fk to `enrollments`. `late_minutes` is null unless `status = 'late'` (then 1–240).
+> - **No direct insert/update grants.** All writes go through `save_attendance(lesson_id, rows jsonb, topic)`
+>   (security definer, one transaction): it checks the window rules above, upserts on `(lesson_id, student_id)`,
+>   sets the lesson `held` on the first save, saves the topic, writes `audit_log` for admin edits after the window,
+>   and enqueues or cancels alerts. Reads for teachers go through `attendance_sheet(lesson_id)` and
+>   `attendance_matrix(group_id, from, to)`; `lesson_attendance_stats(lesson_ids)` gives per-lesson counts for lists.
+>   Select policy: ADM(branch of group), or TCH(group), or the lesson's teacher.
+
 ---
 
 ## Billing
@@ -988,7 +1006,7 @@ RLS: as exam_results.
 
 ## Notifications
 
-### `notification_templates` 🟩 [M4]
+### `notification_templates` 🟩 [M2 table + seed, M4 editing]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
 
@@ -1034,6 +1052,14 @@ RLS: select MBR + system rows; write PERM(settings) for own rows.
 
 Index: (status, send_after) where status = 'pending'.
 RLS: select ADM (history screens); insert only through `enqueue_notification()` (security definer); update service role only.
+
+> PROPOSED (M2 plan): `broadcast_id` is added with `broadcasts` in M4. Dedupe keys are `{base}:{recipient_id}`
+> (recipient = guardian or student id). `enqueue_notification` revives a `cancelled` row with the same key
+> (`on conflict … do update … where status = 'cancelled'`); other rows are left alone. A partial index on
+> `dedupe_key text_pattern_ops where status = 'pending'` lets RPCs cancel a lesson's pending rows by key prefix.
+> Select is **OWN only** in M2: rows have no branch and the payload holds names, so admin access (scoped by the
+> recipient student's branch) comes with M4's history screen.
+> Templates: select MBR for the center's rows and everyone signed in for system rows; no write grants until M4.
 
 ### `broadcasts` 🟩 [M4]
 
