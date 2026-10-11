@@ -6,15 +6,25 @@ import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import { ConfirmDialog, RowActions, type RowAction } from "@/components/patterns";
 import { Button } from "@/components/ui/button";
+import { archiveGroupAction } from "../groups/actions";
 import { archiveBranchAction, archiveRoomAction } from "./actions";
+import { archiveCourseAction, archiveLevelAction } from "./courses/actions";
 
-type Kind = "branch" | "room";
+type Kind = "branch" | "room" | "course" | "level" | "group";
+
+const ACTIONS = {
+  branch: archiveBranchAction,
+  room: archiveRoomAction,
+  course: archiveCourseAction,
+  level: archiveLevelAction,
+  group: archiveGroupAction,
+} as const;
 
 function useArchive(kind: Kind, id: string, archived: boolean) {
   const tc = useTranslations("common");
   const [confirmOpen, setConfirmOpen] = useState(false);
   const [pending, startTransition] = useTransition();
-  const action = kind === "branch" ? archiveBranchAction : archiveRoomAction;
+  const action = ACTIONS[kind];
 
   const run = () => {
     if (!archived) return setConfirmOpen(true);
@@ -41,17 +51,16 @@ function ArchiveConfirm({
   onOpenChange: (open: boolean) => void;
 }) {
   const tc = useTranslations("common");
-  const tb = useTranslations("settings.branches");
-  const tr = useTranslations("settings.rooms");
+  const t = useTranslations("archive");
   return (
     <ConfirmDialog
       open={open}
       onOpenChange={onOpenChange}
-      title={kind === "branch" ? tb("archiveTitle") : tr("archiveTitle")}
+      title={t(kind)}
       description={tc("archiveConfirm")}
       confirmLabel={tc("archive")}
       tone="destructive"
-      action={kind === "branch" ? archiveBranchAction : archiveRoomAction}
+      action={ACTIONS[kind]}
       fields={{ id, archived: "true" }}
       successToast={tc("archivedToast")}
     />

@@ -86,3 +86,55 @@ export async function acceptInvite(browser: Browser, inviteUrl: string, teacher:
   await expect(page).toHaveURL(/\/en\/today$/);
   await context.close();
 }
+
+export async function addRoom(page: Page, branch: string, room: string) {
+  await page.goto("/en/settings/branches");
+  await settled(page);
+  await page.getByRole("link", { name: branch }).first().click();
+  await page.getByRole("tab", { name: en.settings.branches.tabRooms }).click();
+  await page.getByRole("button", { name: en.settings.rooms.add }).click();
+  const dialog = page.getByTestId("room-dialog");
+  await dialog.getByLabel(en.settings.rooms.fields.name).fill(room);
+  await dialog.getByRole("button", { name: en.settings.rooms.add }).click();
+  await expect(dialog).toBeHidden();
+}
+
+/** Opens "New group" and fills it; `times` = how many weekly times to add (Mon, Wed, Fri…). */
+export async function createGroup(
+  page: Page,
+  opts: {
+    room: string;
+    teacher: string;
+    times: number;
+    firstStart?: string;
+    name?: string;
+    days?: string[];
+    course?: string;
+  },
+) {
+  await page.goto("/en/groups");
+  await settled(page);
+  await page.getByRole("button", { name: en.groups.addButton }).click();
+  const dialog = page.getByTestId("group-dialog");
+  if (opts.course) {
+    await dialog.getByLabel(en.groups.fields.course).click();
+    await page.getByRole("option", { name: opts.course, exact: true }).click();
+  }
+  await dialog.getByLabel(en.groups.fields.teacher).click();
+  await page.getByRole("option", { name: opts.teacher }).click();
+  await dialog.getByLabel(en.groups.fields.room).click();
+  await page.getByRole("option", { name: opts.room }).click();
+  for (let i = 0; i < opts.times; i++)
+    await dialog.getByRole("button", { name: en.slots.add }).click();
+  for (const [i, day] of (opts.days ?? []).entries()) {
+    await dialog.getByLabel(en.slots.weekday).nth(i).click();
+    await page.getByRole("option", { name: day, exact: true }).click();
+  }
+  if (opts.firstStart) {
+    for (let i = 0; i < opts.times; i++)
+      await dialog.getByLabel(en.slots.start).nth(i).fill(opts.firstStart);
+  }
+  if (opts.name) await dialog.getByLabel(en.groups.fields.name).fill(opts.name);
+  await dialog.getByRole("button", { name: en.groups.addSubmit }).click();
+  await expect(dialog).toBeHidden();
+}

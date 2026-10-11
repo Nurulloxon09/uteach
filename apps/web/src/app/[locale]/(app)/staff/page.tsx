@@ -24,6 +24,7 @@ import {
 } from "@/components/patterns";
 import { redirect } from "@/i18n/navigation";
 import { requireAdminContext } from "@/lib/center";
+import { isPaletteKey } from "@/lib/palette";
 import { ilikePattern } from "@/lib/search";
 import { createClient } from "@/lib/supabase/server";
 import { InviteDialog } from "./invite-dialog";
@@ -51,6 +52,7 @@ type Member = {
   branch_ids: string[];
   permissions: string[];
   invited_phone: string | null;
+  color: string | null;
 };
 
 /** Staff: a ListPage (05-ui §5) with search, role/status filters, pagination and the invite dialog. */
@@ -70,9 +72,12 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
 
   let query = supabase
     .from("memberships")
-    .select("id, profile_id, display_name, role, status, branch_ids, permissions, invited_phone", {
-      count: "exact",
-    })
+    .select(
+      "id, profile_id, display_name, role, status, branch_ids, permissions, invited_phone, color",
+      {
+        count: "exact",
+      },
+    )
     .eq("center_id", ctx.center.id);
   const role = ROLES.find((r) => r === list.filters.role);
   const status = STATUSES.find((s) => s === list.filters.status);
@@ -122,7 +127,24 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
   );
   const actionsOf = (m: Member) =>
     canManage(m) ? (
-      <MemberActions membershipId={m.id} name={m.display_name} status={m.status} />
+      <MemberActions
+        membershipId={m.id}
+        name={m.display_name}
+        status={m.status}
+        edit={{
+          member: {
+            id: m.id,
+            name: m.display_name,
+            role: m.role,
+            branchIds: m.branch_ids,
+            permissions: m.permissions,
+            color: isPaletteKey(m.color) ? m.color : null,
+          },
+          branches: scopeBranches,
+          flags: [...PERMISSION_FLAGS],
+          canEditFlags: isOwner,
+        }}
+      />
     ) : null;
 
   return (

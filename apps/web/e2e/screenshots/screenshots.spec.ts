@@ -4,6 +4,7 @@ import { expect, test, type Browser, type Page } from "@playwright/test";
 import {
   acceptInvite,
   createCenter,
+  createGroup,
   en,
   inviteTeacher,
   logIn,
@@ -87,6 +88,44 @@ test("seed a demo center", async ({ page, browser }) => {
   const url = await inviteTeacher(page, TEACHER, "Chilonzor");
   await acceptInvite(browser, url, TEACHER);
   for (const person of INVITED) await inviteTeacher(page, person, "Yunusobod");
+
+  // Courses, levels and two groups for the M1 screens.
+  for (const [course, levels] of [
+    ["IELTS", ["5.5", "6.0", "6.5"]],
+    ["General English", ["Elementary", "Pre-Intermediate", "Intermediate"]],
+  ] as const) {
+    await page.goto("/en/settings/courses");
+    await settled(page);
+    await page.getByRole("button", { name: en.courses.addButton }).click();
+    const dialog = page.getByTestId("course-dialog");
+    await dialog.getByLabel(en.courses.fields.name).fill(course);
+    await dialog.getByLabel(en.courses.fields.price).fill(course === "IELTS" ? "750000" : "600000");
+    await dialog.getByRole("button", { name: en.courses.addSubmit }).click();
+    await expect(dialog).toBeHidden();
+    await page.getByRole("link", { name: en.common.rowOpen.replace("{name}", course) }).click();
+    for (const level of levels) {
+      await page.getByRole("button", { name: en.courses.levels.add }).click();
+      const levelDialog = page.getByTestId("level-dialog");
+      await levelDialog.getByLabel(en.courses.levels.name).fill(level);
+      await levelDialog.getByRole("button", { name: en.courses.levels.add }).click();
+      await expect(levelDialog).toBeHidden();
+    }
+  }
+  await createGroup(page, { course: "IELTS", room: "Room 101", teacher: TEACHER.name, times: 3 });
+  await createGroup(page, {
+    room: "Room 102",
+    teacher: OWNER.name,
+    times: 2,
+    days: ["Tuesday", "Thursday"],
+    firstStart: "10:00",
+  });
+  await createGroup(page, {
+    room: "IELTS lab",
+    teacher: OWNER.name,
+    times: 2,
+    days: ["Monday", "Wednesday"],
+    firstStart: "15:00",
+  });
 });
 
 test("capture uteach", async ({ browser }) => {
@@ -114,6 +153,38 @@ test("capture uteach", async ({ browser }) => {
 
     await page.goto("/en/dev/ui");
     await shoot(page, `dev-ui-${w}`);
+
+    await page.goto("/en/settings/courses");
+    await shoot(page, `courses-${w}`);
+    await page.goto("/en/groups");
+    await shoot(page, `groups-${w}`);
+    await page.getByRole("button", { name: en.groups.addButton }).click();
+    await expect(page.getByTestId("group-dialog")).toBeVisible();
+    await shoot(page, `group-dialog-${w}`, false);
+    await page.keyboard.press("Escape");
+    await page
+      .getByRole("link", { name: /^Open IELTS/ })
+      .first()
+      .click();
+    await expect(page).toHaveURL(/\/groups\/[0-9a-f-]{36}$/);
+    await shoot(page, `group-detail-${w}`);
+    await page.getByRole("tab", { name: en.groups.tabSchedule }).click();
+    await shoot(page, `group-schedule-${w}`);
+
+    const nextMonday = (() => {
+      const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tashkent" }).format(
+        new Date(),
+      );
+      const d = new Date(`${today}T12:00:00Z`);
+      d.setUTCDate(d.getUTCDate() + 8 - (d.getUTCDay() || 7));
+      return d.toISOString().slice(0, 10);
+    })();
+    await page.goto(`/en/schedule?date=${nextMonday}`);
+    await shoot(page, `schedule-week-${w}`);
+    if (w === 1440) {
+      await page.goto(`/en/schedule?date=${nextMonday}&view=day`);
+      await shoot(page, "schedule-day-rooms-1440");
+    }
 
     await page.goto("/ru/staff");
     await shoot(page, `staff-ru-${w}`);

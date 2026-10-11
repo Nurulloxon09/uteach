@@ -51,7 +51,11 @@
     "rowOpen": "{name}ni ochish",
     "rowEdit": "{name}ni tahrirlash",
     "rowArchive": "{name}ni arxivlash",
-    "rowRestore": "{name}ni qayta tiklash"
+    "rowRestore": "{name}ni qayta tiklash",
+    "active": "Faol",
+    "status": "Holat",
+    "remove": "Oʻchirish",
+    "failed": "Nimadir xato ketdi. Qayta urinib koʻring."
   },
   "nav": {
     "home": "Bosh sahifa",
@@ -71,7 +75,12 @@
     "goToPlaceholder": "Qayerga oʻtamiz?",
     "goToDescription": "Sahifa nomini yozing va Enter bosing",
     "account": "Akkaunt menyusi",
-    "centers": "Markazlaringiz"
+    "centers": "Markazlaringiz",
+    "groups": "Guruhlar",
+    "myGroups": "Mening guruhlarim",
+    "schedule": "Jadval",
+    "courses": "Kurslar",
+    "holidays": "Bayramlar"
   },
   "errors": {
     "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
@@ -86,7 +95,13 @@
       "timezone": "Vaqt mintaqasini tanlang.",
       "invalid": "Notoʻgʻri qiymat.",
       "branchRequired": "Kamida bitta filialni tanlang.",
-      "capacity": "1 dan 1000 gacha butun son kiriting."
+      "capacity": "1 dan 1000 gacha butun son kiriting.",
+      "amount": "Summani kiriting, masalan 600000.",
+      "date": "Sanani tanlang.",
+      "time": "Vaqtni kiriting, masalan 18:00.",
+      "number": "Ruxsat etilgan oraliqdagi butun son kiriting.",
+      "slots": "Dars vaqtlarini tekshiring.",
+      "endBeforeStart": "Tugash sanasi boshlanishdan oldin boʻlmaydi."
     },
     "auth": {
       "invalidCredentials": "Telefon raqami yoki parol notoʻgʻri.",
@@ -136,7 +151,8 @@
       "transfer_before_start": "Oʻtkazish sanasi roʻyxatga olish boshlanganidan keyin boʻlishi kerak.",
       "use_transfer": "Oʻquvchini boshqa guruhga oʻtkazish uchun «Oʻtkazish»dan foydalaning.",
       "student_has_active_enrollments": "Arxivlashdan oldin oʻquvchining guruhlardagi oʻqishini tugating."
-    }
+    },
+    "groupHasStudents": "Arxivlashdan oldin guruh oʻquvchilarining oʻqishini tugating yoki ularni oʻtkazing."
   },
   "auth": {
     "fields": {
@@ -228,7 +244,8 @@
   "today": {
     "title": "Bugun",
     "emptyTitle": "Bugun dars yoʻq",
-    "emptyDescription": "Guruhlar sozlangach, darslaringiz va davomat varaqlari shu yerda chiqadi."
+    "emptyDescription": "Bugungi darslaringiz shu yerda chiqadi.",
+    "thisWeek": "Shu haftada keyinroq"
   },
   "staff": {
     "title": "Xodimlar",
@@ -251,7 +268,8 @@
       "role": "Rol",
       "branches": "Filiallar",
       "permissions": "Ruxsatlar",
-      "permissionsHint": "Administratorlar faqat oʻz filiallarini koʻradi. Ruxsatlar qoʻshimcha huquq beradi."
+      "permissionsHint": "Administratorlar faqat oʻz filiallarini koʻradi. Ruxsatlar qoʻshimcha huquq beradi.",
+      "color": "Jadvaldagi rang"
     },
     "inviteSubmit": "Taklif havolasini yaratish",
     "linkReady": "Taklif havolasi tayyor",
@@ -276,7 +294,9 @@
     "disableDescription": "U darhol kira olmaydi. Keyinroq qayta yoqishingiz mumkin.",
     "rowNewLink": "{name} uchun yangi havola",
     "rowDisable": "{name}ni oʻchirish",
-    "rowEnable": "{name}ni yoqish"
+    "rowEnable": "{name}ni yoqish",
+    "editTitle": "Xodimni tahrirlash",
+    "editHint": "{name}: filiallar, ruxsatlar va jadval rangi."
   },
   "flags": {
     "students": {
@@ -443,5 +463,286 @@
     "placeholder": "Vaqt mintaqasini tanlang",
     "search": "Vaqt mintaqasini qidirish",
     "empty": "Vaqt mintaqasi topilmadi"
+  },
+  "archive": {
+    "branch": "Bu filial arxivlansinmi?",
+    "room": "Bu xona arxivlansinmi?",
+    "course": "Bu kurs arxivlansinmi?",
+    "level": "Bu daraja arxivlansinmi?",
+    "group": "Bu guruh arxivlansinmi?"
+  },
+  "timetable": {
+    "time": "Vaqt",
+    "dragStart": "{title} olindi.",
+    "dragOver": "{title} — {column} ustida.",
+    "dragEnd": "{title} {column} ga qoʻyildi.",
+    "dragCancel": "{title} koʻchirish bekor qilindi.",
+    "dragInstructions": "Darsni olish uchun boʻsh joy tugmasini, siljitish uchun strelkalarni, qoʻyish uchun yana boʻsh joyni, bekor qilish uchun Escape ni bosing. «Koʻchirish» amali sudrashsiz ishlaydi."
+  },
+  "slots": {
+    "weekday": "Kun",
+    "start": "Boshlanishi",
+    "minutes": "Daqiqa",
+    "room": "Xona",
+    "teacher": "Oʻqituvchi",
+    "remove": "{n}-vaqtni oʻchirish",
+    "add": "Vaqt qoʻshish",
+    "groupDefault": "Guruhniki"
+  },
+  "palette": {
+    "violet": "Binafsha",
+    "sky": "Havorang",
+    "orange": "Toʻq sariq",
+    "green": "Yashil",
+    "rose": "Pushti",
+    "amber": "Qahrabo",
+    "teal": "Moviy-yashil",
+    "indigo": "Toʻq koʻk"
+  },
+  "courses": {
+    "title": "Kurslar",
+    "listTitle": "Barcha kurslar",
+    "addButton": "Kurs qoʻshish",
+    "addTitle": "Yangi kurs",
+    "addHint": "Kurslar darslaringizni guruhlaydi, masalan General English yoki IELTS. Darajalarni kurs sahifasida qoʻshing.",
+    "addSubmit": "Kurs qoʻshish",
+    "added": "Kurs qoʻshildi",
+    "editTitle": "Kursni tahrirlash",
+    "searchPlaceholder": "Nomi boʻyicha qidirish",
+    "searchLabel": "Kurslarni qidirish",
+    "emptyTitle": "Hali kurslar yoʻq",
+    "emptyHint": "Markazingiz oʻqitadigan kurslarni qoʻshing.",
+    "columns": {
+      "levels": "Darajalar"
+    },
+    "fields": {
+      "name": "Kurs nomi",
+      "kind": "Turi",
+      "minutes": "Dars davomiyligi, daqiqa",
+      "minutesHint": "Yangi guruhlar uchun standart.",
+      "price": "Bir sikl uchun standart narx",
+      "priceHint": "Bu kursning yangi guruhlariga avtomatik qoʻyiladi.",
+      "description": "Tavsif"
+    },
+    "kinds": {
+      "language": "Til",
+      "exam_prep": "Imtihonga tayyorlov",
+      "school_subject": "Maktab fani",
+      "other": "Boshqa"
+    },
+    "minutesValue": "{count} daq",
+    "levelsCount": "{count} ta daraja",
+    "tabLevels": "Darajalar",
+    "levels": {
+      "name": "Daraja nomi",
+      "namePlaceholder": "masalan, B1 yoki IELTS 6.0",
+      "next": "Keyingi daraja",
+      "nextHint": "Bu darajani tugatganlarga keyingisi taklif qilinadi.",
+      "noNext": "Yoʻq",
+      "hint": "Darajalar birinchisidan oxirgisigacha tartiblangan.",
+      "add": "Daraja qoʻshish",
+      "addTitle": "Yangi daraja",
+      "added": "Daraja qoʻshildi",
+      "editTitle": "Darajani tahrirlash",
+      "emptyTitle": "Hali darajalar yoʻq",
+      "emptyHint": "Darajalarni tartib bilan qoʻshing, masalan Beginner, Elementary, Intermediate.",
+      "moveUp": "{name} ni yuqoriga",
+      "moveDown": "{name} ni pastga"
+    }
+  },
+  "holidays": {
+    "title": "Bayramlar",
+    "listTitle": "Bayramlar va dam olish kunlari",
+    "listHint": "Bu kunlarda darslar rejalashtirilmaydi.",
+    "addButton": "Bayram qoʻshish",
+    "addTitle": "Yangi bayram",
+    "addHint": "Shu kunga rejalashtirilgan darslar bekor qilinadi va hisoblanmaydi.",
+    "addSubmit": "Bayram qoʻshish",
+    "added": "{count, plural, =0 {Bayram qoʻshildi} other {Bayram qoʻshildi, # ta dars bekor qilindi}}",
+    "allBranches": "Barcha filiallar",
+    "past": "Oʻtgan",
+    "upcoming": "Kelgusi",
+    "emptyTitle": "Bayramlar yoʻq",
+    "emptyHint": "Davlat bayramlari va dam olish kunlarini qoʻshing, shunda ularga dars rejalashtirilmaydi.",
+    "removeRow": "{name} ni oʻchirish",
+    "removeTitle": "Bu bayram oʻchirilsinmi?",
+    "removeDescription": "U bekor qilgan darslar xona va oʻqituvchi boʻsh boʻlsa qaytadi.",
+    "removed": "Bayram oʻchirildi",
+    "fields": {
+      "date": "Sana",
+      "name": "Nomi",
+      "namePlaceholder": "masalan, Mustaqillik kuni",
+      "branch": "Filial"
+    }
+  },
+  "groups": {
+    "title": "Guruhlar",
+    "myTitle": "Mening guruhlarim",
+    "listTitle": "Guruhlar roʻyxati",
+    "searchPlaceholder": "Nomi boʻyicha qidirish",
+    "searchLabel": "Guruhlarni qidirish",
+    "addButton": "Yangi guruh",
+    "addTitle": "Yangi guruh",
+    "addHint": "Haftalik vaqtlardan keyingi 8 hafta uchun darslar yaratiladi.",
+    "addSubmit": "Guruh yaratish",
+    "added": "Guruh yaratildi",
+    "editTitle": "Guruhni tahrirlash",
+    "editHint": "Oʻqituvchi, xona yoki sanalarni oʻzgartirish qoʻlda oʻzgartirilmagan kelgusi darslarni yangilaydi.",
+    "emptyTitle": "Hali guruhlar yoʻq",
+    "emptyHint": "Oʻqituvchi, xona va haftalik vaqtlari bilan guruh yarating.",
+    "emptyHintTeacher": "Siz dars beradigan guruhlar shu yerda chiqadi.",
+    "noLevel": "Darajasiz",
+    "noTeacher": "Hali oʻqituvchi yoʻq",
+    "noRoom": "Xonasiz",
+    "noSchedule": "Hali haftalik vaqtlar yoʻq",
+    "tabLessons": "Darslar",
+    "tabSchedule": "Haftalik vaqtlar",
+    "tabPrice": "Narx",
+    "datesRange": "{from} – {to}",
+    "datesFrom": "{from} dan",
+    "capacityValue": "{count} tagacha oʻquvchi",
+    "columns": {
+      "schedule": "Haftalik vaqtlar"
+    },
+    "fields": {
+      "branch": "Filial",
+      "course": "Kurs",
+      "level": "Daraja",
+      "teacher": "Oʻqituvchi",
+      "room": "Xona",
+      "slots": "Haftalik vaqtlar",
+      "name": "Guruh nomi",
+      "nameHint": "Kurs, daraja va vaqtlardan taklif qilinadi; oʻzgartirishingiz mumkin.",
+      "startDate": "Boshlanish sanasi",
+      "endDate": "Tugash sanasi",
+      "capacity": "Sigʻim",
+      "capacityHint": "Undan oshsa ogohlantirish chiqadi, lekin taqiqlanmaydi.",
+      "price": "Bir sikl narxi",
+      "cycleLessons": "Darslar",
+      "status": "Holat"
+    },
+    "status": {
+      "forming": "Yigʻilmoqda",
+      "active": "Faol",
+      "finished": "Tugagan"
+    },
+    "schedule": {
+      "hint": "Darslar shu vaqtlardan 8 hafta oldinga rejalashtiriladi. Saqlash qoʻlda oʻzgartirilmagan kelgusi darslarni yangilaydi; oʻtgan darslar oʻzgarmaydi.",
+      "slots": "Haftalik vaqtlar",
+      "saved": "Saqlandi: {created} ta dars rejalashtirildi, {conflicts} ta ziddiyat.",
+      "conflictsTitle": "Keyingi 8 haftada {count} ta toʻqnashuv",
+      "conflictRoom": "{when}: xona {group} bilan band",
+      "conflictTeacher": "{when}: oʻqituvchi {group} da dars beradi",
+      "conflictsHint": "Baribir saqlashingiz mumkin: toʻqnashgan darslar yaratilmaydi va ziddiyatlar roʻyxatida kutadi.",
+      "saveAnyway": "Baribir saqlash",
+      "save": "Vaqtlarni saqlash"
+    },
+    "price": {
+      "hint": "Bitta toʻliq sikl narxi. Yangi narx siz tanlagan oydan amal qiladi.",
+      "change": "Narxni oʻzgartirish",
+      "changeTitle": "Narxni oʻzgartirish",
+      "changeHint": "Qaysi oydan? Oldinroq boshlangan sikllar eski narxda qoladi.",
+      "changeSubmit": "Narxni saqlash",
+      "changed": "Narx saqlandi",
+      "price": "Bir sikl narxi",
+      "cycleLessons": "Sikldagi darslar",
+      "fromMonth": "Qaysi oydan",
+      "fromMonthHint": "Odatda keyingi oy.",
+      "emptyTitle": "Hali narx yoʻq",
+      "emptyHint": "Oʻquvchilar bir sikl uchun toʻlaydigan narxni belgilang.",
+      "from": "Boshlab",
+      "status": "Holat",
+      "current": "Joriy"
+    }
+  },
+  "lessons": {
+    "sameRoom": "Oʻsha xona",
+    "moveTitle": "Darsni koʻchirish",
+    "moveHint": "{group} ning faqat shu darsi koʻchiriladi; haftalik vaqtlar oʻzgarmaydi.",
+    "move": "Koʻchirish",
+    "moved": "Dars koʻchirildi",
+    "date": "Sana",
+    "time": "Vaqt",
+    "room": "Xona",
+    "cancelTitle": "Darsni bekor qilish",
+    "cancelHint": "{group} ning shu darsini bekor qilish.",
+    "cancelSubmit": "Darsni bekor qilish",
+    "cancelled": "Dars bekor qilindi",
+    "reason": "Sabab",
+    "reasonPlaceholder": "masalan, Oʻqituvchi kasal",
+    "centerFault": "Markaz aybi bilan",
+    "centerFaultHint": "Dars hisoblanmaydi: har bir oʻquvchining sikli bitta darsga uzayadi.",
+    "makeupTitle": "Oʻrniga dars",
+    "extraTitle": "Qoʻshimcha dars",
+    "makeupHint": "{group} uchun bir martalik dars.",
+    "makeupSubmit": "Dars qoʻshish",
+    "makeupAdded": "Dars qoʻshildi",
+    "duration": "Daqiqa",
+    "billable": "Dars sifatida hisoblanadi",
+    "billableHint": "Hali hisoblangan bekor qilingan dars oʻrniga boʻlsa, oʻchiring.",
+    "substituteTitle": "Oʻrinbosar oʻqituvchi",
+    "substituteHint": "{group} ning shu darsini boshqa oʻqituvchi oʻtadi. Asl oʻqituvchini tanlash buni bekor qiladi.",
+    "substituteSubmit": "Saqlash",
+    "substituted": "Oʻrinbosar saqlandi",
+    "teacher": "Oʻqituvchi",
+    "rowMakeup": "{lesson} oʻrniga dars",
+    "rowMove": "{lesson} ni koʻchirish",
+    "rowSubstitute": "{lesson} uchun oʻrinbosar",
+    "rowCancel": "{lesson} ni bekor qilish",
+    "makeup": "Oʻrniga dars",
+    "substitute": "Oʻrinbosar",
+    "cancel": "Bekor qilish",
+    "extra": "Qoʻshimcha dars",
+    "status": {
+      "scheduled": "Rejada",
+      "held": "Oʻtildi",
+      "cancelled": "Bekor qilingan"
+    },
+    "makeupChip": "Oʻrniga",
+    "substituteChip": "Oʻrinbosar",
+    "when": "Qachon",
+    "upcoming": "Kelgusi",
+    "past": "Oʻtgan",
+    "noUpcoming": "Kelgusi darslar yoʻq",
+    "noPast": "Hali oʻtgan darslar yoʻq",
+    "openGroup": "Guruhni ochish"
+  },
+  "schedule": {
+    "title": "Jadval",
+    "weekOf": "{from} – {to}",
+    "noRoom": "Xonasiz",
+    "useSubstitute": "Oʻqituvchini almashtirish uchun «Oʻrinbosar»dan foydalaning.",
+    "previous": "Oldingi",
+    "next": "Keyingi",
+    "today": "Bugun",
+    "viewLabel": "Davr",
+    "week": "Hafta",
+    "day": "Kun",
+    "byLabel": "Ustunlar",
+    "byRoom": "Xonalar",
+    "byTeacher": "Oʻqituvchilar",
+    "branch": "Filial",
+    "focusRoom": "Xona",
+    "focusTeacher": "Oʻqituvchi",
+    "allRooms": "Barcha xonalar",
+    "allTeachers": "Barcha oʻqituvchilar",
+    "conflicts": "{count, plural, =0 {Ziddiyat yoʻq} other {# ta ziddiyat}}",
+    "emptyDay": "Bu kunda dars yoʻq",
+    "skipped": "Oʻtkazib yuborildi",
+    "inboxTitle": "Ziddiyatlar",
+    "inboxHint": "Xona yoki oʻqituvchi band boʻlgani uchun rejalashtirilmagan darslar.",
+    "inboxEmpty": "Ziddiyatlar yoʻq",
+    "clashRoom": "Xona {group} bilan band",
+    "clashTeacher": "Oʻqituvchida oʻsha vaqtda {group}",
+    "skip": "Bu kunni oʻtkazish",
+    "place": "Boshqa vaqtga qoʻyish",
+    "placeTitle": "Darsni joylashtirish",
+    "placeHint": "{group} ning shu darsi uchun boʻsh vaqt (va xona) tanlang.",
+    "placeSubmit": "Joylashtirish",
+    "placed": "Dars joylashtirildi",
+    "date": "Sana",
+    "time": "Vaqt",
+    "room": "Xona",
+    "ruleRoom": "Odatdagi xona"
   }
 }

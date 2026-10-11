@@ -51,7 +51,11 @@
     "rowOpen": "Open {name}",
     "rowEdit": "Edit {name}",
     "rowArchive": "Archive {name}",
-    "rowRestore": "Restore {name}"
+    "rowRestore": "Restore {name}",
+    "active": "Active",
+    "status": "Status",
+    "remove": "Remove",
+    "failed": "Something went wrong. Try again."
   },
   "nav": {
     "home": "Home",
@@ -71,7 +75,12 @@
     "goToPlaceholder": "Go to…",
     "goToDescription": "Type a page name and press Enter",
     "account": "Account menu",
-    "centers": "Your centers"
+    "centers": "Your centers",
+    "groups": "Groups",
+    "myGroups": "My groups",
+    "schedule": "Schedule",
+    "courses": "Courses",
+    "holidays": "Holidays"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -86,7 +95,13 @@
       "timezone": "Choose a time zone.",
       "invalid": "Invalid value.",
       "branchRequired": "Choose at least one branch.",
-      "capacity": "Enter a whole number from 1 to 1000."
+      "capacity": "Enter a whole number from 1 to 1000.",
+      "amount": "Enter an amount, e.g. 600000.",
+      "date": "Choose a date.",
+      "time": "Enter a time, e.g. 18:00.",
+      "number": "Enter a whole number in the allowed range.",
+      "slots": "Check the lesson times.",
+      "endBeforeStart": "The end date can't be before the start."
     },
     "auth": {
       "invalidCredentials": "Wrong phone number or password.",
@@ -136,7 +151,8 @@
       "transfer_before_start": "The transfer date must be after the enrollment starts.",
       "use_transfer": "Use Transfer to move a student to another group.",
       "student_has_active_enrollments": "End the student's enrollments before archiving them."
-    }
+    },
+    "groupHasStudents": "End or transfer the group's students before archiving it."
   },
   "auth": {
     "fields": {
@@ -228,7 +244,8 @@
   "today": {
     "title": "Today",
     "emptyTitle": "No lessons today",
-    "emptyDescription": "Your lessons and attendance sheets will appear here once groups are set up."
+    "emptyDescription": "Your lessons for today will appear here.",
+    "thisWeek": "Later this week"
   },
   "staff": {
     "title": "Staff",
@@ -251,7 +268,8 @@
       "role": "Role",
       "branches": "Branches",
       "permissions": "Permissions",
-      "permissionsHint": "Admins only see their branches. Permissions add extra rights."
+      "permissionsHint": "Admins only see their branches. Permissions add extra rights.",
+      "color": "Timetable color"
     },
     "inviteSubmit": "Create invite link",
     "linkReady": "Invite link created",
@@ -276,7 +294,9 @@
     "disableDescription": "They lose access right away. You can enable them again later.",
     "rowNewLink": "New invite link for {name}",
     "rowDisable": "Disable {name}",
-    "rowEnable": "Enable {name}"
+    "rowEnable": "Enable {name}",
+    "editTitle": "Edit staff member",
+    "editHint": "Branches, permissions and timetable color of {name}."
   },
   "flags": {
     "students": {
@@ -443,5 +463,286 @@
     "placeholder": "Choose a time zone",
     "search": "Search time zones",
     "empty": "No time zone found"
+  },
+  "archive": {
+    "branch": "Archive this branch?",
+    "room": "Archive this room?",
+    "course": "Archive this course?",
+    "level": "Archive this level?",
+    "group": "Archive this group?"
+  },
+  "timetable": {
+    "time": "Time",
+    "dragStart": "Picked up {title}.",
+    "dragOver": "{title} is over {column}.",
+    "dragEnd": "{title} was dropped on {column}.",
+    "dragCancel": "Moving {title} was cancelled.",
+    "dragInstructions": "Press space to pick up a lesson, arrow keys to move it, space to drop it, Escape to cancel. The Move action works without dragging."
+  },
+  "slots": {
+    "weekday": "Day",
+    "start": "Start",
+    "minutes": "Minutes",
+    "room": "Room",
+    "teacher": "Teacher",
+    "remove": "Remove time {n}",
+    "add": "Add a time",
+    "groupDefault": "Group's default"
+  },
+  "palette": {
+    "violet": "Violet",
+    "sky": "Sky blue",
+    "orange": "Orange",
+    "green": "Green",
+    "rose": "Rose",
+    "amber": "Amber",
+    "teal": "Teal",
+    "indigo": "Indigo"
+  },
+  "courses": {
+    "title": "Courses",
+    "listTitle": "All courses",
+    "addButton": "Add course",
+    "addTitle": "New course",
+    "addHint": "Courses group your classes, e.g. General English or IELTS. Add levels on the course page.",
+    "addSubmit": "Add course",
+    "added": "Course added",
+    "editTitle": "Edit course",
+    "searchPlaceholder": "Search by name",
+    "searchLabel": "Search courses",
+    "emptyTitle": "No courses yet",
+    "emptyHint": "Add the courses your center teaches.",
+    "columns": {
+      "levels": "Levels"
+    },
+    "fields": {
+      "name": "Course name",
+      "kind": "Kind",
+      "minutes": "Lesson length, minutes",
+      "minutesHint": "The default for new groups.",
+      "price": "Default price per cycle",
+      "priceHint": "Prefilled into new groups of this course.",
+      "description": "Description"
+    },
+    "kinds": {
+      "language": "Language",
+      "exam_prep": "Exam prep",
+      "school_subject": "School subject",
+      "other": "Other"
+    },
+    "minutesValue": "{count} min",
+    "levelsCount": "{count, plural, one {# level} other {# levels}}",
+    "tabLevels": "Levels",
+    "levels": {
+      "name": "Level name",
+      "namePlaceholder": "e.g. B1 or IELTS 6.0",
+      "next": "Next level",
+      "nextHint": "Students finishing this level are offered the next one.",
+      "noNext": "None",
+      "hint": "Levels go from the first to the last.",
+      "add": "Add level",
+      "addTitle": "New level",
+      "added": "Level added",
+      "editTitle": "Edit level",
+      "emptyTitle": "No levels yet",
+      "emptyHint": "Add levels in order, e.g. Beginner, Elementary, Intermediate.",
+      "moveUp": "Move {name} up",
+      "moveDown": "Move {name} down"
+    }
+  },
+  "holidays": {
+    "title": "Holidays",
+    "listTitle": "Holidays and days off",
+    "listHint": "No lessons are planned on these days.",
+    "addButton": "Add holiday",
+    "addTitle": "New holiday",
+    "addHint": "Lessons already planned for that day are cancelled and don't count.",
+    "addSubmit": "Add holiday",
+    "added": "{count, plural, =0 {Holiday added} one {Holiday added, # lesson cancelled} other {Holiday added, # lessons cancelled}}",
+    "allBranches": "All branches",
+    "past": "Past",
+    "upcoming": "Upcoming",
+    "emptyTitle": "No holidays",
+    "emptyHint": "Add public holidays and days off so no lessons are planned on them.",
+    "removeRow": "Remove {name}",
+    "removeTitle": "Remove this holiday?",
+    "removeDescription": "Lessons it cancelled come back where the room and teacher are still free.",
+    "removed": "Holiday removed",
+    "fields": {
+      "date": "Date",
+      "name": "Name",
+      "namePlaceholder": "e.g. Independence Day",
+      "branch": "Branch"
+    }
+  },
+  "groups": {
+    "title": "Groups",
+    "myTitle": "My groups",
+    "listTitle": "Group list",
+    "searchPlaceholder": "Search by name",
+    "searchLabel": "Search groups",
+    "addButton": "New group",
+    "addTitle": "New group",
+    "addHint": "Lessons for the next 8 weeks are created from the weekly times.",
+    "addSubmit": "Create group",
+    "added": "Group created",
+    "editTitle": "Edit group",
+    "editHint": "Changing the teacher, room or dates updates future lessons that weren't changed by hand.",
+    "emptyTitle": "No groups yet",
+    "emptyHint": "Create a group with its teacher, room and weekly times.",
+    "emptyHintTeacher": "Groups you teach will appear here.",
+    "noLevel": "No level",
+    "noTeacher": "No teacher yet",
+    "noRoom": "No room",
+    "noSchedule": "No weekly times yet",
+    "tabLessons": "Lessons",
+    "tabSchedule": "Weekly times",
+    "tabPrice": "Price",
+    "datesRange": "{from} – {to}",
+    "datesFrom": "From {from}",
+    "capacityValue": "Up to {count} students",
+    "columns": {
+      "schedule": "Weekly times"
+    },
+    "fields": {
+      "branch": "Branch",
+      "course": "Course",
+      "level": "Level",
+      "teacher": "Teacher",
+      "room": "Room",
+      "slots": "Weekly times",
+      "name": "Group name",
+      "nameHint": "Suggested from the course, level and times; you can change it.",
+      "startDate": "Start date",
+      "endDate": "End date",
+      "capacity": "Capacity",
+      "capacityHint": "You'll see a warning above it; it doesn't block.",
+      "price": "Price per cycle",
+      "cycleLessons": "Lessons",
+      "status": "Status"
+    },
+    "status": {
+      "forming": "Forming",
+      "active": "Active",
+      "finished": "Finished"
+    },
+    "schedule": {
+      "hint": "Lessons are planned 8 weeks ahead from these times. Saving updates future lessons that weren't changed by hand; past lessons stay as they were.",
+      "slots": "Weekly times",
+      "saved": "Saved: {created, plural, one {# lesson} other {# lessons}} planned, {conflicts, plural, =0 {no conflicts} one {# conflict} other {# conflicts}}.",
+      "conflictsTitle": "{count, plural, one {# clash} other {# clashes}} in the next 8 weeks",
+      "conflictRoom": "{when}: the room is taken by {group}",
+      "conflictTeacher": "{when}: the teacher teaches {group}",
+      "conflictsHint": "You can still save: the clashing lessons won't be created and will wait in the conflicts inbox.",
+      "saveAnyway": "Save anyway",
+      "save": "Save times"
+    },
+    "price": {
+      "hint": "The price of one full cycle. A new price applies from the month you choose.",
+      "change": "Change price",
+      "changeTitle": "Change price",
+      "changeHint": "From which month? Cycles that start earlier keep the old price.",
+      "changeSubmit": "Save price",
+      "changed": "Price saved",
+      "price": "Price per cycle",
+      "cycleLessons": "Lessons per cycle",
+      "fromMonth": "From month",
+      "fromMonthHint": "Usually next month.",
+      "emptyTitle": "No price yet",
+      "emptyHint": "Set the price students pay for a cycle.",
+      "from": "From",
+      "status": "Status",
+      "current": "Current"
+    }
+  },
+  "lessons": {
+    "sameRoom": "Same room",
+    "moveTitle": "Move lesson",
+    "moveHint": "Moves this one lesson of {group}; the weekly times stay the same.",
+    "move": "Move",
+    "moved": "Lesson moved",
+    "date": "Date",
+    "time": "Time",
+    "room": "Room",
+    "cancelTitle": "Cancel lesson",
+    "cancelHint": "Cancel this lesson of {group}.",
+    "cancelSubmit": "Cancel lesson",
+    "cancelled": "Lesson cancelled",
+    "reason": "Reason",
+    "reasonPlaceholder": "e.g. Teacher is ill",
+    "centerFault": "The center's fault",
+    "centerFaultHint": "The lesson won't count: each student's cycle gets one lesson longer.",
+    "makeupTitle": "Makeup lesson",
+    "extraTitle": "Extra lesson",
+    "makeupHint": "A one-off lesson for {group}.",
+    "makeupSubmit": "Add lesson",
+    "makeupAdded": "Lesson added",
+    "duration": "Minutes",
+    "billable": "Counts as a lesson",
+    "billableHint": "Off when it replaces a cancelled lesson that still counted.",
+    "substituteTitle": "Substitute teacher",
+    "substituteHint": "Another teacher takes this lesson of {group}. Choosing the original teacher again undoes it.",
+    "substituteSubmit": "Save",
+    "substituted": "Substitute saved",
+    "teacher": "Teacher",
+    "rowMakeup": "Makeup for {lesson}",
+    "rowMove": "Move {lesson}",
+    "rowSubstitute": "Substitute for {lesson}",
+    "rowCancel": "Cancel {lesson}",
+    "makeup": "Makeup lesson",
+    "substitute": "Substitute",
+    "cancel": "Cancel lesson",
+    "extra": "Extra lesson",
+    "status": {
+      "scheduled": "Planned",
+      "held": "Held",
+      "cancelled": "Cancelled"
+    },
+    "makeupChip": "Makeup",
+    "substituteChip": "Substitute",
+    "when": "When",
+    "upcoming": "Upcoming",
+    "past": "Past",
+    "noUpcoming": "No upcoming lessons",
+    "noPast": "No past lessons yet",
+    "openGroup": "Open group"
+  },
+  "schedule": {
+    "title": "Schedule",
+    "weekOf": "{from} – {to}",
+    "noRoom": "No room",
+    "useSubstitute": "To change the teacher, use Substitute.",
+    "previous": "Previous",
+    "next": "Next",
+    "today": "Today",
+    "viewLabel": "Range",
+    "week": "Week",
+    "day": "Day",
+    "byLabel": "Columns",
+    "byRoom": "Rooms",
+    "byTeacher": "Teachers",
+    "branch": "Branch",
+    "focusRoom": "Room",
+    "focusTeacher": "Teacher",
+    "allRooms": "All rooms",
+    "allTeachers": "All teachers",
+    "conflicts": "{count, plural, =0 {No conflicts} one {# conflict} other {# conflicts}}",
+    "emptyDay": "No lessons on this day",
+    "skipped": "Occurrence skipped",
+    "inboxTitle": "Conflicts",
+    "inboxHint": "Lessons that couldn't be planned because the room or teacher was busy.",
+    "inboxEmpty": "No conflicts",
+    "clashRoom": "The room is taken by {group}",
+    "clashTeacher": "The teacher has {group} then",
+    "skip": "Skip this day",
+    "place": "Place at another time",
+    "placeTitle": "Place the lesson",
+    "placeHint": "Choose a free time (and room) for this lesson of {group}.",
+    "placeSubmit": "Place lesson",
+    "placed": "Lesson placed",
+    "date": "Date",
+    "time": "Time",
+    "room": "Room",
+    "ruleRoom": "The usual room"
   }
 }

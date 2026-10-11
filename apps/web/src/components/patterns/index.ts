@@ -31,6 +31,7 @@ export {
 export { FilterButton, type FilterOption } from "./filter-button";
 export { FormDialog } from "./form-dialog";
 export { InitialsAvatar, initials, tintFor } from "./initials-avatar";
+export { LessonList, type LessonListItem } from "./lesson-list";
 export { MobileCard, MobileList, MobileRecord } from "./mobile-list";
 export { PageAction, PageHeader, type Crumb } from "./page-header";
 export {
@@ -41,13 +42,17 @@ export {
   parseListParams,
 } from "./list-params";
 export { Pagination } from "./pagination";
+export { PaletteField } from "./palette-field";
 export { ProfileCard, ProfileChip } from "./profile-card";
 export { RowActions, type RowAction } from "./row-actions";
 export { Section } from "./section";
+export { SegmentedControl } from "./segmented-control";
 export { StatTiles, type StatTile, type StatTone } from "./stat-tiles";
 export { EmptyState, ErrorState, LoadingState } from "./states";
 export { StatusChip, type ChipTone } from "./status-chip";
 export { StatusToggleGroup, type StatusOption } from "./status-toggle-group";
 export { TableSearch } from "./table-search";
 export { TimezoneField } from "./timezone-field";
+export { Timetable, minutesLabel, type TimetableColumn, type TimetableLesson } from "./timetable";
+export { WeeklySlotsField, type WeeklySlot } from "./weekly-slots-field";
 export { Wordmark } from "./wordmark";

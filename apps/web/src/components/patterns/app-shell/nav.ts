@@ -1,4 +1,13 @@
-import { Building2, CalendarCheck, Home, Settings, Users, type LucideIcon } from "lucide-react";
+import {
+  Building2,
+  CalendarCheck,
+  CalendarDays,
+  Home,
+  Settings,
+  UsersRound,
+  Users,
+  type LucideIcon,
+} from "lucide-react";
 
 /**
  * Navigation model. Built on the server (per role and permission flags) and passed to the client shell,
@@ -10,6 +19,8 @@ export const NAV_ICONS = {
   staff: Users,
   settings: Settings,
   branches: Building2,
+  groups: UsersRound,
+  schedule: CalendarDays,
 } satisfies Record<string, LucideIcon>;
 
 export type NavIconName = keyof typeof NAV_ICONS;

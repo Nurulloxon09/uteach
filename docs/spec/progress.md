@@ -8,14 +8,15 @@ Format: newest first. Keep it short and factual.
 
 ## Current milestone
 **M1 · Academic core**: ◐ in progress. Plan approved 2026-10-11: four PRs (M1a data layer → M1b courses, groups and
-schedule screens → M1c students and enrollments → M1d onboarding wizard and import). M1a (data layer) is built.
+schedule screens → M1c students and enrollments → M1d onboarding wizard and import). M1a merged (PR #3);
+M1b (courses, groups, schedule screens) is built.
 
 ## Milestones
 | # | Milestone | Status | Finished |
 |---|---|---|---|
 | M0 | Foundation | ☑ done | 2026-10-11 |
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
-| M1 | Academic core | ◐ in progress (M1a) | |
+| M1 | Academic core | ◐ in progress (M1a ☑, M1b) | |
 | M2 | Attendance | ☐ | |
 | M3 | Billing | ☐ | |
 | M4 | Telegram & SMS | ☐ | |
@@ -57,12 +58,12 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 | Item (30-milestones) | Status | Evidence |
 |---|---|---|
-| Mon/Wed/Fri 18:00 → exactly the right lessons for 8 weeks (branch tz); 2nd run = 0 rows | ◐ DB | pgTAP (`m1_academic.test.sql`) + Vitest; UI in M1b |
-| Holidays skipped; adding one cancels that day's generated lesson | ◐ DB | pgTAP; UI in M1b |
-| Room/teacher clash: DB rejects the 2nd lesson; conflict in the inbox | ◐ DB | pgTAP (exclusion constraints, `schedule_conflicts`); inbox UI in M1b |
-| Rule edits regenerate only future, untouched lessons | ◐ DB | pgTAP (held, moved, cancelled, substituted lessons survive) |
-| Timetable week/day by room/teacher; drag; conflicting drop refused | ☐ | M1b (`move_lesson` refuses clashes: pgTAP) |
-| Cancel, makeup, substitute; substitute sees it in Today | ◐ DB | pgTAP; Today in M1b |
+| Mon/Wed/Fri 18:00 → exactly the right lessons for 8 weeks (branch tz); 2nd run = 0 rows | ☑ | pgTAP + Vitest; e2e `m1-schedule` (group dialog → 24 lessons) |
+| Holidays skipped; adding one cancels that day's generated lesson | ☑ | pgTAP; Settings → Holidays screen |
+| Room/teacher clash: DB rejects the 2nd lesson; conflict in the inbox | ☑ | pgTAP; e2e (8 Monday clashes in the inbox, skip one) |
+| Rule edits regenerate only future, untouched lessons | ☑ | pgTAP (held, moved, cancelled, substituted lessons survive); rules editor with conflict pre-check |
+| Timetable week/day by room/teacher; drag; conflicting drop refused | ☑ | e2e: clashing drop refused with the DB message, free drop moves the lesson |
+| Cancel, makeup, substitute; substitute sees it in Today | ☑ | pgTAP; e2e (cancel, extra lesson, substitute → teacher's Today at 390 px) |
 | Guardian with existing phone is linked; "also guardian of" | ◐ DB | pgTAP; profile in M1c |
 | Enroll / freeze / transfer / end with date rules + `audit_log` | ◐ DB | pgTAP; dialogs in M1c |
 | Teachers see only their groups and rosters (names; no phones, no prices) | ☑ | pgTAP negatives (students, guardians, enrollments, prices, other rosters) |
@@ -84,6 +85,18 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-11 · M1b courses, groups and schedule screens
+- Settings → Courses (list, course page with ordered levels and next level) and Holidays (add cancels that day's
+  lessons; removing brings them back). Groups list ("My groups" for teachers) and group page: Lessons (move,
+  cancel, makeup, substitute, extra lesson), Weekly times (rules editor with the conflict pre-check), Price
+  (history, "from which month?", `billing` only).
+- Schedule: new `Timetable` pattern (week/day, by room or teacher, lanes for overlaps, `@dnd-kit` drag with
+  keyboard support and translated announcements), conflicts inbox (skip or place elsewhere); a day list below `md`.
+- Teacher's Today lists today's and this week's lessons (incl. substitute lessons); tapping opens the group.
+- Staff: "Edit member" dialog (name, branches, admin flags for owners, timetable color); color when inviting teachers.
+- New patterns on /dev/ui: Timetable, LessonList, WeeklySlotsField, PaletteField, SegmentedControl; palette tokens.
+- e2e `m1-schedule.spec.ts` (2 tests); M0.5 drawer test now expects Today + My groups. Test OTP phones 09–20 added.
 
 ### 2026-10-11 · M1a data layer
 - Migration `20261012090000_m1_academic.sql`: courses, levels, groups, group_prices, group_schedule_rules, lessons

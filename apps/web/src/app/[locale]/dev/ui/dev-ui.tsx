@@ -53,11 +53,18 @@ import {
   StatusToggleGroup,
   TableSearch,
   TimezoneField,
+  LessonList,
+  PaletteField,
+  SegmentedControl,
+  Timetable,
+  WeeklySlotsField,
   type ChipTone,
   type NavEntry,
+  type TimetableLesson,
 } from "@/components/patterns";
 import { Button } from "@/components/ui/button";
 import type { ActionState } from "@/lib/actions";
+import { weekdayLabels } from "@/lib/dates";
 import {
   DEV_TEXT,
   FAKE_BRANCHES,
@@ -99,6 +106,76 @@ export function DevUi() {
   const rawLocale = useLocale();
   const locale: Locale = isLocale(rawLocale) ? rawLocale : "en";
   const text = DEV_TEXT[locale];
+  const days = weekdayLabels(locale, "short");
+  const longDays = weekdayLabels(locale, "long");
+  const [ttView, setTtView] = useState<"week" | "day">("week");
+  const [ttLessons, setTtLessons] = useState<TimetableLesson[]>(() => [
+    {
+      id: "a",
+      column: "1",
+      startMinutes: 9 * 60,
+      endMinutes: 10 * 60 + 30,
+      title: "IELTS 6.0",
+      subtitle: "Анна Смирнова · Room 3",
+      palette: "violet",
+      status: "scheduled",
+      draggable: true,
+    },
+    {
+      id: "b",
+      column: "1",
+      startMinutes: 10 * 60,
+      endMinutes: 11 * 60,
+      title: "Kids English",
+      subtitle: "Jasur Toshmatov · Room 1",
+      palette: "sky",
+      status: "scheduled",
+      draggable: true,
+    },
+    {
+      id: "c",
+      column: "2",
+      startMinutes: 14 * 60,
+      endMinutes: 15 * 60 + 20,
+      title: "SAT Math",
+      subtitle: "Emily Carter · Room 2",
+      palette: "orange",
+      status: "held",
+    },
+    {
+      id: "d",
+      column: "3",
+      startMinutes: 18 * 60,
+      endMinutes: 19 * 60 + 30,
+      title: "General English B1",
+      subtitle: "Гулноза Юсупова · Room 3",
+      palette: "green",
+      status: "cancelled",
+      badge: "×",
+    },
+    {
+      id: "e",
+      column: "4",
+      startMinutes: 16 * 60,
+      endMinutes: 17 * 60 + 30,
+      title: "Milliy sertifikat",
+      subtitle: "Dilnoza · Room 4",
+      palette: "rose",
+      status: "scheduled",
+      draggable: true,
+    },
+    {
+      id: "f",
+      column: "5",
+      startMinutes: 11 * 60,
+      endMinutes: 12 * 60 + 30,
+      title: "CEFR B2",
+      subtitle: "Sardor · Room 1",
+      palette: "teal",
+      status: "scheduled",
+      draggable: true,
+    },
+  ]);
   const [selected, setSelected] = useState<Set<string>>(new Set(["3", "7"]));
   const [attendance, setAttendance] = useState("present");
 
@@ -606,6 +683,85 @@ export function DevUi() {
           />
         </Section>
       </Kit>
+      <Kit id="timetable" name="Timetable (week, lanes, drag) + SegmentedControl">
+        <Section
+          title={text.kit}
+          tools={
+            <SegmentedControl
+              label={text.kit}
+              value={ttView}
+              options={[
+                { value: "week", label: days[1] ?? "" },
+                { value: "day", label: days[2] ?? "" },
+              ]}
+              onChange={setTtView}
+            />
+          }
+        >
+          <Timetable
+            columns={[1, 2, 3, 4, 5].map((d) => ({ key: String(d), label: longDays[d] ?? "" }))}
+            lessons={ttLessons}
+            startHour={9}
+            endHour={20}
+            onMove={(id, column, start) =>
+              setTtLessons((all) =>
+                all.map((l) =>
+                  l.id === id
+                    ? {
+                        ...l,
+                        column,
+                        startMinutes: start,
+                        endMinutes: start + (l.endMinutes - l.startMinutes),
+                      }
+                    : l,
+                ),
+              )
+            }
+            renderActions={(l) => <p className="text-sm text-secondary-foreground">{l.title}</p>}
+          />
+        </Section>
+      </Kit>
+
+      <div className="grid gap-5 lg:grid-cols-2">
+        <Kit id="lesson-list" name="LessonList (Today, timetable below md)">
+          <div className="mx-auto max-w-sm">
+            <LessonList
+              items={ttLessons.slice(0, 3).map((l) => ({
+                id: l.id,
+                time: `${String(Math.floor(l.startMinutes / 60)).padStart(2, "0")}:${String(l.startMinutes % 60).padStart(2, "0")}`,
+                title: l.title,
+                subtitle: l.subtitle,
+                palette: l.palette,
+                status:
+                  l.status === "cancelled" ? (
+                    <StatusChip tone="muted">{text.lesson}</StatusChip>
+                  ) : undefined,
+                cancelled: l.status === "cancelled",
+                href: "/dev/ui",
+              }))}
+            />
+          </div>
+        </Kit>
+
+        <Kit id="slots" name="WeeklySlotsField + PaletteField">
+          <Section>
+            <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
+              <WeeklySlotsField
+                name="kitSlots"
+                label={text.lesson}
+                state={null}
+                dayLabels={longDays}
+                defaultValue={[
+                  { weekday: 1, startTime: "18:00", durationMinutes: 90 },
+                  { weekday: 3, startTime: "18:00", durationMinutes: 90 },
+                ]}
+                rooms={FAKE_BRANCHES.map((b) => ({ value: b, label: b }))}
+              />
+              <PaletteField name="kitColor" label={text.patterns} defaultValue="sky" />
+            </form>
+          </Section>
+        </Kit>
+      </div>
     </AppShell>
   );
 }
