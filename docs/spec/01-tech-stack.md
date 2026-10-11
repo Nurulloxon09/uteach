@@ -22,6 +22,8 @@ The stack is **fixed**. Don't add frameworks, ORMs or services without changing 
 
 No Vercel Hobby: its terms are non-commercial.
 
+> PROPOSED (M0): the GitHub repo is linked to a Vercel project (team "student-union"), which deploys every push by default. `vercel.json` sets `git.deploymentEnabled: false` so only our own CI runs on PRs. Remove it if Vercel previews are wanted later.
+
 
 > PROPOSED (M0): build tooling not in the table above: **tsup** bundles the worker (workspace packages inlined), **tsx** runs it in dev, **Prettier** formats. `cacheComponents` in Next 16 stays **off** because every staff page reads the user's cookies. Next 16 renamed middleware to `src/proxy.ts`.
 
