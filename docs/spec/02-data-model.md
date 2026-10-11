@@ -462,6 +462,14 @@ RLS: select **ADM(branch_id)** or OWN, or teacher where the student has an enrol
 > and returns names and dates only (no contacts, discounts or prices). `unique (center_id, external_ref)` where not
 > null, so imports can match rows. The duplicate check **warns** ("Create anyway"); it doesn't block.
 
+### View `student_overview` 🟩 [M1]
+
+> PROPOSED (M1c): a read-only view for the students list, `with (security_invoker = true)` so the caller's RLS
+> applies to every table it reads (teachers see nothing). Columns: the student's own columns plus `is_active`
+> (an active or frozen enrollment), `group_ids` and `course_ids` (current groups/courses) and `search_text`
+> (name, phone and the guardians' phones). It lets the list filter and paginate on the server without long
+> `in (…)` id lists.
+
 ### `guardians` 🟩 [M1]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name. "Siblings share guardians" is on the canvas; doing it by unique phone per center is proposed.

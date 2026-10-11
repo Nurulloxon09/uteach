@@ -7,10 +7,11 @@ import { toast } from "sonner";
 import { ConfirmDialog, RowActions, type RowAction } from "@/components/patterns";
 import { Button } from "@/components/ui/button";
 import { archiveGroupAction } from "../groups/actions";
+import { archiveStudentAction } from "../students/actions";
 import { archiveBranchAction, archiveRoomAction } from "./actions";
 import { archiveCourseAction, archiveLevelAction } from "./courses/actions";
 
-type Kind = "branch" | "room" | "course" | "level" | "group";
+type Kind = "branch" | "room" | "course" | "level" | "group" | "student";
 
 const ACTIONS = {
   branch: archiveBranchAction,
@@ -18,6 +19,7 @@ const ACTIONS = {
   course: archiveCourseAction,
   level: archiveLevelAction,
   group: archiveGroupAction,
+  student: archiveStudentAction,
 } as const;
 
 function useArchive(kind: Kind, id: string, archived: boolean) {

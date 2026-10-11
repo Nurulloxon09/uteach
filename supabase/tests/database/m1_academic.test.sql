@@ -587,6 +587,27 @@ select throws_ok(
 );
 
 -- ---------------------------------------------------------------------------
+-- student_overview (students list)
+-- ---------------------------------------------------------------------------
+select pg_temp.login(pg_temp.id('admin_s'));
+select is(
+  (select is_active from public.student_overview where id = pg_temp.id('s1')), true,
+  'a student with a running enrollment is active'
+);
+select is(
+  (select is_active from public.student_overview where id = pg_temp.id('s2')), false,
+  'a student whose only enrollment ended is inactive'
+);
+select ok(
+  (select search_text like '%+998901112233%' from public.student_overview where id = pg_temp.id('s2')),
+  'the list search covers guardian phones'
+);
+select ok(
+  (select pg_temp.id('g3') = any (group_ids) from public.student_overview where id = pg_temp.id('s1')),
+  'group_ids lists the groups the student is in now'
+);
+
+-- ---------------------------------------------------------------------------
 -- Notes
 -- ---------------------------------------------------------------------------
 select pg_temp.login(pg_temp.id('owner_a'));
@@ -606,6 +627,7 @@ select is(
 select is((select count(*)::int from public.lessons where group_id = pg_temp.id('g4')), 0,
   'a teacher sees no lessons of other groups');
 select is((select count(*)::int from public.students), 0, 'a teacher cannot read students (contacts) directly');
+select is((select count(*)::int from public.student_overview), 0, 'nor through the students list view');
 select is((select count(*)::int from public.guardians), 0, 'nor guardians');
 select is((select count(*)::int from public.enrollments), 0, 'nor enrollments (discounts, price overrides)');
 select is((select count(*)::int from public.group_prices), 0, 'nor group prices');
@@ -665,7 +687,7 @@ select is(
         + (select count(*) from public.students) + (select count(*) from public.guardians)
         + (select count(*) from public.student_guardians) + (select count(*) from public.student_notes)
         + (select count(*) from public.enrollments) + (select count(*) from public.enrollment_freezes)
-        + (select count(*) from public.import_jobs))::int,
+        + (select count(*) from public.import_jobs) + (select count(*) from public.student_overview))::int,
   0, 'a member of another center sees nothing in any M1 table'
 );
 select throws_ok(

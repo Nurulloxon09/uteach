@@ -9,14 +9,14 @@ Format: newest first. Keep it short and factual.
 ## Current milestone
 **M1 · Academic core**: ◐ in progress. Plan approved 2026-10-11: four PRs (M1a data layer → M1b courses, groups and
 schedule screens → M1c students and enrollments → M1d onboarding wizard and import). M1a merged (PR #3);
-M1b (courses, groups, schedule screens) is built.
+M1b (PR #4) is in review; M1c (students and enrollments) is built.
 
 ## Milestones
 | # | Milestone | Status | Finished |
 |---|---|---|---|
 | M0 | Foundation | ☑ done | 2026-10-11 |
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
-| M1 | Academic core | ◐ in progress (M1a ☑, M1b) | |
+| M1 | Academic core | ◐ in progress (M1a ☑, M1b, M1c) | |
 | M2 | Attendance | ☐ | |
 | M3 | Billing | ☐ | |
 | M4 | Telegram & SMS | ☐ | |
@@ -64,9 +64,9 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Rule edits regenerate only future, untouched lessons | ☑ | pgTAP (held, moved, cancelled, substituted lessons survive); rules editor with conflict pre-check |
 | Timetable week/day by room/teacher; drag; conflicting drop refused | ☑ | e2e: clashing drop refused with the DB message, free drop moves the lesson |
 | Cancel, makeup, substitute; substitute sees it in Today | ☑ | pgTAP; e2e (cancel, extra lesson, substitute → teacher's Today at 390 px) |
-| Guardian with existing phone is linked; "also guardian of" | ◐ DB | pgTAP; profile in M1c |
-| Enroll / freeze / transfer / end with date rules + `audit_log` | ◐ DB | pgTAP; dialogs in M1c |
-| Teachers see only their groups and rosters (names; no phones, no prices) | ☑ | pgTAP negatives (students, guardians, enrollments, prices, other rosters) |
+| Guardian with existing phone is linked; "also guardian of" | ☑ | pgTAP; e2e `m1-students` (siblings share a guardian; profile shows "also guardian of") |
+| Enroll / freeze / transfer / end with date rules + `audit_log` | ☑ | pgTAP (dates, audit rows); e2e (enroll, freeze, transfer, end) |
+| Teachers see only their groups and rosters (names; no phones, no prices) | ☑ | pgTAP negatives (incl. `student_overview`); e2e (teacher roster shows names, no phone, no students pages) |
 | Import: 300 rows, mapping, re-import without duplicates, row/column errors | ☐ | M1d |
 | Onboarding wizard steps 1–6 resumable | ☐ | M1d |
 | `expandRules()` tests: validity windows, group start/end, holidays, DST | ☑ | Vitest (`schedule.test.ts`) + SQL parity test on the same fixtures |
@@ -85,6 +85,15 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-11 · M1c students and enrollments
+- Students list (`student_overview` view: search by name, phone or guardian phone; branch, group, course and
+  active/inactive filters) with an Add dialog (first guardian optional; duplicate warning, save again to add).
+- Student page: Groups (enroll, freeze, transfer, end; "moved to the next level" offers the next level's groups),
+  Guardians (shared by phone, "also guardian of", main contact and message settings, edit/unlink), Notes (pin,
+  visible to teachers, own notes editable).
+- Group page Roster tab: staff add students and freeze/transfer/end; teachers see names only (`group_roster()`).
+- Migration `20261013090000_m1c_student_overview.sql` (view only); 5 more pgTAP checks; e2e `m1-students` (2 tests).
 
 ### 2026-10-11 · M1b courses, groups and schedule screens
 - Settings → Courses (list, course page with ordered levels and next level) and Holidays (add cancels that day's

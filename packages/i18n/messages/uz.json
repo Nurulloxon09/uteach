@@ -80,7 +80,8 @@
     "myGroups": "Mening guruhlarim",
     "schedule": "Jadval",
     "courses": "Kurslar",
-    "holidays": "Bayramlar"
+    "holidays": "Bayramlar",
+    "students": "Oʻquvchilar"
   },
   "errors": {
     "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
@@ -101,7 +102,8 @@
       "time": "Vaqtni kiriting, masalan 18:00.",
       "number": "Ruxsat etilgan oraliqdagi butun son kiriting.",
       "slots": "Dars vaqtlarini tekshiring.",
-      "endBeforeStart": "Tugash sanasi boshlanishdan oldin boʻlmaydi."
+      "endBeforeStart": "Tugash sanasi boshlanishdan oldin boʻlmaydi.",
+      "percent": "0 dan 100 gacha foiz kiriting."
     },
     "auth": {
       "invalidCredentials": "Telefon raqami yoki parol notoʻgʻri.",
@@ -152,7 +154,8 @@
       "use_transfer": "Oʻquvchini boshqa guruhga oʻtkazish uchun «Oʻtkazish»dan foydalaning.",
       "student_has_active_enrollments": "Arxivlashdan oldin oʻquvchining guruhlardagi oʻqishini tugating."
     },
-    "groupHasStudents": "Arxivlashdan oldin guruh oʻquvchilarining oʻqishini tugating yoki ularni oʻtkazing."
+    "groupHasStudents": "Arxivlashdan oldin guruh oʻquvchilarining oʻqishini tugating yoki ularni oʻtkazing.",
+    "duplicateStudent": "Bunday ism yoki telefonli oʻquvchi allaqachon bor. Roʻyxatni tekshiring yoki baribir qoʻshish uchun yana saqlang."
   },
   "auth": {
     "fields": {
@@ -469,7 +472,8 @@
     "room": "Bu xona arxivlansinmi?",
     "course": "Bu kurs arxivlansinmi?",
     "level": "Bu daraja arxivlansinmi?",
-    "group": "Bu guruh arxivlansinmi?"
+    "group": "Bu guruh arxivlansinmi?",
+    "student": "Bu oʻquvchi arxivlansinmi?"
   },
   "timetable": {
     "time": "Vaqt",
@@ -653,7 +657,8 @@
       "from": "Boshlab",
       "status": "Holat",
       "current": "Joriy"
-    }
+    },
+    "tabRoster": "Oʻquvchilar"
   },
   "lessons": {
     "sameRoom": "Oʻsha xona",
@@ -744,5 +749,172 @@
     "time": "Vaqt",
     "room": "Xona",
     "ruleRoom": "Odatdagi xona"
+  },
+  "students": {
+    "title": "Oʻquvchilar",
+    "listTitle": "Oʻquvchilar roʻyxati",
+    "addButton": "Oʻquvchi qoʻshish",
+    "addTitle": "Yangi oʻquvchi",
+    "addHint": "Vasiyni hozir yoki keyin qoʻshing; tanish telefon oʻsha vasiyni bogʻlaydi (aka-ukalar).",
+    "addSubmit": "Oʻquvchi qoʻshish",
+    "added": "Oʻquvchi qoʻshildi",
+    "editTitle": "Oʻquvchini tahrirlash",
+    "searchPlaceholder": "Ism, telefon yoki vasiy telefoni",
+    "searchLabel": "Oʻquvchilarni qidirish",
+    "filterGroup": "Guruh",
+    "filterCourse": "Kurs",
+    "emptyTitle": "Hali oʻquvchilar yoʻq",
+    "emptyHint": "Oʻquvchilarni birma-bir qoʻshing yoki Exceldan import qiling.",
+    "columns": {
+      "groups": "Guruhlar"
+    },
+    "fields": {
+      "fullName": "F.I.Sh.",
+      "phone": "Telefon",
+      "phoneHint": "Bolalar uchun majburiy emas.",
+      "branch": "Filial",
+      "birthDate": "Tugʻilgan sana",
+      "gender": "Jinsi",
+      "school": "Maktab"
+    },
+    "gender": {
+      "none": "Koʻrsatilmagan",
+      "male": "Erkak",
+      "female": "Ayol"
+    },
+    "firstGuardian": "Vasiy (ixtiyoriy)",
+    "guardian": {
+      "name": "Vasiyning ismi",
+      "phone": "Vasiyning telefoni",
+      "phoneHint": "Bu telefon allaqachon boʻlsa, oʻsha vasiy bogʻlanadi.",
+      "relation": "Qarindoshligi",
+      "primary": "Asosiy aloqa",
+      "notifications": "Dars va davomat xabarlarini oladi",
+      "billing": "Toʻlov xabarlarini oladi",
+      "hint": "Oʻquvchi haqida xabar oladigan ota-onalar va boshqalar.",
+      "add": "Vasiy qoʻshish",
+      "addTitle": "Vasiy qoʻshish",
+      "addHint": "Vasiyda bor telefon oʻsha odamni bogʻlaydi (aka-ukalar uchun).",
+      "linked": "Mavjud vasiy bogʻlandi",
+      "added": "Vasiy qoʻshildi",
+      "emptyTitle": "Hali vasiylar yoʻq",
+      "primaryChip": "Asosiy",
+      "alsoOf": "Shuningdek vasiysi:",
+      "unlinkRow": "{name} ni bu oʻquvchidan olib tashlash",
+      "editTitle": "Vasiyni tahrirlash",
+      "editShared": "Ism va telefon shu vasiyning barcha oʻquvchilari uchun oʻzgaradi.",
+      "unlinkTitle": "Bu vasiy olib tashlansinmi?",
+      "unlinkHint": "U boshqa oʻquvchilariga bogʻliqligicha qoladi.",
+      "unlink": "Olib tashlash",
+      "unlinked": "Vasiy olib tashlandi"
+    },
+    "relations": {
+      "mother": "Onasi",
+      "father": "Otasi",
+      "parent": "Ota-onasi",
+      "other": "Boshqa"
+    },
+    "status": {
+      "active": "Faol",
+      "inactive": "Oʻqimayapti"
+    },
+    "noPhone": "Telefon yoʻq",
+    "tabEnrollments": "Guruhlar",
+    "tabGuardians": "Vasiylar",
+    "tabNotes": "Izohlar",
+    "notes": {
+      "body": "Izoh",
+      "pin": "Tepaga qadash",
+      "visible": "Oʻqituvchilarga koʻrinadi",
+      "visibleHint": "Bu oʻquvchi guruhlarining oʻqituvchilari koʻradi.",
+      "hint": "Izohlarni xodimlar koʻradi; oʻqituvchilar faqat ular uchun belgilanganlarini koʻradi.",
+      "add": "Izoh qoʻshish",
+      "addTitle": "Yangi izoh",
+      "added": "Izoh qoʻshildi",
+      "emptyTitle": "Izohlar yoʻq",
+      "pinned": "Qadalgan",
+      "visibleChip": "Oʻqituvchilar koʻradi",
+      "editRow": "Izohni tahrirlash",
+      "deleteRow": "Izohni oʻchirish",
+      "editTitle": "Izohni tahrirlash",
+      "deleteTitle": "Bu izoh oʻchirilsinmi?",
+      "deleted": "Izoh oʻchirildi"
+    }
+  },
+  "enrollments": {
+    "search": "Qidirish…",
+    "nothingFound": "Hech narsa topilmadi",
+    "enrollTitle": "Guruhga yozish",
+    "enrollHint": "{name} uchun guruh tanlang.",
+    "enrollHintGroup": "{group} uchun oʻquvchi tanlang.",
+    "enrollSubmit": "Yozish",
+    "enrolled": "Oʻquvchi yozildi",
+    "student": "Oʻquvchi",
+    "chooseStudent": "Oʻquvchini tanlang",
+    "group": "Guruh",
+    "chooseGroup": "Guruhni tanlang",
+    "capacityWarning": "Guruh toʻla ({count}/{capacity}). Baribir yozish mumkin.",
+    "startDate": "Boshlanish sanasi",
+    "startDateHint": "Guruhning keyingi darsidan boshlash uchun boʻsh qoldiring.",
+    "discountPercent": "Chegirma, %",
+    "discountCap": "10% gacha.",
+    "discountReason": "Chegirma sababi",
+    "discountAmount": "Sikl uchun qatʼiy chegirma",
+    "priceOverride": "Shaxsiy sikl narxi",
+    "priceOverrideHint": "Bu oʻquvchi uchun guruh narxi oʻrniga.",
+    "freezeTitle": "Muzlatish",
+    "freezeHint": "{name} {group} ni toʻxtatadi. Bu davrdagi darslar hisoblanmaydi.",
+    "freezeSubmit": "Muzlatish",
+    "frozen": "Muzlatildi",
+    "from": "Dan",
+    "to": "Gacha (shu kun ham)",
+    "reason": "Sabab",
+    "transferTitle": "Boshqa guruhga oʻtkazish",
+    "transferHint": "{name} {group} dan oʻtkazish sanasidan bir kun oldin chiqadi.",
+    "transferSubmit": "Oʻtkazish",
+    "transferred": "Oʻquvchi oʻtkazildi",
+    "toGroup": "Yangi guruh",
+    "transferDate": "Oʻtkazish sanasi",
+    "transferDateHint": "Yangi guruhdagi birinchi kun.",
+    "keepDiscount": "Chegirmani saqlash",
+    "endTitle": "Oʻqishni tugatish",
+    "endHint": "{name} {group} da oʻqishni toʻxtatadi.",
+    "endSubmit": "Tugatish",
+    "ended": "Oʻqish tugatildi",
+    "endDate": "Oxirgi kun",
+    "endDateHint": "Hisoblanadigan oxirgi kun.",
+    "endReason": "Sabab",
+    "reasons": {
+      "completed": "Tugatdi",
+      "dropped": "Tashlab ketdi",
+      "moved_level": "Keyingi darajaga oʻtdi",
+      "transferred": "Oʻtkazildi"
+    },
+    "rowFreeze": "{who}: muzlatish",
+    "rowTransfer": "{who}: oʻtkazish",
+    "rowEnd": "{who}: tugatish",
+    "noNextLevel": "Bu darajaning keyingisi belgilanmagan. Oʻquvchini qoʻlda yozing.",
+    "period": "{from} – {to}",
+    "periodFrom": "{from} dan",
+    "status": {
+      "active": "Oʻqiyapti",
+      "frozen": "Muzlatilgan",
+      "ended": "Tugagan"
+    },
+    "discountValue": "Chegirma {percent}%",
+    "frozenFor": "Muzlatilgan {from} – {to}",
+    "hint": "Oʻquvchining hozirgi va avvalgi guruhlari.",
+    "enroll": "Guruhga yozish",
+    "emptyTitle": "Hali hech qaysi guruhda emas",
+    "emptyHint": "Oʻquvchini guruhga yozing.",
+    "periodLabel": "Sanalar",
+    "statusLabel": "Holat",
+    "notes": "Izohlar",
+    "actions": "Amallar",
+    "rosterCountOf": "{count}/{capacity} oʻquvchi",
+    "rosterCount": "{count} ta oʻquvchi",
+    "addStudent": "Oʻquvchi qoʻshish",
+    "rosterEmpty": "Bu guruhda hali oʻquvchi yoʻq",
+    "rosterEmptyHint": "Roʻyxatingizdan oʻquvchi qoʻshing."
   }
 }

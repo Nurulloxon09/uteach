@@ -2,6 +2,7 @@ import {
   Building2,
   CalendarCheck,
   CalendarDays,
+  GraduationCap,
   Home,
   Settings,
   UsersRound,
@@ -21,6 +22,7 @@ export const NAV_ICONS = {
   branches: Building2,
   groups: UsersRound,
   schedule: CalendarDays,
+  students: GraduationCap,
 } satisfies Record<string, LucideIcon>;
 
 export type NavIconName = keyof typeof NAV_ICONS;

@@ -109,6 +109,7 @@ export async function createGroup(
     firstStart?: string;
     name?: string;
     days?: string[];
+    course?: string;
   },
 ) {
   await page.goto("/en/groups");
