@@ -22,6 +22,7 @@ The first market is 🇺🇿 Uzbekistan: uz/ru UI, UZS currency, Click, Payme an
 | `02-data-model.md` | Every table, column, enum, constraint, view and RLS rule |
 | `03-roles-permissions.md` | Roles, admin permission flags, permission matrix, RLS helpers |
 | `04-rules.md` | Non-negotiable cross-cutting rules (money, time, i18n, adapters, audit…) |
+| `05-ui.md` | UI & design system: the reference app, tokens, fonts, layout, patterns, `/dev/ui` |
 | `10-platform-onboarding.md` | Auth, centers/branches/rooms, staff, onboarding wizard, import, plans, super-admin |
 | `11-leads-crm.md` | Lead pipeline, timeline, trials, conversion, auto-capture |
 | `12-students-groups.md` | Students, guardians, courses, levels, groups, enrollments |

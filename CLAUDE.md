@@ -66,6 +66,16 @@ First market: Uzbekistan (uz/ru, UZS, Click/Payme/Uzum, Eskiz SMS). Code must st
   only. Visual design comes later and must be changeable from one place.
 - No hard-coded UI strings. Every string goes through next-intl.
 
+## UI (from M0.5 on; details in docs/spec/05-ui.md)
+
+- The look comes from the reference app (`docs/design/reference/`, full app in
+  `C:\Users\user\Desktop\visual-fidelity-toolkit`). Every screen must look like it belongs to it.
+- Build screens only from `components/ui` and `components/patterns`, following `05-ui.md`.
+  Don't invent new colors, sizes, shadows or layouts.
+- Need something new? Add it as a pattern, show it on `/dev/ui`, then use it.
+- Never import reference files or copy its demo data, "Spik" branding or school-only pages.
+- Before calling a UI task done, take screenshots at 1440 px and 390 px and compare them with the reference.
+
 ## Commands
 
 - Install: `pnpm install`

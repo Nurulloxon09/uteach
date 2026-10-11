@@ -38,6 +38,25 @@ Global "done when" for every milestone:
 - [ ] CI runs typecheck, lint, unit and DB tests on PRs.
 **E2E:** sign up → create center → add branch and room → invite a teacher → teacher accepts → teacher sees the empty "Today" page.
 
+## M0.5 · UI foundation
+
+> ✅ CONFIRMED by owner (2026-10-11): build the UI foundation before M1, matching the reference app (see `05-ui.md`).
+
+> PROPOSED: the scope and every "done when" item below.
+
+**Scope:** tokens and fonts from `05-ui.md` in `globals.css` (light mode); `AppShell` (sidebar with groups, mobile drawer, top bar) replacing the tab row; shadcn `dialog`, `sheet`, `tabs`, `skeleton`, `popover`, `command` added and restyled; `components/patterns` (PageHeader, Section, ListPage + TableSearch + FilterButton + Pagination + RowActions + InitialsAvatar, DetailPage + ProfileCard + tabs, FormDialog, Combobox, StatTiles, StatusChip, MobileList, Empty/Loading/Error states); `/dev/ui` showcase (dev only); every existing M0 screen (auth, onboarding, home, today, staff, settings, invite) moved onto the new shell and patterns.
+**Tables:** none.
+**Done when:**
+- [ ] `globals.css` tokens equal the values in `05-ui.md` §2; no raw color classes or hex values anywhere in `apps/web/src` (lint rule or grep check in CI).
+- [ ] Plus Jakarta Sans loads for Latin and the Cyrillic fallback (Manrope) loads for Russian; the `ru` pages look consistent.
+- [ ] `/dev/ui` shows every pattern in `05-ui.md` §5 with fake data, in uz/ru/en, and returns 404 in production builds.
+- [ ] Side-by-side screenshots at 1440 px and 390 px are saved in `docs/design/screenshots/`: reference `/teachers` vs uteach `ListPage`, reference "Add Teacher" dialog vs `FormDialog`, reference dashboard stat tiles vs `StatTiles`, reference sidebar vs `AppShell`. The owner approves them.
+- [ ] All M0 screens use `AppShell` and the patterns; the Staff page is a `ListPage`; the invite form is a `FormDialog`.
+- [ ] The sidebar shows only the items the current role and permission flags allow (teacher: Today only for now).
+- [ ] Keyboard check: the dialog traps focus and closes on Esc; the mobile drawer opens and closes with the keyboard.
+- [ ] Typecheck, lint, unit, i18n check and the existing M0 e2e tests still pass.
+**E2E:** log in as owner → sidebar visible → open Staff (list page) → open invite dialog → invite a teacher → log in as teacher on a 390 px viewport → drawer menu → Today.
+
 ## M1 · Academic core
 
 > PROPOSED: scope additions: levels, group prices, holidays, conflicts inbox, timetable, cancel/makeup/substitute, guardians, notes, freeze/transfer/end, onboarding wizard, billing-hook stub, opening balances deferred to M3.
