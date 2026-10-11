@@ -90,6 +90,28 @@ Global "done when" for every milestone:
 > PROPOSED: scope additions: trial guests on the sheet, outbox table + templates seed, quiet hours at enqueue, the empty `telegram_links` table.
 
 **Scope:** teacher mobile sheet (P/L/A/E, all present, late minutes, topic), trial guests on the sheet (data model only; leads UI in M5), 48 h edit window, admin edits audited, matrix on the group page, `notification_outbox` + `enqueue_notification()` + templates seed, absence alert enqueue (10 min delay, dedupe, cancel on change), quiet hours applied at enqueue.
+
+> PROPOSED (M2 plan, 2026-10-11): delivered as three PRs.
+> - **M2a · data layer:** migration `m2_attendance` (centers settings columns, `attendance`, `notification_templates`
+>   + seed, `notification_outbox`, `telegram_links`, the RPCs below, "notify students?" parameters on the M1 lesson
+>   RPCs), pgTAP `m2_attendance.test.sql`, DB types, error codes, `packages/core/attendance` + tests.
+> - **M2b · sheet:** `/attendance/[lessonId]` sheet (mobile first), Today links to it (and shows for owners/admins
+>   who teach), the admin **Attendance** page, "notify students?" in cancel/move/drag/makeup/holiday dialogs,
+>   center settings "Attendance & notifications", new patterns on `/dev/ui`, e2e for the sheet.
+> - **M2c · matrix:** group page Attendance tab (matrix, cell edit, Excel export), attendance counts on the Lessons
+>   tab, attendance summary on the student page, the M2 e2e happy path, screenshots.
+>
+> Decisions in the plan (details in 02, 13, 14, 17, 05-ui):
+> - **Trial guests move wholly to M5.** `lead_trials` needs `leads`, so a guest row can't exist before M5. In M2
+>   `attendance.student_id` is `not null`; M5 adds `lead_trial_id`, drops that `not null` and adds the
+>   `num_nonnulls` check and the second unique index (a small additive migration).
+> - `notification_templates` is created in M2 (02 said M4) with system rows (Telegram, uz/ru/en) for the keys M2
+>   enqueues. Editing templates (settings → Notifications) and SMS rows with Eskiz template ids come in M4.
+> - `centers.quiet_hours_start/end` move from M4 to M2 (enqueue needs them); new `centers.late_alert_enabled`.
+> - Attendance has **no direct write grants**: one security-definer RPC, `save_attendance`, applies the window
+>   rules (same pattern as M1 lessons). The "denied at the DB level" item is proven by pgTAP calling the RPC as the
+>   teacher after the window and by a denied direct insert/update.
+> - `outbox.broadcast_id` comes with `broadcasts` in M4.
 **Tables:** attendance, notification_templates, notification_outbox (+ telegram_links table created empty, used in M4).
 **Done when:**
 - [ ] A teacher on a 375 px screen can mark a 15-student lesson in under 30 s ("all present" + 2 exceptions); a save is one request.

@@ -53,6 +53,16 @@ Tables: `group_schedule_rules`, `lessons`, `holidays`, `schedule_conflicts`.
 
 Notifications are enqueued into the outbox with dedupe keys (`lesson_cancelled:{lesson_id}:{recipient}`).
 
+> PROPOSED (M2 plan): `cancel_lesson`, `move_lesson` and `create_makeup_lesson` get `p_notify boolean default true`,
+> and `add_holiday` gets `p_notify boolean default false` (opt-in, as above). Recipients are the students expected
+> at the lesson plus their guardians with `receives_notifications`. A move notifies only when the date or time
+> changes (not a room-only change); its dedupe key includes the new start (`lesson_moved:{lesson_id}:{epoch}:{recipient}`),
+> and a new move or a cancel sets the lesson's still-pending `lesson_moved` rows to `cancelled`. A makeup for a
+> cancelled lesson sends `lesson_moved` (old and new time); an extra lesson sends a new key, `lesson_added`.
+> Substitutes don't notify students in M2; the substitute's staff alert comes with M4. Dropping a lesson on the
+> timetable opens a confirm with "Notify students and parents" ticked. Regeneration and holiday cancelling also
+> skip lessons that have attendance (until now `status = 'scheduled'` stood in for that).
+
 ## Holidays
 
 > PROPOSED: adding a holiday cancels already-generated lessons, which extends running cycles.

@@ -85,6 +85,13 @@ returning *;
 
 System defaults in uz/ru/en for: `absence_alert`, `late_alert`, `payment_received`, `payment_reminder`, `payment_due_soon`, `charge_created` (on by default with cycle billing: tells parents the next cycle is due; PROPOSED), `lesson_cancelled`, `lesson_moved`, `score_posted`, `trial_reminder`, `broadcast`. Centers can override text per locale (settings → Notifications) and enable or disable each key.
 
+> PROPOSED (M2 plan): M2 creates `notification_templates` and seeds Telegram rows in uz/ru/en for the keys it
+> enqueues: `absence_alert`, `late_alert`, `lesson_cancelled`, `lesson_moved` and the new `lesson_added` (extra
+> lesson). Each later milestone seeds its own keys. SMS rows (with `sms_provider_template_id`) and the
+> settings → Notifications screen come in M4. `enqueue_notification()` and quiet hours are built in M2
+> (`private.enqueue_notification`, callable only from other security-definer functions); the sender honours
+> `is_enabled` from M4. A pgTAP test checks that every key M2 enqueues has a system template in all three locales.
+
 ## Broadcasts
 
 > PROPOSED: recipient choice, per-locale text, SMS opt-in, scheduling, preview count, history. Canvas: by branch/group/course/debtors.

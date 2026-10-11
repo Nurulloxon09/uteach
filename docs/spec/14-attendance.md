@@ -14,6 +14,18 @@ Tables: `attendance`, `lead_trials`, `risk_flags`, `notification_outbox`.
 - Works on a poor connection: optimistic UI, and the save is retried. (An offline queue is a nice-to-have, not required.)
 - Allowed: the lesson's teacher (incl. substitute), and admins with `attendance`.
 
+> PROPOSED (M2 plan): the sheet lives at `/attendance/[lessonId]` and reads through `attendance_sheet(lesson_id)`
+> (names only, no contacts). "Expected" depends only on dates (`start_date ≤ local_date ≤ end_date`, no freeze
+> covering the day), not on the enrollment's current status. Students who already have a mark but are no longer
+> expected (e.g. a backdated end) stay on the sheet with a badge. Partial saves are allowed; unmarked students stay
+> blank and the Save button shows "12 / 15 marked". **All present** marks only the still-unmarked rows. The draft is
+> kept in the browser until it's saved, and a failed save is retried automatically (3 times) with a visible status.
+> The original teacher of a substituted lesson can't mark it. A cancelled lesson can't be marked.
+
+> PROPOSED (M2 plan): the owner/admin nav gets **Attendance**: lessons of one day (default today) in the user's
+> branches with their state (not marked yet, "12 / 14 · 2 absent", cancelled) and a "not marked" filter over the
+> last 7 days. Tapping a lesson opens the sheet; marking needs the `attendance` flag.
+
 ## Edit window
 
 > PROPOSED: the edit window measured from `ends_at`, the "ask an admin" message, making it a center setting. Canvas: teachers 48 h; admins any time (audited).
@@ -21,6 +33,11 @@ Tables: `attendance`, `lead_trials`, `risk_flags`, `notification_outbox`.
 - Teachers can create or edit attendance until **`lesson.ends_at + 48 h`** (`centers.attendance_edit_hours`). After that the sheet is read-only for them, with the message "ask an admin".
 - Admins with `attendance`: any time. Edits after the window write `audit_log`.
 - Teachers can't mark a lesson more than 30 min before it starts.
+
+> PROPOSED (M2 plan): the 30-minute rule applies to admins too (a future lesson has no attendance). Someone who is
+> both the lesson's teacher and an admin with `attendance` gets the admin rules. An admin edit after the window
+> writes one `audit_log` row per changed attendance row (changed columns only). Owners set the window, the alert
+> delay, late alerts and quiet hours in Center settings → "Attendance & notifications".
 
 ## Attendance matrix
 
@@ -30,6 +47,13 @@ Tables: `attendance`, `lead_trials`, `risk_flags`, `notification_outbox`.
 - The totals column shows attendance % for the month = (present + late) / (marked lessons − excused).
 - Admins can click a cell to edit. Teachers can edit within the window.
 - Export to Excel.
+
+> PROPOSED (M2 plan): the month is a calendar month of `lessons.local_date`. Rows = students with an enrollment in
+> the group overlapping the month (or a mark in it); frozen days are hatched like days outside the enrollment.
+> With no marked lessons the % shows "—". The % is computed by `attendanceRate()` in `packages/core` (basis
+> points, half-up). Teachers read the matrix through `attendance_matrix(group_id, from, to)` (names only). Clicking a
+> cell opens a small P/L/A/E picker that saves through `save_attendance` with one row. Below `md` the tab shows a
+> per-student summary (%, P/L/A/E counts) instead of the grid. The export has the same cells and % as the screen.
 
 ## Absence alerts
 
@@ -42,6 +66,13 @@ Tables: `attendance`, `lead_trials`, `risk_flags`, `notification_outbox`.
 - Late can optionally alert too (center setting, default off). Excused never alerts.
 - Quiet hours push `send_after` to the end of quiet hours (see 17).
 - **M2 only enqueues.** Sending starts in M4. M2 must still produce correct outbox rows (tested).
+
+> PROPOSED (M2 plan): alerts are enqueued only while the lesson is inside the teacher edit window
+> (`now() < ends_at + attendance_edit_hours`); later corrections don't message parents. The recipients are the
+> guardians with `receives_notifications`; if there are none, the student. Marking absent again after a change
+> revives the cancelled outbox row (same dedupe key, new `send_after`); a row that was already sent is never
+> re-sent. `late_alert` follows the same rules when `centers.late_alert_enabled`. Payload: `student`, `group`,
+> `date` (ISO), `time` (HH:MM, branch tz), `center`, plus `late_minutes` for late alerts; M4 formats them per locale.
 
 ## At-risk detection 🟨
 
