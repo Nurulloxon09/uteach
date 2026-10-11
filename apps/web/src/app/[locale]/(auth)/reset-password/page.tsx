@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AuthCard } from "@/components/patterns";
 import { requireUser } from "@/lib/auth";
 import { ResetPasswordForm } from "./reset-password-form";
 
@@ -13,14 +13,8 @@ export default async function ResetPasswordPage() {
   await requireUser();
   const t = await getTranslations("auth.reset");
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ResetPasswordForm />
-      </CardContent>
-    </Card>
+    <AuthCard title={t("title")} description={<>{t("description")}</>}>
+      <ResetPasswordForm />
+    </AuthCard>
   );
 }

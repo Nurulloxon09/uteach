@@ -1,6 +1,16 @@
 /** Routes reachable without signing in (paths without the locale prefix). */
 export const PUBLIC_PATHS = ["/login", "/signup", "/verify", "/forgot-password", "/invite"];
 
+/**
+ * Developer pages reachable without signing in, only outside production (05-ui §7).
+ * In production they're neither public nor rendered (the page itself calls notFound()).
+ */
+export const DEV_ONLY_PUBLIC_PATHS = ["/dev/ui"];
+
+export function publicPathsFor(nodeEnv: string | undefined): string[] {
+  return nodeEnv === "production" ? PUBLIC_PATHS : [...PUBLIC_PATHS, ...DEV_ONLY_PUBLIC_PATHS];
+}
+
 /** Signed-in users are sent away from these. */
 export const GUEST_ONLY_PATHS = ["/login", "/signup", "/forgot-password"];
 

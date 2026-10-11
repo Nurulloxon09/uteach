@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AuthCard } from "@/components/patterns";
 import { ForgotPasswordForm } from "./forgot-password-form";
 
 export async function generateMetadata() {
@@ -10,14 +10,8 @@ export async function generateMetadata() {
 export default async function ForgotPasswordPage() {
   const t = await getTranslations("auth.forgot");
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <ForgotPasswordForm />
-      </CardContent>
-    </Card>
+    <AuthCard title={t("title")} description={<>{t("description")}</>}>
+      <ForgotPasswordForm />
+    </AuthCard>
   );
 }

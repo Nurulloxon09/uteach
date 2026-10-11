@@ -32,7 +32,26 @@
     "archived": "Archived",
     "archive": "Archive",
     "restore": "Restore",
-    "archiveConfirm": "Archive this? It will be hidden from lists but kept in history."
+    "archiveConfirm": "Archive this? It will be hidden from lists but kept in history.",
+    "cancel": "Cancel",
+    "close": "Close",
+    "add": "Add",
+    "edit": "Edit",
+    "open": "Open",
+    "done": "Done",
+    "all": "All",
+    "confirm": "Confirm",
+    "breadcrumb": "Breadcrumb",
+    "loading": "Loading…",
+    "copy": "Copy",
+    "copied": "Copied",
+    "restored": "Restored.",
+    "archivedToast": "Archived.",
+    "actions": "Actions",
+    "rowOpen": "Open {name}",
+    "rowEdit": "Edit {name}",
+    "rowArchive": "Archive {name}",
+    "rowRestore": "Restore {name}"
   },
   "nav": {
     "home": "Home",
@@ -42,7 +61,17 @@
     "center": "Center",
     "switchCenter": "Switch center",
     "newCenter": "Create another center",
-    "logout": "Log out"
+    "logout": "Log out",
+    "settings": "Settings",
+    "menu": "Main menu",
+    "menuDescription": "Pages of your center",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "goTo": "Go to a page",
+    "goToPlaceholder": "Go to…",
+    "goToDescription": "Type a page name and press Enter",
+    "account": "Account menu",
+    "centers": "Your centers"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -163,7 +192,13 @@
     "nextSteps": "Next steps",
     "nextStepsHint": "Set up the basics: branches, rooms and your team.",
     "addBranch": "Add a branch",
-    "inviteStaff": "Invite staff"
+    "inviteStaff": "Invite staff",
+    "addBranchHint": "Every location of your center",
+    "addRooms": "Add rooms",
+    "addRoomsHint": "Rooms are used for the timetable",
+    "inviteStaffHint": "Admins and teachers join by invite link",
+    "done": "Done",
+    "todo": "To do"
   },
   "today": {
     "title": "Today",
@@ -174,7 +209,7 @@
     "title": "Staff",
     "inviteTitle": "Invite a staff member",
     "inviteDescription": "You get a link to send them. It works once, for their phone number, for 7 days.",
-    "listTitle": "Team",
+    "listTitle": "Staff list",
     "columns": {
       "name": "Name",
       "role": "Role",
@@ -200,36 +235,97 @@
     "copied": "Copied",
     "newLink": "New link",
     "disable": "Disable",
-    "enable": "Enable"
+    "enable": "Enable",
+    "inviteButton": "Invite staff",
+    "searchPlaceholder": "Search by name or phone",
+    "searchLabel": "Search staff",
+    "filterRole": "Role",
+    "filterStatus": "Status",
+    "emptyTitle": "No staff yet",
+    "emptyHint": "Invite your admins and teachers.",
+    "newLinkTitle": "New invite link",
+    "newLinkDescription": "The previous link no longer works.",
+    "disabledToast": "Access disabled.",
+    "enabledToast": "Access enabled.",
+    "disableTitle": "Disable this staff member?",
+    "disableDescription": "They lose access right away. You can enable them again later.",
+    "rowNewLink": "New invite link for {name}",
+    "rowDisable": "Disable {name}",
+    "rowEnable": "Enable {name}"
   },
   "flags": {
     "students": {
       "label": "Students",
       "hint": "Add students and guardians; enroll, freeze, transfer."
     },
-    "leads": { "label": "Leads", "hint": "Work with the leads pipeline." },
-    "attendance": { "label": "Attendance", "hint": "Mark and correct attendance at any time." },
-    "payments": { "label": "Payments", "hint": "Record payments and print receipts." },
-    "billing": { "label": "Billing", "hint": "See prices, charges, balances and debtors." },
-    "broadcasts": { "label": "Broadcasts", "hint": "Send messages to parents and students." },
-    "academics": { "label": "Academics", "hint": "Courses, groups, schedules and prices." },
-    "adjustments": { "label": "Adjustments", "hint": "Waive, write off and correct balances." },
+    "leads": {
+      "label": "Leads",
+      "hint": "Work with the leads pipeline."
+    },
+    "attendance": {
+      "label": "Attendance",
+      "hint": "Mark and correct attendance at any time."
+    },
+    "payments": {
+      "label": "Payments",
+      "hint": "Record payments and print receipts."
+    },
+    "billing": {
+      "label": "Billing",
+      "hint": "See prices, charges, balances and debtors."
+    },
+    "broadcasts": {
+      "label": "Broadcasts",
+      "hint": "Send messages to parents and students."
+    },
+    "academics": {
+      "label": "Academics",
+      "hint": "Courses, groups, schedules and prices."
+    },
+    "adjustments": {
+      "label": "Adjustments",
+      "hint": "Waive, write off and correct balances."
+    },
     "discounts": {
       "label": "Discounts",
       "hint": "Give discounts above 10% and manage promo codes."
     },
-    "void": { "label": "Voids", "hint": "Void payments and charges." },
-    "refunds": { "label": "Refunds", "hint": "Refund payments." },
-    "import": { "label": "Import", "hint": "Import data from Excel." },
-    "staff": { "label": "Staff", "hint": "Invite and disable teachers in their branches." },
-    "settings": { "label": "Settings", "hint": "Rooms, templates and center settings." },
+    "void": {
+      "label": "Voids",
+      "hint": "Void payments and charges."
+    },
+    "refunds": {
+      "label": "Refunds",
+      "hint": "Refund payments."
+    },
+    "import": {
+      "label": "Import",
+      "hint": "Import data from Excel."
+    },
+    "staff": {
+      "label": "Staff",
+      "hint": "Invite and disable teachers in their branches."
+    },
+    "settings": {
+      "label": "Settings",
+      "hint": "Rooms, templates and center settings."
+    },
     "cash_closing": {
       "label": "Cash closing",
       "hint": "Close the cash desk at the end of the day."
     },
-    "finance": { "label": "Finance", "hint": "Accounts, expenses and profit." },
-    "payroll": { "label": "Payroll", "hint": "Teacher pay rules and payroll runs." },
-    "analytics": { "label": "Analytics", "hint": "Reports beyond the dashboard." }
+    "finance": {
+      "label": "Finance",
+      "hint": "Accounts, expenses and profit."
+    },
+    "payroll": {
+      "label": "Payroll",
+      "hint": "Teacher pay rules and payroll runs."
+    },
+    "analytics": {
+      "label": "Analytics",
+      "hint": "Reports beyond the dashboard."
+    }
   },
   "settings": {
     "center": {
@@ -240,7 +336,8 @@
       "name": "Name",
       "defaultLocale": "Main language",
       "timezone": "Default time zone",
-      "timezoneHint": "Used for new branches. Each branch keeps its own time zone."
+      "timezoneHint": "Used for new branches. Each branch keeps its own time zone.",
+      "breadcrumb": "Settings"
     },
     "branches": {
       "title": "Branches & rooms",
@@ -262,7 +359,21 @@
       "addSubmit": "Add branch",
       "added": "Branch added.",
       "back": "All branches",
-      "detailsTitle": "Branch details"
+      "detailsTitle": "Branch details",
+      "addButton": "Add branch",
+      "editTitle": "Edit branch",
+      "listTitle": "All branches",
+      "searchPlaceholder": "Search by name or address",
+      "searchLabel": "Search branches",
+      "filterStatus": "Status",
+      "statusActive": "Active",
+      "statusArchived": "Archived",
+      "emptyTitle": "No branches yet",
+      "emptyHint": "Add the first location of your center.",
+      "archiveTitle": "Archive this branch?",
+      "tabDetails": "Details",
+      "tabRooms": "Rooms",
+      "roomsCount": "{count, plural, one {# room} other {# rooms}}"
     },
     "rooms": {
       "title": "Rooms",
@@ -273,10 +384,39 @@
         "name": "Room",
         "capacity": "Seats"
       },
-      "add": "Add room"
+      "add": "Add room",
+      "addTitle": "Add room",
+      "editTitle": "Edit room",
+      "archiveTitle": "Archive this room?",
+      "added": "Room added.",
+      "emptyHint": "Add the rooms of this branch.",
+      "capacityValue": "{count, plural, one {# seat} other {# seats}}"
     }
   },
   "sms": {
     "otp": "uteach code: {code}. Do not share it with anyone."
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous page",
+    "next": "Next page",
+    "page": "Page {page}",
+    "perPage": "{size} / page"
+  },
+  "states": {
+    "noResults": "No results",
+    "noResultsHint": "Try a different search or clear the filters.",
+    "emptyTitle": "Nothing here yet",
+    "emptyHint": "Items you add will appear here.",
+    "errorTitle": "Something went wrong",
+    "errorHint": "Please try again in a moment.",
+    "notFoundTitle": "Page not found",
+    "notFoundHint": "This page doesn't exist, or you don't have access to it.",
+    "goHome": "Go to home"
+  },
+  "timezone": {
+    "placeholder": "Choose a time zone",
+    "search": "Search time zones",
+    "empty": "No time zone found"
   }
 }

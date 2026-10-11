@@ -1,6 +1,7 @@
 import { todayIn } from "@uteach/core";
+import { CalendarDays } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
-import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { EmptyState, PageHeader, Section } from "@/components/patterns";
 import { getCenterContext } from "@/lib/center";
 
 export async function generateMetadata() {
@@ -19,21 +20,21 @@ export default async function TodayPage() {
   const today = todayIn(ctx.center.timezone);
 
   return (
-    <div className="mx-auto grid max-w-md gap-4">
-      <div>
-        <h1 className="font-heading text-2xl font-semibold" data-testid="today-title">
-          {t("title")}
-        </h1>
-        <p className="text-sm text-muted-foreground">
-          {format.dateTime(new Date(`${today}T12:00:00Z`), { dateStyle: "full", timeZone: "UTC" })}
-        </p>
-      </div>
-      <Card>
-        <CardHeader>
-          <CardTitle>{t("emptyTitle")}</CardTitle>
-          <CardDescription>{t("emptyDescription")}</CardDescription>
-        </CardHeader>
-      </Card>
+    <div className="mx-auto max-w-2xl space-y-5">
+      <PageHeader
+        title={<span data-testid="today-title">{t("title")}</span>}
+        meta={
+          <span className="text-[15px] text-muted-foreground">
+            {format.dateTime(new Date(`${today}T12:00:00Z`), {
+              dateStyle: "full",
+              timeZone: "UTC",
+            })}
+          </span>
+        }
+      />
+      <Section>
+        <EmptyState icon={CalendarDays} title={t("emptyTitle")} hint={t("emptyDescription")} />
+      </Section>
     </div>
   );
 }

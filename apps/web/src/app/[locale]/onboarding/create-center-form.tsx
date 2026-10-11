@@ -1,26 +1,31 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useActionState, type ReactNode } from "react";
-import { Field, FieldError, FormMessage, NativeSelect, SubmitButton } from "@/components/form-bits";
-import { Label } from "@/components/ui/label";
+import { useActionState } from "react";
+import {
+  Field,
+  FormMessage,
+  SelectField,
+  SubmitButton,
+  TimezoneField,
+} from "@/components/patterns";
 import { Separator } from "@/components/ui/separator";
 import { routing } from "@/i18n/routing";
 import { createCenterAction } from "./actions";
 
 export function CreateCenterForm({
   defaultLocale,
-  timezoneSelect,
+  defaultTimezone,
 }: {
   defaultLocale: string;
-  timezoneSelect: ReactNode;
+  defaultTimezone: string;
 }) {
   const t = useTranslations("onboarding");
   const tl = useTranslations("locale");
   const [state, action] = useActionState(createCenterAction, null);
 
   return (
-    <form action={action} className="grid gap-5" noValidate>
+    <form action={action} className="space-y-4" noValidate>
       <FormMessage state={state} />
       <Field
         name="name"
@@ -29,24 +34,16 @@ export function CreateCenterForm({
         state={state}
         required
       />
-      <div className="grid gap-2">
-        <Label htmlFor="field-locale">{t("language")}</Label>
-        <NativeSelect id="field-locale" name="locale" defaultValue={defaultLocale}>
-          {routing.locales.map((l) => (
-            <option key={l} value={l}>
-              {tl(l)}
-            </option>
-          ))}
-        </NativeSelect>
-        <FieldError name="locale" state={state} />
-      </div>
-      <div className="grid gap-2">
-        <Label htmlFor="field-timezone">{t("timezone")}</Label>
-        {timezoneSelect}
-        <FieldError name="timezone" state={state} />
-      </div>
-      <Separator />
-      <p className="text-sm text-muted-foreground">{t("firstBranchHint")}</p>
+      <SelectField
+        name="locale"
+        label={t("language")}
+        state={state}
+        defaultValue={defaultLocale}
+        options={routing.locales.map((l) => ({ value: l, label: tl(l) }))}
+      />
+      <TimezoneField label={t("timezone")} state={state} defaultValue={defaultTimezone} />
+      <Separator className="my-2" />
+      <p className="text-[15px] text-muted-foreground">{t("firstBranchHint")}</p>
       <Field
         name="branchName"
         label={t("branchName")}

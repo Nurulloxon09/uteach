@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AuthCard } from "@/components/patterns";
 import { safeNextPath } from "@/lib/paths";
 import { SignupForm } from "./signup-form";
 
@@ -12,14 +12,8 @@ export default async function SignupPage({ searchParams }: PageProps<"/[locale]/
   const t = await getTranslations("auth.signup");
   const next = safeNextPath((await searchParams).next);
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <SignupForm next={next} />
-      </CardContent>
-    </Card>
+    <AuthCard title={t("title")} description={<>{t("description")}</>}>
+      <SignupForm next={next} />
+    </AuthCard>
   );
 }

@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
-import { FormMessage, SubmitButton } from "@/components/form-bits";
+import { FormMessage, SubmitButton } from "@/components/patterns";
 import { acceptInviteAction } from "./actions";
 
 export function AcceptInviteForm({ token }: { token: string }) {

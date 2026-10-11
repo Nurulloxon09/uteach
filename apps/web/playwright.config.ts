@@ -6,6 +6,8 @@ import { defineConfig, devices } from "@playwright/test";
  */
 export default defineConfig({
   testDir: "./e2e",
+  // `pnpm screenshots` runs these separately (playwright.screenshots.config.ts).
+  testIgnore: "screenshots/**",
   fullyParallel: false,
   workers: 1,
   // next dev compiles each route on first visit, which can take several seconds.

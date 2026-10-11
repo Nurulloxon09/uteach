@@ -1,5 +1,5 @@
 import { getTranslations } from "next-intl/server";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { AuthCard } from "@/components/patterns";
 import { safeNextPath } from "@/lib/paths";
 import { LoginForm } from "./login-form";
 
@@ -12,14 +12,8 @@ export default async function LoginPage({ searchParams }: PageProps<"/[locale]/l
   const t = await getTranslations("auth.login");
   const next = safeNextPath((await searchParams).next);
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{t("title")}</CardTitle>
-        <CardDescription>{t("description")}</CardDescription>
-      </CardHeader>
-      <CardContent>
-        <LoginForm next={next} />
-      </CardContent>
-    </Card>
+    <AuthCard title={t("title")} description={<>{t("description")}</>}>
+      <LoginForm next={next} />
+    </AuthCard>
   );
 }

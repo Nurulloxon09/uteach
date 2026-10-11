@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { matchesPath, safeNextPath, splitLocale } from "./paths";
+import { matchesPath, publicPathsFor, safeNextPath, splitLocale } from "./paths";
 
 describe("safeNextPath", () => {
   it("allows same-site paths", () => {
@@ -33,5 +33,14 @@ describe("matchesPath", () => {
     expect(matchesPath("/invite/abc", ["/invite"])).toBe(true);
     expect(matchesPath("/invitex", ["/invite"])).toBe(false);
     expect(matchesPath("/login", ["/login"])).toBe(true);
+  });
+});
+
+describe("publicPathsFor", () => {
+  it("lets /dev/ui through without login outside production only", () => {
+    expect(matchesPath("/dev/ui", publicPathsFor("development"))).toBe(true);
+    expect(matchesPath("/dev/ui", publicPathsFor("test"))).toBe(true);
+    expect(matchesPath("/dev/ui", publicPathsFor("production"))).toBe(false);
+    expect(matchesPath("/login", publicPathsFor("production"))).toBe(true);
   });
 });

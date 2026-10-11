@@ -32,7 +32,26 @@
     "archived": "Arxivda",
     "archive": "Arxivlash",
     "restore": "Qayta tiklash",
-    "archiveConfirm": "Arxivlansinmi? Roʻyxatlarda koʻrinmaydi, lekin tarixda saqlanadi."
+    "archiveConfirm": "Arxivlansinmi? Roʻyxatlarda koʻrinmaydi, lekin tarixda saqlanadi.",
+    "cancel": "Bekor qilish",
+    "close": "Yopish",
+    "add": "Qoʻshish",
+    "edit": "Tahrirlash",
+    "open": "Ochish",
+    "done": "Tayyor",
+    "all": "Hammasi",
+    "confirm": "Tasdiqlash",
+    "breadcrumb": "Navigatsiya yoʻli",
+    "loading": "Yuklanmoqda…",
+    "copy": "Nusxalash",
+    "copied": "Nusxalandi",
+    "restored": "Qayta tiklandi.",
+    "archivedToast": "Arxivlandi.",
+    "actions": "Amallar",
+    "rowOpen": "{name}ni ochish",
+    "rowEdit": "{name}ni tahrirlash",
+    "rowArchive": "{name}ni arxivlash",
+    "rowRestore": "{name}ni qayta tiklash"
   },
   "nav": {
     "home": "Bosh sahifa",
@@ -42,7 +61,17 @@
     "center": "Markaz",
     "switchCenter": "Markazni almashtirish",
     "newCenter": "Yana bir markaz yaratish",
-    "logout": "Chiqish"
+    "logout": "Chiqish",
+    "settings": "Sozlamalar",
+    "menu": "Asosiy menyu",
+    "menuDescription": "Markazingiz sahifalari",
+    "openMenu": "Menyuni ochish",
+    "closeMenu": "Menyuni yopish",
+    "goTo": "Sahifaga oʻtish",
+    "goToPlaceholder": "Qayerga oʻtamiz?",
+    "goToDescription": "Sahifa nomini yozing va Enter bosing",
+    "account": "Akkaunt menyusi",
+    "centers": "Markazlaringiz"
   },
   "errors": {
     "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
@@ -163,7 +192,13 @@
     "nextSteps": "Keyingi qadamlar",
     "nextStepsHint": "Asosiylarini sozlang: filiallar, xonalar va jamoangiz.",
     "addBranch": "Filial qoʻshish",
-    "inviteStaff": "Xodim taklif qilish"
+    "inviteStaff": "Xodim taklif qilish",
+    "addBranchHint": "Markazingizning har bir manzili",
+    "addRooms": "Xonalar qoʻshish",
+    "addRoomsHint": "Xonalar dars jadvali uchun kerak",
+    "inviteStaffHint": "Administrator va oʻqituvchilar havola orqali qoʻshiladi",
+    "done": "Bajarildi",
+    "todo": "Qilish kerak"
   },
   "today": {
     "title": "Bugun",
@@ -174,7 +209,7 @@
     "title": "Xodimlar",
     "inviteTitle": "Xodim taklif qilish",
     "inviteDescription": "Unga yuborish uchun havola olasiz. Havola bir marta, uning raqami uchun, 7 kun ishlaydi.",
-    "listTitle": "Jamoa",
+    "listTitle": "Xodimlar roʻyxati",
     "columns": {
       "name": "Ism",
       "role": "Rol",
@@ -200,19 +235,41 @@
     "copied": "Nusxalandi",
     "newLink": "Yangi havola",
     "disable": "Oʻchirish",
-    "enable": "Yoqish"
+    "enable": "Yoqish",
+    "inviteButton": "Xodim taklif qilish",
+    "searchPlaceholder": "Ism yoki telefon boʻyicha qidirish",
+    "searchLabel": "Xodimlarni qidirish",
+    "filterRole": "Rol",
+    "filterStatus": "Holat",
+    "emptyTitle": "Hali xodim yoʻq",
+    "emptyHint": "Administrator va oʻqituvchilaringizni taklif qiling.",
+    "newLinkTitle": "Yangi taklif havolasi",
+    "newLinkDescription": "Oldingi havola endi ishlamaydi.",
+    "disabledToast": "Kirish oʻchirildi.",
+    "enabledToast": "Kirish yoqildi.",
+    "disableTitle": "Bu xodimni oʻchirasizmi?",
+    "disableDescription": "U darhol kira olmaydi. Keyinroq qayta yoqishingiz mumkin.",
+    "rowNewLink": "{name} uchun yangi havola",
+    "rowDisable": "{name}ni oʻchirish",
+    "rowEnable": "{name}ni yoqish"
   },
   "flags": {
     "students": {
       "label": "Oʻquvchilar",
       "hint": "Oʻquvchi va ota-onalarni qoʻshish; guruhga yozish, muzlatish, koʻchirish."
     },
-    "leads": { "label": "Lidlar", "hint": "Lidlar voronkasi bilan ishlash." },
+    "leads": {
+      "label": "Lidlar",
+      "hint": "Lidlar voronkasi bilan ishlash."
+    },
     "attendance": {
       "label": "Davomat",
       "hint": "Davomatni istalgan vaqtda belgilash va tuzatish."
     },
-    "payments": { "label": "Toʻlovlar", "hint": "Toʻlovlarni qabul qilish va chek chiqarish." },
+    "payments": {
+      "label": "Toʻlovlar",
+      "hint": "Toʻlovlarni qabul qilish va chek chiqarish."
+    },
     "billing": {
       "label": "Hisob-kitob",
       "hint": "Narxlar, hisoblar, balanslar va qarzdorlarni koʻrish."
@@ -221,7 +278,10 @@
       "label": "Xabarnomalar",
       "hint": "Ota-onalar va oʻquvchilarga xabar yuborish."
     },
-    "academics": { "label": "Oʻquv jarayoni", "hint": "Kurslar, guruhlar, jadvallar va narxlar." },
+    "academics": {
+      "label": "Oʻquv jarayoni",
+      "hint": "Kurslar, guruhlar, jadvallar va narxlar."
+    },
     "adjustments": {
       "label": "Tuzatishlar",
       "hint": "Balanslarni kechish, hisobdan chiqarish va tuzatish."
@@ -230,18 +290,42 @@
       "label": "Chegirmalar",
       "hint": "10% dan ortiq chegirma berish va promokodlar."
     },
-    "void": { "label": "Bekor qilish", "hint": "Toʻlov va hisoblarni bekor qilish." },
-    "refunds": { "label": "Qaytarishlar", "hint": "Toʻlovlarni qaytarish." },
-    "import": { "label": "Import", "hint": "Excel dan maʼlumot yuklash." },
+    "void": {
+      "label": "Bekor qilish",
+      "hint": "Toʻlov va hisoblarni bekor qilish."
+    },
+    "refunds": {
+      "label": "Qaytarishlar",
+      "hint": "Toʻlovlarni qaytarish."
+    },
+    "import": {
+      "label": "Import",
+      "hint": "Excel dan maʼlumot yuklash."
+    },
     "staff": {
       "label": "Xodimlar",
       "hint": "Oʻz filiallariga oʻqituvchi taklif qilish va oʻchirish."
     },
-    "settings": { "label": "Sozlamalar", "hint": "Xonalar, shablonlar va markaz sozlamalari." },
-    "cash_closing": { "label": "Kassani yopish", "hint": "Kun oxirida kassani yopish." },
-    "finance": { "label": "Moliya", "hint": "Hisoblar, xarajatlar va foyda." },
-    "payroll": { "label": "Ish haqi", "hint": "Oʻqituvchi ish haqi qoidalari va hisob-kitobi." },
-    "analytics": { "label": "Analitika", "hint": "Bosh sahifadan tashqari hisobotlar." }
+    "settings": {
+      "label": "Sozlamalar",
+      "hint": "Xonalar, shablonlar va markaz sozlamalari."
+    },
+    "cash_closing": {
+      "label": "Kassani yopish",
+      "hint": "Kun oxirida kassani yopish."
+    },
+    "finance": {
+      "label": "Moliya",
+      "hint": "Hisoblar, xarajatlar va foyda."
+    },
+    "payroll": {
+      "label": "Ish haqi",
+      "hint": "Oʻqituvchi ish haqi qoidalari va hisob-kitobi."
+    },
+    "analytics": {
+      "label": "Analitika",
+      "hint": "Bosh sahifadan tashqari hisobotlar."
+    }
   },
   "settings": {
     "center": {
@@ -252,7 +336,8 @@
       "name": "Nomi",
       "defaultLocale": "Asosiy til",
       "timezone": "Standart vaqt mintaqasi",
-      "timezoneHint": "Yangi filiallar uchun ishlatiladi. Har bir filialning oʻz vaqt mintaqasi bor."
+      "timezoneHint": "Yangi filiallar uchun ishlatiladi. Har bir filialning oʻz vaqt mintaqasi bor.",
+      "breadcrumb": "Sozlamalar"
     },
     "branches": {
       "title": "Filiallar va xonalar",
@@ -274,7 +359,21 @@
       "addSubmit": "Filial qoʻshish",
       "added": "Filial qoʻshildi.",
       "back": "Barcha filiallar",
-      "detailsTitle": "Filial maʼlumotlari"
+      "detailsTitle": "Filial maʼlumotlari",
+      "addButton": "Filial qoʻshish",
+      "editTitle": "Filialni tahrirlash",
+      "listTitle": "Barcha filiallar",
+      "searchPlaceholder": "Nomi yoki manzil boʻyicha qidirish",
+      "searchLabel": "Filiallarni qidirish",
+      "filterStatus": "Holat",
+      "statusActive": "Faol",
+      "statusArchived": "Arxivda",
+      "emptyTitle": "Hali filial yoʻq",
+      "emptyHint": "Markazingizning birinchi manzilini qoʻshing.",
+      "archiveTitle": "Filial arxivlansinmi?",
+      "tabDetails": "Maʼlumotlar",
+      "tabRooms": "Xonalar",
+      "roomsCount": "{count, plural, one {# ta xona} other {# ta xona}}"
     },
     "rooms": {
       "title": "Xonalar",
@@ -285,10 +384,39 @@
         "name": "Xona",
         "capacity": "Oʻrinlar"
       },
-      "add": "Xona qoʻshish"
+      "add": "Xona qoʻshish",
+      "addTitle": "Xona qoʻshish",
+      "editTitle": "Xonani tahrirlash",
+      "archiveTitle": "Xona arxivlansinmi?",
+      "added": "Xona qoʻshildi.",
+      "emptyHint": "Bu filial xonalarini qoʻshing.",
+      "capacityValue": "{count, plural, one {# oʻrin} other {# oʻrin}}"
     }
   },
   "sms": {
     "otp": "uteach kodi: {code}. Uni hech kimga bermang."
+  },
+  "pagination": {
+    "label": "Sahifalar",
+    "previous": "Oldingi sahifa",
+    "next": "Keyingi sahifa",
+    "page": "{page}-sahifa",
+    "perPage": "{size} / sahifa"
+  },
+  "states": {
+    "noResults": "Hech narsa topilmadi",
+    "noResultsHint": "Boshqa soʻz bilan qidiring yoki filtrlarni tozalang.",
+    "emptyTitle": "Hozircha hech narsa yoʻq",
+    "emptyHint": "Qoʻshgan narsalaringiz shu yerda chiqadi.",
+    "errorTitle": "Nimadir xato ketdi",
+    "errorHint": "Birozdan soʻng qayta urinib koʻring.",
+    "notFoundTitle": "Sahifa topilmadi",
+    "notFoundHint": "Bu sahifa mavjud emas yoki unga ruxsatingiz yoʻq.",
+    "goHome": "Bosh sahifaga"
+  },
+  "timezone": {
+    "placeholder": "Vaqt mintaqasini tanlang",
+    "search": "Vaqt mintaqasini qidirish",
+    "empty": "Vaqt mintaqasi topilmadi"
   }
 }

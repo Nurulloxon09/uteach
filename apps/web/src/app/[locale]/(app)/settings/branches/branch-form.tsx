@@ -1,68 +1,108 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useActionState, useEffect, useRef, type ReactNode } from "react";
-import { Field, FieldError, FormMessage, SubmitButton } from "@/components/form-bits";
-import { Label } from "@/components/ui/label";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
+import {
+  Field,
+  FormDialog,
+  FormMessage,
+  PageAction,
+  SubmitButton,
+  TimezoneField,
+} from "@/components/patterns";
+import type { ActionState } from "@/lib/actions";
 import { createBranchAction, updateBranchAction } from "../actions";
 
-type Branch = { id: string; name: string; address: string | null; phone: string | null };
+type Branch = {
+  id: string;
+  name: string;
+  address: string | null;
+  phone: string | null;
+  timezone: string;
+};
 
-/** Create a branch, or edit one when `branch` is given. */
-export function BranchForm({
+function BranchFields({
+  state,
   branch,
-  editable = true,
-  timezoneSelect,
+  defaultTimezone,
+  disabled,
 }: {
+  state: ActionState;
   branch?: Branch;
-  editable?: boolean;
-  timezoneSelect: ReactNode;
+  defaultTimezone: string;
+  disabled?: boolean;
 }) {
-  const t = useTranslations("settings.branches");
-  const tc = useTranslations("common");
-  const [state, action] = useActionState(branch ? updateBranchAction : createBranchAction, null);
-  const formRef = useRef<HTMLFormElement>(null);
+  const t = useTranslations("settings.branches.fields");
+  return (
+    <>
+      <Field name="name" label={t("name")} defaultValue={branch?.name} state={state} required />
+      <Field
+        name="address"
+        label={t("address")}
+        defaultValue={branch?.address ?? ""}
+        state={state}
+      />
+      <Field
+        name="phone"
+        type="tel"
+        inputMode="tel"
+        label={t("phone")}
+        defaultValue={branch?.phone ?? ""}
+        state={state}
+      />
+      <TimezoneField
+        label={t("timezone")}
+        hint={t("timezoneHint")}
+        state={state}
+        defaultValue={branch?.timezone ?? defaultTimezone}
+        disabled={disabled}
+      />
+    </>
+  );
+}
 
+/** "+ Add branch" page action and its FormDialog. */
+export function AddBranchDialog({ defaultTimezone }: { defaultTimezone: string }) {
+  const t = useTranslations("settings.branches");
+  return (
+    <FormDialog
+      trigger={<PageAction>{t("addButton")}</PageAction>}
+      title={t("addTitle")}
+      description={t("addHint")}
+      action={createBranchAction}
+      submitLabel={t("addSubmit")}
+      successToast={t("added")}
+      testId="branch-dialog"
+    >
+      {(state) => <BranchFields state={state} defaultTimezone={defaultTimezone} />}
+    </FormDialog>
+  );
+}
+
+/** Inline edit form on the branch detail page (Details tab). */
+export function EditBranchForm({ branch, editable }: { branch: Branch; editable: boolean }) {
+  const tc = useTranslations("common");
+  const [state, action] = useActionState(updateBranchAction, null);
   useEffect(() => {
-    if (state?.ok && !branch) formRef.current?.reset();
-  }, [state, branch]);
+    if (state?.ok) toast.success(tc("saved"));
+  }, [state, tc]);
 
   return (
-    <form ref={formRef} action={action} className="grid gap-4" noValidate>
-      {branch ? <input type="hidden" name="id" value={branch.id} /> : null}
-      <FormMessage state={state} success={branch ? tc("saved") : t("added")} />
-      <fieldset disabled={!editable} className="grid gap-4">
-        <Field
-          name="name"
-          label={t("fields.name")}
-          defaultValue={branch?.name}
+    <form action={action} className="space-y-4" noValidate>
+      <input type="hidden" name="id" value={branch.id} />
+      <FormMessage state={state} />
+      <fieldset disabled={!editable} className="space-y-4 disabled:opacity-80">
+        <BranchFields
           state={state}
-          required
+          branch={branch}
+          defaultTimezone={branch.timezone}
+          disabled={!editable}
         />
-        <Field
-          name="address"
-          label={t("fields.address")}
-          defaultValue={branch?.address ?? ""}
-          state={state}
-        />
-        <Field
-          name="phone"
-          type="tel"
-          inputMode="tel"
-          label={t("fields.phone")}
-          defaultValue={branch?.phone ?? ""}
-          state={state}
-        />
-        <div className="grid gap-2">
-          <Label htmlFor="field-timezone">{t("fields.timezone")}</Label>
-          {timezoneSelect}
-          <p className="text-sm text-muted-foreground">{t("fields.timezoneHint")}</p>
-          <FieldError name="timezone" state={state} />
-        </div>
       </fieldset>
       {editable ? (
-        <div>
-          <SubmitButton>{branch ? tc("save") : t("addSubmit")}</SubmitButton>
+        <div className="flex justify-end pt-2">
+          <SubmitButton>{tc("save")}</SubmitButton>
         </div>
       ) : null}
     </form>

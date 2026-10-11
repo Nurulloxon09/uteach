@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import uteach from "./eslint-rules/no-raw-colors.mjs";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -8,13 +9,20 @@ const eslintConfig = defineConfig([
   {
     // All UI text goes through next-intl (04-rules §4): no string literals in JSX.
     files: ["src/app/**/*.tsx", "src/components/**/*.tsx"],
-    ignores: ["src/components/ui/**"],
+    // /dev/ui is a developer-only page (404 in production); its section labels stay untranslated (05-ui.md §6b).
+    ignores: ["src/components/ui/**", "**/dev/ui/**"],
     rules: {
       "react/jsx-no-literals": [
         "error",
         { noStrings: true, ignoreProps: true, allowedStrings: ["·", "—", "/", ":", "(", ")"] },
       ],
     },
+  },
+  {
+    // Colors come only from theme tokens in globals.css (05-ui.md §2).
+    files: ["src/**/*.{ts,tsx}"],
+    plugins: { uteach },
+    rules: { "uteach/no-raw-colors": "error" },
   },
   {
     rules: {

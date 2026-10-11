@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
-import { Field, FormMessage, SubmitButton } from "@/components/form-bits";
+import { Field, FormMessage, SubmitButton } from "@/components/patterns";
 import { Link } from "@/i18n/navigation";
 import { signUpAction } from "../actions";
 
@@ -45,7 +45,7 @@ export function SignupForm({ next }: { next: string | null }) {
       <p className="text-center text-sm">
         <Link
           href={next ? { pathname: "/login", query: { next } } : "/login"}
-          className="underline-offset-4 hover:underline"
+          className="font-medium text-primary underline-offset-4 hover:underline"
         >
           {t("signup.toLogin")}
         </Link>

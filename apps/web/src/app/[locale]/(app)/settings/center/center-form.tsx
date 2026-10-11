@@ -1,54 +1,57 @@
 "use client";
 
 import { useTranslations } from "next-intl";
-import { useActionState, type ReactNode } from "react";
-import { Field, FieldError, FormMessage, NativeSelect, SubmitButton } from "@/components/form-bits";
-import { Label } from "@/components/ui/label";
+import { useActionState, useEffect } from "react";
+import { toast } from "sonner";
+import {
+  Field,
+  FormMessage,
+  SelectField,
+  SubmitButton,
+  TimezoneField,
+} from "@/components/patterns";
 import { routing } from "@/i18n/routing";
 import { updateCenterAction } from "../actions";
 
 export function CenterForm({
   center,
   editable,
-  timezoneSelect,
 }: {
-  center: { name: string; defaultLocale: string };
+  center: { name: string; defaultLocale: string; timezone: string };
   editable: boolean;
-  timezoneSelect: ReactNode;
 }) {
   const t = useTranslations("settings.center");
   const tl = useTranslations("locale");
   const tc = useTranslations("common");
   const [state, action] = useActionState(updateCenterAction, null);
 
+  useEffect(() => {
+    if (state?.ok) toast.success(tc("saved"));
+  }, [state, tc]);
+
   return (
-    <form action={action} className="grid gap-4" noValidate>
-      <FormMessage state={state} success={tc("saved")} />
-      <fieldset disabled={!editable} className="grid gap-4">
+    <form action={action} className="space-y-4" noValidate>
+      <FormMessage state={state} />
+      <fieldset disabled={!editable} className="space-y-4 disabled:opacity-80">
         <Field name="name" label={t("name")} defaultValue={center.name} state={state} required />
-        <div className="grid gap-2">
-          <Label htmlFor="field-defaultLocale">{t("defaultLocale")}</Label>
-          <NativeSelect
-            id="field-defaultLocale"
-            name="defaultLocale"
-            defaultValue={center.defaultLocale}
-          >
-            {routing.locales.map((l) => (
-              <option key={l} value={l}>
-                {tl(l)}
-              </option>
-            ))}
-          </NativeSelect>
-        </div>
-        <div className="grid gap-2">
-          <Label htmlFor="field-timezone">{t("timezone")}</Label>
-          {timezoneSelect}
-          <p className="text-sm text-muted-foreground">{t("timezoneHint")}</p>
-          <FieldError name="timezone" state={state} />
-        </div>
+        <SelectField
+          name="defaultLocale"
+          label={t("defaultLocale")}
+          state={state}
+          defaultValue={center.defaultLocale}
+          disabled={!editable}
+          options={routing.locales.map((l) => ({ value: l, label: tl(l) }))}
+        />
+        <TimezoneField
+          label={t("timezone")}
+          hint={t("timezoneHint")}
+          state={state}
+          defaultValue={center.timezone}
+          disabled={!editable}
+        />
       </fieldset>
       {editable ? (
-        <div>
+        <div className="flex justify-end pt-2">
           <SubmitButton>{tc("save")}</SubmitButton>
         </div>
       ) : null}
