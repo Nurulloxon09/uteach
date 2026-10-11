@@ -9,14 +9,15 @@ Format: newest first. Keep it short and factual.
 ## Current milestone
 **M1 · Academic core**: ◐ in progress. Plan approved 2026-10-11: four PRs (M1a data layer → M1b courses, groups and
 schedule screens → M1c students and enrollments → M1d onboarding wizard and import). M1a merged (PR #3);
-M1b (PR #4) is in review; M1c (students and enrollments) is built.
+M1b (PR #4) and M1c (PR #5) are in review; M1d (onboarding wizard and Excel import) is built, so every M1
+"done when" item is checked. M1 is done once the four PRs are merged with green CI.
 
 ## Milestones
 | # | Milestone | Status | Finished |
 |---|---|---|---|
 | M0 | Foundation | ☑ done | 2026-10-11 |
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
-| M1 | Academic core | ◐ in progress (M1a ☑, M1b, M1c) | |
+| M1 | Academic core | ◐ built; merging (M1a ☑, M1b, M1c, M1d) | |
 | M2 | Attendance | ☐ | |
 | M3 | Billing | ☐ | |
 | M4 | Telegram & SMS | ☐ | |
@@ -67,8 +68,8 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Guardian with existing phone is linked; "also guardian of" | ☑ | pgTAP; e2e `m1-students` (siblings share a guardian; profile shows "also guardian of") |
 | Enroll / freeze / transfer / end with date rules + `audit_log` | ☑ | pgTAP (dates, audit rows); e2e (enroll, freeze, transfer, end) |
 | Teachers see only their groups and rosters (names; no phones, no prices) | ☑ | pgTAP negatives (incl. `student_overview`); e2e (teacher roster shows names, no phone, no students pages) |
-| Import: 300 rows, mapping, re-import without duplicates, row/column errors | ☐ | M1d |
-| Onboarding wizard steps 1–6 resumable | ☐ | M1d |
+| Import: 300 rows, mapping, re-import without duplicates, row/column errors | ☑ | e2e `m1-onboarding` (300-row file, again → 0 new, broken file → errors, nothing written); Vitest (validation, 300 rows); pgTAP `m1d_import.test.sql` (all-or-nothing, permissions) |
+| Onboarding wizard steps 1–6 resumable | ☑ | e2e `m1-onboarding` (leave after step 4, "Continue setup" on Home resumes at step 5) |
 | `expandRules()` tests: validity windows, group start/end, holidays, DST | ☑ | Vitest (`schedule.test.ts`) + SQL parity test on the same fixtures |
 
 ## M0.5 "done when" status
@@ -85,6 +86,19 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-11 · M1d onboarding wizard and Excel import
+- Wizard: steps 1–2 (center + logo, first branch) → rooms → course presets (IELTS, General English, … with levels)
+  → import → staff; skip or "Finish later" anywhere; progress in `centers.settings.onboarding`; Home shows
+  "Continue setup" until done and new checklist items (first group, students) plus Students/Groups tiles.
+- Excel import page (students, groups, enrollments): template download per kind and language, FileDrop upload
+  straight to Storage, auto-guessed column mapping (uz/ru/en headers + aliases), check with row/column problems
+  (nothing written), one all-or-nothing import; matched rows are skipped.
+- Migration `20261014090000_m1d_import.sql` (storage buckets + policies, import RPCs); pgTAP `m1d_import.test.sql`
+  (17 checks; 184 in total). Core: `import.ts` (header matching, cell parsing) + tests; web: `lib/import/*`.
+- New patterns `Stepper` and `FileDrop` (on /dev/ui). Fixed a timetable hydration warning (stable dnd-kit id).
+- e2e `m1-onboarding.spec.ts` (M1 happy path: wizard → course → group → student with guardian → timetable; and
+  import); helpers now pass the wizard with "Finish later". 12 e2e tests pass.
 
 ### 2026-10-11 · M1c students and enrollments
 - Students list (`student_overview` view: search by name, phone or guardian phone; branch, group, course and

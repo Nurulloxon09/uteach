@@ -28,6 +28,7 @@ export {
   SelectField,
   SubmitButton,
 } from "./fields";
+export { FileDrop } from "./file-drop";
 export { FilterButton, type FilterOption } from "./filter-button";
 export { FormDialog } from "./form-dialog";
 export { InitialsAvatar, initials, tintFor } from "./initials-avatar";
@@ -50,6 +51,7 @@ export { SegmentedControl } from "./segmented-control";
 export { StatTiles, type StatTile, type StatTone } from "./stat-tiles";
 export { EmptyState, ErrorState, LoadingState } from "./states";
 export { StatusChip, type ChipTone } from "./status-chip";
+export { Stepper, type Step } from "./stepper";
 export { StatusToggleGroup, type StatusOption } from "./status-toggle-group";
 export { TableSearch } from "./table-search";
 export { TimezoneField } from "./timezone-field";

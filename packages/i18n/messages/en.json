@@ -152,7 +152,8 @@
       "transfer_same_group": "Choose a different group.",
       "transfer_before_start": "The transfer date must be after the enrollment starts.",
       "use_transfer": "Use Transfer to move a student to another group.",
-      "student_has_active_enrollments": "End the student's enrollments before archiving them."
+      "student_has_active_enrollments": "End the student's enrollments before archiving them.",
+      "import_done": "This file was already imported."
     },
     "groupHasStudents": "End or transfer the group's students before archiving it.",
     "duplicateStudent": "A student with this name or phone already exists. Check the list, or save again to add anyway."
@@ -213,7 +214,82 @@
     "branchName": "Branch name",
     "branchNamePlaceholder": "e.g. Chilonzor",
     "branchAddress": "Address",
-    "submit": "Create center"
+    "submit": "Create center and continue",
+    "stepCenter": "1 · Center",
+    "stepBranch": "2 · First branch",
+    "logo": "Logo (optional)",
+    "logoHint": "Choose an image: PNG, JPG, WebP or SVG",
+    "logoTooBig": "The logo must be smaller than 2 MB.",
+    "currency": "Currency",
+    "stepsLabel": "Setup steps",
+    "steps": {
+      "center": "Center",
+      "branch": "Branch",
+      "rooms": "Rooms",
+      "courses": "Courses",
+      "import": "Import",
+      "staff": "Staff"
+    },
+    "skip": "Skip this step",
+    "finishLater": "Finish later",
+    "continue": "Save and continue",
+    "finish": "Finish setup",
+    "titles": {
+      "rooms": "Rooms",
+      "courses": "Courses you teach",
+      "import": "Bring your students",
+      "staff": "Invite your team"
+    },
+    "hints": {
+      "rooms": "Add the rooms of your first branch. Lessons in one room never overlap.",
+      "courses": "Pick ready-made courses (levels included) or add your own. You can edit them later.",
+      "import": "Upload your students from Excel, or add them later by hand.",
+      "staff": "Invite admins and teachers by phone. Each gets a one-time link."
+    },
+    "existingRooms": "Already added: {names}",
+    "roomName": "Room {n}",
+    "roomPlaceholder": "e.g. Room {n}",
+    "roomCapacity": "Seats",
+    "addRoomRow": "Another room",
+    "presetsLegend": "Ready-made courses",
+    "customCourse": "Your own course (optional)",
+    "customCoursePlaceholder": "e.g. Korean",
+    "openImport": "Import students from Excel",
+    "invitedCount": "{count, plural, =0 {No one invited yet.} one {# person invited.} other {# people invited.}}",
+    "presets": {
+      "general_english": {
+        "name": "General English",
+        "levels": "Beginner, Elementary, Pre-Intermediate, Intermediate, Upper-Intermediate, Advanced"
+      },
+      "kids_english": {
+        "name": "Kids English",
+        "levels": "Starters, Movers, Flyers"
+      },
+      "ielts": {
+        "name": "IELTS",
+        "levels": "5.5, 6.0, 6.5, 7.0+"
+      },
+      "sat": {
+        "name": "SAT",
+        "levels": "1200+, 1400+, 1500+"
+      },
+      "cefr": {
+        "name": "CEFR exam prep",
+        "levels": "B1, B2, C1"
+      },
+      "milliy": {
+        "name": "Milliy sertifikat",
+        "levels": "B1, B2, C1"
+      },
+      "russian": {
+        "name": "Russian",
+        "levels": "A1, A2, B1, B2"
+      },
+      "math": {
+        "name": "Mathematics",
+        "levels": "Grades 5–6, Grades 7–8, Grades 9–11"
+      }
+    }
   },
   "invite": {
     "title": "You're invited",
@@ -242,7 +318,16 @@
     "addRoomsHint": "Rooms are used for the timetable",
     "inviteStaffHint": "Admins and teachers join by invite link",
     "done": "Done",
-    "todo": "To do"
+    "todo": "To do",
+    "students": "Students",
+    "groups": "Groups",
+    "addGroup": "Create the first group",
+    "addGroupHint": "Course, teacher, room and weekly times",
+    "addStudents": "Add students",
+    "addStudentsHint": "One by one or from Excel",
+    "continueSetup": "Finish setting up your center",
+    "continueSetupHint": "{done} of {total} steps done. Pick up where you left off.",
+    "continueSetupButton": "Continue setup"
   },
   "today": {
     "title": "Today",
@@ -839,7 +924,8 @@
       "editTitle": "Edit note",
       "deleteTitle": "Delete this note?",
       "deleted": "Note deleted"
-    }
+    },
+    "importButton": "Import from Excel"
   },
   "enrollments": {
     "search": "Search…",
@@ -916,5 +1002,161 @@
     "addStudent": "Add student",
     "rosterEmpty": "No students in this group yet",
     "rosterEmptyHint": "Add students from your list."
+  },
+  "import": {
+    "title": "Import from Excel",
+    "setup": "Setup",
+    "stepsLabel": "Import steps",
+    "stages": {
+      "pick": "File",
+      "map": "Columns",
+      "check": "Check",
+      "done": "Done"
+    },
+    "pickTitle": "Choose what to import",
+    "pickHint": "Import in this order: students, then groups, then enrollments. Nothing is saved until you confirm.",
+    "kindLabel": "What to import",
+    "kinds": {
+      "students": "Students",
+      "groups": "Groups",
+      "enrollments": "Enrollments"
+    },
+    "dropLabel": "Drop an Excel or CSV file here, or press to choose one",
+    "dropHint": ".xlsx or .csv, up to 5 000 rows. The first row is the column names.",
+    "template": "Download the {kind} template",
+    "templateHelp": "How to fill",
+    "templateIntro": "Fill one row per record on the first sheet. Keep the first row (column names). Columns you don't need can stay empty.",
+    "mapTitle": "Match the columns",
+    "mapHint": "{count, plural, one {# row found.} other {# rows found.}} Check which column holds each field; * is required.",
+    "notInFile": "Not in the file",
+    "columnN": "Column {n}",
+    "another": "Another file",
+    "check": "Check the file",
+    "checkTitle": "Check",
+    "rows": "{count} rows",
+    "willCreate": "{count} new",
+    "willSkip": "{count} already there",
+    "problems": "{count, plural, one {# problem} other {# problems}}",
+    "fixHint": "Fix these in the file and upload it again. Nothing was saved.",
+    "row": "Row",
+    "column": "Column",
+    "problem": "Problem",
+    "uploadFixed": "Upload the fixed file",
+    "back": "Back",
+    "run": "{count, plural, =0 {Nothing new to import} one {Import # row} other {Import # rows}}",
+    "doneTitle": "{created, plural, =0 {Nothing new was added} one {# record added} other {# records added}}",
+    "doneHint": "{skipped} rows were already there and were left as they were.",
+    "openGroups": "Open groups",
+    "openStudents": "Open students",
+    "fields": {
+      "students": {
+        "fullName": "Full name",
+        "phone": "Phone",
+        "birthDate": "Birth date",
+        "gender": "Gender",
+        "school": "School",
+        "branch": "Branch",
+        "externalRef": "ID in your old system",
+        "guardianName": "Guardian's name",
+        "guardianPhone": "Guardian's phone",
+        "relation": "Relation"
+      },
+      "groups": {
+        "name": "Group name",
+        "course": "Course",
+        "level": "Level",
+        "branch": "Branch",
+        "teacher": "Teacher",
+        "room": "Room",
+        "weekdays": "Days",
+        "startTime": "Start time",
+        "duration": "Minutes",
+        "startDate": "Start date",
+        "endDate": "End date",
+        "capacity": "Capacity",
+        "price": "Price per cycle",
+        "cycleLessons": "Lessons per cycle"
+      },
+      "enrollments": {
+        "studentRef": "Student ID in your old system",
+        "studentPhone": "Student phone",
+        "studentName": "Student name",
+        "group": "Group",
+        "branch": "Branch",
+        "startDate": "Start date"
+      }
+    },
+    "hints": {
+      "students": {
+        "fullName": "Required.",
+        "phone": "Any common format: 90 123 45 67 or +998901234567.",
+        "birthDate": "A date, e.g. 25.03.2012.",
+        "gender": "Male or female (any language, or M/F).",
+        "school": "Free text.",
+        "branch": "A branch name; empty = the first branch.",
+        "externalRef": "Your own ID; it prevents duplicates when you import again.",
+        "guardianName": "Parent or other guardian.",
+        "guardianPhone": "A known phone links the same guardian (siblings).",
+        "relation": "Mother, father, parent or other."
+      },
+      "groups": {
+        "name": "Required; unique within a branch.",
+        "course": "Required; a course that already exists.",
+        "level": "A level of that course.",
+        "branch": "A branch name; empty = the first branch.",
+        "teacher": "A staff member's name; without one, lessons are made once you pick a teacher.",
+        "room": "A room of that branch.",
+        "weekdays": "e.g. Mon/Wed/Fri, Du/Chor/Ju, Пн/Ср/Пт or 1,3,5.",
+        "startTime": "e.g. 18:00.",
+        "duration": "Lesson length in minutes; empty = the course default.",
+        "startDate": "Required; a date.",
+        "endDate": "A date; empty = no end.",
+        "capacity": "A whole number.",
+        "price": "Price of one full cycle, e.g. 600 000.",
+        "cycleLessons": "Lessons per cycle; empty = 12."
+      },
+      "enrollments": {
+        "studentRef": "Same ID as in the students file.",
+        "studentPhone": "Used when there is no ID.",
+        "studentName": "Used when there is no ID or phone; must be unique.",
+        "group": "Required; a group name.",
+        "branch": "Only needed if two branches have a group with this name.",
+        "startDate": "A date; empty = today."
+      }
+    },
+    "errors": {
+      "invalid": "Something is wrong with this import. Start again.",
+      "fileType": "Use an .xlsx or .csv file.",
+      "upload": "The file couldn't be uploaded. Try again.",
+      "unreadable": "The file couldn't be read. Save it as .xlsx and try again.",
+      "tooMany": "The file has more than 5 000 rows. Split it into smaller files.",
+      "hasIssues": "The file has problems. Check it again.",
+      "columnMissing": "This column is required. Choose it above.",
+      "empty": "The file has no rows.",
+      "required": "Empty, but required.",
+      "tooLong": "Too long.",
+      "phone": "Not a valid phone number.",
+      "date": "Not a date (use 25.03.2026 or 2026-03-25).",
+      "gender": "Use male or female.",
+      "branchUnknown": "No branch with this name.",
+      "guardianPhoneRequired": "A guardian needs a phone number.",
+      "relation": "Use mother, father, parent or other.",
+      "duplicateInFile": "Already appears in an earlier row.",
+      "courseUnknown": "No course with this name. Add it first.",
+      "levelUnknown": "This course has no such level.",
+      "teacherUnknown": "No staff member with this name in this branch.",
+      "roomUnknown": "This branch has no such room.",
+      "weekdays": "Can't read the days (e.g. Mon/Wed/Fri).",
+      "time": "Not a time (e.g. 18:00).",
+      "number": "Not a whole number in the allowed range.",
+      "endBeforeStart": "Ends before it starts.",
+      "priceNeedsBilling": "You can't set prices (needs the billing permission).",
+      "amount": "Not an amount (e.g. 600 000).",
+      "studentRequired": "Give the student's ID, phone or name.",
+      "studentUnknown": "No such student. Import students first.",
+      "studentAmbiguous": "Several students match. Use the ID or phone.",
+      "groupUnknown": "No group with this name.",
+      "groupAmbiguous": "Groups with this name exist in several branches. Add the branch."
+    }
   }
 }

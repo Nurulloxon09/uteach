@@ -1,4 +1,12 @@
-import { BookOpen, Building2, CircleDot, GraduationCap, SearchX, UsersRound } from "lucide-react";
+import {
+  BookOpen,
+  Building2,
+  CircleDot,
+  FileSpreadsheet,
+  GraduationCap,
+  SearchX,
+  UsersRound,
+} from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import {
   DataTable,
@@ -15,6 +23,8 @@ import {
   pageCountFor,
   parseListParams,
 } from "@/components/patterns";
+import { buttonVariants } from "@/components/ui/button";
+import { Link } from "@/i18n/navigation";
 import { loadBranches, loadCourses, loadGroupOptions } from "@/lib/academics";
 import { requireAdminContext } from "@/lib/center";
 import { ilikePattern } from "@/lib/search";
@@ -110,7 +120,22 @@ export default async function StudentsPage({ searchParams }: PageProps<"/[locale
         title={t("title")}
         breadcrumbLabel={tc("breadcrumb")}
         crumbs={[{ label: tn("home"), href: "/home" }, { label: t("title") }]}
-        action={ctx.can.students ? <AddStudentDialog branches={branches} /> : undefined}
+        action={
+          ctx.can.students || ctx.can.import ? (
+            <div className="flex flex-wrap gap-3">
+              {ctx.can.import ? (
+                <Link
+                  href="/import?kind=students"
+                  className={buttonVariants({ variant: "outline", size: "lg" })}
+                >
+                  <FileSpreadsheet />
+                  {t("importButton")}
+                </Link>
+              ) : null}
+              {ctx.can.students ? <AddStudentDialog branches={branches} /> : null}
+            </div>
+          ) : undefined
+        }
       />
 
       <Section

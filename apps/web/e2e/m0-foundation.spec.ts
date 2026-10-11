@@ -24,6 +24,9 @@ test.describe.serial("M0 foundation", () => {
     await expect(page.getByLabel(en.onboarding.timezone)).toHaveText(/Asia\/Tashkent/);
     await page.getByLabel(en.onboarding.branchName).fill("Chilonzor");
     await page.getByRole("button", { name: en.onboarding.submit }).click();
+    // The rest of the wizard (M1) can wait.
+    await expect(page).toHaveURL(/\/en\/onboarding\/rooms$/);
+    await page.getByTestId("finish-later").click();
     await expect(page).toHaveURL(/\/en\/home$/);
 
     // Second branch + a room.

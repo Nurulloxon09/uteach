@@ -1,3 +1,4 @@
+import ExcelJS from "exceljs";
 import fs from "node:fs";
 import path from "node:path";
 import { expect, test, type Browser, type Page } from "@playwright/test";
@@ -126,6 +127,43 @@ test("seed a demo center", async ({ page, browser }) => {
     days: ["Monday", "Wednesday"],
     firstStart: "15:00",
   });
+
+  // Students through the Excel import (also exercises it).
+  const names = [
+    "Aziza Karimova",
+    "Bekzod Tursunov",
+    "Анна Ким",
+    "Diyorbek Rahimov",
+    "Elena Pak",
+    "Farrux Islomov",
+    "Gulnoza Yusupova",
+    "Hasan Qodirov",
+    "Ирина Ли",
+    "Jamshid Aliev",
+    "Kamila Saidova",
+    "Laylo Ergasheva",
+  ];
+  const book = new ExcelJS.Workbook();
+  const sheet = book.addWorksheet("Students");
+  sheet.addRow(["F.I.Sh.", "Telefon", "Ota-ona", "Ota-ona telefoni"]);
+  names.forEach((n, i) =>
+    sheet.addRow([
+      n,
+      `+99893${4000000 + i}`,
+      `Parent of ${n.split(" ")[0]}`,
+      `+99894${4000000 + i}`,
+    ]),
+  );
+  await page.goto("/en/import?kind=students");
+  await settled(page);
+  await page.getByTestId("import-file").setInputFiles({
+    name: "students.xlsx",
+    mimeType: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    buffer: Buffer.from(await book.xlsx.writeBuffer()),
+  });
+  await page.getByRole("button", { name: en.import.check }).click();
+  await page.getByTestId("import-run").click();
+  await expect(page.getByText(`${names.length} records added`)).toBeVisible();
 });
 
 test("capture uteach", async ({ browser }) => {
@@ -188,6 +226,20 @@ test("capture uteach", async ({ browser }) => {
 
     await page.goto("/ru/staff");
     await shoot(page, `staff-ru-${w}`);
+
+    await page.goto("/en/students");
+    await shoot(page, `students-${w}`);
+    await page
+      .getByRole("link", { name: /^Open Aziza Karimova/ })
+      .first()
+      .click();
+    await expect(page).toHaveURL(/\/students\/[0-9a-f-]{36}$/);
+    await page.getByRole("tab", { name: en.students.tabGuardians }).click();
+    await shoot(page, `student-detail-${w}`);
+    await page.goto("/en/import?kind=groups");
+    await shoot(page, `import-${w}`);
+    await page.goto("/en/onboarding/courses");
+    await shoot(page, `onboarding-courses-${w}`);
 
     if (w === 390) {
       await page.goto("/en/home");
