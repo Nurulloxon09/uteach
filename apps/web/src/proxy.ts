@@ -1,10 +1,11 @@
 import createIntlMiddleware from "next-intl/middleware";
 import { NextResponse, type NextRequest } from "next/server";
 import { routing } from "@/i18n/routing";
-import { GUEST_ONLY_PATHS, PUBLIC_PATHS, matchesPath, splitLocale } from "@/lib/paths";
+import { GUEST_ONLY_PATHS, matchesPath, publicPathsFor, splitLocale } from "@/lib/paths";
 import { refreshSession } from "@/lib/supabase/proxy";
 
 const intl = createIntlMiddleware(routing);
+const publicPaths = publicPathsFor(process.env.NODE_ENV);
 
 /**
  * 1. next-intl picks/redirects the locale.
@@ -18,7 +19,7 @@ export default async function proxy(request: NextRequest) {
   const { locale, path } = splitLocale(request.nextUrl.pathname, routing.locales);
   if (!locale) return response; // next-intl is redirecting to a localized URL
 
-  if (!signedIn && !matchesPath(path, PUBLIC_PATHS)) {
+  if (!signedIn && !matchesPath(path, publicPaths)) {
     const url = new URL(`/${locale}/login`, request.url);
     if (path !== "/") url.searchParams.set("next", `/${locale}${path}${request.nextUrl.search}`);
     return withCookies(NextResponse.redirect(url), response);

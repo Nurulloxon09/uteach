@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
-import { Field, FormMessage, SubmitButton } from "@/components/form-bits";
+import { Field, FormMessage, SubmitButton } from "@/components/patterns";
 import { resetPasswordAction } from "../actions";
 
 export function ResetPasswordForm() {

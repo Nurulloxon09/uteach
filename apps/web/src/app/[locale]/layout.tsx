@@ -1,14 +1,24 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Manrope, Plus_Jakarta_Sans } from "next/font/google";
 import { notFound } from "next/navigation";
 import { hasLocale, NextIntlClientProvider } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
+import { TooltipProvider } from "@/components/ui/tooltip";
 import { Toaster } from "@/components/ui/sonner";
 import { routing } from "@/i18n/routing";
 import "../globals.css";
 
-const sans = Geist({ variable: "--font-sans", subsets: ["latin", "cyrillic"] });
-const mono = Geist_Mono({ variable: "--font-geist-mono", subsets: ["latin", "cyrillic"] });
+// Plus Jakarta Sans has no basic Cyrillic, so Russian glyphs fall back to Manrope (05-ui §3).
+const jakarta = Plus_Jakarta_Sans({
+  variable: "--font-jakarta",
+  subsets: ["latin", "latin-ext"],
+  weight: ["400", "500", "600", "700", "800"],
+});
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["cyrillic"],
+  weight: ["400", "500", "600", "700", "800"],
+});
 
 export function generateStaticParams() {
   return routing.locales.map((locale) => ({ locale }));
@@ -32,11 +42,13 @@ export default async function LocaleLayout({ children, params }: LayoutProps<"/[
   setRequestLocale(locale);
 
   return (
-    <html lang={locale} className={`${sans.variable} ${mono.variable} h-full antialiased`}>
-      <body className="flex min-h-full flex-col">
+    <html lang={locale} className={`${jakarta.variable} ${manrope.variable} h-full`}>
+      <body className="min-h-full">
         <NextIntlClientProvider>
-          {children}
-          <Toaster />
+          <TooltipProvider delayDuration={300}>
+            {children}
+            <Toaster />
+          </TooltipProvider>
         </NextIntlClientProvider>
       </body>
     </html>

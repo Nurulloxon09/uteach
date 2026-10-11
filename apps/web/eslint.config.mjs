@@ -8,7 +8,8 @@ const eslintConfig = defineConfig([
   {
     // All UI text goes through next-intl (04-rules §4): no string literals in JSX.
     files: ["src/app/**/*.tsx", "src/components/**/*.tsx"],
-    ignores: ["src/components/ui/**"],
+    // /dev/ui is a developer-only page (404 in production); its section labels stay untranslated (05-ui.md §6b).
+    ignores: ["src/components/ui/**", "**/dev/ui/**"],
     rules: {
       "react/jsx-no-literals": [
         "error",

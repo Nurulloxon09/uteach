@@ -1,7 +1,7 @@
+import { Building2, Phone } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { AuthCard, AuthLayout, InitialsAvatar, StatusChip } from "@/components/patterns";
 import { buttonVariants } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Link } from "@/i18n/navigation";
 import { getCurrentUser } from "@/lib/auth";
 import { createClient } from "@/lib/supabase/server";
@@ -17,64 +17,61 @@ export default async function InvitePage({ params }: PageProps<"/[locale]/invite
   const t = await getTranslations("invite");
   const tr = await getTranslations("roles");
   const supabase = await createClient();
-  const [{ data }, user] = await Promise.all([
-    supabase.rpc("get_invite", { p_token: token }),
-    getCurrentUser(),
-  ]);
+  const [{ data }, user] = await Promise.all([supabase.rpc("get_invite", { p_token: token }), getCurrentUser()]);
   const invite = data?.[0];
   const next = `/${locale}/invite/${token}`;
 
+  if (!invite || invite.is_expired) {
+    return (
+      <AuthLayout>
+        <AuthCard title={t("invalidTitle")} description={t("invalidDescription")} />
+      </AuthLayout>
+    );
+  }
+
   return (
-    <div className="flex min-h-svh flex-col">
-      <header className="flex items-center justify-end px-4 py-3">
-        <LocaleSwitcher className="w-auto" />
-      </header>
-      <main className="flex flex-1 items-start justify-center px-4 py-8 sm:items-center">
-        <Card className="w-full max-w-sm">
-          {!invite || invite.is_expired ? (
-            <CardHeader>
-              <CardTitle>{t("invalidTitle")}</CardTitle>
-              <CardDescription>{t("invalidDescription")}</CardDescription>
-            </CardHeader>
+    <AuthLayout>
+      <AuthCard
+        title={t("title")}
+        description={t("description", {
+          center: invite.center_name,
+          role: tr(invite.role),
+          name: invite.display_name,
+        })}
+      >
+        <div className="space-y-5">
+          <div className="flex items-center gap-4 rounded-xl bg-muted p-4">
+            <InitialsAvatar name={invite.display_name} size="md" />
+            <div className="min-w-0 flex-1">
+              <p className="truncate text-[15px] font-semibold text-foreground">{invite.display_name}</p>
+              <p className="flex items-center gap-1.5 truncate text-sm text-muted-foreground">
+                <Building2 className="size-4 text-primary" strokeWidth={1.8} aria-hidden />
+                {invite.center_name}
+              </p>
+            </div>
+            <StatusChip tone="primary">{tr(invite.role)}</StatusChip>
+          </div>
+          <p className="flex items-center gap-2 text-[15px] text-secondary-foreground">
+            <Phone className="size-4 shrink-0 text-primary" strokeWidth={1.8} aria-hidden />
+            {t("phoneHint", { phone: invite.phone_hint })}
+          </p>
+          {user ? (
+            <AcceptInviteForm token={token} />
           ) : (
-            <>
-              <CardHeader>
-                <CardTitle>{t("title")}</CardTitle>
-                <CardDescription>
-                  {t("description", {
-                    center: invite.center_name,
-                    role: tr(invite.role),
-                    name: invite.display_name,
-                  })}
-                </CardDescription>
-              </CardHeader>
-              <CardContent className="grid gap-4">
-                <p className="text-sm text-muted-foreground">
-                  {t("phoneHint", { phone: invite.phone_hint })}
-                </p>
-                {user ? (
-                  <AcceptInviteForm token={token} />
-                ) : (
-                  <div className="grid gap-2">
-                    <Link
-                      href={{ pathname: "/signup", query: { next } }}
-                      className={buttonVariants()}
-                    >
-                      {t("signupToAccept")}
-                    </Link>
-                    <Link
-                      href={{ pathname: "/login", query: { next } }}
-                      className={buttonVariants({ variant: "outline" })}
-                    >
-                      {t("loginToAccept")}
-                    </Link>
-                  </div>
-                )}
-              </CardContent>
-            </>
+            <div className="grid gap-3">
+              <Link href={{ pathname: "/signup", query: { next } }} className={buttonVariants({ className: "w-full" })}>
+                {t("signupToAccept")}
+              </Link>
+              <Link
+                href={{ pathname: "/login", query: { next } }}
+                className={buttonVariants({ variant: "outline", className: "w-full" })}
+              >
+                {t("loginToAccept")}
+              </Link>
+            </div>
           )}
-        </Card>
-      </main>
-    </div>
+        </div>
+      </AuthCard>
+    </AuthLayout>
   );
 }

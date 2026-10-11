@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
-import { Field, FormMessage, SubmitButton } from "@/components/form-bits";
+import { Field, FormMessage, SubmitButton } from "@/components/patterns";
 import { Link } from "@/i18n/navigation";
 import { loginAction } from "../actions";
 
@@ -36,13 +36,13 @@ export function LoginForm({ next }: { next: string | null }) {
       <div className="flex flex-col gap-2 text-center text-sm">
         <Link
           href="/forgot-password"
-          className="text-muted-foreground underline-offset-4 hover:underline"
+          className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
         >
           {t("login.forgot")}
         </Link>
         <Link
           href={next ? { pathname: "/signup", query: { next } } : "/signup"}
-          className="underline-offset-4 hover:underline"
+          className="font-medium text-primary underline-offset-4 hover:underline"
         >
           {t("login.toSignup")}
         </Link>

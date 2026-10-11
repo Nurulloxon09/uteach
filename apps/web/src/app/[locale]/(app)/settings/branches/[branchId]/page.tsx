@@ -1,27 +1,24 @@
+import { DoorOpen, Globe, MapPin, Phone } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { TimezoneSelect } from "@/components/timezone-select";
-import { Badge } from "@/components/ui/badge";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Link } from "@/i18n/navigation";
+import { DetailPage, InitialsAvatar, PageHeader, ProfileCard, StatusChip } from "@/components/patterns";
 import { requireAdminContext } from "@/lib/center";
 import { createClient } from "@/lib/supabase/server";
 import { ArchiveButton } from "../../archive-button";
-import { BranchForm } from "../branch-form";
-import { RoomForm, RoomRow } from "./rooms";
+import { EditBranchForm } from "../branch-form";
+import { RoomsPanel, type Room } from "./rooms";
 
 export async function generateMetadata() {
   const t = await getTranslations("settings.branches");
   return { title: t("title") };
 }
 
-export default async function BranchPage({
-  params,
-}: PageProps<"/[locale]/settings/branches/[branchId]">) {
+/** Branch detail: ProfileCard + tabs (Details | Rooms). */
+export default async function BranchPage({ params }: PageProps<"/[locale]/settings/branches/[branchId]">) {
   const { branchId } = await params;
   const ctx = await requireAdminContext();
   const t = await getTranslations("settings.branches");
-  const tr = await getTranslations("settings.rooms");
+  const tn = await getTranslations("nav");
   const tc = await getTranslations("common");
   const supabase = await createClient();
 
@@ -42,61 +39,63 @@ export default async function BranchPage({
   if (!branch) notFound();
 
   const archived = branch.archived_at !== null;
+  const activeRooms = (rooms ?? []).filter((r) => r.archived_at === null).length;
   const canEditRooms = ctx.can.manageRooms(branch.id) && !archived;
 
   return (
-    <div className="grid gap-6">
-      <div className="flex flex-wrap items-center gap-3">
-        <Link
-          href="/settings/branches"
-          className="text-sm text-muted-foreground underline-offset-4 hover:underline"
-        >
-          {t("back")}
-        </Link>
-        <h1 className="font-heading text-2xl font-semibold">{branch.name}</h1>
-        {archived ? <Badge variant="secondary">{tc("archived")}</Badge> : null}
-      </div>
-
-      <div className="grid gap-6 lg:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("detailsTitle")}</CardTitle>
-          </CardHeader>
-          <CardContent className="grid gap-4">
-            <BranchForm
-              branch={branch}
-              editable={ctx.can.manageBranches && !archived}
-              timezoneSelect={
-                <TimezoneSelect
-                  id="field-timezone"
-                  name="timezone"
-                  defaultValue={branch.timezone}
-                />
-              }
-            />
-            {ctx.can.manageBranches ? (
-              <ArchiveButton kind="branch" id={branch.id} archived={archived} />
-            ) : null}
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>{tr("title")}</CardTitle>
-            <CardDescription>{canEditRooms ? tr("hint") : tr("readOnlyHint")}</CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-3">
-            {(rooms ?? []).length === 0 ? (
-              <p className="text-sm text-muted-foreground">{tr("empty")}</p>
-            ) : (
-              (rooms ?? []).map((room) => (
-                <RoomRow key={room.id} room={room} editable={canEditRooms} />
-              ))
-            )}
-            {canEditRooms ? <RoomForm branchId={branch.id} /> : null}
-          </CardContent>
-        </Card>
-      </div>
-    </div>
+    <>
+      <PageHeader
+        title={branch.name}
+        breadcrumbLabel={tc("breadcrumb")}
+        crumbs={[
+          { label: tn("home"), href: "/home" },
+          { label: t("title"), href: "/settings/branches" },
+          { label: branch.name },
+        ]}
+      />
+      <DetailPage
+        header={
+          <ProfileCard
+            avatar={<InitialsAvatar name={branch.name} size="lg" />}
+            name={branch.name}
+            subtitle={t("roomsCount", { count: activeRooms })}
+            rows={[
+              ...(branch.address ? [{ key: "address", icon: MapPin, value: branch.address }] : []),
+              ...(branch.phone ? [{ key: "phone", icon: Phone, value: branch.phone }] : []),
+              { key: "timezone", icon: Globe, value: branch.timezone.replaceAll("_", " ") },
+              { key: "rooms", icon: DoorOpen, value: t("roomsCount", { count: activeRooms }) },
+            ]}
+            chip={
+              archived ? (
+                <StatusChip tone="muted">{tc("archived")}</StatusChip>
+              ) : (
+                <StatusChip tone="success">{t("statusActive")}</StatusChip>
+              )
+            }
+          />
+        }
+        tabs={[
+          {
+            value: "details",
+            label: t("tabDetails"),
+            content: (
+              <div className="space-y-5">
+                <EditBranchForm branch={branch} editable={ctx.can.manageBranches && !archived} />
+                {ctx.can.manageBranches ? (
+                  <div className="border-t border-border/70 pt-5">
+                    <ArchiveButton kind="branch" id={branch.id} archived={archived} />
+                  </div>
+                ) : null}
+              </div>
+            ),
+          },
+          {
+            value: "rooms",
+            label: t("tabRooms"),
+            content: <RoomsPanel branchId={branch.id} rooms={(rooms ?? []) as Room[]} editable={canEditRooms} />,
+          },
+        ]}
+      />
+    </>
   );
 }

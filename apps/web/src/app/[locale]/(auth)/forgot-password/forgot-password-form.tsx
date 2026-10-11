@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
-import { Field, FormMessage, SubmitButton } from "@/components/form-bits";
+import { Field, FormMessage, SubmitButton } from "@/components/patterns";
 import { Link } from "@/i18n/navigation";
 import { forgotPasswordAction } from "../actions";
 
@@ -25,7 +25,7 @@ export function ForgotPasswordForm() {
       />
       <SubmitButton className="w-full">{t("forgot.submit")}</SubmitButton>
       <p className="text-center text-sm">
-        <Link href="/login" className="underline-offset-4 hover:underline">
+        <Link href="/login" className="font-medium text-primary underline-offset-4 hover:underline">
           {t("verify.backToLogin")}
         </Link>
       </p>
