@@ -139,6 +139,12 @@ isOneToOne: false
       foreignKeyName: "enrollments_center_id_student_id_fkey"
       columns: ["center_id","student_id"]
 isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "enrollments_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
       referencedRelation: "students"
       referencedColumns: ["center_id","id"]
     },{
@@ -555,6 +561,12 @@ isOneToOne: false
       foreignKeyName: "student_guardians_center_id_student_id_fkey"
       columns: ["center_id","student_id"]
 isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "student_guardians_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
       referencedRelation: "students"
       referencedColumns: ["center_id","id"]
     }
@@ -577,6 +589,12 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "centers"
       referencedColumns: ["id"]
+    },{
+      foreignKeyName: "student_notes_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
     },{
       foreignKeyName: "student_notes_center_id_student_id_fkey"
       columns: ["center_id","student_id"]
@@ -620,7 +638,33 @@ isOneToOne: false
                 }
           }
           Views: {
-            [_ in never]: never
+            "student_overview": {
+                  Row: {
+                    "archived_at": string | null,"birth_date": string | null,"branch_id": string | null,"center_id": string | null,"course_ids": (string)[] | null,"created_at": string | null,"external_ref": string | null,"full_name": string | null,"gender": string | null,"group_ids": (string)[] | null,"id": string | null,"is_active": boolean | null,"phone": string | null,"school": string | null,"search_text": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                           "archived_at"?: string | null,"birth_date"?: string | null,"branch_id"?: string | null,"center_id"?: string | null,"course_ids"?: never,"created_at"?: string | null,"external_ref"?: string | null,"full_name"?: string | null,"gender"?: string | null,"group_ids"?: never,"id"?: string | null,"is_active"?: never,"phone"?: string | null,"school"?: string | null,"search_text"?: never
+                         }
+                        Update: {
+                           "archived_at"?: string | null,"birth_date"?: string | null,"branch_id"?: string | null,"center_id"?: string | null,"course_ids"?: never,"created_at"?: string | null,"external_ref"?: string | null,"full_name"?: string | null,"gender"?: string | null,"group_ids"?: never,"id"?: string | null,"is_active"?: never,"phone"?: string | null,"school"?: string | null,"search_text"?: never
+                         }
+                        Relationships: [
+                    {
+      foreignKeyName: "students_center_id_branch_id_fkey"
+      columns: ["center_id","branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "students_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    }
+                  ]
+                }
           }
           Functions: {
             "accept_invite":

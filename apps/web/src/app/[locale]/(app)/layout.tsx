@@ -23,6 +23,7 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
   const nav: NavEntry[] = ctx.can.seeAdminPages
     ? [
         { key: "home", label: t("home"), href: "/home", icon: "home" },
+        { key: "students", label: t("students"), href: "/students", icon: "students" },
         { key: "groups", label: t("groups"), href: "/groups", icon: "groups" },
         { key: "schedule", label: t("schedule"), href: "/schedule", icon: "schedule" },
         ...(ctx.can.manageStaff

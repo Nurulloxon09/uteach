@@ -131,3 +131,44 @@ export const loadCoursePrices = cache(
     return prices;
   },
 );
+
+export type GroupOption = {
+  id: string;
+  name: string;
+  branchId: string;
+  courseId: string;
+  levelId: string | null;
+  capacity: number | null;
+  /** Students in the group now (active or frozen). */
+  count: number;
+};
+
+/** Groups that can take students (live, not finished), with how many students they have (staff only). */
+export const loadGroupOptions = cache(async (ctx: CenterContext): Promise<GroupOption[]> => {
+  const supabase = await createClient();
+  const [{ data: groups }, { data: enrollments }] = await Promise.all([
+    supabase
+      .from("groups")
+      .select("id, name, branch_id, course_id, level_id, capacity")
+      .eq("center_id", ctx.center.id)
+      .is("archived_at", null)
+      .neq("status", "finished")
+      .order("name"),
+    supabase
+      .from("enrollments")
+      .select("group_id")
+      .eq("center_id", ctx.center.id)
+      .neq("status", "ended"),
+  ]);
+  const count = new Map<string, number>();
+  for (const e of enrollments ?? []) count.set(e.group_id, (count.get(e.group_id) ?? 0) + 1);
+  return (groups ?? []).map((g) => ({
+    id: g.id,
+    name: g.name,
+    branchId: g.branch_id,
+    courseId: g.course_id,
+    levelId: g.level_id,
+    capacity: g.capacity,
+    count: count.get(g.id) ?? 0,
+  }));
+});

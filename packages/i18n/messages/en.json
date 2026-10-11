@@ -80,7 +80,8 @@
     "myGroups": "My groups",
     "schedule": "Schedule",
     "courses": "Courses",
-    "holidays": "Holidays"
+    "holidays": "Holidays",
+    "students": "Students"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -101,7 +102,8 @@
       "time": "Enter a time, e.g. 18:00.",
       "number": "Enter a whole number in the allowed range.",
       "slots": "Check the lesson times.",
-      "endBeforeStart": "The end date can't be before the start."
+      "endBeforeStart": "The end date can't be before the start.",
+      "percent": "Enter a percentage from 0 to 100."
     },
     "auth": {
       "invalidCredentials": "Wrong phone number or password.",
@@ -152,7 +154,8 @@
       "use_transfer": "Use Transfer to move a student to another group.",
       "student_has_active_enrollments": "End the student's enrollments before archiving them."
     },
-    "groupHasStudents": "End or transfer the group's students before archiving it."
+    "groupHasStudents": "End or transfer the group's students before archiving it.",
+    "duplicateStudent": "A student with this name or phone already exists. Check the list, or save again to add anyway."
   },
   "auth": {
     "fields": {
@@ -469,7 +472,8 @@
     "room": "Archive this room?",
     "course": "Archive this course?",
     "level": "Archive this level?",
-    "group": "Archive this group?"
+    "group": "Archive this group?",
+    "student": "Archive this student?"
   },
   "timetable": {
     "time": "Time",
@@ -653,7 +657,8 @@
       "from": "From",
       "status": "Status",
       "current": "Current"
-    }
+    },
+    "tabRoster": "Students"
   },
   "lessons": {
     "sameRoom": "Same room",
@@ -744,5 +749,172 @@
     "time": "Time",
     "room": "Room",
     "ruleRoom": "The usual room"
+  },
+  "students": {
+    "title": "Students",
+    "listTitle": "Student list",
+    "addButton": "Add student",
+    "addTitle": "New student",
+    "addHint": "Add the guardian now or later; a known phone links the same guardian (siblings).",
+    "addSubmit": "Add student",
+    "added": "Student added",
+    "editTitle": "Edit student",
+    "searchPlaceholder": "Name, phone or guardian's phone",
+    "searchLabel": "Search students",
+    "filterGroup": "Group",
+    "filterCourse": "Course",
+    "emptyTitle": "No students yet",
+    "emptyHint": "Add students one by one, or import them from Excel.",
+    "columns": {
+      "groups": "Groups"
+    },
+    "fields": {
+      "fullName": "Full name",
+      "phone": "Phone",
+      "phoneHint": "Optional for children.",
+      "branch": "Branch",
+      "birthDate": "Birth date",
+      "gender": "Gender",
+      "school": "School"
+    },
+    "gender": {
+      "none": "Not set",
+      "male": "Male",
+      "female": "Female"
+    },
+    "firstGuardian": "Guardian (optional)",
+    "guardian": {
+      "name": "Guardian's name",
+      "phone": "Guardian's phone",
+      "phoneHint": "If this phone is already known, that guardian is linked.",
+      "relation": "Relation",
+      "primary": "Main contact",
+      "notifications": "Gets lesson and attendance messages",
+      "billing": "Gets payment messages",
+      "hint": "Parents and others who get messages about the student.",
+      "add": "Add guardian",
+      "addTitle": "Add guardian",
+      "addHint": "A phone already used by a guardian links that person (for siblings).",
+      "linked": "Existing guardian linked",
+      "added": "Guardian added",
+      "emptyTitle": "No guardians yet",
+      "primaryChip": "Main",
+      "alsoOf": "Also guardian of:",
+      "unlinkRow": "Remove {name} from this student",
+      "editTitle": "Edit guardian",
+      "editShared": "Name and phone change for every student of this guardian.",
+      "unlinkTitle": "Remove this guardian?",
+      "unlinkHint": "They stay linked to their other students.",
+      "unlink": "Remove",
+      "unlinked": "Guardian removed"
+    },
+    "relations": {
+      "mother": "Mother",
+      "father": "Father",
+      "parent": "Parent",
+      "other": "Other"
+    },
+    "status": {
+      "active": "Active",
+      "inactive": "Not studying"
+    },
+    "noPhone": "No phone",
+    "tabEnrollments": "Groups",
+    "tabGuardians": "Guardians",
+    "tabNotes": "Notes",
+    "notes": {
+      "body": "Note",
+      "pin": "Pin to the top",
+      "visible": "Visible to teachers",
+      "visibleHint": "Teachers of this student's groups will see it.",
+      "hint": "Notes are seen by staff; teachers only see notes marked for them.",
+      "add": "Add note",
+      "addTitle": "New note",
+      "added": "Note added",
+      "emptyTitle": "No notes",
+      "pinned": "Pinned",
+      "visibleChip": "Teachers see it",
+      "editRow": "Edit note",
+      "deleteRow": "Delete note",
+      "editTitle": "Edit note",
+      "deleteTitle": "Delete this note?",
+      "deleted": "Note deleted"
+    }
+  },
+  "enrollments": {
+    "search": "Search…",
+    "nothingFound": "Nothing found",
+    "enrollTitle": "Enroll in a group",
+    "enrollHint": "Choose a group for {name}.",
+    "enrollHintGroup": "Choose a student for {group}.",
+    "enrollSubmit": "Enroll",
+    "enrolled": "Student enrolled",
+    "student": "Student",
+    "chooseStudent": "Choose a student",
+    "group": "Group",
+    "chooseGroup": "Choose a group",
+    "capacityWarning": "The group is full ({count} of {capacity}). You can still enroll.",
+    "startDate": "Start date",
+    "startDateHint": "Leave empty to start from the group's next lesson.",
+    "discountPercent": "Discount, %",
+    "discountCap": "Up to 10%.",
+    "discountReason": "Reason for the discount",
+    "discountAmount": "Fixed discount per cycle",
+    "priceOverride": "Own price per cycle",
+    "priceOverrideHint": "Replaces the group's price for this student.",
+    "freezeTitle": "Freeze",
+    "freezeHint": "{name} pauses {group}. Lessons in this period don't count.",
+    "freezeSubmit": "Freeze",
+    "frozen": "Enrollment frozen",
+    "from": "From",
+    "to": "To (inclusive)",
+    "reason": "Reason",
+    "transferTitle": "Transfer to another group",
+    "transferHint": "{name} leaves {group} the day before the transfer date.",
+    "transferSubmit": "Transfer",
+    "transferred": "Student transferred",
+    "toGroup": "New group",
+    "transferDate": "Transfer date",
+    "transferDateHint": "The first day in the new group.",
+    "keepDiscount": "Keep the discount",
+    "endTitle": "End enrollment",
+    "endHint": "{name} stops studying in {group}.",
+    "endSubmit": "End",
+    "ended": "Enrollment ended",
+    "endDate": "Last day",
+    "endDateHint": "The last day that counts.",
+    "endReason": "Reason",
+    "reasons": {
+      "completed": "Completed",
+      "dropped": "Dropped out",
+      "moved_level": "Moved to the next level",
+      "transferred": "Transferred"
+    },
+    "rowFreeze": "Freeze {who}",
+    "rowTransfer": "Transfer {who}",
+    "rowEnd": "End {who}",
+    "noNextLevel": "This level has no next level set. Enroll the student manually.",
+    "period": "{from} – {to}",
+    "periodFrom": "Since {from}",
+    "status": {
+      "active": "Studying",
+      "frozen": "Frozen",
+      "ended": "Ended"
+    },
+    "discountValue": "Discount {percent}%",
+    "frozenFor": "Frozen {from} – {to}",
+    "hint": "Groups the student is in, now and before.",
+    "enroll": "Enroll",
+    "emptyTitle": "Not in any group yet",
+    "emptyHint": "Enroll the student in a group.",
+    "periodLabel": "Dates",
+    "statusLabel": "Status",
+    "notes": "Notes",
+    "actions": "Actions",
+    "rosterCountOf": "{count} of {capacity} students",
+    "rosterCount": "{count, plural, one {# student} other {# students}}",
+    "addStudent": "Add student",
+    "rosterEmpty": "No students in this group yet",
+    "rosterEmptyHint": "Add students from your list."
   }
 }

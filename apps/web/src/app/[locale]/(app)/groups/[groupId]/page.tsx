@@ -15,7 +15,7 @@ import {
   type ChipTone,
 } from "@/components/patterns";
 import { Button } from "@/components/ui/button";
-import { loadRooms, loadTeachers, teachersFor } from "@/lib/academics";
+import { loadGroupOptions, loadRooms, loadTeachers, teachersFor } from "@/lib/academics";
 import { getCenterContext } from "@/lib/center";
 import { dayAsDate, hhmm, localParts, monthStart, weekdayLabels } from "@/lib/dates";
 import { formatMinor } from "@/lib/money";
@@ -30,6 +30,7 @@ import {
   type LessonRef,
 } from "../lesson-actions";
 import { PricePanel } from "./price-panel";
+import { RosterPanel, type RosterRow } from "./roster";
 import { RulesEditor } from "./rules-editor";
 
 export async function generateMetadata() {
@@ -247,6 +248,72 @@ export default async function GroupPage({ params }: PageProps<"/[locale]/groups/
   };
 
   const formData = editable ? await groupFormData(ctx) : null;
+
+  // Roster: staff read enrollments (with students); teachers get names only from group_roster() (03).
+  const canEnroll =
+    isStaff && ctx.can.students && ctx.can.inBranch(group.branch_id) && group.archived_at === null;
+  const { data: levelRow } = group.level_id
+    ? await supabase.from("levels").select("next_level_id").eq("id", group.level_id).maybeSingle()
+    : { data: null };
+  const rosterBase = {
+    groupId: group.id,
+    groupName: group.name,
+    nextLevelId: levelRow?.next_level_id ?? null,
+    today,
+  };
+  let rosterRows: RosterRow[];
+  if (isStaff) {
+    const { data: enrolled } = await supabase
+      .from("enrollments")
+      .select("id, student_id, status, start_date, end_date, students ( full_name )")
+      .eq("group_id", group.id)
+      .neq("status", "ended")
+      .order("start_date");
+    rosterRows = (enrolled ?? []).map((e) => ({
+      ...rosterBase,
+      id: e.id,
+      studentId: e.student_id,
+      studentName: e.students?.full_name ?? "—",
+      status: e.status,
+      startDate: e.start_date,
+      endDate: e.end_date,
+    }));
+  } else {
+    const { data: roster } = await supabase.rpc("group_roster", { p_group_id: group.id });
+    rosterRows = (roster ?? []).map((e) => ({
+      ...rosterBase,
+      id: e.enrollment_id,
+      studentId: e.student_id,
+      studentName: e.full_name,
+      status: e.status,
+      startDate: e.start_date,
+      endDate: e.end_date,
+    }));
+  }
+  const [studentChoices, groupChoices] = canEnroll
+    ? await Promise.all([
+        supabase
+          .from("students")
+          .select("id, full_name, phone")
+          .eq("center_id", ctx.center.id)
+          .is("archived_at", null)
+          .order("full_name")
+          .then(({ data }) =>
+            (data ?? []).map((s) => ({ id: s.id, name: s.full_name, hint: s.phone ?? undefined })),
+          ),
+        loadGroupOptions(ctx).then((list) =>
+          list
+            .filter((g) => ctx.can.inBranch(g.branchId))
+            .map((g) => ({
+              id: g.id,
+              name: g.name,
+              capacity: g.capacity,
+              count: g.count,
+              levelId: g.levelId,
+            })),
+        ),
+      ])
+    : [[], []];
   const course = group.courses?.name ?? "";
   const subtitle = [course, group.levels?.name].filter(Boolean).join(" · ");
 
@@ -268,6 +335,23 @@ export default async function GroupPage({ params }: PageProps<"/[locale]/groups/
             {lessonTable(pastRows, "past-lesson-row", tl("noPast"))}
           </Section>
         </div>
+      ),
+    },
+    {
+      value: "roster",
+      label: t("tabRoster"),
+      content: (
+        <RosterPanel
+          group={{ id: group.id, name: group.name }}
+          rows={rosterRows}
+          isStaff={isStaff}
+          editable={canEnroll}
+          capacity={group.capacity}
+          students={studentChoices}
+          groups={groupChoices}
+          canDiscount={ctx.can.discounts}
+          canOverridePrice={ctx.can.discounts && ctx.can.billing}
+        />
       ),
     },
     {

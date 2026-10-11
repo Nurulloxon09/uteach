@@ -145,3 +145,18 @@ export const optionalIntField = (min: number, max: number) =>
       }
       return n;
     });
+
+/** A percentage typed by staff ("10", "12.5") → basis points (1250), without floats (02: `*_bp`). */
+export const optionalPercentField = z
+  .string()
+  .trim()
+  .transform((value, ctx) => {
+    if (value === "") return 0;
+    const match = /^(\d{1,3})(?:[.,](\d{1,2}))?$/.exec(value);
+    const bp = match ? Number(match[1]) * 100 + Number((match[2] ?? "").padEnd(2, "0")) : NaN;
+    if (!match || bp > 10000) {
+      ctx.addIssue({ code: "custom", message: "validation.percent" });
+      return z.NEVER;
+    }
+    return bp;
+  });

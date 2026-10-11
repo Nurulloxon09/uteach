@@ -53,6 +53,11 @@ Rules:
 - Two non-ended enrollments of the same student in the same group are not allowed.
 - Every action writes `audit_log`.
 
+> PROPOSED (M1c): the group page's Roster tab comes after Lessons. The duplicate check runs on save: a match by
+> phone or normalised name shows a warning and a second save creates the student anyway. The students list has
+> no bulk actions yet: broadcast arrives with M4 and export with M7. Debtor and "Telegram not linked" filters
+> come with M3 and M4.
+
 > PROPOSED (M1): in M1 the billing side (first cycle charge, voiding cycles, unused-lesson credits) is the no-op
 > hook `private.on_enrollment_change`; M3 fills it in. The plan's student limit check comes with plans in M7.
 > Default start date = the group's next scheduled lesson on or after today (branch tz), else the group's start date.
