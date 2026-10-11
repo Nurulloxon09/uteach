@@ -12,6 +12,8 @@ export default async function LoginPage({ searchParams }: PageProps<"/[locale]/l
   const t = await getTranslations("auth.login");
   const next = safeNextPath((await searchParams).next);
   return (
-    <AuthCard title={t("title")} description={<>{t("description")}</>}><LoginForm next={next} /></AuthCard>
+    <AuthCard title={t("title")} description={<>{t("description")}</>}>
+      <LoginForm next={next} />
+    </AuthCard>
   );
 }

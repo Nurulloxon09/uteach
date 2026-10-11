@@ -24,7 +24,10 @@ export function ProfileCard({
   className?: string;
 }) {
   return (
-    <article className={cn("rounded-2xl bg-card p-6 shadow-card", className)} data-testid="profile-card">
+    <article
+      className={cn("rounded-2xl bg-card p-6 shadow-card", className)}
+      data-testid="profile-card"
+    >
       <div className="flex flex-wrap items-start gap-4">
         <div className="flex min-w-0 flex-1 items-center gap-4">
           {avatar}

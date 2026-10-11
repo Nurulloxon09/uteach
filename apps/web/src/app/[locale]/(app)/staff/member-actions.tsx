@@ -4,7 +4,13 @@ import { Link2, UserCheck, UserX } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useActionState, useState, useTransition } from "react";
 import { toast } from "sonner";
-import { ConfirmDialog, FormMessage, RowActions, SubmitButton, type RowAction } from "@/components/patterns";
+import {
+  ConfirmDialog,
+  FormMessage,
+  RowActions,
+  SubmitButton,
+  type RowAction,
+} from "@/components/patterns";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -35,7 +41,14 @@ export function MemberActions({
 
   const actions: RowAction[] =
     status === "invited"
-      ? [{ key: "link", label: t("rowNewLink", { name }), icon: Link2, onSelect: () => setLinkOpen(true) }]
+      ? [
+          {
+            key: "link",
+            label: t("rowNewLink", { name }),
+            icon: Link2,
+            onSelect: () => setLinkOpen(true),
+          },
+        ]
       : status === "active"
         ? [
             {

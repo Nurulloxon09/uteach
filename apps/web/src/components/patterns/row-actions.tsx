@@ -33,7 +33,13 @@ export function RowActions({ actions, className }: { actions: RowAction[]; class
                   {icon}
                 </Link>
               ) : (
-                <button type="button" aria-label={label} onClick={onSelect} disabled={disabled} className={cls}>
+                <button
+                  type="button"
+                  aria-label={label}
+                  onClick={onSelect}
+                  disabled={disabled}
+                  className={cls}
+                >
                   {icon}
                 </button>
               )}

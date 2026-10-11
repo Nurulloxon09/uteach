@@ -1,7 +1,7 @@
 "use client";
 
-import { ChevronDown, type LucideIcon } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown } from "lucide-react";
+import { useState, type ReactNode } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 import { useListParams } from "./url-params";
@@ -11,15 +11,16 @@ export type FilterOption = { value: string; label: string };
 /**
  * Filter button from the reference (`DateRangeButton`: `h-11 rounded-xl border`, icon + label + chevron).
  * Opens a small option list and writes `?{param}=`. The first option is "All" (empty value).
+ * `icon` is a rendered element (`<CircleDot />`) so server pages can pass it to this client component.
  */
 export function FilterButton({
-  icon: Icon,
+  icon,
   label,
   param,
   options,
   allLabel,
 }: {
-  icon: LucideIcon;
+  icon: ReactNode;
   label: string;
   param: string;
   options: FilterOption[];
@@ -39,7 +40,9 @@ export function FilterButton({
           current ? "border-primary/50" : "border-border",
         )}
       >
-        <Icon className="size-4 text-muted-foreground" strokeWidth={1.8} />
+        <span className="text-muted-foreground [&_svg]:size-4" aria-hidden>
+          {icon}
+        </span>
         <span className="whitespace-nowrap">
           {label}
           {currentLabel ? (
@@ -66,7 +69,9 @@ export function FilterButton({
                   }}
                   className={cn(
                     "w-full rounded-lg px-3 py-2.5 text-left text-[15px] outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/30",
-                    selected ? "bg-primary-soft font-medium text-primary" : "text-secondary-foreground hover:bg-muted",
+                    selected
+                      ? "bg-primary-soft font-medium text-primary"
+                      : "text-secondary-foreground hover:bg-muted",
                   )}
                 >
                   {o.label}

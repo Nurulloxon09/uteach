@@ -4,11 +4,16 @@ import { cn } from "@/lib/utils";
 import type { ChipTone } from "./status-chip";
 
 const CHECKED: Record<ChipTone, string> = {
-  primary: "peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary",
-  success: "peer-checked:bg-success peer-checked:text-success-foreground peer-checked:border-success",
-  warning: "peer-checked:bg-warning peer-checked:text-warning-foreground peer-checked:border-warning",
-  destructive: "peer-checked:bg-destructive peer-checked:text-destructive-foreground peer-checked:border-destructive",
-  muted: "peer-checked:bg-secondary-foreground peer-checked:text-card peer-checked:border-secondary-foreground",
+  primary:
+    "peer-checked:bg-primary peer-checked:text-primary-foreground peer-checked:border-primary",
+  success:
+    "peer-checked:bg-success peer-checked:text-success-foreground peer-checked:border-success",
+  warning:
+    "peer-checked:bg-warning peer-checked:text-warning-foreground peer-checked:border-warning",
+  destructive:
+    "peer-checked:bg-destructive peer-checked:text-destructive-foreground peer-checked:border-destructive",
+  muted:
+    "peer-checked:bg-secondary-foreground peer-checked:text-card peer-checked:border-secondary-foreground",
 };
 
 export type StatusOption = { value: string; label: string; tone: ChipTone };

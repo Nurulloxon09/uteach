@@ -16,7 +16,9 @@ import { NAV_ICONS, isActivePath, isGroup, type NavEntry } from "./nav";
 export function Sidebar({ nav, onClose }: { nav: NavEntry[]; onClose?: () => void }) {
   const t = useTranslations("nav");
   const pathname = usePathname();
-  const activeGroup = nav.find((e) => isGroup(e) && e.children.some((c) => isActivePath(pathname, c.href)));
+  const activeGroup = nav.find(
+    (e) => isGroup(e) && e.children.some((c) => isActivePath(pathname, c.href)),
+  );
   const [openKey, setOpenKey] = useState<string | null>(activeGroup?.key ?? null);
 
   return (
@@ -46,11 +48,16 @@ export function Sidebar({ nav, onClose }: { nav: NavEntry[]; onClose?: () => voi
             const isOpen = group && openKey === entry.key;
             const rowClass = cn(
               "group flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-[15px] font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/30",
-              active ? "text-primary" : "text-secondary-foreground hover:bg-muted hover:text-primary",
+              active
+                ? "text-primary"
+                : "text-secondary-foreground hover:bg-muted hover:text-primary",
             );
             const icon = (
               <Icon
-                className={cn("size-[18px] shrink-0", active ? "text-primary" : "text-muted-foreground")}
+                className={cn(
+                  "size-[18px] shrink-0",
+                  active ? "text-primary" : "text-muted-foreground",
+                )}
                 strokeWidth={1.8}
                 aria-hidden
               />
@@ -93,7 +100,10 @@ export function Sidebar({ nav, onClose }: { nav: NavEntry[]; onClose?: () => voi
                       isOpen ? "grid-rows-[1fr]" : "grid-rows-[0fr]",
                     )}
                   >
-                    <ul className="ml-6 overflow-hidden border-l border-border pl-2" inert={!isOpen}>
+                    <ul
+                      className="ml-6 overflow-hidden border-l border-border pl-2"
+                      inert={!isOpen}
+                    >
                       {entry.children.map((child) => {
                         const childActive = isActivePath(pathname, child.href);
                         return (

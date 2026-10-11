@@ -3,11 +3,24 @@
 import { useTranslations } from "next-intl";
 import { useActionState, useEffect } from "react";
 import { toast } from "sonner";
-import { Field, FormDialog, FormMessage, PageAction, SubmitButton, TimezoneField } from "@/components/patterns";
+import {
+  Field,
+  FormDialog,
+  FormMessage,
+  PageAction,
+  SubmitButton,
+  TimezoneField,
+} from "@/components/patterns";
 import type { ActionState } from "@/lib/actions";
 import { createBranchAction, updateBranchAction } from "../actions";
 
-type Branch = { id: string; name: string; address: string | null; phone: string | null; timezone: string };
+type Branch = {
+  id: string;
+  name: string;
+  address: string | null;
+  phone: string | null;
+  timezone: string;
+};
 
 function BranchFields({
   state,
@@ -24,8 +37,20 @@ function BranchFields({
   return (
     <>
       <Field name="name" label={t("name")} defaultValue={branch?.name} state={state} required />
-      <Field name="address" label={t("address")} defaultValue={branch?.address ?? ""} state={state} />
-      <Field name="phone" type="tel" inputMode="tel" label={t("phone")} defaultValue={branch?.phone ?? ""} state={state} />
+      <Field
+        name="address"
+        label={t("address")}
+        defaultValue={branch?.address ?? ""}
+        state={state}
+      />
+      <Field
+        name="phone"
+        type="tel"
+        inputMode="tel"
+        label={t("phone")}
+        defaultValue={branch?.phone ?? ""}
+        state={state}
+      />
       <TimezoneField
         label={t("timezone")}
         hint={t("timezoneHint")}
@@ -68,7 +93,12 @@ export function EditBranchForm({ branch, editable }: { branch: Branch; editable:
       <input type="hidden" name="id" value={branch.id} />
       <FormMessage state={state} />
       <fieldset disabled={!editable} className="space-y-4 disabled:opacity-80">
-        <BranchFields state={state} branch={branch} defaultTimezone={branch.timezone} disabled={!editable} />
+        <BranchFields
+          state={state}
+          branch={branch}
+          defaultTimezone={branch.timezone}
+          disabled={!editable}
+        />
       </fieldset>
       {editable ? (
         <div className="flex justify-end pt-2">

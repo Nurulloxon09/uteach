@@ -1,4 +1,9 @@
-import { DEFAULT_ADMIN_FLAGS, PERMISSION_FLAGS, type MembershipRole, type MembershipStatus } from "@uteach/db";
+import {
+  DEFAULT_ADMIN_FLAGS,
+  PERMISSION_FLAGS,
+  type MembershipRole,
+  type MembershipStatus,
+} from "@uteach/db";
 import { CircleDot, SearchX, UserCog, Users } from "lucide-react";
 import { getFormatter, getLocale, getTranslations } from "next-intl/server";
 import {
@@ -90,25 +95,35 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
 
   const branchName = new Map((branches ?? []).map((b) => [b.id, b.name]));
   const isOwner = ctx.membership.role === "owner";
-  const myBranches = new Set(isOwner ? (branches ?? []).map((b) => b.id) : ctx.membership.branchIds);
+  const myBranches = new Set(
+    isOwner ? (branches ?? []).map((b) => b.id) : ctx.membership.branchIds,
+  );
   const scopeBranches = (branches ?? []).filter((b) => myBranches.has(b.id));
   const canManage = (m: Member) =>
     m.profile_id !== ctx.user.id &&
     (isOwner || (m.role === "teacher" && m.branch_ids.every((id) => myBranches.has(id))));
 
   const branchesOf = (m: Member) =>
-    m.role === "owner" ? t("allBranches") : format.list(m.branch_ids.map((id) => branchName.get(id) ?? "—"));
+    m.role === "owner"
+      ? t("allBranches")
+      : format.list(m.branch_ids.map((id) => branchName.get(id) ?? "—"));
   const roleOf = (m: Member) => (
     <>
       {tr(m.role)}
       {m.role === "admin" && m.permissions.length ? (
-        <span className="block text-xs text-muted-foreground">{t("flagCount", { count: m.permissions.length })}</span>
+        <span className="block text-xs text-muted-foreground">
+          {t("flagCount", { count: m.permissions.length })}
+        </span>
       ) : null}
     </>
   );
-  const statusOf = (m: Member) => <StatusChip tone={STATUS_TONE[m.status]}>{tst(m.status)}</StatusChip>;
+  const statusOf = (m: Member) => (
+    <StatusChip tone={STATUS_TONE[m.status]}>{tst(m.status)}</StatusChip>
+  );
   const actionsOf = (m: Member) =>
-    canManage(m) ? <MemberActions membershipId={m.id} name={m.display_name} status={m.status} /> : null;
+    canManage(m) ? (
+      <MemberActions membershipId={m.id} name={m.display_name} status={m.status} />
+    ) : null;
 
   return (
     <>
@@ -132,14 +147,14 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
           <>
             <TableSearch placeholder={t("searchPlaceholder")} label={t("searchLabel")} />
             <FilterButton
-              icon={UserCog}
+              icon={<UserCog strokeWidth={1.8} />}
               label={t("filterRole")}
               param="role"
               allLabel={tc("all")}
               options={ROLES.map((r) => ({ value: r, label: tr(r) }))}
             />
             <FilterButton
-              icon={CircleDot}
+              icon={<CircleDot strokeWidth={1.8} />}
               label={t("filterStatus")}
               param="status"
               allLabel={tc("all")}
@@ -154,7 +169,11 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
           rowKey={(m) => m.id}
           empty={
             filtered ? (
-              <EmptyState icon={SearchX} title={tStates("noResults")} hint={tStates("noResultsHint")} />
+              <EmptyState
+                icon={SearchX}
+                title={tStates("noResults")}
+                hint={tStates("noResultsHint")}
+              />
             ) : (
               <EmptyState icon={Users} title={t("emptyTitle")} hint={t("emptyHint")} />
             )
@@ -172,7 +191,12 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
               ),
             },
             { key: "role", header: t("columns.role"), cell: roleOf },
-            { key: "branches", header: t("columns.branches"), cell: branchesOf, className: "max-w-[260px]" },
+            {
+              key: "branches",
+              header: t("columns.branches"),
+              cell: branchesOf,
+              className: "max-w-[260px]",
+            },
             { key: "status", header: t("columns.status"), cell: statusOf },
             { key: "actions", header: t("columns.actions"), cell: actionsOf, className: "w-24" },
           ]}
@@ -192,7 +216,11 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
         />
       </Section>
 
-      <Pagination page={list.page} pageCount={pageCountFor(count ?? 0, list.size)} pageSize={list.size} />
+      <Pagination
+        page={list.page}
+        pageCount={pageCountFor(count ?? 0, list.size)}
+        pageSize={list.size}
+      />
     </>
   );
 }

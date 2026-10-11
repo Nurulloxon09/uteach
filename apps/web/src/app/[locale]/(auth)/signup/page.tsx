@@ -12,6 +12,8 @@ export default async function SignupPage({ searchParams }: PageProps<"/[locale]/
   const t = await getTranslations("auth.signup");
   const next = safeNextPath((await searchParams).next);
   return (
-    <AuthCard title={t("title")} description={<>{t("description")}</>}><SignupForm next={next} /></AuthCard>
+    <AuthCard title={t("title")} description={<>{t("description")}</>}>
+      <SignupForm next={next} />
+    </AuthCard>
   );
 }

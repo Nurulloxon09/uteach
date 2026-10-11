@@ -2,7 +2,13 @@
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
-import { Command, CommandEmpty, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
+import {
+  Command,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+} from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { cn } from "@/lib/utils";
 
@@ -54,7 +60,9 @@ export function Combobox({
             aria-describedby={invalid && id ? `${id}-error` : undefined}
             className="flex h-12 w-full items-center justify-between gap-2 rounded-xl bg-muted px-4 text-left text-[15px] outline-none transition-colors hover:bg-muted/70 focus-visible:ring-2 focus-visible:ring-primary/30 disabled:cursor-not-allowed disabled:opacity-60 data-[invalid=true]:ring-2 data-[invalid=true]:ring-destructive/30"
           >
-            <span className={cn("truncate", selected ? "text-foreground" : "text-muted-foreground")}>
+            <span
+              className={cn("truncate", selected ? "text-foreground" : "text-muted-foreground")}
+            >
               {selected?.label ?? placeholder}
             </span>
             {open ? (
@@ -87,7 +95,11 @@ export function Combobox({
                     )}
                   >
                     <span className="truncate">{o.label}</span>
-                    {o.hint ? <span className="ml-auto shrink-0 text-sm text-muted-foreground">{o.hint}</span> : null}
+                    {o.hint ? (
+                      <span className="ml-auto shrink-0 text-sm text-muted-foreground">
+                        {o.hint}
+                      </span>
+                    ) : null}
                   </CommandItem>
                 );
               })}

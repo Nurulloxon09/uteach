@@ -51,7 +51,10 @@ export function StatTiles({ items, className }: { items: StatTile[]; className?:
           <Link
             key={key}
             href={href}
-            className={cn(tileClass, "outline-none focus-visible:ring-2 focus-visible:ring-primary/30")}
+            className={cn(
+              tileClass,
+              "outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+            )}
             data-testid="stat-tile"
           >
             {body}

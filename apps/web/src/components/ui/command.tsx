@@ -33,7 +33,10 @@ function CommandDialog({
 }) {
   return (
     <Dialog {...props}>
-      <DialogContent showCloseButton={false} className={cn("top-[12vh] max-w-[520px] p-3 sm:top-[12vh]", className)}>
+      <DialogContent
+        showCloseButton={false}
+        className={cn("top-[12vh] max-w-[520px] p-3 sm:top-[12vh]", className)}
+      >
         <DialogTitle className="sr-only">{title}</DialogTitle>
         <DialogDescription className="sr-only">{description}</DialogDescription>
         {children}
@@ -69,13 +72,19 @@ function CommandList({ className, ...props }: React.ComponentProps<typeof Comman
   return (
     <CommandPrimitive.List
       data-slot="command-list"
-      className={cn("mt-2 max-h-[190px] overflow-x-hidden overflow-y-auto pr-1 outline-none", className)}
+      className={cn(
+        "mt-2 max-h-[190px] overflow-x-hidden overflow-y-auto pr-1 outline-none",
+        className,
+      )}
       {...props}
     />
   );
 }
 
-function CommandEmpty({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Empty>) {
+function CommandEmpty({
+  className,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Empty>) {
   return (
     <CommandPrimitive.Empty
       data-slot="command-empty"
@@ -85,7 +94,10 @@ function CommandEmpty({ className, ...props }: React.ComponentProps<typeof Comma
   );
 }
 
-function CommandGroup({ className, ...props }: React.ComponentProps<typeof CommandPrimitive.Group>) {
+function CommandGroup({
+  className,
+  ...props
+}: React.ComponentProps<typeof CommandPrimitive.Group>) {
   return (
     <CommandPrimitive.Group
       data-slot="command-group"
@@ -111,4 +123,12 @@ function CommandItem({ className, ...props }: React.ComponentProps<typeof Comman
   );
 }
 
-export { Command, CommandDialog, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList };
+export {
+  Command,
+  CommandDialog,
+  CommandEmpty,
+  CommandGroup,
+  CommandInput,
+  CommandItem,
+  CommandList,
+};

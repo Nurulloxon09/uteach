@@ -18,7 +18,10 @@ export default async function OnboardingPage({ params }: PageProps<"/[locale]/on
   return (
     <AuthLayout wide>
       <AuthCard title={t("title")} description={t("description", { name: user.fullName })}>
-        <CreateCenterForm defaultLocale={locale} defaultTimezone={publicEnv.NEXT_PUBLIC_DEFAULT_TIMEZONE} />
+        <CreateCenterForm
+          defaultLocale={locale}
+          defaultTimezone={publicEnv.NEXT_PUBLIC_DEFAULT_TIMEZONE}
+        />
       </AuthCard>
     </AuthLayout>
   );

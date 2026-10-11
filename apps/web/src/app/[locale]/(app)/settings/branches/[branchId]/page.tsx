@@ -1,7 +1,13 @@
 import { DoorOpen, Globe, MapPin, Phone } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { notFound } from "next/navigation";
-import { DetailPage, InitialsAvatar, PageHeader, ProfileCard, StatusChip } from "@/components/patterns";
+import {
+  DetailPage,
+  InitialsAvatar,
+  PageHeader,
+  ProfileCard,
+  StatusChip,
+} from "@/components/patterns";
 import { requireAdminContext } from "@/lib/center";
 import { createClient } from "@/lib/supabase/server";
 import { ArchiveButton } from "../../archive-button";
@@ -14,7 +20,9 @@ export async function generateMetadata() {
 }
 
 /** Branch detail: ProfileCard + tabs (Details | Rooms). */
-export default async function BranchPage({ params }: PageProps<"/[locale]/settings/branches/[branchId]">) {
+export default async function BranchPage({
+  params,
+}: PageProps<"/[locale]/settings/branches/[branchId]">) {
   const { branchId } = await params;
   const ctx = await requireAdminContext();
   const t = await getTranslations("settings.branches");
@@ -92,7 +100,13 @@ export default async function BranchPage({ params }: PageProps<"/[locale]/settin
           {
             value: "rooms",
             label: t("tabRooms"),
-            content: <RoomsPanel branchId={branch.id} rooms={(rooms ?? []) as Room[]} editable={canEditRooms} />,
+            content: (
+              <RoomsPanel
+                branchId={branch.id}
+                rooms={(rooms ?? []) as Room[]}
+                editable={canEditRooms}
+              />
+            ),
           },
         ]}
       />

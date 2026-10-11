@@ -25,14 +25,22 @@ export function PageHeader({
   return (
     <div className="flex flex-wrap items-start justify-between gap-4">
       <div className="min-w-0">
-        <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-[28px]">{title}</h1>
+        <h1 className="text-2xl font-extrabold tracking-tight text-foreground sm:text-[28px]">
+          {title}
+        </h1>
         {crumbs.length > 0 ? (
-          <nav aria-label={breadcrumbLabel} className="mt-2 flex flex-wrap items-center gap-2 text-[15px]">
+          <nav
+            aria-label={breadcrumbLabel}
+            className="mt-2 flex flex-wrap items-center gap-2 text-[15px]"
+          >
             {crumbs.map((crumb, i) => (
               <Fragment key={`${crumb.label}-${i}`}>
                 {i > 0 ? <span className="text-muted-foreground/70">/</span> : null}
                 {crumb.href ? (
-                  <Link href={crumb.href} className="text-muted-foreground transition-colors hover:text-primary">
+                  <Link
+                    href={crumb.href}
+                    className="text-muted-foreground transition-colors hover:text-primary"
+                  >
                     {crumb.label}
                   </Link>
                 ) : (

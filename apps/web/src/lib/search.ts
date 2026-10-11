@@ -3,6 +3,9 @@
  * PostgREST filter syntax (`,()`), LIKE wildcards and backslashes are replaced with spaces.
  */
 export function ilikePattern(q: string): string | null {
-  const cleaned = q.replace(/[,()*%_\\]/g, " ").replace(/\s+/g, " ").trim();
+  const cleaned = q
+    .replace(/[,()*%_\\]/g, " ")
+    .replace(/\s+/g, " ")
+    .trim();
   return cleaned ? `%${cleaned}%` : null;
 }

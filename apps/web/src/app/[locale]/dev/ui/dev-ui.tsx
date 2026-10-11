@@ -58,15 +58,29 @@ import {
 } from "@/components/patterns";
 import { Button } from "@/components/ui/button";
 import type { ActionState } from "@/lib/actions";
-import { DEV_TEXT, FAKE_BRANCHES, FAKE_CENTERS, FAKE_MEMBERS, TOKENS, TOKEN_CLASS, type FakeMember } from "./fixtures";
+import {
+  DEV_TEXT,
+  FAKE_BRANCHES,
+  FAKE_CENTERS,
+  FAKE_MEMBERS,
+  TOKENS,
+  TOKEN_CLASS,
+  type FakeMember,
+} from "./fixtures";
 
-const STATUS_TONE: Record<FakeMember["status"], ChipTone> = { active: "success", invited: "warning", disabled: "muted" };
+const STATUS_TONE: Record<FakeMember["status"], ChipTone> = {
+  active: "success",
+  invited: "warning",
+  disabled: "muted",
+};
 
 /** A labelled block on the kit page; `id` is used for screenshots (/dev/ui#list-page). */
 function Kit({ id, name, children }: { id: string; name: string; children: ReactNode }) {
   return (
-    <div id={id} className="scroll-mt-6 space-y-3">
-      <p className="font-mono text-xs font-semibold tracking-wide text-muted-foreground uppercase">{name}</p>
+    <div id={id} className="min-w-0 scroll-mt-6 space-y-3">
+      <p className="font-mono text-xs font-semibold tracking-wide text-muted-foreground uppercase">
+        {name}
+      </p>
       {children}
     </div>
   );
@@ -110,12 +124,25 @@ export function DevUi() {
 
   const money = (minor: bigint) => formatMoney(minor, "UZS", locale);
   const roleOf = (m: FakeMember) => t(`roles.${m.role}`);
-  const statusOf = (m: FakeMember) => <StatusChip tone={STATUS_TONE[m.status]}>{t(`memberStatus.${m.status}`)}</StatusChip>;
+  const statusOf = (m: FakeMember) => (
+    <StatusChip tone={STATUS_TONE[m.status]}>{t(`memberStatus.${m.status}`)}</StatusChip>
+  );
   const actionsOf = (m: FakeMember) => (
     <RowActions
       actions={[
-        { key: "delete", label: t("common.rowArchive", { name: m.name }), icon: Trash2, tone: "destructive", onSelect: () => toast(t("common.archivedToast")) },
-        { key: "edit", label: t("common.rowEdit", { name: m.name }), icon: Pencil, onSelect: () => toast(t("common.saved")) },
+        {
+          key: "delete",
+          label: t("common.rowArchive", { name: m.name }),
+          icon: Trash2,
+          tone: "destructive",
+          onSelect: () => toast(t("common.archivedToast")),
+        },
+        {
+          key: "edit",
+          label: t("common.rowEdit", { name: m.name }),
+          icon: Pencil,
+          onSelect: () => toast(t("common.saved")),
+        },
       ]}
     />
   );
@@ -131,100 +158,124 @@ export function DevUi() {
       <PageHeader
         title={text.kit}
         breadcrumbLabel={t("common.breadcrumb")}
-        crumbs={[{ label: t("nav.home"), href: "/home" }, { label: text.patterns }, { label: text.kit }]}
-        action={<PageAction onClick={() => toast.success(t("common.saved"))}>{t("staff.inviteButton")}</PageAction>}
+        crumbs={[
+          { label: t("nav.home"), href: "/home" },
+          { label: text.patterns },
+          { label: text.kit },
+        ]}
+        action={
+          <PageAction onClick={() => toast.success(t("common.saved"))}>
+            {t("staff.inviteButton")}
+          </PageAction>
+        }
       />
 
       <Kit id="stat-tiles" name="StatTiles in Section (dashboard)">
         <Section title={t("home.greeting", { name: "Malika" })} titleSize="dashboard">
           <StatTiles
             items={[
-              { key: "students", label: t("home.staff"), value: "1 248", icon: GraduationCap, tone: "purple" },
-              { key: "branches", label: t("home.branches"), value: "4", icon: Building2, tone: "blue" },
+              {
+                key: "students",
+                label: t("home.staff"),
+                value: "1 248",
+                icon: GraduationCap,
+                tone: "purple",
+              },
+              {
+                key: "branches",
+                label: t("home.branches"),
+                value: "4",
+                icon: Building2,
+                tone: "blue",
+              },
               { key: "rooms", label: t("home.rooms"), value: "27", icon: DoorOpen, tone: "orange" },
-              { key: "money", label: t("flags.payments.label"), value: money(1_930_000_000n), icon: Wallet, tone: "green" },
+              {
+                key: "money",
+                label: t("flags.payments.label"),
+                value: money(1_930_000_000n),
+                icon: Wallet,
+                tone: "green",
+              },
             ]}
           />
         </Section>
       </Kit>
 
-      <div className="grid gap-5 xl:grid-cols-[1.65fr_1fr]">
-        <Kit id="list-page" name="ListPage: Section + TableSearch + FilterButton + DataTable + RowActions + Pagination">
-          <Section
-            title={t("staff.listTitle")}
-            tools={
-              <>
-                <TableSearch placeholder={t("staff.searchPlaceholder")} label={t("staff.searchLabel")} />
-                <FilterButton
-                  icon={UserCog}
-                  label={t("staff.filterRole")}
-                  param="role"
-                  allLabel={t("common.all")}
-                  options={(["owner", "admin", "teacher"] as const).map((r) => ({ value: r, label: t(`roles.${r}`) }))}
-                />
-              </>
-            }
-          >
-            <DataTable
-              rows={FAKE_MEMBERS}
-              rowKey={(m) => m.id}
-              selection={{
-                selected,
-                onToggle: (key) =>
-                  setSelected((prev) => {
-                    const next = new Set(prev);
-                    if (next.has(key)) next.delete(key);
-                    else next.add(key);
-                    return next;
-                  }),
-                onToggleAll: () =>
-                  setSelected((prev) => (prev.size === FAKE_MEMBERS.length ? new Set() : new Set(FAKE_MEMBERS.map((m) => m.id)))),
-                labelAll: t("common.all"),
-                labelRow: (key) => FAKE_MEMBERS.find((m) => m.id === key)?.name ?? key,
-              }}
-              columns={[
-                {
-                  key: "name",
-                  header: t("staff.columns.name"),
-                  cell: (m) => <NameCell avatar={<InitialsAvatar name={m.name} />} name={m.name} />,
-                },
-                { key: "phone", header: t("staff.fields.phone"), cell: (m) => m.phone },
-                { key: "branch", header: t("staff.columns.branches"), cell: (m) => m.branch },
-                { key: "role", header: t("staff.columns.role"), cell: roleOf },
-                { key: "status", header: t("staff.columns.status"), cell: statusOf },
-                { key: "actions", header: t("staff.columns.actions"), cell: actionsOf },
-              ]}
-              mobileCard={(m) => (
-                <MobileRecord
-                  avatar={<InitialsAvatar name={m.name} />}
-                  title={m.name}
-                  subtitle={m.phone}
-                  status={statusOf(m)}
-                  fields={[
-                    { label: t("staff.columns.role"), value: roleOf(m) },
-                    { label: t("staff.columns.branches"), value: m.branch },
-                  ]}
-                  actions={actionsOf(m)}
-                />
-              )}
-            />
-          </Section>
-          <Pagination page={2} pageCount={100} pageSize={10} alwaysShow />
-        </Kit>
-
-        <Kit id="activity-list" name="ActivityList">
-          <Section title={t("home.nextSteps")} titleSize="card">
-            <ActivityList
-              items={[
-                { key: "a", icon: Building2, tone: "blue", title: t("home.addBranch"), description: t("home.addBranchHint"), meta: <StatusChip tone="success">{t("home.done")}</StatusChip> },
-                { key: "b", icon: DoorOpen, tone: "orange", title: t("home.addRooms"), description: t("home.addRoomsHint"), meta: <StatusChip tone="muted">{t("home.todo")}</StatusChip> },
-                { key: "c", icon: UserPlus, tone: "green", title: t("home.inviteStaff"), description: t("home.inviteStaffHint"), meta: money(60_000_000n) },
-                { key: "d", icon: GraduationCap, tone: "purple", title: text.lesson, description: text.group, meta: "18:00" },
-              ]}
-            />
-          </Section>
-        </Kit>
-      </div>
+      <Kit
+        id="list-page"
+        name="ListPage: Section + TableSearch + FilterButton + DataTable + RowActions + Pagination"
+      >
+        <Section
+          title={t("staff.listTitle")}
+          tools={
+            <>
+              <TableSearch
+                placeholder={t("staff.searchPlaceholder")}
+                label={t("staff.searchLabel")}
+              />
+              <FilterButton
+                icon={<UserCog strokeWidth={1.8} />}
+                label={t("staff.filterRole")}
+                param="role"
+                allLabel={t("common.all")}
+                options={(["owner", "admin", "teacher"] as const).map((r) => ({
+                  value: r,
+                  label: t(`roles.${r}`),
+                }))}
+              />
+            </>
+          }
+        >
+          <DataTable
+            rows={FAKE_MEMBERS}
+            rowKey={(m) => m.id}
+            selection={{
+              selected,
+              onToggle: (key) =>
+                setSelected((prev) => {
+                  const next = new Set(prev);
+                  if (next.has(key)) next.delete(key);
+                  else next.add(key);
+                  return next;
+                }),
+              onToggleAll: () =>
+                setSelected((prev) =>
+                  prev.size === FAKE_MEMBERS.length
+                    ? new Set()
+                    : new Set(FAKE_MEMBERS.map((m) => m.id)),
+                ),
+              labelAll: t("common.all"),
+              labelRow: (key) => FAKE_MEMBERS.find((m) => m.id === key)?.name ?? key,
+            }}
+            columns={[
+              {
+                key: "name",
+                header: t("staff.columns.name"),
+                cell: (m) => <NameCell avatar={<InitialsAvatar name={m.name} />} name={m.name} />,
+              },
+              { key: "phone", header: t("staff.fields.phone"), cell: (m) => m.phone },
+              { key: "branch", header: t("staff.columns.branches"), cell: (m) => m.branch },
+              { key: "role", header: t("staff.columns.role"), cell: roleOf },
+              { key: "status", header: t("staff.columns.status"), cell: statusOf },
+              { key: "actions", header: t("staff.columns.actions"), cell: actionsOf },
+            ]}
+            mobileCard={(m) => (
+              <MobileRecord
+                avatar={<InitialsAvatar name={m.name} />}
+                title={m.name}
+                subtitle={m.phone}
+                status={statusOf(m)}
+                fields={[
+                  { label: t("staff.columns.role"), value: roleOf(m) },
+                  { label: t("staff.columns.branches"), value: m.branch },
+                ]}
+                actions={actionsOf(m)}
+              />
+            )}
+          />
+        </Section>
+        <Pagination page={2} pageCount={100} pageSize={10} alwaysShow />
+      </Kit>
 
       <Kit id="detail-page" name="DetailPage: ProfileCard + Tabs">
         <DetailPage
@@ -250,14 +301,23 @@ export function DevUi() {
             {
               value: "rooms",
               label: t("settings.branches.tabRooms"),
-              content: <EmptyState icon={DoorOpen} title={t("settings.rooms.empty")} hint={t("settings.rooms.emptyHint")} />,
+              content: (
+                <EmptyState
+                  icon={DoorOpen}
+                  title={t("settings.rooms.empty")}
+                  hint={t("settings.rooms.emptyHint")}
+                />
+              ),
             },
           ]}
         />
       </Kit>
 
       <div className="grid gap-5 lg:grid-cols-2">
-        <Kit id="form-dialog" name="FormDialog + Field + SelectField + ComboboxField + CheckboxGroup">
+        <Kit
+          id="form-dialog"
+          name="FormDialog + Field + SelectField + ComboboxField + CheckboxGroup"
+        >
           <Section title={t("staff.inviteTitle")} description={t("staff.inviteDescription")}>
             <FormDialog
               trigger={<PageAction>{t("staff.inviteButton")}</PageAction>}
@@ -270,7 +330,12 @@ export function DevUi() {
             >
               {(state) => (
                 <>
-                  <Field name="displayName" label={t("staff.fields.name")} placeholder="Malika Karimova" state={state} />
+                  <Field
+                    name="displayName"
+                    label={t("staff.fields.name")}
+                    placeholder="Malika Karimova"
+                    state={state}
+                  />
                   <ComboboxField
                     name="branch"
                     label={t("staff.fields.branches")}
@@ -286,7 +351,10 @@ export function DevUi() {
                     label={t("staff.fields.role")}
                     state={state}
                     defaultValue="teacher"
-                    options={(["admin", "teacher"] as const).map((r) => ({ value: r, label: t(`roles.${r}`) }))}
+                    options={(["admin", "teacher"] as const).map((r) => ({
+                      value: r,
+                      label: t(`roles.${r}`),
+                    }))}
                   />
                 </>
               )}
@@ -297,14 +365,24 @@ export function DevUi() {
         <Kit id="fields" name="Fields (inline form)">
           <Section>
             <form className="space-y-4" onSubmit={(e) => e.preventDefault()}>
-              <Field name="kitName" label={t("auth.fields.fullName")} defaultValue="Гулноза Юсупова" state={null} />
+              <Field
+                name="kitName"
+                label={t("auth.fields.fullName")}
+                defaultValue="Гулноза Юсупова"
+                state={null}
+              />
               <Field
                 name="kitPhone"
                 label={t("auth.fields.phone")}
                 state={{ ok: false, fieldErrors: { kitPhone: "validation.phone" } }}
                 defaultValue="12"
               />
-              <TimezoneField name="kitTz" label={t("settings.center.timezone")} state={null} defaultValue="Asia/Tashkent" />
+              <TimezoneField
+                name="kitTz"
+                label={t("settings.center.timezone")}
+                state={null}
+                defaultValue="Asia/Tashkent"
+              />
               <CheckboxGroup legend={t("staff.fields.permissions")} name="kitFlags" state={null}>
                 {(["students", "payments", "billing"] as const).map((f, i) => (
                   <CheckboxField
@@ -328,7 +406,12 @@ export function DevUi() {
             <MobileList>
               {FAKE_MEMBERS.slice(2, 4).map((m) => (
                 <MobileCard key={m.id}>
-                  <MobileRecord avatar={<InitialsAvatar name={m.name} />} title={m.name} subtitle={text.group} status={statusOf(m)} />
+                  <MobileRecord
+                    avatar={<InitialsAvatar name={m.name} />}
+                    title={m.name}
+                    subtitle={text.group}
+                    status={statusOf(m)}
+                  />
                   <div className="mt-4">
                     <StatusToggleGroup
                       name={`att-${m.id}`}
@@ -352,49 +435,108 @@ export function DevUi() {
 
         <Kit id="states" name="EmptyState / ErrorState / LoadingState">
           <Section>
-            <EmptyState icon={Users} title={t("staff.emptyTitle")} hint={t("staff.emptyHint")} action={<PageAction>{t("staff.inviteButton")}</PageAction>} />
+            <EmptyState
+              icon={Users}
+              title={t("staff.emptyTitle")}
+              hint={t("staff.emptyHint")}
+              action={<PageAction>{t("staff.inviteButton")}</PageAction>}
+            />
           </Section>
           <Section>
-            <ErrorState title={t("states.errorTitle")} hint={t("states.errorHint")} action={<Button variant="outline">{text.retry}</Button>} />
+            <ErrorState
+              title={t("states.errorTitle")}
+              hint={t("states.errorHint")}
+              action={<Button variant="outline">{text.retry}</Button>}
+            />
           </Section>
           <Section>
             <LoadingState variant="table" rows={3} label={t("common.loading")} />
           </Section>
           <Section>
-            <EmptyState icon={SearchX} title={t("states.noResults")} hint={t("states.noResultsHint")} />
+            <EmptyState
+              icon={SearchX}
+              title={t("states.noResults")}
+              hint={t("states.noResultsHint")}
+            />
           </Section>
         </Kit>
       </div>
 
-      <Kit id="chips" name="StatusChip + InitialsAvatar + Buttons + Toast">
-        <Section>
-          <div className="flex flex-wrap items-center gap-3">
-            {(["primary", "success", "warning", "destructive", "muted"] as const).map((tone) => (
-              <StatusChip key={tone} tone={tone}>
-                {tone}
-              </StatusChip>
-            ))}
-            <ProfileChip>{"ID #0021"}</ProfileChip>
-          </div>
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            {FAKE_MEMBERS.slice(0, 6).map((m, i) => (
-              <InitialsAvatar key={m.id} name={m.name} size={i === 0 ? "lg" : i < 3 ? "md" : "sm"} />
-            ))}
-          </div>
-          <div className="mt-5 flex flex-wrap items-center gap-3">
-            <Button>{t("common.save")}</Button>
-            <Button variant="outline">{t("common.cancel")}</Button>
-            <PageAction>{t("common.add")}</PageAction>
-            <Button variant="ghost-round" size="icon" aria-label={t("common.edit")}>
-              <Pencil />
-            </Button>
-            <Button variant="destructive">{t("common.archive")}</Button>
-            <Button variant="link" onClick={() => toast.success(t("common.saved"))}>
-              {t("common.saved")}
-            </Button>
-          </div>
-        </Section>
-      </Kit>
+      <div className="grid gap-5 lg:grid-cols-2">
+        <Kit id="activity-list" name="ActivityList">
+          <Section title={t("home.nextSteps")} titleSize="card">
+            <ActivityList
+              items={[
+                {
+                  key: "a",
+                  icon: Building2,
+                  tone: "blue",
+                  title: t("home.addBranch"),
+                  description: t("home.addBranchHint"),
+                  meta: <StatusChip tone="success">{t("home.done")}</StatusChip>,
+                },
+                {
+                  key: "b",
+                  icon: DoorOpen,
+                  tone: "orange",
+                  title: t("home.addRooms"),
+                  description: t("home.addRoomsHint"),
+                  meta: <StatusChip tone="muted">{t("home.todo")}</StatusChip>,
+                },
+                {
+                  key: "c",
+                  icon: UserPlus,
+                  tone: "green",
+                  title: t("home.inviteStaff"),
+                  description: t("home.inviteStaffHint"),
+                  meta: money(60_000_000n),
+                },
+                {
+                  key: "d",
+                  icon: GraduationCap,
+                  tone: "purple",
+                  title: text.lesson,
+                  description: text.group,
+                  meta: "18:00",
+                },
+              ]}
+            />
+          </Section>
+        </Kit>
+        <Kit id="chips" name="StatusChip + InitialsAvatar + Buttons + Toast">
+          <Section>
+            <div className="flex flex-wrap items-center gap-3">
+              {(["primary", "success", "warning", "destructive", "muted"] as const).map((tone) => (
+                <StatusChip key={tone} tone={tone}>
+                  {tone}
+                </StatusChip>
+              ))}
+              <ProfileChip>{"ID #0021"}</ProfileChip>
+            </div>
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              {FAKE_MEMBERS.slice(0, 6).map((m, i) => (
+                <InitialsAvatar
+                  key={m.id}
+                  name={m.name}
+                  size={i === 0 ? "lg" : i < 3 ? "md" : "sm"}
+                />
+              ))}
+            </div>
+            <div className="mt-5 flex flex-wrap items-center gap-3">
+              <Button>{t("common.save")}</Button>
+              <Button variant="outline">{t("common.cancel")}</Button>
+              <PageAction>{t("common.add")}</PageAction>
+              <Button variant="ghost-round" size="icon" aria-label={t("common.edit")}>
+                <Pencil />
+              </Button>
+              <Button variant="destructive">{t("common.archive")}</Button>
+              <Button variant="link" onClick={() => toast.success(t("common.saved"))}>
+                {t("common.saved")}
+              </Button>
+            </div>
+          </Section>
+        </Kit>
+      </div>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Kit id="tokens" name="Tokens (globals.css)">
@@ -402,19 +544,28 @@ export function DevUi() {
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
               {TOKENS.map((token) => (
                 <div key={token} className="flex items-center gap-2.5">
-                  <span className={`size-9 shrink-0 rounded-lg border border-border/70 ${TOKEN_CLASS[token]}`} />
+                  <span
+                    className={`size-9 shrink-0 rounded-lg border border-border/70 ${TOKEN_CLASS[token]}`}
+                  />
                   <span className="font-mono text-xs text-secondary-foreground">{token}</span>
                 </div>
               ))}
             </div>
             <div className="mt-5 flex flex-wrap items-end gap-4">
               {(["rounded-lg", "rounded-xl", "rounded-2xl"] as const).map((r) => (
-                <div key={r} className={`grid size-20 place-items-center bg-primary-soft font-mono text-xs text-primary ${r}`}>
+                <div
+                  key={r}
+                  className={`grid size-20 place-items-center bg-primary-soft font-mono text-xs text-primary ${r}`}
+                >
                   {r}
                 </div>
               ))}
-              <div className="grid size-20 place-items-center rounded-2xl bg-card font-mono text-xs shadow-card">{"shadow-card"}</div>
-              <div className="grid size-20 place-items-center rounded-2xl bg-card font-mono text-xs shadow-shell">{"shadow-shell"}</div>
+              <div className="grid size-20 place-items-center rounded-2xl bg-card font-mono text-xs shadow-card">
+                {"shadow-card"}
+              </div>
+              <div className="grid size-20 place-items-center rounded-2xl bg-card font-mono text-xs shadow-shell">
+                {"shadow-shell"}
+              </div>
             </div>
           </Section>
         </Kit>
@@ -422,14 +573,19 @@ export function DevUi() {
         <Kit id="fonts" name="Typography (Plus Jakarta Sans + Manrope for Cyrillic)">
           <Section>
             <div className="space-y-3">
-              <p className="text-2xl font-extrabold tracking-tight sm:text-[28px]">{DEV_TEXT.uz.specimen.slice(0, 40)}</p>
-              <p className="text-2xl font-extrabold tracking-tight sm:text-[28px]">{DEV_TEXT.ru.specimen.slice(0, 40)}</p>
+              <p className="text-2xl font-extrabold tracking-tight sm:text-[28px]">
+                {DEV_TEXT.uz.specimen.slice(0, 40)}
+              </p>
+              <p className="text-2xl font-extrabold tracking-tight sm:text-[28px]">
+                {DEV_TEXT.ru.specimen.slice(0, 40)}
+              </p>
               <p className="text-xl font-bold">{DEV_TEXT.en.specimen}</p>
               <p className="text-[15px]">{DEV_TEXT.uz.specimen}</p>
               <p className="text-[15px]">{DEV_TEXT.ru.specimen}</p>
               <p className="text-sm text-muted-foreground">{DEV_TEXT.ru.specimen}</p>
               <p className="flex items-center gap-2 text-sm text-muted-foreground">
-                <CalendarDays className="size-4 text-primary" /> {money(55_384_615n)} · {money(-150n)}
+                <CalendarDays className="size-4 text-primary" /> {money(55_384_615n)} ·{" "}
+                {money(-150n)}
               </p>
             </div>
           </Section>
@@ -439,11 +595,14 @@ export function DevUi() {
       <Kit id="filters" name="FilterButton (status)">
         <Section>
           <FilterButton
-            icon={CircleDot}
+            icon={<CircleDot strokeWidth={1.8} />}
             label={t("staff.filterStatus")}
             param="status"
             allLabel={t("common.all")}
-            options={(["active", "invited", "disabled"] as const).map((s) => ({ value: s, label: t(`memberStatus.${s}`) }))}
+            options={(["active", "invited", "disabled"] as const).map((s) => ({
+              value: s,
+              label: t(`memberStatus.${s}`),
+            }))}
           />
         </Section>
       </Kit>

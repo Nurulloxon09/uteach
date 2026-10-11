@@ -1,11 +1,4 @@
-import {
-  Building2,
-  CalendarCheck,
-  Home,
-  Settings,
-  Users,
-  type LucideIcon,
-} from "lucide-react";
+import { Building2, CalendarCheck, Home, Settings, Users, type LucideIcon } from "lucide-react";
 
 /**
  * Navigation model. Built on the server (per role and permission flags) and passed to the client shell,
@@ -35,12 +28,19 @@ export function isActivePath(pathname: string, href: string): boolean {
 }
 
 /** All link targets, flattened (for the "Go to…" palette). */
-export function flattenNav(nav: NavEntry[]): { key: string; label: string; href: string; group?: string }[] {
+export function flattenNav(
+  nav: NavEntry[],
+): { key: string; label: string; href: string; group?: string }[] {
   return nav.flatMap((e) =>
-    isGroup(e) ? e.children.map((c) => ({ ...c, group: e.label })) : [{ key: e.key, label: e.label, href: e.href }],
+    isGroup(e)
+      ? e.children.map((c) => ({ ...c, group: e.label }))
+      : [{ key: e.key, label: e.label, href: e.href }],
   );
 }
 
 export type ShellUser = { name: string; roleLabel: string };
 export type ShellCenter = { id: string; name: string };
-export type ShellChip = { label: string; tone: "primary" | "success" | "warning" | "destructive" | "muted" };
+export type ShellChip = {
+  label: string;
+  tone: "primary" | "success" | "warning" | "destructive" | "muted";
+};

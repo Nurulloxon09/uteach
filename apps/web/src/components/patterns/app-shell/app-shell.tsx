@@ -2,7 +2,7 @@
 
 import { Menu } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { useState, type ReactNode } from "react";
+import { useRef, useState, type ReactNode } from "react";
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { GoToPalette } from "./go-to-palette";
 import { CenterMenu, LanguageMenu, UserMenu } from "./menus";
@@ -35,6 +35,7 @@ export function AppShell({
 }) {
   const t = useTranslations("nav");
   const [menuOpen, setMenuOpen] = useState(false);
+  const menuButton = useRef<HTMLButtonElement>(null);
 
   return (
     <div className="min-h-svh bg-card lg:flex">
@@ -43,7 +44,15 @@ export function AppShell({
       </div>
 
       <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
-        <SheetContent side="left" className="w-[248px]">
+        <SheetContent
+          side="left"
+          className="w-[248px]"
+          // The menu button isn't a Radix trigger, so return focus to it by hand.
+          onCloseAutoFocus={(e) => {
+            e.preventDefault();
+            menuButton.current?.focus();
+          }}
+        >
           <SheetTitle className="sr-only">{t("menu")}</SheetTitle>
           <SheetDescription className="sr-only">{t("menuDescription")}</SheetDescription>
           <Sidebar nav={nav} onClose={() => setMenuOpen(false)} />
@@ -53,6 +62,7 @@ export function AppShell({
       <div className="flex min-w-0 flex-1 flex-col">
         <header className="flex items-center gap-2 border-b border-border/70 bg-card px-4 py-4 sm:gap-3 sm:px-6 lg:px-8">
           <button
+            ref={menuButton}
             type="button"
             onClick={() => setMenuOpen(true)}
             aria-label={t("openMenu")}

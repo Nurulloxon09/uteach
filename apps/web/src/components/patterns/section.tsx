@@ -36,10 +36,14 @@ export function Section({
           {title ? (
             <div className="min-w-0">
               <h2 className={cn("text-foreground", TITLE_SIZES[titleSize])}>{title}</h2>
-              {description ? <p className="mt-1 text-[15px] text-muted-foreground">{description}</p> : null}
+              {description ? (
+                <p className="mt-1 text-[15px] text-muted-foreground">{description}</p>
+              ) : null}
             </div>
           ) : null}
-          {tools ? <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">{tools}</div> : null}
+          {tools ? (
+            <div className="flex w-full flex-wrap items-center gap-3 sm:w-auto">{tools}</div>
+          ) : null}
         </div>
       ) : null}
       {children ? <div className={cn(hasHeader && "mt-5")}>{children}</div> : null}

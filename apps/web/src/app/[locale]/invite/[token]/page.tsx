@@ -17,7 +17,10 @@ export default async function InvitePage({ params }: PageProps<"/[locale]/invite
   const t = await getTranslations("invite");
   const tr = await getTranslations("roles");
   const supabase = await createClient();
-  const [{ data }, user] = await Promise.all([supabase.rpc("get_invite", { p_token: token }), getCurrentUser()]);
+  const [{ data }, user] = await Promise.all([
+    supabase.rpc("get_invite", { p_token: token }),
+    getCurrentUser(),
+  ]);
   const invite = data?.[0];
   const next = `/${locale}/invite/${token}`;
 
@@ -43,7 +46,9 @@ export default async function InvitePage({ params }: PageProps<"/[locale]/invite
           <div className="flex items-center gap-4 rounded-xl bg-muted p-4">
             <InitialsAvatar name={invite.display_name} size="md" />
             <div className="min-w-0 flex-1">
-              <p className="truncate text-[15px] font-semibold text-foreground">{invite.display_name}</p>
+              <p className="truncate text-[15px] font-semibold text-foreground">
+                {invite.display_name}
+              </p>
               <p className="flex items-center gap-1.5 truncate text-sm text-muted-foreground">
                 <Building2 className="size-4 text-primary" strokeWidth={1.8} aria-hidden />
                 {invite.center_name}
@@ -59,7 +64,10 @@ export default async function InvitePage({ params }: PageProps<"/[locale]/invite
             <AcceptInviteForm token={token} />
           ) : (
             <div className="grid gap-3">
-              <Link href={{ pathname: "/signup", query: { next } }} className={buttonVariants({ className: "w-full" })}>
+              <Link
+                href={{ pathname: "/signup", query: { next } }}
+                className={buttonVariants({ className: "w-full" })}
+              >
                 {t("signupToAccept")}
               </Link>
               <Link

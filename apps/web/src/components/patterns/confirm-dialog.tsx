@@ -100,7 +100,9 @@ function ConfirmBody({
             {t("cancel")}
           </Button>
         </DialogClose>
-        <SubmitButton variant={tone === "destructive" ? "destructive" : "default"}>{confirmLabel}</SubmitButton>
+        <SubmitButton variant={tone === "destructive" ? "destructive" : "default"}>
+          {confirmLabel}
+        </SubmitButton>
       </DialogFooter>
     </form>
   );

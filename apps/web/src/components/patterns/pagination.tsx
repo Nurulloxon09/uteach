@@ -15,7 +15,8 @@ import { ELLIPSIS } from "./brand";
 import { PAGE_SIZES, pageWindow } from "./list-params";
 import { useListParams } from "./url-params";
 
-const btn = "grid size-9 place-items-center rounded-lg text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/30";
+const btn =
+  "grid size-9 place-items-center rounded-lg text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/30";
 
 /** Pagination under the list card (reference `TablePagination`): square buttons, active in primary, "10 / page". */
 export function Pagination({
@@ -37,7 +38,10 @@ export function Pagination({
   const disabled = "pointer-events-none opacity-40";
 
   return (
-    <nav aria-label={t("label")} className="flex flex-wrap items-center justify-center gap-1.5 pt-2">
+    <nav
+      aria-label={t("label")}
+      className="flex flex-wrap items-center justify-center gap-1.5 pt-2"
+    >
       <Link
         href={pageLink(Math.max(1, page - 1))}
         aria-label={t("previous")}
@@ -48,7 +52,10 @@ export function Pagination({
       </Link>
       {pageWindow(page, pageCount).map((p, i) =>
         p === "gap" ? (
-          <span key={`gap-${i}`} className="px-2 text-lg leading-none tracking-widest text-muted-foreground">
+          <span
+            key={`gap-${i}`}
+            className="px-2 text-lg leading-none tracking-widest text-muted-foreground"
+          >
             {ELLIPSIS}
           </span>
         ) : (
@@ -60,7 +67,9 @@ export function Pagination({
             className={cn(
               btn,
               p >= 100 && "w-11",
-              p === page ? "bg-primary text-primary-foreground" : "text-secondary-foreground hover:bg-muted",
+              p === page
+                ? "bg-primary text-primary-foreground"
+                : "text-secondary-foreground hover:bg-muted",
             )}
           >
             {p}
@@ -71,7 +80,11 @@ export function Pagination({
         href={pageLink(Math.min(pageCount, page + 1))}
         aria-label={t("next")}
         aria-disabled={page >= pageCount}
-        className={cn(btn, "text-secondary-foreground hover:bg-muted", page >= pageCount && disabled)}
+        className={cn(
+          btn,
+          "text-secondary-foreground hover:bg-muted",
+          page >= pageCount && disabled,
+        )}
       >
         <ChevronRight className="size-4" />
       </Link>
@@ -81,7 +94,10 @@ export function Pagination({
           <ChevronDown className="size-4 text-muted-foreground" />
         </DropdownMenuTrigger>
         <DropdownMenuContent align="center" className="min-w-36">
-          <DropdownMenuRadioGroup value={String(pageSize)} onValueChange={(v) => setParams({ size: v })}>
+          <DropdownMenuRadioGroup
+            value={String(pageSize)}
+            onValueChange={(v) => setParams({ size: v })}
+          >
             {PAGE_SIZES.map((s) => (
               <DropdownMenuRadioItem key={s} value={String(s)}>
                 {t("perPage", { size: s })}

@@ -25,7 +25,10 @@ export default async function TodayPage() {
         title={<span data-testid="today-title">{t("title")}</span>}
         meta={
           <span className="text-[15px] text-muted-foreground">
-            {format.dateTime(new Date(`${today}T12:00:00Z`), { dateStyle: "full", timeZone: "UTC" })}
+            {format.dateTime(new Date(`${today}T12:00:00Z`), {
+              dateStyle: "full",
+              timeZone: "UTC",
+            })}
           </span>
         }
       />

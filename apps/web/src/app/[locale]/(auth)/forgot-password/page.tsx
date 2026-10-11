@@ -10,6 +10,8 @@ export async function generateMetadata() {
 export default async function ForgotPasswordPage() {
   const t = await getTranslations("auth.forgot");
   return (
-    <AuthCard title={t("title")} description={<>{t("description")}</>}><ForgotPasswordForm /></AuthCard>
+    <AuthCard title={t("title")} description={<>{t("description")}</>}>
+      <ForgotPasswordForm />
+    </AuthCard>
   );
 }

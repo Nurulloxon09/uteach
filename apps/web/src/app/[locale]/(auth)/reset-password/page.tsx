@@ -13,6 +13,8 @@ export default async function ResetPasswordPage() {
   await requireUser();
   const t = await getTranslations("auth.reset");
   return (
-    <AuthCard title={t("title")} description={<>{t("description")}</>}><ResetPasswordForm /></AuthCard>
+    <AuthCard title={t("title")} description={<>{t("description")}</>}>
+      <ResetPasswordForm />
+    </AuthCard>
   );
 }

@@ -95,7 +95,15 @@ export function ArchiveRowActions({
 }
 
 /** Full-size Archive / Restore button (branch detail page). */
-export function ArchiveButton({ kind, id, archived }: { kind: Kind; id: string; archived: boolean }) {
+export function ArchiveButton({
+  kind,
+  id,
+  archived,
+}: {
+  kind: Kind;
+  id: string;
+  archived: boolean;
+}) {
   const tc = useTranslations("common");
   const a = useArchive(kind, id, archived);
   return (

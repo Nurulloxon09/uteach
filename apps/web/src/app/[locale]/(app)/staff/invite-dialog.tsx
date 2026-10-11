@@ -69,7 +69,13 @@ export function InviteDialog({
           />
           <CheckboxGroup legend={t("fields.branches")} name="branchIds" state={state}>
             {branches.map((b) => (
-              <CheckboxField key={b.id} name="branchIds" value={b.id} label={b.name} defaultChecked={branches.length === 1} />
+              <CheckboxField
+                key={b.id}
+                name="branchIds"
+                value={b.id}
+                label={b.name}
+                defaultChecked={branches.length === 1}
+              />
             ))}
           </CheckboxGroup>
           {role === "admin" ? (

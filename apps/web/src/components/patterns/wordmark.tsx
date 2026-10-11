@@ -11,7 +11,10 @@ export function Wordmark({ href = "/", className }: { href?: string; className?:
   return (
     <Link
       href={href}
-      className={cn("flex items-center gap-2.5 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary/30", className)}
+      className={cn(
+        "flex items-center gap-2.5 rounded-xl outline-none focus-visible:ring-2 focus-visible:ring-primary/30",
+        className,
+      )}
     >
       <span className="grid size-9 place-items-center rounded-xl bg-primary/10 text-primary">
         <GraduationCap className="size-5" strokeWidth={2} aria-hidden />

@@ -15,15 +15,87 @@ export type FakeMember = {
 };
 
 export const FAKE_MEMBERS: FakeMember[] = [
-  { id: "1", name: "Malika Karimova", phone: "+998 90 123 45 67", role: "owner", status: "active", branch: "Chilonzor", balanceMinor: 0n },
-  { id: "2", name: "Aziz Rahimov", phone: "+998 91 234 56 78", role: "admin", status: "active", branch: "Yunusobod", balanceMinor: 60_000_000n },
-  { id: "3", name: "Анна Смирнова", phone: "+998 93 345 67 89", role: "teacher", status: "active", branch: "Chilonzor", balanceMinor: 49_800_000n },
-  { id: "4", name: "Jasur Toshmatov", phone: "+998 94 456 78 90", role: "teacher", status: "invited", branch: "Sergeli", balanceMinor: 0n },
-  { id: "5", name: "Дмитрий Ким", phone: "+998 95 567 89 01", role: "teacher", status: "active", branch: "Yunusobod", balanceMinor: 125_000_000n },
-  { id: "6", name: "Nilufar Qodirova", phone: "+998 97 678 90 12", role: "admin", status: "disabled", branch: "Chilonzor", balanceMinor: 0n },
-  { id: "7", name: "Sardor Oʻrinboyev", phone: "+998 98 789 01 23", role: "teacher", status: "active", branch: "Sergeli", balanceMinor: 72_500_000n },
-  { id: "8", name: "Emily Carter", phone: "+998 99 890 12 34", role: "teacher", status: "invited", branch: "Yunusobod", balanceMinor: 0n },
-  { id: "9", name: "Гулноза Юсупова", phone: "+998 90 901 23 45", role: "teacher", status: "active", branch: "Chilonzor", balanceMinor: 30_000_000n },
+  {
+    id: "1",
+    name: "Malika Karimova",
+    phone: "+998 90 123 45 67",
+    role: "owner",
+    status: "active",
+    branch: "Chilonzor",
+    balanceMinor: 0n,
+  },
+  {
+    id: "2",
+    name: "Aziz Rahimov",
+    phone: "+998 91 234 56 78",
+    role: "admin",
+    status: "active",
+    branch: "Yunusobod",
+    balanceMinor: 60_000_000n,
+  },
+  {
+    id: "3",
+    name: "Анна Смирнова",
+    phone: "+998 93 345 67 89",
+    role: "teacher",
+    status: "active",
+    branch: "Chilonzor",
+    balanceMinor: 49_800_000n,
+  },
+  {
+    id: "4",
+    name: "Jasur Toshmatov",
+    phone: "+998 94 456 78 90",
+    role: "teacher",
+    status: "invited",
+    branch: "Sergeli",
+    balanceMinor: 0n,
+  },
+  {
+    id: "5",
+    name: "Дмитрий Ким",
+    phone: "+998 95 567 89 01",
+    role: "teacher",
+    status: "active",
+    branch: "Yunusobod",
+    balanceMinor: 125_000_000n,
+  },
+  {
+    id: "6",
+    name: "Nilufar Qodirova",
+    phone: "+998 97 678 90 12",
+    role: "admin",
+    status: "disabled",
+    branch: "Chilonzor",
+    balanceMinor: 0n,
+  },
+  {
+    id: "7",
+    name: "Sardor Oʻrinboyev",
+    phone: "+998 98 789 01 23",
+    role: "teacher",
+    status: "active",
+    branch: "Sergeli",
+    balanceMinor: 72_500_000n,
+  },
+  {
+    id: "8",
+    name: "Emily Carter",
+    phone: "+998 99 890 12 34",
+    role: "teacher",
+    status: "invited",
+    branch: "Yunusobod",
+    balanceMinor: 0n,
+  },
+  {
+    id: "9",
+    name: "Гулноза Юсупова",
+    phone: "+998 90 901 23 45",
+    role: "teacher",
+    status: "active",
+    branch: "Chilonzor",
+    balanceMinor: 30_000_000n,
+  },
 ];
 
 export const FAKE_CENTERS = [
@@ -36,7 +108,15 @@ export const FAKE_BRANCHES = ["Chilonzor", "Yunusobod", "Sergeli", "Mirzo Ulugʻ
 /** Strings that have no real i18n key yet (patterns only appear in later milestones). */
 export const DEV_TEXT: Record<
   Locale,
-  { attendance: [string, string, string, string]; lesson: string; group: string; retry: string; patterns: string; kit: string; specimen: string }
+  {
+    attendance: [string, string, string, string];
+    lesson: string;
+    group: string;
+    retry: string;
+    patterns: string;
+    kit: string;
+    specimen: string;
+  }
 > = {
   en: {
     attendance: ["Present", "Late", "Absent", "Excused"],

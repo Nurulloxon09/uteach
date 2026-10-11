@@ -18,7 +18,12 @@ import type { ActionState } from "@/lib/actions";
 import { createRoomAction, updateRoomAction } from "../../actions";
 import { ArchiveRowActions } from "../../archive-button";
 
-export type Room = { id: string; name: string; capacity: number | null; archived_at: string | null };
+export type Room = {
+  id: string;
+  name: string;
+  capacity: number | null;
+  archived_at: string | null;
+};
 
 function RoomFields({ state, room }: { state: ActionState; room?: Room }) {
   const t = useTranslations("settings.rooms.fields");
@@ -39,7 +44,15 @@ function RoomFields({ state, room }: { state: ActionState; room?: Room }) {
 }
 
 /** Rooms tab: list of rooms with add / edit dialogs and archive / restore. */
-export function RoomsPanel({ branchId, rooms, editable }: { branchId: string; rooms: Room[]; editable: boolean }) {
+export function RoomsPanel({
+  branchId,
+  rooms,
+  editable,
+}: {
+  branchId: string;
+  rooms: Room[];
+  editable: boolean;
+}) {
   const t = useTranslations("settings.rooms");
   const tb = useTranslations("settings.branches");
   const tc = useTranslations("common");
@@ -47,7 +60,11 @@ export function RoomsPanel({ branchId, rooms, editable }: { branchId: string; ro
 
   const capacityOf = (r: Room) => (r.capacity ? t("capacityValue", { count: r.capacity }) : "—");
   const statusOf = (r: Room) =>
-    r.archived_at ? <StatusChip tone="muted">{tc("archived")}</StatusChip> : <StatusChip tone="success">{tb("statusActive")}</StatusChip>;
+    r.archived_at ? (
+      <StatusChip tone="muted">{tc("archived")}</StatusChip>
+    ) : (
+      <StatusChip tone="success">{tb("statusActive")}</StatusChip>
+    );
   const actionsOf = (r: Room) =>
     editable ? (
       <ArchiveRowActions
@@ -58,7 +75,14 @@ export function RoomsPanel({ branchId, rooms, editable }: { branchId: string; ro
         extra={
           r.archived_at
             ? []
-            : [{ key: "edit", label: tc("rowEdit", { name: r.name }), icon: Pencil, onSelect: () => setEditing(r) }]
+            : [
+                {
+                  key: "edit",
+                  label: tc("rowEdit", { name: r.name }),
+                  icon: Pencil,
+                  onSelect: () => setEditing(r),
+                },
+              ]
         }
       />
     ) : null;
@@ -66,7 +90,9 @@ export function RoomsPanel({ branchId, rooms, editable }: { branchId: string; ro
   return (
     <div className="space-y-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <p className="text-[15px] text-muted-foreground">{editable ? t("hint") : t("readOnlyHint")}</p>
+        <p className="text-[15px] text-muted-foreground">
+          {editable ? t("hint") : t("readOnlyHint")}
+        </p>
         {editable ? (
           <FormDialog
             trigger={
@@ -95,12 +121,20 @@ export function RoomsPanel({ branchId, rooms, editable }: { branchId: string; ro
         testId="room-row"
         rows={rooms}
         rowKey={(r) => r.id}
-        empty={<EmptyState icon={DoorOpen} title={t("empty")} hint={editable ? t("emptyHint") : undefined} />}
+        empty={
+          <EmptyState
+            icon={DoorOpen}
+            title={t("empty")}
+            hint={editable ? t("emptyHint") : undefined}
+          />
+        }
         columns={[
           {
             key: "name",
             header: t("fields.name"),
-            cell: (r) => <NameCell avatar={<InitialsAvatar name={r.name} size="sm" />} name={r.name} />,
+            cell: (r) => (
+              <NameCell avatar={<InitialsAvatar name={r.name} size="sm" />} name={r.name} />
+            ),
           },
           { key: "capacity", header: t("fields.capacity"), cell: capacityOf },
           { key: "status", header: tb("filterStatus"), cell: statusOf },

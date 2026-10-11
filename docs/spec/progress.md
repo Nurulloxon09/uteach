@@ -7,13 +7,14 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M0.5 · UI foundation**: ◐ in progress (branch `m0.5-ui`). M0 is done: PR #1 merged into `main` on 2026-10-11 with all 4 CI checks green.
+**M0.5 · UI foundation**: ◐ built and all checks pass (branch `m0.5-ui`); waiting for the owner to approve the
+side-by-side screenshots (`docs/design/screenshots/compare/`). M0 is done: PR #1 merged into `main` on 2026-10-11.
 
 ## Milestones
 | # | Milestone | Status | Finished |
 |---|---|---|---|
 | M0 | Foundation | ☑ done | 2026-10-11 |
-| M0.5 | UI foundation | ◐ in progress | |
+| M0.5 | UI foundation | ◐ built, awaiting screenshot approval | |
 | M1 | Academic core | ☐ | |
 | M2 | Attendance | ☐ | |
 | M3 | Billing | ☐ | |
@@ -52,7 +53,38 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | CI on PRs | ☑ | GitHub Actions on PR #1: checks, Supabase DB tests, e2e and Docker build all green |
 | E2E happy path | ☑ | `pnpm e2e`: 3 tests pass against local Supabase (2026-10-11) |
 
+## M0.5 "done when" status
+
+| Item (30-milestones) | Status | Evidence |
+|---|---|---|
+| Tokens equal 05-ui §2; no raw colors in `apps/web/src` | ☑ | `globals.css`; `uteach/no-raw-colors` lint rule (unit tested, verified it fires; runs in CI via `pnpm lint`) |
+| Plus Jakarta Sans + Manrope for Cyrillic; `ru` pages consistent | ☑ | `staff-ru-*.png`, `/dev/ui` typography block (uz/ru/en specimens) |
+| `/dev/ui` shows every pattern, uz/ru/en, 404 in production | ☑ | `dev-ui-*.png`; e2e "/dev/ui is available in development and 404 in production" (404 branch runs in CI on `pnpm start`); `next build` prerenders it as the 404 page |
+| Side-by-side screenshots 1440/390 saved; owner approves | ◐ | `docs/design/screenshots/compare/` (9 pairs); **owner approval pending** |
+| All M0 screens on `AppShell` + patterns; Staff is a `ListPage`; invite is a `FormDialog` | ☑ | Auth, onboarding, invite, home, today, staff, center, branches, branch detail + rooms |
+| Sidebar shows only allowed items (teacher: Today only) | ☑ | e2e: owner sees Home/Staff/Settings; teacher drawer has exactly one link (Today) |
+| Keyboard: dialog traps focus, Esc closes; drawer opens/closes with keyboard | ☑ | e2e: 12 Tabs stay in the invite dialog, Esc closes and focus returns; drawer Esc closes, focus returns to the menu button |
+| Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
+
 ## Log
+
+### 2026-10-11 · M0.5 built
+- Tokens, radius scale, shadows and fonts from the reference in `globals.css`; shadcn primitives (button, input,
+  checkbox, dialog, sheet, tabs, popover, command, select, dropdown, table, tooltip, sonner, …) restyled to match.
+- `components/patterns`: AppShell (sidebar, drawer, Go-to palette, center/language/user menus), PageHeader, Section,
+  StatTiles, ActivityList, DataTable (+ mobile cards), TableSearch, FilterButton, Pagination, RowActions,
+  FormDialog, ConfirmDialog, fields + Combobox/TimezoneField, StatusChip, InitialsAvatar, ProfileCard, DetailPage,
+  MobileList, StatusToggleGroup, Empty/Error/Loading states, AuthLayout.
+- Every M0 screen moved onto them. Staff and Branches are list pages with search, filters and pagination in the URL;
+  invite, add branch, add/edit room are dialogs; branch detail has Details/Rooms tabs.
+- `/dev/ui` kit with fake data (dev only). New e2e `m0.5-ui.spec.ts` (3 tests); M0 e2e updated for the new UI;
+  shared helpers in `e2e/helpers.ts`; `pnpm typecheck` now also checks the e2e folder.
+- Fixed while testing: server pages passed icon components to the client `FilterButton` (now an element);
+  focus didn't return to the menu button after closing the drawer; the detail-page grid overflowed at 390 px.
+- New decisions recorded as PROPOSED in `05-ui.md` §6b (restore without confirm, lint rule, mobile row actions,
+  icon elements, `pnpm screenshots`).
+- No database changes.
+
 
 ### 2026-10-11 · M0 done, M0.5 started
 - GitHub repo `Nurulloxon09/uteach` (private). PR #1 (M0) green on all 4 CI jobs and merged into `main`.
@@ -102,6 +134,8 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
   - Charges are per enrollment per month; unexcused absences are still billed.
 
 ## Known gaps / follow-ups
+- Phone numbers show unformatted in staff lists (`+998931234567`); formatting with `packages/core` phone helpers can come with M1 lists.
+- Dark mode tokens exist in `globals.css` but are unused (light mode only, per 05-ui).
 - CI's e2e job uses only `test_otp` numbers, which skip the Send-SMS hook, so `host.docker.internal` on Linux runners doesn't matter.
 - Verify the SAT / CEFR / Milliy sertifikat score ranges and grade mappings against official sources before M6.
 - "Upcoming events page" (from brainstorm) has no milestone yet; decide in M15 planning.

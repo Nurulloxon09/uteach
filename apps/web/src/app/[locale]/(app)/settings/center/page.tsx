@@ -19,7 +19,11 @@ export default async function CenterSettingsPage() {
       <PageHeader
         title={t("title")}
         breadcrumbLabel={tc("breadcrumb")}
-        crumbs={[{ label: tn("home"), href: "/home" }, { label: tn("settings") }, { label: t("title") }]}
+        crumbs={[
+          { label: tn("home"), href: "/home" },
+          { label: tn("settings") },
+          { label: t("title") },
+        ]}
       />
       <Section
         className="max-w-3xl"

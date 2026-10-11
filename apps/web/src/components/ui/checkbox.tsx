@@ -16,7 +16,14 @@ function Checkbox({ className, ...props }: React.ComponentProps<typeof CheckboxP
       {...props}
     >
       <CheckboxPrimitive.Indicator data-slot="checkbox-indicator">
-        <svg viewBox="0 0 24 24" className="size-3.5" fill="none" stroke="currentColor" strokeWidth={3.2} aria-hidden>
+        <svg
+          viewBox="0 0 24 24"
+          className="size-3.5"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth={3.2}
+          aria-hidden
+        >
           <path d="M5 13l4 4L19 7" strokeLinecap="round" strokeLinejoin="round" />
         </svg>
       </CheckboxPrimitive.Indicator>

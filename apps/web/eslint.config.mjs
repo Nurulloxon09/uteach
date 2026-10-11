@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import uteach from "./eslint-rules/no-raw-colors.mjs";
 
 const eslintConfig = defineConfig([
   ...nextVitals,
@@ -16,6 +17,12 @@ const eslintConfig = defineConfig([
         { noStrings: true, ignoreProps: true, allowedStrings: ["·", "—", "/", ":", "(", ")"] },
       ],
     },
+  },
+  {
+    // Colors come only from theme tokens in globals.css (05-ui.md §2).
+    files: ["src/**/*.{ts,tsx}"],
+    plugins: { uteach },
+    rules: { "uteach/no-raw-colors": "error" },
   },
   {
     rules: {

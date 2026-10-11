@@ -19,7 +19,7 @@ export function DetailPage({
   defaultTab?: string;
 }) {
   return (
-    <div className="grid gap-5 lg:grid-cols-[minmax(280px,360px)_1fr] lg:items-start">
+    <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] lg:items-start">
       {header}
       <section className="min-w-0 rounded-2xl bg-card p-4 shadow-card sm:p-6">
         <Tabs defaultValue={defaultTab ?? tabs[0]?.value}>

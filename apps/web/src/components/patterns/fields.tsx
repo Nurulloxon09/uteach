@@ -8,7 +8,13 @@ import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import type { ActionState } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 import { Combobox, type ComboboxOption } from "./combobox";
@@ -25,7 +31,13 @@ function fieldState(state: ActionState, name: string) {
 export function SubmitButton({ children, className, ...props }: ComponentProps<typeof Button>) {
   const { pending } = useFormStatus();
   return (
-    <Button type="submit" disabled={pending || props.disabled} aria-busy={pending} className={cn("px-7", className)} {...props}>
+    <Button
+      type="submit"
+      disabled={pending || props.disabled}
+      aria-busy={pending}
+      className={cn("px-7", className)}
+      {...props}
+    >
       {children}
     </Button>
   );
@@ -234,7 +246,14 @@ export function CheckboxField({
       htmlFor={id}
       className="flex cursor-pointer items-start gap-3 rounded-xl px-1 py-1.5 transition-colors hover:bg-muted/60"
     >
-      <Checkbox id={id} name={name} value={value} defaultChecked={defaultChecked} disabled={disabled} className="mt-0.5" />
+      <Checkbox
+        id={id}
+        name={name}
+        value={value}
+        defaultChecked={defaultChecked}
+        disabled={disabled}
+        className="mt-0.5"
+      />
       <span className="min-w-0">
         <span className="block text-[15px] font-medium text-foreground">{label}</span>
         {hint ? <span className="block text-sm text-muted-foreground">{hint}</span> : null}

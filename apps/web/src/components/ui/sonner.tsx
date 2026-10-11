@@ -1,7 +1,13 @@
 "use client";
 
 import { Toaster as Sonner, type ToasterProps } from "sonner";
-import { CircleCheckIcon, InfoIcon, Loader2Icon, OctagonXIcon, TriangleAlertIcon } from "lucide-react";
+import {
+  CircleCheckIcon,
+  InfoIcon,
+  Loader2Icon,
+  OctagonXIcon,
+  TriangleAlertIcon,
+} from "lucide-react";
 
 /** Toasts as small cards (`rounded-xl shadow-card`). Light mode only in MVP. */
 const Toaster = (props: ToasterProps) => {

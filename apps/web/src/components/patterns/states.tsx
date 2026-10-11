@@ -18,7 +18,12 @@ export function EmptyState({
   className?: string;
 }) {
   return (
-    <div className={cn("flex flex-col items-center justify-center gap-4 px-4 py-10 text-center", className)}>
+    <div
+      className={cn(
+        "flex flex-col items-center justify-center gap-4 px-4 py-10 text-center",
+        className,
+      )}
+    >
       <span className="grid size-14 place-items-center rounded-full bg-primary-soft text-primary">
         <Icon className="size-6" strokeWidth={1.9} aria-hidden />
       </span>
@@ -53,7 +58,10 @@ export function LoadingState({
         <>
           <Skeleton className="h-14 w-full" />
           {Array.from({ length: rows }, (_, i) => (
-            <div key={i} className="flex items-center gap-3 border-b border-border/70 px-2 py-3 last:border-0">
+            <div
+              key={i}
+              className="flex items-center gap-3 border-b border-border/70 px-2 py-3 last:border-0"
+            >
               <Skeleton className="size-10 rounded-full" />
               <Skeleton className="h-4 w-40" />
               <Skeleton className="ml-auto h-4 w-24" />

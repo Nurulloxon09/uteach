@@ -37,7 +37,9 @@ export function AuthCard({
       <h1 className="text-2xl font-extrabold tracking-tight text-foreground">{title}</h1>
       {description ? <p className="mt-2 text-[15px] text-muted-foreground">{description}</p> : null}
       {children ? <div className="mt-6">{children}</div> : null}
-      {footer ? <div className="mt-6 border-t border-border/70 pt-5 text-center text-[15px]">{footer}</div> : null}
+      {footer ? (
+        <div className="mt-6 border-t border-border/70 pt-5 text-center text-[15px]">{footer}</div>
+      ) : null}
     </div>
   );
 }

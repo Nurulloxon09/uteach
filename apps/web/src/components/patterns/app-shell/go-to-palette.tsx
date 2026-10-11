@@ -3,7 +3,14 @@
 import { CornerDownLeft, Search } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useEffect, useState } from "react";
-import { CommandDialog, CommandEmpty, CommandInput, CommandItem, CommandList, Command } from "@/components/ui/command";
+import {
+  CommandDialog,
+  CommandEmpty,
+  CommandInput,
+  CommandItem,
+  CommandList,
+  Command,
+} from "@/components/ui/command";
 import { useRouter } from "@/i18n/navigation";
 import { flattenNav, type NavEntry } from "./nav";
 
@@ -40,7 +47,12 @@ export function GoToPalette({ nav }: { nav: NavEntry[] }) {
         <span className="truncate">{t("goToPlaceholder")}</span>
         <Search className="pointer-events-none absolute top-1/2 right-4 size-4 -translate-y-1/2 text-primary" />
       </button>
-      <CommandDialog open={open} onOpenChange={setOpen} title={t("goTo")} description={t("goToDescription")}>
+      <CommandDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={t("goTo")}
+        description={t("goToDescription")}
+      >
         <Command>
           <CommandInput withIcon placeholder={t("goToPlaceholder")} aria-label={t("goTo")} />
           <CommandList className="max-h-[320px]">

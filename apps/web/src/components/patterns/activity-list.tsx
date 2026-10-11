@@ -28,11 +28,18 @@ export function ActivityList({ items }: { items: ActivityItem[] }) {
       {items.map(({ key, icon: Icon, tone, title, description, meta, href }) => {
         const row = (
           <>
-            <span className={cn("grid size-11 shrink-0 place-items-center rounded-xl text-primary", TONES[tone])}>
+            <span
+              className={cn(
+                "grid size-11 shrink-0 place-items-center rounded-xl text-primary",
+                TONES[tone],
+              )}
+            >
               <Icon className="size-5" strokeWidth={1.9} aria-hidden />
             </span>
             <span className="min-w-0 flex-1">
-              <span className="block truncate text-[15px] font-semibold text-foreground">{title}</span>
+              <span className="block truncate text-[15px] font-semibold text-foreground">
+                {title}
+              </span>
               {description ? (
                 <span className="block truncate text-sm text-muted-foreground">{description}</span>
               ) : null}

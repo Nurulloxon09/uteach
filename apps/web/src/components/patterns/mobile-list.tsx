@@ -70,7 +70,9 @@ export function MobileRecord({
           ))}
         </dl>
       ) : null}
-      {actions ? <div className="flex justify-end border-t border-border/70 pt-2">{actions}</div> : null}
+      {actions ? (
+        <div className="flex justify-end border-t border-border/70 pt-2">{actions}</div>
+      ) : null}
     </div>
   );
 }

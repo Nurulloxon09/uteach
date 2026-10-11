@@ -26,10 +26,18 @@ export async function generateMetadata() {
   return { title: t("title") };
 }
 
-type Branch = { id: string; name: string; address: string | null; timezone: string; archived_at: string | null };
+type Branch = {
+  id: string;
+  name: string;
+  address: string | null;
+  timezone: string;
+  archived_at: string | null;
+};
 
 /** Branches & rooms: a ListPage with search, an active/archived filter and the add-branch dialog. */
-export default async function BranchesPage({ searchParams }: PageProps<"/[locale]/settings/branches">) {
+export default async function BranchesPage({
+  searchParams,
+}: PageProps<"/[locale]/settings/branches">) {
   const ctx = await requireAdminContext();
   const t = await getTranslations("settings.branches");
   const tn = await getTranslations("nav");
@@ -69,10 +77,19 @@ export default async function BranchesPage({ searchParams }: PageProps<"/[locale
   for (const r of rooms ?? []) roomCount.set(r.branch_id, (roomCount.get(r.branch_id) ?? 0) + 1);
 
   const statusOf = (b: Branch) =>
-    b.archived_at ? <StatusChip tone="muted">{tc("archived")}</StatusChip> : <StatusChip tone="success">{t("statusActive")}</StatusChip>;
+    b.archived_at ? (
+      <StatusChip tone="muted">{tc("archived")}</StatusChip>
+    ) : (
+      <StatusChip tone="success">{t("statusActive")}</StatusChip>
+    );
   const roomsOf = (b: Branch) => t("roomsCount", { count: roomCount.get(b.id) ?? 0 });
   const actionsOf = (b: Branch) => (
-    <BranchRowActions id={b.id} name={b.name} archived={b.archived_at !== null} canManage={ctx.can.manageBranches} />
+    <BranchRowActions
+      id={b.id}
+      name={b.name}
+      archived={b.archived_at !== null}
+      canManage={ctx.can.manageBranches}
+    />
   );
 
   return (
@@ -80,8 +97,16 @@ export default async function BranchesPage({ searchParams }: PageProps<"/[locale
       <PageHeader
         title={t("title")}
         breadcrumbLabel={tc("breadcrumb")}
-        crumbs={[{ label: tn("home"), href: "/home" }, { label: tn("settings") }, { label: t("title") }]}
-        action={ctx.can.manageBranches ? <AddBranchDialog defaultTimezone={ctx.center.timezone} /> : undefined}
+        crumbs={[
+          { label: tn("home"), href: "/home" },
+          { label: tn("settings") },
+          { label: t("title") },
+        ]}
+        action={
+          ctx.can.manageBranches ? (
+            <AddBranchDialog defaultTimezone={ctx.center.timezone} />
+          ) : undefined
+        }
       />
 
       <Section
@@ -90,7 +115,7 @@ export default async function BranchesPage({ searchParams }: PageProps<"/[locale
           <>
             <TableSearch placeholder={t("searchPlaceholder")} label={t("searchLabel")} />
             <FilterButton
-              icon={CircleDot}
+              icon={<CircleDot strokeWidth={1.8} />}
               label={t("filterStatus")}
               param="status"
               allLabel={tc("all")}
@@ -108,7 +133,11 @@ export default async function BranchesPage({ searchParams }: PageProps<"/[locale
           rowKey={(b) => b.id}
           empty={
             filtered ? (
-              <EmptyState icon={SearchX} title={tStates("noResults")} hint={tStates("noResultsHint")} />
+              <EmptyState
+                icon={SearchX}
+                title={tStates("noResults")}
+                hint={tStates("noResultsHint")}
+              />
             ) : (
               <EmptyState icon={Building2} title={t("emptyTitle")} hint={t("emptyHint")} />
             )
@@ -120,8 +149,16 @@ export default async function BranchesPage({ searchParams }: PageProps<"/[locale
               cell: (b) => <NameCell avatar={<InitialsAvatar name={b.name} />} name={b.name} />,
             },
             { key: "address", header: t("columns.address"), cell: (b) => b.address ?? "—" },
-            { key: "timezone", header: t("columns.timezone"), cell: (b) => b.timezone.replaceAll("_", " ") },
-            { key: "rooms", header: t("columns.rooms"), cell: (b) => format.number(roomCount.get(b.id) ?? 0) },
+            {
+              key: "timezone",
+              header: t("columns.timezone"),
+              cell: (b) => b.timezone.replaceAll("_", " "),
+            },
+            {
+              key: "rooms",
+              header: t("columns.rooms"),
+              cell: (b) => format.number(roomCount.get(b.id) ?? 0),
+            },
             { key: "status", header: t("filterStatus"), cell: statusOf },
             { key: "actions", header: tc("actions"), cell: actionsOf, className: "w-28" },
           ]}
@@ -141,7 +178,11 @@ export default async function BranchesPage({ searchParams }: PageProps<"/[locale
         />
       </Section>
 
-      <Pagination page={list.page} pageCount={pageCountFor(count ?? 0, list.size)} pageSize={list.size} />
+      <Pagination
+        page={list.page}
+        pageCount={pageCountFor(count ?? 0, list.size)}
+        pageSize={list.size}
+      />
     </>
   );
 }

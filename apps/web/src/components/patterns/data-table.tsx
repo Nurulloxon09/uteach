@@ -1,6 +1,13 @@
 import type { ReactNode } from "react";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 import { cn } from "@/lib/utils";
 import { MobileCard, MobileList } from "./mobile-list";
 
@@ -44,7 +51,8 @@ export function DataTable<T>({
   testId?: string;
 }) {
   if (rows.length === 0 && empty) return <>{empty}</>;
-  const allChecked = !!selection && rows.length > 0 && rows.every((r) => selection.selected.has(rowKey(r)));
+  const allChecked =
+    !!selection && rows.length > 0 && rows.every((r) => selection.selected.has(rowKey(r)));
 
   return (
     <>
@@ -73,7 +81,11 @@ export function DataTable<T>({
               const key = rowKey(row);
               const isSelected = selection?.selected.has(key) ?? false;
               return (
-                <TableRow key={key} data-state={isSelected ? "selected" : undefined} data-testid={testId}>
+                <TableRow
+                  key={key}
+                  data-state={isSelected ? "selected" : undefined}
+                  data-testid={testId}
+                >
                   {selection ? (
                     <TableCell className="py-4">
                       <Checkbox
@@ -114,7 +126,15 @@ export function DataTable<T>({
 }
 
 /** First-column cell: avatar + name (+ optional second line). */
-export function NameCell({ avatar, name, sub }: { avatar?: ReactNode; name: ReactNode; sub?: ReactNode }) {
+export function NameCell({
+  avatar,
+  name,
+  sub,
+}: {
+  avatar?: ReactNode;
+  name: ReactNode;
+  sub?: ReactNode;
+}) {
   return (
     <div className="flex items-center gap-3">
       {avatar}

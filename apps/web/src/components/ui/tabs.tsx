@@ -6,7 +6,9 @@ import { Tabs as TabsPrimitive } from "radix-ui";
 
 /** Underline tabs: active tab in primary with a 2 px primary underline (05-ui §5, DetailPage). */
 function Tabs({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Root>) {
-  return <TabsPrimitive.Root data-slot="tabs" className={cn("flex flex-col", className)} {...props} />;
+  return (
+    <TabsPrimitive.Root data-slot="tabs" className={cn("flex flex-col", className)} {...props} />
+  );
 }
 
 function TabsList({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.List>) {
@@ -34,7 +36,11 @@ function TabsTrigger({ className, ...props }: React.ComponentProps<typeof TabsPr
 
 function TabsContent({ className, ...props }: React.ComponentProps<typeof TabsPrimitive.Content>) {
   return (
-    <TabsPrimitive.Content data-slot="tabs-content" className={cn("mt-5 outline-none", className)} {...props} />
+    <TabsPrimitive.Content
+      data-slot="tabs-content"
+      className={cn("mt-5 outline-none", className)}
+      {...props}
+    />
   );
 }
 

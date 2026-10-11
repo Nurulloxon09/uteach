@@ -1,6 +1,12 @@
 import { Building2, DoorOpen, UserPlus, Users } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
-import { ActivityList, Section, StatTiles, StatusChip, type ActivityItem } from "@/components/patterns";
+import {
+  ActivityList,
+  Section,
+  StatTiles,
+  StatusChip,
+  type ActivityItem,
+} from "@/components/patterns";
 import { requireAdminContext } from "@/lib/center";
 import { createClient } from "@/lib/supabase/server";
 
@@ -33,7 +39,11 @@ export default async function HomePage() {
       .eq("center_id", ctx.center.id)
       .eq("status", "active"),
   ]);
-  const counts = { branches: branches.count ?? 0, rooms: rooms.count ?? 0, staff: staff.count ?? 0 };
+  const counts = {
+    branches: branches.count ?? 0,
+    rooms: rooms.count ?? 0,
+    staff: staff.count ?? 0,
+  };
 
   const stepMeta = (done: boolean) => (
     <StatusChip tone={done ? "success" : "muted"}>{done ? t("done") : t("todo")}</StatusChip>

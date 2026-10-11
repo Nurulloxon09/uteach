@@ -2,7 +2,13 @@
 
 import { useTranslations } from "next-intl";
 import { useActionState } from "react";
-import { Field, FormMessage, SelectField, SubmitButton, TimezoneField } from "@/components/patterns";
+import {
+  Field,
+  FormMessage,
+  SelectField,
+  SubmitButton,
+  TimezoneField,
+} from "@/components/patterns";
 import { Separator } from "@/components/ui/separator";
 import { routing } from "@/i18n/routing";
 import { createCenterAction } from "./actions";
@@ -21,7 +27,13 @@ export function CreateCenterForm({
   return (
     <form action={action} className="space-y-4" noValidate>
       <FormMessage state={state} />
-      <Field name="name" label={t("centerName")} placeholder={t("centerNamePlaceholder")} state={state} required />
+      <Field
+        name="name"
+        label={t("centerName")}
+        placeholder={t("centerNamePlaceholder")}
+        state={state}
+        required
+      />
       <SelectField
         name="locale"
         label={t("language")}

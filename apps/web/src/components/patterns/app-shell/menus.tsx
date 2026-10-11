@@ -133,7 +133,9 @@ export function UserMenu({ user, logout }: { user: ShellUser; logout?: () => Pro
       >
         <InitialsAvatar name={user.name} />
         <span className="hidden text-left leading-tight sm:block">
-          <span className="block max-w-[160px] truncate text-sm font-semibold text-foreground">{user.name}</span>
+          <span className="block max-w-[160px] truncate text-sm font-semibold text-foreground">
+            {user.name}
+          </span>
           <span className="block text-xs text-muted-foreground">{user.roleLabel}</span>
         </span>
         <ChevronDown className="size-4 text-muted-foreground" />
