@@ -760,7 +760,8 @@
       "status": "Status",
       "current": "Current"
     },
-    "tabRoster": "Students"
+    "tabRoster": "Students",
+    "tabAttendance": "Attendance"
   },
   "lessons": {
     "sameRoom": "Same room",
@@ -1255,6 +1256,46 @@
       "emptyHint": "There are no lessons on this day in your branches.",
       "unmarkedEmptyTitle": "Everything is marked",
       "unmarkedEmptyHint": "Every lesson of the last 7 days has attendance."
+    },
+    "letter": {
+      "present": "P",
+      "late": "L",
+      "absent": "A",
+      "excused": "E",
+      "frozen": "F"
+    },
+    "matrix": {
+      "title": "Attendance · {month}",
+      "previousMonth": "Previous month",
+      "nextMonth": "Next month",
+      "thisMonth": "This month",
+      "export": "Export to Excel",
+      "student": "Student",
+      "rate": "Rate",
+      "counts": "{present} present · {late} late · {absent} absent · {excused} excused",
+      "legendOut": "Not in the group or frozen",
+      "legendCancelled": "Lesson cancelled",
+      "notMarked": "not marked",
+      "outside": "not in the group",
+      "frozen": "frozen",
+      "cancelled": "cancelled",
+      "cell": "{name}, {date}: {state}",
+      "edit": "Change the mark of {name} on {date}",
+      "saved": "Mark saved",
+      "emptyTitle": "No lessons this month",
+      "emptyHint": "This group's lessons in the month will appear here.",
+      "noStudentsTitle": "No students this month",
+      "noStudentsHint": "Nobody was in the group during this month.",
+      "rateHint": "Rate = (present + late) ÷ (marked − excused)"
+    },
+    "summary": {
+      "tab": "Attendance",
+      "title": "Attendance by group",
+      "thisMonth": "This month",
+      "last30": "Last 30 days",
+      "recent": "Recent marks",
+      "emptyTitle": "No attendance yet",
+      "emptyHint": "Marks from this student's lessons will appear here."
     }
   }
 }

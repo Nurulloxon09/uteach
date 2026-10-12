@@ -61,6 +61,13 @@ Tables: `attendance`, `lead_trials`, `risk_flags`, `notification_outbox`.
 > cell opens a small P/L/A/E picker that saves through `save_attendance` with one row. Below `md` the tab shows a
 > per-student summary (%, P/L/A/E counts) instead of the grid. The export has the same cells and % as the screen.
 
+> PROPOSED (M2c): cell letters are translated (en P/L/A/E, ru П/О/Н/У, uz B/K/Y/S; frozen F/З/M). The rate chip is
+> green from 80%, amber from 60% (the at-risk line), red below. The tab is `?tab=attendance&month=YYYY-MM`. The
+> export is `/[locale]/groups/[id]/attendance/export?month=YYYY-MM` (title row, then a header row of dates and a
+> row of weekday + time or "cancelled", then one row per student with P/L/A/E counts and the rate as a % cell).
+> The group's Lessons tab shows each lesson's marking state and links to its sheet; the student profile gets an
+> Attendance tab (per group: this month and last 30 days, then the latest 10 marks).
+
 ## Absence alerts
 
 > PROPOSED: who receives it, the dedupe key format, cancelling when the status changes, optional late alerts, quiet hours applied at enqueue. Canvas: guardian notified after 10 min, deduped; M2 only enqueues.

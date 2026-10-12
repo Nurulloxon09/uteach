@@ -175,3 +175,14 @@
     @apply bg-background text-foreground antialiased;
   }
 }
+
+/* Attendance matrix (05-ui, M2): days outside a student's enrollment, or frozen, are hatched. */
+@utility bg-hatch {
+  background-image: repeating-linear-gradient(
+    135deg,
+    var(--border) 0,
+    var(--border) 2px,
+    transparent 2px,
+    transparent 7px
+  );
+}

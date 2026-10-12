@@ -51,6 +51,8 @@ export type CenterContext = {
     billing: boolean;
     /** Students, guardians, enrollments. */
     students: boolean;
+    /** Mark and edit any attendance in their branches, at any time (14). */
+    attendance: boolean;
     discounts: boolean;
     import: boolean;
     /** Is this branch in the user's scope (owners: every branch). */
@@ -147,6 +149,7 @@ export const getCenterContext = cache(async (): Promise<CenterContext> => {
       academics: has("academics"),
       billing: has("billing"),
       students: has("students"),
+      attendance: has("attendance"),
       discounts: has("discounts"),
       import: has("import"),
       inBranch,

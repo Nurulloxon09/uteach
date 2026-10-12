@@ -7,9 +7,9 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M2 · Attendance**: ◐ in progress. Plan (2026-10-11, PR #7): three PRs, M2a data layer → M2b sheet, Today and
-notify prompts → M2c matrix and export. M2a merged (PR #8); M2b (sheet, Today, Attendance page, notify prompts,
-settings) is built and in review. Left for M2c: the matrix with Excel export.
+**M2 · Attendance**: ◐ built; merging. Plan (2026-10-11, PR #7): three PRs. M2a (PR #8) and M2b (PR #9) are
+merged; M2c (matrix, export, student summary) is built and in review, so every M2 "done when" item is checked.
+M2 is done once M2c is merged with green CI. Next: M3 · Billing.
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -17,7 +17,7 @@ settings) is built and in review. Left for M2c: the matrix with Excel export.
 | M0 | Foundation | ☑ done | 2026-10-11 |
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
 | M1 | Academic core | ☑ done | 2026-10-11 |
-| M2 | Attendance | ◐ in progress (M2a ☑, M2b built; M2c) | |
+| M2 | Attendance | ◐ built; merging (M2a ☑, M2b ☑, M2c) | |
 | M3 | Billing | ☐ | |
 | M4 | Telegram & SMS | ☐ | |
 | M5 | Leads CRM | ☐ | |
@@ -62,7 +62,7 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Expected students = active on the date minus freezes (start/end/freeze edge tests) | ☑ | pgTAP `m2_attendance` (start day, end day, freeze day, day before/after, ended status ignored); matrix day states |
 | Teacher edits until `ends_at + 48h`, denied after at the DB level; admin late edits audited | ☑ | pgTAP: 47 h ok, after 48 h `attendance_window_closed`, no direct insert/update grants, admin edits after the window write `audit_log` (changed columns); mutation-checked |
 | First save sets the lesson `held` | ☑ | pgTAP (held + topic in the same call); e2e ("Held" after the first save) |
-| Matrix: month with correct % (excused excluded); Excel export | ☐ | |
+| Matrix: month with correct % (excused excluded); Excel export | ☑ | Vitest `attendanceRateBp` (excused excluded, half-up, null); e2e `m2-attendance` (matrix cells and %, admin edits a cell absent → excused, rate becomes "—", the downloaded .xlsx has the same letters, counts and rate) |
 | Absent → one outbox row per notifiable guardian, +10 min, dedupe; re-save no duplicate; change cancels; 22:00 → quiet-hours end | ☑ | pgTAP: opted-out guardian skipped, no guardians → student, `send_after = +10 min`, key `absence:{lesson}:{student}:{guardian}`, re-save no duplicate, present cancels, absent again revives, sent never re-sent, quiet hours (22:00 → 08:00, wrap, DST) |
 | Attendance unique (lesson, student) enforced | ☑ | pgTAP: duplicate insert → 23505; re-saves update the same row |
 
@@ -97,6 +97,23 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-12 · M2c attendance matrix and export
+- Group page → **Attendance** tab: the month as a students × lessons matrix (pattern `AttendanceMatrix`: sticky
+  names, letter cells by meaning, cancelled columns muted, days outside the enrollment or frozen hatched with a new
+  `bg-hatch` utility, rate per student), month navigation, legend; a per-student summary below `md`. Clicking a
+  cell opens a P/L/A/E picker that saves one row through `save_attendance` (admins any time, teachers within the
+  window; the database decides).
+- **Export to Excel** (`/groups/[id]/attendance/export?month=`): same cells, counts and rate, labels in the
+  user's language. `lib/attendance-matrix.ts` loads the month for both.
+- Lessons tab: an Attendance column (marking state, links to the sheet). Student profile: **Attendance** tab
+  (per group this month and last 30 days, recent marks).
+- `ctx.can.attendance`; 35 new strings in uz/ru/en; `AttendanceMatrix` on /dev/ui.
+- e2e `m2-attendance` gains the admin path through the matrix, a cell edit and the export (4 tests).
+- Screenshots of the M2 screens at 1440 and 390 px in `docs/design/screenshots/uteach/` (`attendance-*`,
+  `group-attendance-matrix-*`, `today-attendance-*`, …), taken from the e2e demo data.
+- Docker Desktop had stopped during the session (local Supabase down → login failed); restarted it and
+  `pnpm db:start`, data intact.
 
 ### 2026-10-12 · M2b attendance sheet, Today and notify prompts
 - `/attendance/[lessonId]`: the sheet (mobile first): P/L/A/E in one row at 375 px, "All present" / "Mark the
@@ -265,6 +282,8 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
   - Charges are per enrollment per month; unexcused absences are still billed.
 
 ## Known gaps / follow-ups
+- `pnpm screenshots` doesn't seed attendance yet; the M2 screenshots came from the e2e demo data. Add an
+  attendance step to its seed when the screenshots are next refreshed.
 - Phone numbers show unformatted in staff lists (`+998931234567`); formatting with `packages/core` phone helpers can come with M1 lists.
 - Dark mode tokens exist in `globals.css` but are unused (light mode only, per 05-ui).
 - CI's e2e job uses only `test_otp` numbers, which skip the Send-SMS hook, so `host.docker.internal` on Linux runners doesn't matter.
