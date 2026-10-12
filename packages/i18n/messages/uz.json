@@ -760,7 +760,8 @@
       "status": "Holat",
       "current": "Joriy"
     },
-    "tabRoster": "Oʻquvchilar"
+    "tabRoster": "Oʻquvchilar",
+    "tabAttendance": "Davomat"
   },
   "lessons": {
     "sameRoom": "Oʻsha xona",
@@ -1255,6 +1256,46 @@
       "emptyHint": "Bu kuni filiallaringizda darslar yoʻq.",
       "unmarkedEmptyTitle": "Hammasi belgilangan",
       "unmarkedEmptyHint": "Oxirgi 7 kundagi barcha darslarda davomat bor."
+    },
+    "letter": {
+      "present": "B",
+      "late": "K",
+      "absent": "Y",
+      "excused": "S",
+      "frozen": "M"
+    },
+    "matrix": {
+      "title": "Davomat · {month}",
+      "previousMonth": "Oldingi oy",
+      "nextMonth": "Keyingi oy",
+      "thisMonth": "Shu oy",
+      "export": "Excelga yuklab olish",
+      "student": "Oʻquvchi",
+      "rate": "Foiz",
+      "counts": "Keldi: {present} · kechikdi: {late} · kelmadi: {absent} · sababli: {excused}",
+      "legendOut": "Guruhda emas yoki muzlatilgan",
+      "legendCancelled": "Dars bekor qilingan",
+      "notMarked": "belgilanmagan",
+      "outside": "guruhda emas",
+      "frozen": "muzlatilgan",
+      "cancelled": "bekor qilingan",
+      "cell": "{name}, {date}: {state}",
+      "edit": "{name} belgisini oʻzgartirish ({date})",
+      "saved": "Belgi saqlandi",
+      "emptyTitle": "Bu oyda darslar yoʻq",
+      "emptyHint": "Guruhning shu oydagi darslari shu yerda chiqadi.",
+      "noStudentsTitle": "Bu oyda oʻquvchilar yoʻq",
+      "noStudentsHint": "Bu oyda guruhda hech kim boʻlmagan.",
+      "rateHint": "Foiz = (keldi + kechikdi) ÷ (belgilangan − sababli)"
+    },
+    "summary": {
+      "tab": "Davomat",
+      "title": "Guruhlar boʻyicha davomat",
+      "thisMonth": "Shu oy",
+      "last30": "Oxirgi 30 kun",
+      "recent": "Soʻnggi belgilar",
+      "emptyTitle": "Hali davomat yoʻq",
+      "emptyHint": "Oʻquvchi darslaridagi belgilar shu yerda chiqadi."
     }
   }
 }

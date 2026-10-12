@@ -13,6 +13,12 @@ export type {
   ShellChip,
   ShellUser,
 } from "./app-shell/nav";
+export {
+  AttendanceMatrix,
+  type MatrixColumn,
+  type MatrixMark,
+  type MatrixRow,
+} from "./attendance-matrix";
 export { AttendanceRow, type AttendanceRowValue } from "./attendance-row";
 export { AuthCard, AuthLayout } from "./auth-layout";
 export { Combobox, type ComboboxOption } from "./combobox";

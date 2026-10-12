@@ -16,11 +16,15 @@ import {
 } from "@/components/patterns";
 import { Button } from "@/components/ui/button";
 import { loadGroupOptions, loadRooms, loadTeachers, teachersFor } from "@/lib/academics";
+import { MARKING_OPENS_MS, markState, nowMs, type LessonStats } from "@/lib/attendance";
+import { loadMatrix, monthParam, shiftMonth } from "@/lib/attendance-matrix";
 import { getCenterContext } from "@/lib/center";
 import { dayAsDate, hhmm, localParts, monthStart, weekdayLabels } from "@/lib/dates";
 import { formatMinor } from "@/lib/money";
+import { Link } from "@/i18n/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { minorToInput } from "@/lib/validation";
+import { MarkChip } from "../../attendance/mark-chip";
 import { groupFormData } from "../data";
 import { EditGroupDialog } from "../group-dialog";
 import {
@@ -29,6 +33,7 @@ import {
   LessonRowActions,
   type LessonRef,
 } from "../lesson-actions";
+import { AttendanceTab, type TabLesson } from "./attendance-tab";
 import { PricePanel } from "./price-panel";
 import { RosterPanel, type RosterRow } from "./roster";
 import { RulesEditor } from "./rules-editor";
@@ -57,14 +62,22 @@ type LessonRow = LessonRef & {
   cancelReason: string | null;
 };
 
-/** Group page (12): ProfileCard + tabs Lessons | Schedule | Price (billing). Teachers get a read-only view. */
-export default async function GroupPage({ params }: PageProps<"/[locale]/groups/[groupId]">) {
+/**
+ * Group page (12): ProfileCard + tabs Lessons | Roster | Attendance | Schedule | Price (billing). Teachers get
+ * a read-only view (and mark attendance within their window). `?tab=attendance&month=YYYY-MM` opens a month.
+ */
+export default async function GroupPage({
+  params,
+  searchParams,
+}: PageProps<"/[locale]/groups/[groupId]">) {
   const { groupId } = await params;
+  const sp = await searchParams;
   const ctx = await getCenterContext();
   const t = await getTranslations("groups");
   const tl = await getTranslations("lessons");
   const tn = await getTranslations("nav");
   const tc = await getTranslations("common");
+  const tAtt = await getTranslations("attendance");
   const format = await getFormatter();
   const supabase = await createClient();
 
@@ -166,6 +179,68 @@ export default async function GroupPage({ params }: PageProps<"/[locale]/groups/
   const upcomingRows = (upcoming ?? []).map(toRow);
   const pastRows = (past ?? []).map(toRow);
 
+  // Attendance: counts per lesson for the Lessons tab, and one month for the Attendance tab (14).
+  const thisMonth = today.slice(0, 7);
+  const month = monthParam(sp.month, thisMonth);
+  const lessonIds = [...upcomingRows, ...pastRows].map((r) => r.id);
+  const [{ data: stats }, matrix, { data: centerRules }] = await Promise.all([
+    lessonIds.length
+      ? supabase.rpc("lesson_attendance_stats", { p_lesson_ids: lessonIds })
+      : Promise.resolve({ data: [] }),
+    loadMatrix(supabase, group.id, month, tz),
+    supabase.from("centers").select("attendance_edit_hours").eq("id", ctx.center.id).single(),
+  ]);
+  const statsOf = new Map<string, LessonStats>(
+    (stats ?? []).map((s) => [
+      s.lesson_id,
+      { expected: s.expected, marked: s.marked, absent: s.absent },
+    ]),
+  );
+  const now = nowMs();
+  const editHours = centerRules?.attendance_edit_hours ?? 48;
+  const markAnyTime = ctx.can.attendance && ctx.can.inBranch(group.branch_id);
+  const tabLessons: TabLesson[] = (matrix?.lessons ?? []).map((l) => ({
+    id: l.id,
+    date: l.date,
+    startMinutes: l.startMinutes,
+    cancelled: l.cancelled,
+    // A hint only: save_attendance applies the same rules.
+    editable:
+      !l.cancelled &&
+      now >= Date.parse(l.startsAt) - MARKING_OPENS_MS &&
+      (markAnyTime ||
+        (l.teacherId === ctx.membership.id && now < Date.parse(l.endsAt) + editHours * 3_600_000)),
+  }));
+  const startsOf = new Map(
+    [...(upcoming ?? []), ...(past ?? [])].map((l) => [
+      l.id,
+      { startsAt: l.starts_at, endsAt: l.ends_at },
+    ]),
+  );
+  const attendanceOf = (r: LessonRow) => {
+    const times = startsOf.get(r.id);
+    const chip = (
+      <MarkChip
+        state={markState(
+          { status: r.status, startsAt: times?.startsAt ?? "", endsAt: times?.endsAt ?? "" },
+          statsOf.get(r.id),
+          now,
+        )}
+      />
+    );
+    return r.status === "cancelled" ? (
+      chip
+    ) : (
+      <Link
+        href={`/attendance/${r.id}`}
+        aria-label={tAtt("list.open", { name: whenOf(r) })}
+        className="inline-block rounded-lg outline-none focus-visible:ring-2 focus-visible:ring-primary/30"
+      >
+        {chip}
+      </Link>
+    );
+  };
+
   const whenOf = (r: LessonRow) =>
     `${format.dateTime(dayAsDate(r.date), { weekday: "short", day: "numeric", month: "short", timeZone: "UTC" })} · ${hhmm(r.startMinutes)}–${hhmm(r.endMinutes)}`;
   const statusOf = (r: LessonRow) => (
@@ -188,6 +263,7 @@ export default async function GroupPage({ params }: PageProps<"/[locale]/groups/
         ...(isStaff ? [{ key: "teacher", header: tl("teacher"), cell: teacherOf }] : []),
         { key: "room", header: tl("room"), cell: (r: LessonRow) => r.roomName },
         { key: "status", header: tc("status"), cell: statusOf },
+        { key: "attendance", header: tAtt("title"), cell: attendanceOf },
         ...(editable
           ? [
               {
@@ -204,7 +280,10 @@ export default async function GroupPage({ params }: PageProps<"/[locale]/groups/
           title={whenOf(r)}
           subtitle={isStaff ? `${r.teacherName} · ${r.roomName}` : r.roomName}
           status={statusOf(r)}
-          fields={r.cancelReason ? [{ label: tl("reason"), value: r.cancelReason }] : []}
+          fields={[
+            { label: tAtt("title"), value: attendanceOf(r) },
+            ...(r.cancelReason ? [{ label: tl("reason"), value: r.cancelReason }] : []),
+          ]}
           actions={editable ? <LessonRowActions lesson={r} /> : undefined}
         />
       )}
@@ -353,6 +432,21 @@ export default async function GroupPage({ params }: PageProps<"/[locale]/groups/
           canOverridePrice={ctx.can.discounts && ctx.can.billing}
         />
       ),
+    },
+    {
+      value: "attendance",
+      label: t("tabAttendance"),
+      content: matrix ? (
+        <AttendanceTab
+          month={month}
+          prevMonth={shiftMonth(month, -1)}
+          nextMonth={shiftMonth(month, 1)}
+          thisMonth={thisMonth}
+          exportHref={`/${ctx.locale}/groups/${group.id}/attendance/export?month=${month}`}
+          lessons={tabLessons}
+          students={matrix.students}
+        />
+      ) : null,
     },
     {
       value: "schedule",
@@ -508,6 +602,9 @@ export default async function GroupPage({ params }: PageProps<"/[locale]/groups/
           />
         }
         tabs={tabs}
+        defaultTab={
+          typeof sp.tab === "string" && tabs.some((x) => x.value === sp.tab) ? sp.tab : undefined
+        }
       />
     </LessonActionsProvider>
   );

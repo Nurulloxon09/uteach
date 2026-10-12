@@ -760,7 +760,8 @@
       "status": "Статус",
       "current": "Текущая"
     },
-    "tabRoster": "Ученики"
+    "tabRoster": "Ученики",
+    "tabAttendance": "Посещаемость"
   },
   "lessons": {
     "sameRoom": "Тот же кабинет",
@@ -1255,6 +1256,46 @@
       "emptyHint": "В этот день в ваших филиалах занятий нет.",
       "unmarkedEmptyTitle": "Всё отмечено",
       "unmarkedEmptyHint": "У всех занятий за последние 7 дней есть посещаемость."
+    },
+    "letter": {
+      "present": "П",
+      "late": "О",
+      "absent": "Н",
+      "excused": "У",
+      "frozen": "З"
+    },
+    "matrix": {
+      "title": "Посещаемость · {month}",
+      "previousMonth": "Предыдущий месяц",
+      "nextMonth": "Следующий месяц",
+      "thisMonth": "Этот месяц",
+      "export": "Выгрузить в Excel",
+      "student": "Ученик",
+      "rate": "Процент",
+      "counts": "Был: {present} · опоздал: {late} · не был: {absent} · уваж.: {excused}",
+      "legendOut": "Не в группе или заморожен",
+      "legendCancelled": "Занятие отменено",
+      "notMarked": "не отмечено",
+      "outside": "не в группе",
+      "frozen": "заморожен",
+      "cancelled": "отменено",
+      "cell": "{name}, {date}: {state}",
+      "edit": "Изменить отметку: {name}, {date}",
+      "saved": "Отметка сохранена",
+      "emptyTitle": "В этом месяце нет занятий",
+      "emptyHint": "Здесь появятся занятия группы за месяц.",
+      "noStudentsTitle": "В этом месяце нет учеников",
+      "noStudentsHint": "В этом месяце в группе никого не было.",
+      "rateHint": "Процент = (был + опоздал) ÷ (отмечено − уважительные)"
+    },
+    "summary": {
+      "tab": "Посещаемость",
+      "title": "Посещаемость по группам",
+      "thisMonth": "Этот месяц",
+      "last30": "Последние 30 дней",
+      "recent": "Последние отметки",
+      "emptyTitle": "Пока нет посещаемости",
+      "emptyHint": "Здесь появятся отметки с занятий ученика."
     }
   }
 }

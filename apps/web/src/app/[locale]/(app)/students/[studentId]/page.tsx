@@ -15,6 +15,7 @@ import { requireAdminContext } from "@/lib/center";
 import { dayAsDate } from "@/lib/dates";
 import { createClient } from "@/lib/supabase/server";
 import { EditStudentDialog } from "../student-dialog";
+import { AttendanceSummary } from "./attendance-summary";
 import {
   EnrollmentsPanel,
   GuardiansPanel,
@@ -28,11 +29,12 @@ export async function generateMetadata() {
   return { title: t("title") };
 }
 
-/** Student profile (12): contacts and home branch; tabs Enrollments | Guardians | Notes. */
+/** Student profile (12): contacts and home branch; tabs Enrollments | Attendance | Guardians | Notes. */
 export default async function StudentPage({ params }: PageProps<"/[locale]/students/[studentId]">) {
   const { studentId } = await params;
   const ctx = await requireAdminContext();
   const t = await getTranslations("students");
+  const ta = await getTranslations("attendance");
   const tn = await getTranslations("nav");
   const tc = await getTranslations("common");
   const format = await getFormatter();
@@ -230,6 +232,19 @@ export default async function StudentPage({ params }: PageProps<"/[locale]/stude
                 editable={editable}
                 canDiscount={ctx.can.discounts}
                 canOverridePrice={ctx.can.discounts && ctx.can.billing}
+              />
+            ),
+          },
+          {
+            value: "attendance",
+            label: ta("summary.tab"),
+            content: (
+              <AttendanceSummary
+                studentId={student.id}
+                today={today}
+                groupNames={
+                  new Map((enrollments ?? []).map((e) => [e.group_id, e.groups?.name ?? "—"]))
+                }
               />
             ),
           },

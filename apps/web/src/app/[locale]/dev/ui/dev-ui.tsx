@@ -24,8 +24,11 @@ import { toast } from "sonner";
 import {
   ActivityList,
   AppShell,
+  AttendanceMatrix,
   AttendanceRow,
   type AttendanceRowValue,
+  type MatrixColumn,
+  type MatrixRow,
   CheckboxField,
   CheckboxGroup,
   ComboboxField,
@@ -105,6 +108,66 @@ async function fakeSave(_prev: ActionState, form: FormData): Promise<ActionState
   if (!name) return { ok: false, fieldErrors: { displayName: "validation.required" } };
   return { ok: true };
 }
+
+/** Fake month for the AttendanceMatrix demo (fixtures aren't translated, 05-ui §6b). */
+const MATRIX_COLUMNS: MatrixColumn[] = [
+  { id: "l1", day: "1", weekday: "Wed", label: "Wed 1 · 18:00", cancelled: false, editable: true },
+  { id: "l2", day: "3", weekday: "Fri", label: "Fri 3 · 18:00", cancelled: false, editable: true },
+  { id: "l3", day: "6", weekday: "Mon", label: "Mon 6 · 18:00", cancelled: true, editable: false },
+  { id: "l4", day: "8", weekday: "Wed", label: "Wed 8 · 18:00", cancelled: false, editable: true },
+  {
+    id: "l5",
+    day: "10",
+    weekday: "Fri",
+    label: "Fri 10 · 18:00",
+    cancelled: false,
+    editable: true,
+  },
+];
+const MATRIX_ROWS: MatrixRow[] = [
+  {
+    id: "s1",
+    name: "Ali Valiyev",
+    rate: "75%",
+    rateTone: "warning",
+    counts: "3 · 0 · 1 · 0",
+    cells: {
+      l1: { state: "expected", status: "present" },
+      l2: { state: "expected", status: "absent" },
+      l3: { state: "expected", status: null },
+      l4: { state: "expected", status: "present" },
+      l5: { state: "expected", status: "present" },
+    },
+  },
+  {
+    id: "s2",
+    name: "Анна Смирнова",
+    rate: "100%",
+    rateTone: "success",
+    counts: "2 · 1 · 0 · 1",
+    cells: {
+      l1: { state: "expected", status: "late" },
+      l2: { state: "expected", status: "excused" },
+      l3: { state: "expected", status: null },
+      l4: { state: "frozen", status: null },
+      l5: { state: "expected", status: null },
+    },
+  },
+  {
+    id: "s3",
+    name: "Madina Karimova",
+    rate: "—",
+    rateTone: "muted",
+    counts: "0 · 0 · 0 · 0",
+    cells: {
+      l1: { state: "out", status: null },
+      l2: { state: "out", status: null },
+      l3: { state: "out", status: null },
+      l4: { state: "expected", status: null },
+      l5: { state: "expected", status: null },
+    },
+  },
+];
 
 export function DevUi() {
   const t = useTranslations();
@@ -188,6 +251,7 @@ export function DevUi() {
     b: { status: "late", lateMinutes: "10", note: "Bus was late" },
     c: { status: null, lateMinutes: "", note: "" },
   });
+  const [matrixRows, setMatrixRows] = useState<MatrixRow[]>(MATRIX_ROWS);
   const attendanceLabels = {
     lateMinutes: t("attendance.lateMinutes"),
     minutesShort: t("attendance.minutesShort"),
@@ -493,6 +557,51 @@ export function DevUi() {
           </Section>
         </Kit>
       </div>
+
+      <Kit id="attendance-matrix" name="AttendanceMatrix (group page → Attendance)">
+        <Section>
+          <AttendanceMatrix
+            columns={MATRIX_COLUMNS}
+            rows={matrixRows}
+            letters={{
+              present: t("attendance.letter.present"),
+              late: t("attendance.letter.late"),
+              absent: t("attendance.letter.absent"),
+              excused: t("attendance.letter.excused"),
+              frozen: t("attendance.letter.frozen"),
+            }}
+            labels={{
+              student: t("attendance.matrix.student"),
+              rate: t("attendance.matrix.rate"),
+              marks: {
+                present: t("attendance.status.present"),
+                late: t("attendance.status.late"),
+                absent: t("attendance.status.absent"),
+                excused: t("attendance.status.excused"),
+              },
+              cell: (r, c, state) => `${r.name}, ${c.label}: ${state}`,
+              notMarked: t("attendance.matrix.notMarked"),
+              outside: t("attendance.matrix.outside"),
+              frozen: t("attendance.matrix.frozen"),
+              cancelled: t("attendance.matrix.cancelled"),
+              edit: (r, c) => `${r.name} · ${c.label}`,
+            }}
+            onMark={async (studentId, lessonId, mark) => {
+              await new Promise((r) => setTimeout(r, 300));
+              setMatrixRows((rows) =>
+                rows.map((r) =>
+                  r.id === studentId
+                    ? {
+                        ...r,
+                        cells: { ...r.cells, [lessonId]: { state: "expected", status: mark } },
+                      }
+                    : r,
+                ),
+              );
+            }}
+          />
+        </Section>
+      </Kit>
 
       <div className="grid gap-5 lg:grid-cols-2">
         <Kit id="mobile-list" name="MobileList + MobileCard + StatusToggleGroup (teacher screens)">

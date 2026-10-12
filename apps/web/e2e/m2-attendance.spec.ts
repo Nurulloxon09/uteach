@@ -13,7 +13,8 @@ import {
 
 /**
  * M2 E2E (30-milestones M2): a teacher on a 375 px phone opens today's lesson from Today, taps "All present",
- * marks the exceptions and saves in one request; the lesson is held and the admin sees the marks.
+ * marks the exceptions and saves in one request; the lesson is held and the admin sees the marks in the
+ * Attendance list and the group's matrix, edits a cell there and exports the month to Excel.
  */
 const OWNER = { name: "Shahnoza Owner", phone: "+998990000012", password: "owner-pass-12" };
 const TEACHER = { name: "Jasur Teacher", phone: "+998990000013", password: "teach-pass-13" };
@@ -214,5 +215,65 @@ test.describe.serial("M2 · attendance", () => {
       "absent",
     );
     await expect(page.getByTestId("sheet-banner")).toHaveCount(0);
+  });
+
+  test("the admin sees the month in the group's matrix, edits a cell and exports it", async ({
+    page,
+  }) => {
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await logIn(page, OWNER.phone, OWNER.password);
+    await expect(page).toHaveURL(/\/en\/home$/);
+    await page.goto("/en/groups");
+    await settled(page);
+    await page.getByRole("link", { name: en.common.rowOpen.replace("{name}", GROUP) }).click();
+    // The Lessons tab counts the marks too.
+    await expect(page.getByTestId("lesson-row")).toContainText("15/15 marked");
+    await page.getByRole("tab", { name: en.groups.tabAttendance }).click();
+
+    const matrixRow = (name: string) => page.getByTestId("matrix-row").filter({ hasText: name });
+    await expect(page.getByTestId("matrix-row")).toHaveCount(15);
+    await expect(matrixRow(ABSENT).getByTestId("matrix-cell")).toHaveAttribute(
+      "data-status",
+      "absent",
+    );
+    await expect(matrixRow(ABSENT)).toContainText("0%");
+    await expect(matrixRow(LATE).getByTestId("matrix-cell")).toHaveAttribute("data-status", "late");
+    await expect(matrixRow(LATE)).toContainText("100%");
+
+    // Admin edit: absent → excused; excused counts neither way, so the rate becomes "—".
+    await matrixRow(ABSENT)
+      .getByRole("button", { name: /^Change the mark of/ })
+      .click();
+    await page.getByRole("button", { name: en.attendance.status.excused, exact: true }).click();
+    await expect(page.getByText(en.attendance.matrix.saved)).toBeVisible();
+    await expect(matrixRow(ABSENT).getByTestId("matrix-cell")).toHaveAttribute(
+      "data-status",
+      "excused",
+    );
+    await expect(matrixRow(ABSENT)).toContainText("—");
+
+    // Excel: the same cells and rate as the screen.
+    const [download] = await Promise.all([
+      page.waitForEvent("download"),
+      page.getByTestId("attendance-export").click(),
+    ]);
+    const book = new ExcelJS.Workbook();
+    await book.xlsx.readFile(await download.path());
+    const sheet = book.worksheets[0]!;
+    const rowOf = (name: string) => {
+      let found: ExcelJS.Row | undefined;
+      sheet.eachRow((row) => {
+        if (row.getCell(1).text === name) found = row;
+      });
+      return found!;
+    };
+    expect(sheet.getRow(2).getCell(1).text).toBe(en.attendance.matrix.student);
+    // Columns: name, the lesson, P, L, A, E, rate.
+    expect(rowOf(ABSENT).getCell(2).text).toBe(en.attendance.letter.excused);
+    expect(rowOf(ABSENT).getCell(7).text).toBe("");
+    expect(rowOf(LATE).getCell(2).text).toBe(en.attendance.letter.late);
+    expect(rowOf(LATE).getCell(4).value).toBe(1);
+    expect(rowOf(LATE).getCell(7).value).toBe(1);
+    expect(rowOf(STUDENTS[0]!.name).getCell(2).text).toBe(en.attendance.letter.present);
   });
 });
