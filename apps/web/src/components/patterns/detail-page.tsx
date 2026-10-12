@@ -22,7 +22,7 @@ export function DetailPage({
     <div className="grid grid-cols-[minmax(0,1fr)] gap-5 lg:grid-cols-[minmax(280px,360px)_minmax(0,1fr)] lg:items-start">
       {header}
       <section className="min-w-0 rounded-2xl bg-card p-4 shadow-card sm:p-6">
-        <Tabs defaultValue={defaultTab ?? tabs[0]?.value}>
+        <Tabs defaultValue={tabs.some((t) => t.value === defaultTab) ? defaultTab : tabs[0]?.value}>
           <TabsList>
             {tabs.map((t) => (
               <TabsTrigger key={t.value} value={t.value}>

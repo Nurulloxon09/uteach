@@ -115,6 +115,8 @@ export async function createGroup(
     name?: string;
     days?: string[];
     course?: string;
+    /** yyyy-mm-dd; the group price takes effect from it. */
+    startDate?: string;
   },
 ) {
   await page.goto("/en/groups");
@@ -140,6 +142,7 @@ export async function createGroup(
       await dialog.getByLabel(en.slots.start).nth(i).fill(opts.firstStart);
   }
   if (opts.name) await dialog.getByLabel(en.groups.fields.name).fill(opts.name);
+  if (opts.startDate) await dialog.getByLabel(en.groups.fields.startDate).fill(opts.startDate);
   await dialog.getByRole("button", { name: en.groups.addSubmit }).click();
   await expect(dialog).toBeHidden();
 }

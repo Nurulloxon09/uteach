@@ -37,6 +37,8 @@ export type ImportContext = {
   groups: { id: string; name: string; branchId: string }[];
   /** `${studentId}:${groupId}` of enrollments that haven't ended. */
   openEnrollments: Set<string>;
+  /** Students who already have an opening balance (only loaded for that import). */
+  openingBalances: Set<string>;
 };
 
 export type ImportIssue = { row: number; field: string; code: string };
@@ -80,7 +82,9 @@ export function validateImport(
       ? validateStudents(sheet, mapping, ctx)
       : kind === "groups"
         ? validateGroups(sheet, mapping, ctx)
-        : validateEnrollments(sheet, mapping, ctx);
+        : kind === "enrollments"
+          ? validateEnrollments(sheet, mapping, ctx)
+          : validateOpeningBalances(sheet, mapping, ctx);
   return {
     ...result,
     rows: sheet.rows.length,
@@ -294,31 +298,32 @@ function validateGroups(sheet: Sheet, mapping: Mapping, ctx: ImportContext): Row
 
 // --- Enrollments -------------------------------------------------------------------------
 
-function validateEnrollments(sheet: Sheet, mapping: Mapping, ctx: ImportContext): RowsResult {
-  const get = reader(mapping);
-  const issues: ImportIssue[] = [];
-  const payload: Record<string, unknown>[] = [];
-  const groups = byName(ctx.groups);
+type ImportStudent = ImportContext["students"][number];
+
+/**
+ * Finds the student a row means: by external ref, else phone (+ name if several share it), else a unique
+ * name. Reports `studentRequired` / `studentUnknown` / `studentAmbiguous` on the field that was used.
+ */
+function studentMatcher(ctx: ImportContext) {
   const byRef = new Map(ctx.students.filter((s) => s.externalRef).map((s) => [s.externalRef!, s]));
-  const byPhone = new Map<string, typeof ctx.students>();
+  const byPhone = new Map<string, ImportStudent[]>();
   for (const s of ctx.students)
     if (s.phone) byPhone.set(s.phone, [...(byPhone.get(s.phone) ?? []), s]);
-  const byStudentName = new Map<string, typeof ctx.students>();
+  const byStudentName = new Map<string, ImportStudent[]>();
   for (const s of ctx.students)
     byStudentName.set(key(s.fullName), [...(byStudentName.get(key(s.fullName)) ?? []), s]);
-  const seen = new Set<string>();
-  let skip = 0;
 
-  for (const { number, cells } of sheet.rows) {
-    const issue = (field: string, code: string) => issues.push({ row: number, field, code });
-
-    // Student: by external ref, else phone (+ name if several), else a unique name.
+  return (
+    get: (cells: unknown[], field: string) => unknown,
+    cells: unknown[],
+    issue: (field: string, code: string) => void,
+  ): ImportStudent | undefined => {
     const ref = cellText(get(cells, "studentRef"));
     const phoneText = cellText(get(cells, "studentPhone"));
     const phone = phoneText ? normalizePhone(phoneText, ctx.country) : null;
     if (phoneText && !phone) issue("studentPhone", "phone");
     const name = cellText(get(cells, "studentName"));
-    let candidates: typeof ctx.students = [];
+    let candidates: ImportStudent[] = [];
     let field = "studentName";
     if (ref) {
       candidates = byRef.has(ref) ? [byRef.get(ref)!] : [];
@@ -334,7 +339,22 @@ function validateEnrollments(sheet: Sheet, mapping: Mapping, ctx: ImportContext)
     if (!ref && !phone && !name) issue("studentName", "studentRequired");
     else if (candidates.length === 0) issue(field, "studentUnknown");
     else if (candidates.length > 1) issue(field, "studentAmbiguous");
-    const student = candidates.length === 1 ? candidates[0] : undefined;
+    return candidates.length === 1 ? candidates[0] : undefined;
+  };
+}
+
+function validateEnrollments(sheet: Sheet, mapping: Mapping, ctx: ImportContext): RowsResult {
+  const get = reader(mapping);
+  const issues: ImportIssue[] = [];
+  const payload: Record<string, unknown>[] = [];
+  const groups = byName(ctx.groups);
+  const matchStudent = studentMatcher(ctx);
+  const seen = new Set<string>();
+  let skip = 0;
+
+  for (const { number, cells } of sheet.rows) {
+    const issue = (field: string, code: string) => issues.push({ row: number, field, code });
+    const student = matchStudent(get, cells, issue);
 
     // Group: by name, narrowed by branch when the name is used in several branches.
     const groupText = cellText(get(cells, "group"));
@@ -360,6 +380,58 @@ function validateEnrollments(sheet: Sheet, mapping: Mapping, ctx: ImportContext)
       if (ctx.openEnrollments.has(k)) skip++;
     }
     payload.push({ studentId: student?.id ?? null, groupId: group?.id ?? null, startDate });
+  }
+  return { create: payload.length - skip, skip, issues, payload };
+}
+
+// --- Opening balances ----------------------------------------------------------------------
+
+/**
+ * Opening balances (15): one signed amount per student, negative = an existing debt, positive = prepaid. The
+ * payload names the matched student the way `import_opening_balances` finds them (their external ref, else
+ * their phone + name), so a student with neither can't take an opening balance. A student who already has one
+ * is skipped, as the database does.
+ */
+function validateOpeningBalances(sheet: Sheet, mapping: Mapping, ctx: ImportContext): RowsResult {
+  const get = reader(mapping);
+  const issues: ImportIssue[] = [];
+  const payload: Record<string, unknown>[] = [];
+  const matchStudent = studentMatcher(ctx);
+  const seen = new Set<string>();
+  let skip = 0;
+
+  for (const { number, cells } of sheet.rows) {
+    const issue = (field: string, code: string) => issues.push({ row: number, field, code });
+    const student = matchStudent(get, cells, issue);
+    if (student && !student.externalRef && !student.phone) issue("studentName", "studentNoKey");
+
+    const amountText = cellText(get(cells, "amount"));
+    let amount: string | null = null;
+    if (!amountText) issue("amount", "required");
+    else {
+      try {
+        const minor = parseMajorUnits(amountText);
+        if (minor === 0n) issue("amount", "amountZero");
+        else amount = minor.toString();
+      } catch {
+        issue("amount", "amount");
+      }
+    }
+    const note = cellText(get(cells, "note"));
+    if (note.length > 500) issue("note", "tooLong");
+
+    if (student) {
+      if (seen.has(student.id)) issue("studentName", "duplicateInFile");
+      seen.add(student.id);
+      if (ctx.openingBalances.has(student.id)) skip++;
+    }
+    payload.push({
+      externalRef: student?.externalRef ?? null,
+      phone: student?.externalRef ? null : (student?.phone ?? null),
+      fullName: student?.fullName ?? null,
+      amount,
+      note: note || null,
+    });
   }
   return { create: payload.length - skip, skip, issues, payload };
 }

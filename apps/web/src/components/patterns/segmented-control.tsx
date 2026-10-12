@@ -4,7 +4,8 @@ import { cn } from "@/lib/utils";
 
 /**
  * A few mutually exclusive options in one `h-11 rounded-xl` box, sized like `FilterButton`
- * (e.g. Week | Day). The selected option is `bg-primary-soft text-primary`.
+ * (e.g. Week | Day). The selected option is `bg-primary-soft text-primary`. On a narrow screen the options wrap
+ * onto a second line instead of pushing the page wider.
  */
 export function SegmentedControl<T extends string>({
   label,
@@ -25,7 +26,7 @@ export function SegmentedControl<T extends string>({
       role="radiogroup"
       aria-label={label}
       data-testid={testId}
-      className="inline-flex h-11 items-center gap-1 rounded-xl border border-border bg-card p-1"
+      className="inline-flex min-h-11 max-w-full flex-wrap items-center gap-1 rounded-xl border border-border bg-card p-1"
     >
       {options.map((o) => {
         const selected = o.value === value;
@@ -37,7 +38,7 @@ export function SegmentedControl<T extends string>({
             aria-checked={selected}
             onClick={() => onChange(o.value)}
             className={cn(
-              "h-full rounded-lg px-3.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/30",
+              "h-[34px] whitespace-nowrap rounded-lg px-3.5 text-sm font-medium outline-none transition-colors focus-visible:ring-2 focus-visible:ring-primary/30",
               selected
                 ? "bg-primary-soft text-primary"
                 : "text-secondary-foreground hover:bg-muted",

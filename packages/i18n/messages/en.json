@@ -83,7 +83,8 @@
     "holidays": "Holidays",
     "students": "Students",
     "attendance": "Attendance",
-    "payments": "Payments"
+    "payments": "Payments",
+    "debtors": "Debtors"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -1067,12 +1068,13 @@
       "done": "Done"
     },
     "pickTitle": "Choose what to import",
-    "pickHint": "Import in this order: students, then groups, then enrollments. Nothing is saved until you confirm.",
+    "pickHint": "Import in this order: students, then groups, then enrollments; opening balances once the students are in. Nothing is saved until you confirm.",
     "kindLabel": "What to import",
     "kinds": {
       "students": "Students",
       "groups": "Groups",
-      "enrollments": "Enrollments"
+      "enrollments": "Enrollments",
+      "opening_balances": "Opening balances"
     },
     "dropLabel": "Drop an Excel or CSV file here, or press to choose one",
     "dropHint": ".xlsx or .csv, up to 5 000 rows. The first row is the column names.",
@@ -1137,6 +1139,13 @@
         "group": "Group",
         "branch": "Branch",
         "startDate": "Start date"
+      },
+      "opening_balances": {
+        "studentRef": "Student ID in your old system",
+        "studentPhone": "Student phone",
+        "studentName": "Student name",
+        "amount": "Balance",
+        "note": "Note"
       }
     },
     "hints": {
@@ -1175,6 +1184,13 @@
         "group": "Required; a group name.",
         "branch": "Only needed if two branches have a group with this name.",
         "startDate": "A date; empty = today."
+      },
+      "opening_balances": {
+        "studentRef": "Same ID as in the students file.",
+        "studentPhone": "Used when there is no ID.",
+        "studentName": "Used when there is no ID or phone; must be unique.",
+        "amount": "Required. Negative = the student owes (-500 000), positive = paid in advance.",
+        "note": "Optional, e.g. where the balance comes from."
       }
     },
     "errors": {
@@ -1209,8 +1225,11 @@
       "studentUnknown": "No such student. Import students first.",
       "studentAmbiguous": "Several students match. Use the ID or phone.",
       "groupUnknown": "No group with this name.",
-      "groupAmbiguous": "Groups with this name exist in several branches. Add the branch."
-    }
+      "groupAmbiguous": "Groups with this name exist in several branches. Add the branch.",
+      "amountZero": "Zero isn't a balance. Leave this student out.",
+      "studentNoKey": "This student has no ID or phone. Add one to the student first."
+    },
+    "openDebtors": "Open debtors"
   },
   "attendance": {
     "title": "Attendance",
@@ -1499,5 +1518,44 @@
       "emptyTitle": "No payments",
       "emptyHint": "No payments match these filters."
     }
+  },
+  "debtors": {
+    "title": "Debtors",
+    "listTitle": "Students who owe",
+    "export": "Export to Excel",
+    "total": "Owed: {amount}",
+    "students": "{count, plural, one {# student} other {# students}}",
+    "search": "Search by name or phone",
+    "bucket": "Overdue",
+    "branch": "Branch",
+    "group": "Group",
+    "course": "Course",
+    "student": "Student",
+    "contact": "Contact",
+    "guardian": "Guardian",
+    "debt": "Debt",
+    "overdue": "Overdue",
+    "lastPayment": "Last payment",
+    "daysOverdue": "{count, plural, one {# day overdue} other {# days overdue}}",
+    "since": "since {date}",
+    "dueOn": "Due {date}",
+    "notDue": "Not due yet",
+    "never": "Never paid",
+    "call": "Call about {name}",
+    "emptyTitle": "Nobody owes anything",
+    "emptyHint": "Students with a debt show up here, most overdue first.",
+    "buckets": {
+      "0-30": "0–30 days",
+      "31-60": "31–60 days",
+      "61-90": "61–90 days",
+      "90+": "Over 90 days"
+    },
+    "studentPhone": "Student phone",
+    "guardianPhone": "Guardian phone",
+    "groups": "Groups",
+    "oldestDue": "Oldest unpaid due date",
+    "overdueDays": "Days overdue",
+    "lastPaymentAmount": "Last payment amount",
+    "fileName": "debtors"
   }
 }

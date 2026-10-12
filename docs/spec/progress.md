@@ -7,10 +7,9 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M3 · Billing**: ◐ in progress. Plan (2026-10-12, PR #11): M3a data layer → M3b payments & receipts → M3c
-debtors & import. M3a (data layer) merged (#12). M3b (payments & receipts) is built and in review: the receipt
-PDF item is proven (uz/ru/en, logo, 80 mm). Left for M3c: Debtors page, the opening-balance import screen, the
-full M3 e2e and screenshots.
+**M3 · Billing**: ◐ last PR in review. Plan (2026-10-12, PR #11): M3a data layer → M3b payments & receipts →
+M3c debtors & import. M3a merged (#12), M3b merged (#13). M3c (Debtors page, opening-balance import, the full M3
+e2e, screenshots) is built; every M3 "done when" item is checked. M3 is done when M3c merges with green CI.
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -19,7 +18,7 @@ full M3 e2e and screenshots.
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
 | M1 | Academic core | ☑ done | 2026-10-11 |
 | M2 | Attendance | ☑ done | 2026-10-12 |
-| M3 | Billing | ◐ in progress (M3a merged; M3b built; M3c) | |
+| M3 | Billing | ◐ M3a, M3b merged; M3c in review | |
 | M4 | Telegram & SMS | ☐ | |
 | M5 | Leads CRM | ☐ | |
 | M6 | Exam scores | ☐ | |
@@ -66,10 +65,10 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Price/discount change applies from the next cycle | ☑ | pgTAP (600 000 → 700 000 from the next cycle; issued charges unchanged) |
 | Mid-cycle end follows `leave_credit_policy`; example 3 = 315 000 UZS credit; future cycles voided; transfer credits | ☑ | pgTAP (ask / credit / no_credit, preview, void of unstarted cycles, transfer); Vitest `unusedLessonsCredit`; mutation-checked |
 | Receipt numbers unique and gap-free under 20 concurrent inserts | ☑ | `receipt-numbers.concurrency.test.ts` (postgres.js, 20 connections, 5 rolled back → 000001–000015) in CI's database job; fails with a naive max + 1 numbering |
-| Receipt PDFs in uz/ru/en with the logo; 80 mm prints | ☐ | |
+| Receipt PDFs in uz/ru/en with the logo; 80 mm prints | ☑ | Vitest `receipt.test.ts` (uz/ru/en, PNG/JPEG logo, VOID); e2e `m3b-payments` and `m3-billing` fetch both PDFs; 80 mm checked by hand in the browser (M3b) |
 | Balance and FIFO: `charge_debts` and debtors match fixtures | ☑ | pgTAP (FIFO with an opening-debt item, aging buckets, a not-yet-due debtor) |
 | Voids need `void` + reason; balance updates; nothing deletable | ☑ | pgTAP (void payment, charge + reissue, adjustment; guard trigger on delete, update, truncate) |
-| Opening balances import creates adjustments | ◐ | pgTAP `import_opening_balances` (creates, re-import skips, unknown student aborts); import screen in M3c |
+| Opening balances import creates adjustments | ☑ | pgTAP `import_opening_balances`; Vitest (amount sign, matching, skip); e2e `m3-billing` (import → on the Debtors list → re-import adds nothing) |
 | Teachers can't select any billing table or view | ☑ | pgTAP (8 tables/views + `student_balance()`); other branch, other center, admin without `billing` |
 | No float money (lint rule) | ☑ | `uteach/no-float-money` (unit tested; flagged the 6 existing `Number(price)` calls, now `toDbAmount()`) |
 
@@ -116,6 +115,26 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-12 · M3c debtors & import
+- **Debtors** page (nav after Payments, `billing`): aging tiles that filter, search, filters for bucket, branch,
+  group and course, call + record payment per row, most overdue first. `lib/debtors.ts` loads it from the
+  `debtors` view plus guardians, groups and the last payment; the **Excel export** route uses the same loader.
+- **Opening balances** import kind: template, header guessing (balance / qoldiq / остаток…), validation (signed
+  amount, not 0, student by ID / phone / unique name, must have an ID or phone, skip if already imported) and
+  `import_opening_balances` (M3a). Shared student matching with the enrollments import.
+- Student profile opens a tab from `?tab=` (Debtors links to Payments). `SegmentedControl` wraps on narrow
+  screens (the import kinds overflowed at 390 px). `toSheetAmount()` in `lib/money.ts` writes amounts to Excel
+  without floats. `fetchAll` / `chunks` moved to `lib/fetch-all.ts`.
+- e2e `m3-billing` (5 tests): the M3 happy path from the milestone (12 backdated lessons → cycle 1 → cash payment
+  → receipt → settled → mark 12 → 13th lesson → the job charges cycle 2, twice = once → Debtors 0–30 → Excel
+  export), then an opening-balance import. `e2e/db.ts` (postgres.js, devDependency) runs the hourly job and
+  pauses its cron during the test.
+- Screenshots at 1440 and 390 px: `debtors`, `payments`, `student-payments`, `payment-dialog`,
+  `import-opening-balances`, `settings-billing`.
+- Decisions: `PROPOSED (M3c, as built)` in 15 (Debtors behaviour; reminders, broadcast and "last reminder" wait
+  for M4).
+- Known gaps: the Radix select no-JS path posting an empty value before hydration is still open (app-wide).
 
 ### 2026-10-12 · M3b payments & receipts
 - Student profile: balance chip (debt / credit / settled) and a **Payments** tab: balance with "Record payment"

@@ -36,8 +36,12 @@ export async function generateMetadata() {
  * Student profile (12): contacts, home branch and balance (15); tabs Enrollments | Payments | Attendance |
  * Guardians | Notes. Payments shows for `billing` or `payments`.
  */
-export default async function StudentPage({ params }: PageProps<"/[locale]/students/[studentId]">) {
+export default async function StudentPage({
+  params,
+  searchParams,
+}: PageProps<"/[locale]/students/[studentId]">) {
   const { studentId } = await params;
+  const { tab } = await searchParams;
   const ctx = await requireAdminContext();
   const t = await getTranslations("students");
   const ta = await getTranslations("attendance");
@@ -201,6 +205,7 @@ export default async function StudentPage({ params }: PageProps<"/[locale]/stude
         }
       />
       <DetailPage
+        defaultTab={typeof tab === "string" ? tab : undefined}
         header={
           <ProfileCard
             avatar={<InitialsAvatar name={student.full_name} size="lg" />}

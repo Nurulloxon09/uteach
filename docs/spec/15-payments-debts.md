@@ -121,6 +121,18 @@ Percent (`discount_bp`) and/or a fixed amount per cycle, with a required reason.
 - `balance = payments + adjustments − charges` (open, non-voided). Negative = debt, positive = prepaid credit.
 - **FIFO:** credits cover the oldest-due charges first. `charge_debts` gives the outstanding amount per charge and its days overdue.
 - **Debtors list:** students with balance < 0, showing debt, oldest unpaid due date, days overdue, aging bucket (0–30, 31–60, 61–90, 90+), guardian phone, last payment, last reminder. Filters: branch, group, course, bucket. Actions: call (tel: link), send reminder, record payment, broadcast to selection. Export.
+> PROPOSED (M3c, as built): the Debtors page (`billing`) lists every student with a negative balance, most
+> overdue first (then largest debt). Four aging tiles (count + amount per bucket) sit on top and each one filters
+> the list; the tiles count the rows the other filters leave. A debt that isn't due yet shows "Due {date}" and
+> sits in 0–30. The phone shown is the primary guardian's, else the student's. Search covers the name and the
+> student's and guardians' phones. **Send reminder**, **broadcast to selection** and the **last reminder** column
+> wait for M4 (they need the outbox sender); M3c has call (`tel:`) and record payment. The Excel export
+> (`/[locale]/debtors/export`, exceljs) carries the same rows and filters, all pages, amounts as numbers in major
+> units. Opening balances come in through the Excel import (kind "Opening balances", `billing` + `adjustments` +
+> `import`): one signed amount per student, negative = owed; a student is matched like the enrollments import
+> (ID, else phone, else a unique name) and must have an ID or a phone, because `import_opening_balances` finds
+> students by those; a student who already has an opening balance is skipped.
+
 - **Reminders:** `enqueue_payment_reminders` daily. Students with outstanding debt past due_date get a reminder every `reminder_every_days` (dedupe key `reminder:{student}:{date}`). There's also a "due soon" reminder 2 days before due_date (setting, default on). Templates include the amount and (🟨) a pay link.
 
 ## Adjustments & voids

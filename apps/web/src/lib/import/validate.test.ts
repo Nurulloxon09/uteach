@@ -16,6 +16,7 @@ const ctx = (overrides: Partial<ImportContext> = {}): ImportContext => ({
   students: [],
   groups: [],
   openEnrollments: new Set(),
+  openingBalances: new Set(),
   ...overrides,
 });
 
@@ -201,5 +202,66 @@ describe("validateImport: groups and enrollments", () => {
       openEnrollments: new Set(["s1:g1"]),
     });
     expect(again).toMatchObject({ create: 0, skip: 1 });
+  });
+
+  it("turns opening balances into signed minor units and names students the way the database finds them", () => {
+    const sheet: Sheet = {
+      headers: ["ID", "Telefon", "F.I.Sh.", "Balans", "Izoh"],
+      rows: [
+        { number: 2, cells: ["A-7", "", "", "-500 000", "Old system"] },
+        { number: 3, cells: ["", "93 123 45 67", "", "250000.50", ""] },
+        { number: 4, cells: ["", "", "Nobody", "0", ""] },
+        { number: 5, cells: ["", "", "Vali", "abc", ""] },
+      ],
+    };
+    const mapping: Mapping = {
+      studentRef: 0,
+      studentPhone: 1,
+      studentName: 2,
+      amount: 3,
+      note: 4,
+    };
+    const base = ctx({
+      students: [
+        { id: "s1", fullName: "Ali", phone: "+998901112233", externalRef: "A-7" },
+        { id: "s2", fullName: "Bobur", phone: "+998931234567", externalRef: null },
+        { id: "s3", fullName: "Vali", phone: null, externalRef: null },
+      ],
+    });
+    const result = validateImport("opening_balances", sheet, mapping, base);
+    expect(result.issues.map((i) => `${i.row}:${i.field}:${i.code}`)).toEqual([
+      "4:studentName:studentUnknown",
+      "4:amount:amountZero",
+      "5:studentName:studentNoKey",
+      "5:amount:amount",
+    ]);
+
+    const valid = validateImport(
+      "opening_balances",
+      { ...sheet, rows: sheet.rows.slice(0, 2) },
+      mapping,
+      { ...base, openingBalances: new Set(["s2"]) },
+    );
+    expect(valid).toMatchObject({
+      create: 1,
+      skip: 1,
+      issues: [],
+      payload: [
+        {
+          externalRef: "A-7",
+          phone: null,
+          fullName: "Ali",
+          amount: "-50000000",
+          note: "Old system",
+        },
+        {
+          externalRef: null,
+          phone: "+998931234567",
+          fullName: "Bobur",
+          amount: "25000050",
+          note: null,
+        },
+      ],
+    });
   });
 });

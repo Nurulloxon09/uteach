@@ -83,7 +83,8 @@
     "holidays": "Bayramlar",
     "students": "Oʻquvchilar",
     "attendance": "Davomat",
-    "payments": "Toʻlovlar"
+    "payments": "Toʻlovlar",
+    "debtors": "Qarzdorlar"
   },
   "errors": {
     "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
@@ -1067,12 +1068,13 @@
       "done": "Tayyor"
     },
     "pickTitle": "Nimani import qilishni tanlang",
-    "pickHint": "Shu tartibda import qiling: oʻquvchilar, keyin guruhlar, keyin guruhlarga yozilishlar. Tasdiqlamaguningizcha hech narsa saqlanmaydi.",
+    "pickHint": "Shu tartibda import qiling: oʻquvchilar, keyin guruhlar, keyin guruhlarga yozilishlar; boshlangʻich qoldiqlar — oʻquvchilar kiritilgandan keyin. Tasdiqlamaguningizcha hech narsa saqlanmaydi.",
     "kindLabel": "Nimani import qilish",
     "kinds": {
       "students": "Oʻquvchilar",
       "groups": "Guruhlar",
-      "enrollments": "Yozilishlar"
+      "enrollments": "Yozilishlar",
+      "opening_balances": "Boshlangʻich qoldiqlar"
     },
     "dropLabel": "Excel yoki CSV faylni shu yerga tashlang yoki tanlash uchun bosing",
     "dropHint": ".xlsx yoki .csv, 5 000 qatorgacha. Birinchi qator — ustun nomlari.",
@@ -1137,6 +1139,13 @@
         "group": "Guruh",
         "branch": "Filial",
         "startDate": "Boshlanish sanasi"
+      },
+      "opening_balances": {
+        "studentRef": "Oʻquvchining eski tizimdagi ID",
+        "studentPhone": "Oʻquvchi telefoni",
+        "studentName": "Oʻquvchi ismi",
+        "amount": "Qoldiq",
+        "note": "Izoh"
       }
     },
     "hints": {
@@ -1175,6 +1184,13 @@
         "group": "Majburiy; guruh nomi.",
         "branch": "Faqat ikki filialda shu nomli guruh boʻlsa kerak.",
         "startDate": "Sana; boʻsh = bugun."
+      },
+      "opening_balances": {
+        "studentRef": "Oʻquvchilar faylidagi ID.",
+        "studentPhone": "ID boʻlmasa ishlatiladi.",
+        "studentName": "ID yoki telefon boʻlmasa ishlatiladi; takrorlanmasligi kerak.",
+        "amount": "Majburiy. Minus — oʻquvchi qarzdor (-500 000), plyus — oldindan toʻlangan.",
+        "note": "Ixtiyoriy, masalan qoldiq qayerdan."
       }
     },
     "errors": {
@@ -1209,8 +1225,11 @@
       "studentUnknown": "Bunday oʻquvchi yoʻq. Avval oʻquvchilarni import qiling.",
       "studentAmbiguous": "Bir nechta oʻquvchi mos keladi. ID yoki telefondan foydalaning.",
       "groupUnknown": "Bunday nomli guruh yoʻq.",
-      "groupAmbiguous": "Bunday nomli guruh bir nechta filialda bor. Filialni koʻrsating."
-    }
+      "groupAmbiguous": "Bunday nomli guruh bir nechta filialda bor. Filialni koʻrsating.",
+      "amountZero": "Nol qoldiq emas. Bu oʻquvchini olib tashlang.",
+      "studentNoKey": "Oʻquvchida ID ham, telefon ham yoʻq. Avval birini qoʻshing."
+    },
+    "openDebtors": "Qarzdorlarni ochish"
   },
   "attendance": {
     "title": "Davomat",
@@ -1499,5 +1518,44 @@
       "emptyTitle": "Toʻlovlar yoʻq",
       "emptyHint": "Bu filtrlar boʻyicha toʻlov yoʻq."
     }
+  },
+  "debtors": {
+    "title": "Qarzdorlar",
+    "listTitle": "Qarzi bor oʻquvchilar",
+    "export": "Excelga yuklab olish",
+    "total": "Qarz: {amount}",
+    "students": "{count} ta oʻquvchi",
+    "search": "Ism yoki telefon boʻyicha qidirish",
+    "bucket": "Kechikish",
+    "branch": "Filial",
+    "group": "Guruh",
+    "course": "Kurs",
+    "student": "Oʻquvchi",
+    "contact": "Aloqa",
+    "guardian": "Ota-ona",
+    "debt": "Qarz",
+    "overdue": "Kechikish",
+    "lastPayment": "Oxirgi toʻlov",
+    "daysOverdue": "{count} kun kechikdi",
+    "since": "{date} dan",
+    "dueOn": "Muddat {date}",
+    "notDue": "Muddati kelmagan",
+    "never": "Toʻlamagan",
+    "call": "{name} boʻyicha qoʻngʻiroq",
+    "emptyTitle": "Qarzdorlar yoʻq",
+    "emptyHint": "Qarzi bor oʻquvchilar shu yerda chiqadi, eng koʻp kechikkanlar yuqorida.",
+    "buckets": {
+      "0-30": "0–30 kun",
+      "31-60": "31–60 kun",
+      "61-90": "61–90 kun",
+      "90+": "90 kundan koʻp"
+    },
+    "studentPhone": "Oʻquvchi telefoni",
+    "guardianPhone": "Ota-ona telefoni",
+    "groups": "Guruhlar",
+    "oldestDue": "Eng eski toʻlanmagan muddat",
+    "overdueDays": "Kechikkan kunlar",
+    "lastPaymentAmount": "Oxirgi toʻlov summasi",
+    "fileName": "qarzdorlar"
   }
 }
