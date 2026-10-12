@@ -29,6 +29,11 @@ No Vercel Hobby: its terms are non-commercial.
 > PROPOSED (M1): two libraries join the web app: **exceljs** (reads `.xlsx`/`.csv` for Excel import and writes the
 > localized template files) and **@dnd-kit/core** (accessible drag and drop with keyboard support for the timetable).
 
+> PROPOSED (M3 plan): **`@react-pdf/renderer`** renders receipts (80 mm and A4) in a new `packages/receipts`
+> (Node, no browser), with Plus Jakarta Sans and Manrope TTF files bundled for Latin and Cyrillic. The
+> receipt-number concurrency test uses **`postgres`** (postgres.js, dev dependency of `packages/db`) to open 20
+> real connections to the local/CI Supabase; it runs in CI's database job.
+
 > PROPOSED (M0): the GitHub repo is linked to a Vercel project (team "student-union"), which deploys every push by default. `vercel.json` sets `git.deploymentEnabled: false` so only our own CI runs on PRs. Remove it if Vercel previews are wanted later.
 
 

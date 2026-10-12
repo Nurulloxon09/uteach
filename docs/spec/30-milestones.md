@@ -131,6 +131,42 @@ Global "done when" for every milestone:
 
 **Scope:** `computeCycleCharge` (price, discounts, rounding), `charge_cycles` view (lessons used/left, computed cycle end), first cycle charge on enroll, `generate_cycle_charges` (pg_cron, idempotent), freeze/cancel/holiday extend cycles, end/transfer unused-lesson credits per `leave_credit_policy`, void-and-reissue, accounts (default cash + terminal per branch), record payment (cash/card/transfer), receipt numbering + PDF (80 mm + A4), balances view, FIFO `charge_debts`, debtors list with aging, adjustments (waive cycle, opening balance from import, write-off, correction, unused lessons), voids, receipts enqueued to the outbox (`payment_received`).
 **Tables:** charges, payments, balance_adjustments, accounts, receipt_sequences; views charge_cycles, student_balances, charge_debts, debtors.
+
+> PROPOSED (M3 plan, 2026-10-12): delivered as three PRs.
+> - **M3a · data layer:** migration `m3_billing`:
+>   - center billing columns and `branches.code`;
+>   - `accounts` with defaults per branch;
+>   - `charges`, `payments`, `balance_adjustments`, `receipt_sequences`;
+>   - views `charge_cycles`, `student_balances`, `charge_debts`, `debtors`;
+>   - the M1 billing hook filled in (first charge, freeze, end/transfer credits, voiding later cycles);
+>   - `generate_cycle_charges` (pg_cron), `record_payment`, `void_payment`, `void_charge` (+ reissue), `add_adjustment`, `import_opening_balances`;
+>   - `payment_received` queued to the outbox.
+>
+>   Also: `packages/core/billing` (`computeCycleCharge`, cycle windows, FIFO, aging) with shared fixtures and a SQL parity test, pgTAP `m3_billing`, the 20-concurrent receipt-number test, and the `uteach/no-float-money` lint rule.
+> - **M3b · payments & receipts:**
+>   - student profile "Payments" tab and balance card;
+>   - "Record payment" dialog (student, Payments page, debtors) showing the resulting balance;
+>   - void / waive / write-off / correction dialogs;
+>   - the End dialog's unused-lessons credit choice (policy `ask`);
+>   - receipt PDFs (80 mm + A4) in a new `packages/receipts`;
+>   - Payments page;
+>   - Center settings → Billing and the branch code field.
+> - **M3c · debtors & import:**
+>   - Debtors page (aging buckets, filters, Excel export);
+>   - the opening-balance import kind;
+>   - the M3 e2e happy path;
+>   - screenshots.
+>
+> Decisions in the plan (details in 01, 02, 05-ui, 15, 17):
+> - **No billable lesson, no charge yet.** A group without generated lessons can't place cycle 1. `enroll` creates cycle 1 when the student has a billable lesson. Otherwise `generate_cycle_charges` creates it once one exists (same idempotency key `(enrollment_id, cycle_no)`).
+> - **Receipts are rendered on demand**, not stored. A route returns the PDF from the payment row (a voided payment shows "VOID"), so `payments.receipt_path` stays null in M3. The renderer lives in `packages/receipts` (`@react-pdf/renderer`, fonts bundled), so the M4 worker can send the same PDF in Telegram.
+> - **Receipt numbers** use a new `branches.code` (2–6 letters/digits, unique per center, suggested from the name, editable by the owner): `{CODE}-{YYYY}-{000123}`.
+> - **Accounts:** M3 creates a cash and a terminal account per branch (also for new branches, by trigger) and one center bank account. There is no accounts screen until M11.
+> - **Reminders move wholly to M4:** M3 queues only `payment_received`. `charge_created`, payment reminders and "due soon" are queued in M4 together with the sender.
+> - **Group page "Finance" tab** (12) waits for M7 dashboards; M3's group view stays the Price tab.
+> - **Unused-lessons credit:** `end_enrollment` gets `p_credit boolean` (required when the policy is `ask`). Transfer always credits.
+> - **e2e:** jobs that run from pg_cron (`generate_cycle_charges`) are called through a test-only SQL helper in `apps/web/e2e`. Lessons in the past come from backdated extra lessons.
+> - **Money:** amounts cross the app ↔ database edge as decimal strings or `bigint`, never `Number()`. Existing `Number(price)` calls are changed, and the new lint rule keeps it that way.
 **Done when:**
 - [ ] `computeCycleCharge` unit tests: no discount, % discount, fixed discount, % + fixed, price override, rounding to 1 000 UZS. Worked examples 1 and 2 in 15 give 540 000 and 468 000 UZS.
 - [ ] `charge_cycles` tests: absences count as used; a center-cancelled lesson, a holiday and a freeze each push the cycle end one lesson later and never change the amount; a group with `cycle_lessons = 8` gives 8-lesson cycles.
