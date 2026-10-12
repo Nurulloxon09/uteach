@@ -123,6 +123,13 @@ export function LessonActionsProvider({
                 defaultValue={SAME}
                 options={roomOptions}
               />
+              <CheckboxField
+                name="notify"
+                value="on"
+                label={t("notify")}
+                hint={t("notifyMoveHint")}
+                defaultChecked
+              />
             </>
           ) : null
         }
@@ -156,6 +163,7 @@ export function LessonActionsProvider({
                 hint={t("centerFaultHint")}
                 defaultChecked
               />
+              <CheckboxField name="notify" value="on" label={t("notify")} defaultChecked />
             </>
           ) : null
         }
@@ -220,6 +228,7 @@ export function LessonActionsProvider({
                 hint={t("billableHint")}
                 defaultChecked={lesson.id ? !lesson.isBillable : true}
               />
+              <CheckboxField name="notify" value="on" label={t("notify")} defaultChecked />
             </>
           ) : null
         }

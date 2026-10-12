@@ -172,3 +172,29 @@ export const loadGroupOptions = cache(async (ctx: CenterContext): Promise<GroupO
     count: count.get(g.id) ?? 0,
   }));
 });
+
+/**
+ * Whether the user teaches (05-ui, M2): the teacher of a live group, or of a lesson within 30 days either
+ * side. Owners and admins who teach get "Today" in the nav.
+ */
+export const teachesLessons = cache(async (ctx: CenterContext): Promise<boolean> => {
+  const supabase = await createClient();
+  const month = 30 * 86_400_000;
+  const now = Date.now();
+  const [{ count: groups }, { count: lessons }] = await Promise.all([
+    supabase
+      .from("groups")
+      .select("id", { count: "exact", head: true })
+      .eq("center_id", ctx.center.id)
+      .eq("teacher_membership_id", ctx.membership.id)
+      .is("archived_at", null),
+    supabase
+      .from("lessons")
+      .select("id", { count: "exact", head: true })
+      .eq("center_id", ctx.center.id)
+      .eq("teacher_membership_id", ctx.membership.id)
+      .gte("starts_at", new Date(now - month).toISOString())
+      .lte("starts_at", new Date(now + month).toISOString()),
+  ]);
+  return (groups ?? 0) + (lessons ?? 0) > 0;
+});

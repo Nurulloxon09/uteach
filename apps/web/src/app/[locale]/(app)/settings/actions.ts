@@ -6,10 +6,12 @@ import { dbErrorKey, fail, fieldErrorsFrom, str, type ActionState } from "@/lib/
 import { getCenterContext } from "@/lib/center";
 import { createClient } from "@/lib/supabase/server";
 import {
+  intField,
   localeField,
   optionalPhoneField,
   optionalText,
   requiredText,
+  timeField,
   timezoneField,
   uuidField,
 } from "@/lib/validation";
@@ -51,6 +53,48 @@ export async function updateCenterAction(_prev: ActionState, form: FormData): Pr
   if (!changed(data)) return fail("db.forbidden", form);
 
   revalidatePath("/[locale]", "layout");
+  return { ok: true };
+}
+
+/** Attendance and notification rules (14, 17): edit window, alert delay, late alerts, quiet hours. */
+export async function updateAttendanceSettingsAction(
+  _prev: ActionState,
+  form: FormData,
+): Promise<ActionState> {
+  const ctx = await getCenterContext();
+  const parsed = z
+    .object({
+      editHours: intField(1, 720),
+      alertDelay: intField(0, 240),
+      lateAlerts: z.boolean(),
+      quietStart: timeField,
+      quietEnd: timeField,
+    })
+    .safeParse({
+      editHours: str(form, "editHours"),
+      alertDelay: str(form, "alertDelay"),
+      lateAlerts: form.get("lateAlerts") === "on",
+      quietStart: str(form, "quietStart"),
+      quietEnd: str(form, "quietEnd"),
+    });
+  if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("centers")
+    .update({
+      attendance_edit_hours: parsed.data.editHours,
+      absence_alert_delay_min: parsed.data.alertDelay,
+      late_alert_enabled: parsed.data.lateAlerts,
+      quiet_hours_start: parsed.data.quietStart,
+      quiet_hours_end: parsed.data.quietEnd,
+    })
+    .eq("id", ctx.center.id)
+    .select("id");
+  if (error) return fail(dbErrorKey(error), form);
+  if (!changed(data)) return fail("db.forbidden", form);
+
+  refresh();
   return { ok: true };
 }
 

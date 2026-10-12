@@ -8,8 +8,8 @@ Format: newest first. Keep it short and factual.
 
 ## Current milestone
 **M2 · Attendance**: ◐ in progress. Plan (2026-10-11, PR #7): three PRs, M2a data layer → M2b sheet, Today and
-notify prompts → M2c matrix and export. M2a (data layer) is built and in review; the database side of five
-"done when" items is proven by pgTAP. The sheet (375 px, one request) and the matrix/export come with M2b and M2c.
+notify prompts → M2c matrix and export. M2a merged (PR #8); M2b (sheet, Today, Attendance page, notify prompts,
+settings) is built and in review. Left for M2c: the matrix with Excel export.
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -17,7 +17,7 @@ notify prompts → M2c matrix and export. M2a (data layer) is built and in revie
 | M0 | Foundation | ☑ done | 2026-10-11 |
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
 | M1 | Academic core | ☑ done | 2026-10-11 |
-| M2 | Attendance | ◐ in progress (M2a built; M2b, M2c) | |
+| M2 | Attendance | ◐ in progress (M2a ☑, M2b built; M2c) | |
 | M3 | Billing | ☐ | |
 | M4 | Telegram & SMS | ☐ | |
 | M5 | Leads CRM | ☐ | |
@@ -58,10 +58,10 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 | Item (30-milestones) | Status | Evidence |
 |---|---|---|
-| 375 px: 15 students in < 30 s ("all present" + 2 exceptions); a save is one request | ☐ | |
+| 375 px: 15 students in < 30 s ("all present" + 2 exceptions); a save is one request | ☑ | e2e `m2-attendance` (375 × 812: Today → sheet → All present → absent + late → Save: one POST, < 30 s, marks survive a reload) |
 | Expected students = active on the date minus freezes (start/end/freeze edge tests) | ☑ | pgTAP `m2_attendance` (start day, end day, freeze day, day before/after, ended status ignored); matrix day states |
 | Teacher edits until `ends_at + 48h`, denied after at the DB level; admin late edits audited | ☑ | pgTAP: 47 h ok, after 48 h `attendance_window_closed`, no direct insert/update grants, admin edits after the window write `audit_log` (changed columns); mutation-checked |
-| First save sets the lesson `held` | ◐ | pgTAP (held + topic in the same call); e2e comes with the sheet (M2b) |
+| First save sets the lesson `held` | ☑ | pgTAP (held + topic in the same call); e2e ("Held" after the first save) |
 | Matrix: month with correct % (excused excluded); Excel export | ☐ | |
 | Absent → one outbox row per notifiable guardian, +10 min, dedupe; re-save no duplicate; change cancels; 22:00 → quiet-hours end | ☑ | pgTAP: opted-out guardian skipped, no guardians → student, `send_after = +10 min`, key `absence:{lesson}:{student}:{guardian}`, re-save no duplicate, present cancels, absent again revives, sent never re-sent, quiet hours (22:00 → 08:00, wrap, DST) |
 | Attendance unique (lesson, student) enforced | ☑ | pgTAP: duplicate insert → 23505; re-saves update the same row |
@@ -97,6 +97,23 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-12 · M2b attendance sheet, Today and notify prompts
+- `/attendance/[lessonId]`: the sheet (mobile first): P/L/A/E in one row at 375 px, "All present" / "Mark the
+  rest present", late minutes, note, topic, sticky save bar with a counter; one Server Action → one
+  `save_attendance` call; draft kept in the browser; network failures retried 3 times; banners for too early,
+  closed ("ask an admin"), view only, cancelled, and admin edits after the window.
+- Today: cards open the sheet and show "To mark / 12/15 marked / 2 absent / Not marked". Owners and admins who
+  teach get Today in the nav; every owner/admin gets **Attendance** (one day's lessons with their state, or
+  "Not marked" over the last 7 days, branch filter).
+- "Notify students and parents" in the Move, Cancel and Makeup dialogs (on) and Add holiday (off); a timetable
+  drop to a new day or time opens a confirm with it ticked.
+- Center settings → "Attendance & notifications" (edit window, alert delay, late alerts, quiet hours; owner).
+- New pattern `AttendanceRow` (on /dev/ui); `StatusToggleGroup` row layout + screen-reader labels; `LessonList`
+  chips moved under the title (names were squeezed out at 375 px). 81 new strings in uz/ru/en.
+- e2e `m2-attendance.spec.ts` (3 tests: setup with a 15-student Excel import, teacher at 375 px, admin view);
+  `m1-schedule` updated for the drop confirm and for Today opening the sheet. Checked in the browser at 375 px
+  (en, ru) and desktop.
 
 ### 2026-10-12 · M2a attendance data layer
 - Migration `20261015090000_m2_attendance.sql`: centers settings (`attendance_edit_hours`, `absence_alert_delay_min`,

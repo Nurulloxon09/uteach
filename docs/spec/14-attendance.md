@@ -22,6 +22,12 @@ Tables: `attendance`, `lead_trials`, `risk_flags`, `notification_outbox`.
 > kept in the browser until it's saved, and a failed save is retried automatically (3 times) with a visible status.
 > The original teacher of a substituted lesson can't mark it. A cancelled lesson can't be marked.
 
+> PROPOSED (M2b): the draft lives in `localStorage` under the lesson id together with a "version" of the saved
+> marks; a draft made against an older version (someone else saved since) is dropped, not merged. Once some rows
+> are marked, "All present" reads "Mark the rest present". After the window an admin sees a note that their
+> changes go to the audit log. Today chips: "To mark" (open, nothing marked), "Not marked" (ended, nothing
+> marked), "12/15 marked" + "2 absent", "Upcoming", "Cancelled".
+
 > PROPOSED (M2 plan): the owner/admin nav gets **Attendance**: lessons of one day (default today) in the user's
 > branches with their state (not marked yet, "12 / 14 · 2 absent", cancelled) and a "not marked" filter over the
 > last 7 days. Tapping a lesson opens the sheet; marking needs the `attendance` flag.

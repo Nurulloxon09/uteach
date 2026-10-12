@@ -10,10 +10,12 @@ import {
   type LessonListItem,
 } from "@/components/patterns";
 import { loadRooms } from "@/lib/academics";
+import { markState, nowMs, type LessonStats } from "@/lib/attendance";
 import { getCenterContext } from "@/lib/center";
 import { dayAsDate, hhmm, localParts } from "@/lib/dates";
 import { paletteFor } from "@/lib/palette";
 import { createClient } from "@/lib/supabase/server";
+import { MarkChip } from "../attendance/mark-chip";
 
 export async function generateMetadata() {
   const t = await getTranslations("today");
@@ -22,7 +24,7 @@ export async function generateMetadata() {
 
 /**
  * Teacher's start page (mobile-first, 13): today's lessons, then the rest of the week, including lessons
- * they cover as a substitute. Tapping a lesson opens its group (the attendance sheet arrives in M2).
+ * they cover as a substitute. Tapping a lesson opens its attendance sheet (14); chips say what to mark.
  */
 export default async function TodayPage() {
   const ctx = await getCenterContext();
@@ -48,6 +50,18 @@ export default async function TodayPage() {
     supabase.from("memberships").select("color").eq("id", ctx.membership.id).maybeSingle(),
   ]);
 
+  const ids = (lessons ?? []).map((l) => l.id);
+  const { data: stats } = ids.length
+    ? await supabase.rpc("lesson_attendance_stats", { p_lesson_ids: ids })
+    : { data: [] };
+  const statsOf = new Map<string, LessonStats>(
+    (stats ?? []).map((s) => [
+      s.lesson_id,
+      { expected: s.expected, marked: s.marked, absent: s.absent },
+    ]),
+  );
+  const now = nowMs();
+
   const tzOf = new Map((branches ?? []).map((b) => [b.id, b.timezone]));
   const roomName = new Map(rooms.map((r) => [r.id, r.name]));
   const palette = paletteFor(me?.color, ctx.membership.id);
@@ -56,14 +70,24 @@ export default async function TodayPage() {
     const tz = tzOf.get(l.branch_id) ?? ctx.center.timezone;
     const start = localParts(l.starts_at, tz);
     const end = localParts(l.ends_at, tz);
-    const chip =
-      l.status === "cancelled" ? (
-        <StatusChip tone="muted">{tl("status.cancelled")}</StatusChip>
-      ) : l.original_teacher_membership_id ? (
+    const kind =
+      l.status === "cancelled" ? null : l.original_teacher_membership_id ? (
         <StatusChip tone="warning">{tl("substituteChip")}</StatusChip>
       ) : l.is_makeup ? (
         <StatusChip tone="primary">{tl("makeupChip")}</StatusChip>
-      ) : undefined;
+      ) : null;
+    const chip = (
+      <span className="flex flex-wrap gap-1.5">
+        {kind}
+        <MarkChip
+          state={markState(
+            { status: l.status, startsAt: l.starts_at, endsAt: l.ends_at },
+            statsOf.get(l.id),
+            now,
+          )}
+        />
+      </span>
+    );
     const item: LessonListItem & { date: string } = {
       id: l.id,
       date: start.date,
@@ -73,7 +97,7 @@ export default async function TodayPage() {
       palette,
       status: chip,
       cancelled: l.status === "cancelled",
-      href: `/groups/${l.group_id}`,
+      href: `/attendance/${l.id}`,
     };
     return item;
   });

@@ -12,6 +12,7 @@ import { useFormatter, useTranslations } from "next-intl";
 import { useState, useTransition } from "react";
 import { toast } from "sonner";
 import {
+  CheckboxField,
   EmptyState,
   Field,
   FormDialog,
@@ -38,7 +39,7 @@ import {
 import { Sheet, SheetContent, SheetDescription, SheetTitle } from "@/components/ui/sheet";
 import { Link } from "@/i18n/navigation";
 import type { ActionState } from "@/lib/actions";
-import { hhmm } from "@/lib/dates";
+import { dayAsDate, hhmm } from "@/lib/dates";
 import type { PaletteKey } from "@/lib/palette";
 import { cn } from "@/lib/utils";
 import { dropLessonAction, placeConflictAction, skipConflictAction } from "../groups/actions";
@@ -58,6 +59,27 @@ type Teacher = { id: string; name: string; role: string; branchIds: string[]; pa
 type Room = { id: string; name: string; branchId: string };
 
 const ALL = "__all__";
+
+type PendingDrop = {
+  lessonId: string;
+  groupName: string;
+  date: string;
+  minutes: number;
+  roomId: string | null;
+};
+
+/** The drop confirm's action: hidden fields carry the drop, the checkbox says whether to notify. */
+async function confirmDropAction(_prev: ActionState, form: FormData): Promise<ActionState> {
+  const roomId = form.get("roomId");
+  const result = await dropLessonAction(
+    String(form.get("lessonId")),
+    String(form.get("date")),
+    Number(form.get("minutes")),
+    typeof roomId === "string" && roomId ? roomId : null,
+    form.get("notify") === "on",
+  );
+  return result.ok ? { ok: true } : { ok: false, error: result.error };
+}
 const NO_ROOM = "__none__";
 
 export function ScheduleView({
@@ -104,7 +126,9 @@ export function ScheduleView({
   const te = useTranslations("errors");
   const { setParams, hrefWith } = useListParams();
   const [inboxOpen, setInboxOpen] = useState(false);
+  const [drop, setDrop] = useState<PendingDrop | null>(null);
   const [, startTransition] = useTransition();
+  const format = useFormatter();
 
   const palette = new Map(teachers.map((m) => [m.id, m.palette]));
   const roomName = new Map(rooms.map((r) => [r.id, r.name]));
@@ -175,8 +199,19 @@ export function ScheduleView({
       toast.error(t("useSubstitute"));
       return;
     }
+    // A new date or time asks "notify students?" first (13); a room-only drop moves at once.
+    if (newDate !== lesson.date || startMinutes !== lesson.startMinutes) {
+      setDrop({
+        lessonId,
+        groupName: lesson.groupName,
+        date: newDate,
+        minutes: startMinutes,
+        roomId,
+      });
+      return;
+    }
     startTransition(async () => {
-      const result = await dropLessonAction(lessonId, newDate, startMinutes, roomId);
+      const result = await dropLessonAction(lessonId, newDate, startMinutes, roomId, false);
       if (result.ok) toast.success(tl("moved"));
       else toast.error(te(result.error as never));
     });
@@ -340,6 +375,44 @@ export function ScheduleView({
           rooms={rooms}
         />
       ) : null}
+
+      <FormDialog
+        open={drop !== null}
+        onOpenChange={(open) => {
+          if (!open) setDrop(null);
+        }}
+        title={tl("dropTitle")}
+        description={
+          drop
+            ? tl("dropHint", {
+                group: drop.groupName,
+                date: format.dateTime(dayAsDate(drop.date), {
+                  weekday: "short",
+                  day: "numeric",
+                  month: "short",
+                  timeZone: "UTC",
+                }),
+                time: hhmm(drop.minutes),
+              })
+            : undefined
+        }
+        action={confirmDropAction}
+        submitLabel={tl("move")}
+        successToast={tl("moved")}
+        testId="drop-dialog"
+      >
+        {() =>
+          drop ? (
+            <>
+              <input type="hidden" name="lessonId" value={drop.lessonId} />
+              <input type="hidden" name="date" value={drop.date} />
+              <input type="hidden" name="minutes" value={drop.minutes} />
+              <input type="hidden" name="roomId" value={drop.roomId ?? ""} />
+              <CheckboxField name="notify" value="on" label={tl("notify")} defaultChecked />
+            </>
+          ) : null
+        }
+      </FormDialog>
     </LessonActionsProvider>
   );
 }
