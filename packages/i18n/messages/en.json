@@ -82,7 +82,8 @@
     "courses": "Courses",
     "holidays": "Holidays",
     "students": "Students",
-    "attendance": "Attendance"
+    "attendance": "Attendance",
+    "payments": "Payments"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -104,7 +105,8 @@
       "number": "Enter a whole number in the allowed range.",
       "slots": "Check the lesson times.",
       "endBeforeStart": "The end date can't be before the start.",
-      "percent": "Enter a percentage from 0 to 100."
+      "percent": "Enter a percentage from 0 to 100.",
+      "branchCode": "Use 2 to 6 Latin letters or digits."
     },
     "auth": {
       "invalidCredentials": "Wrong phone number or password.",
@@ -500,7 +502,18 @@
       "lateAlerts": "Also alert parents when a student is late",
       "quietStart": "Quiet hours from",
       "quietEnd": "Quiet hours until",
-      "quietHint": "Messages that fall in quiet hours wait until they end. The same time in both fields turns quiet hours off."
+      "quietHint": "Messages that fall in quiet hours wait until they end. The same time in both fields turns quiet hours off.",
+      "billingTitle": "Billing",
+      "billingHint": "How lesson cycles are charged and what happens when a student leaves.",
+      "roundingUnit": "Round charges to",
+      "roundingUnitHint": "In so'm, e.g. 1 000.",
+      "dueDays": "Payment due (days after a cycle starts)",
+      "leavePolicy": "When a student leaves mid-cycle",
+      "policies": {
+        "ask": "Ask each time",
+        "credit": "Always credit the lessons not taken",
+        "no_credit": "Never credit them"
+      }
     },
     "branches": {
       "title": "Branches & rooms",
@@ -517,7 +530,9 @@
         "address": "Address",
         "phone": "Phone number",
         "timezone": "Time zone",
-        "timezoneHint": "All lessons of this branch are scheduled in this time zone."
+        "timezoneHint": "All lessons of this branch are scheduled in this time zone.",
+        "code": "Code",
+        "codeHint": "Start of receipt numbers, e.g. CHI-2026-000123."
       },
       "addSubmit": "Add branch",
       "added": "Branch added.",
@@ -1039,7 +1054,7 @@
     "rosterEmpty": "No students in this group yet",
     "rosterEmptyHint": "Add students from your list.",
     "creditUnused": "Credit the unused lessons",
-    "creditUnusedHint": "If the student leaves mid-cycle, the lessons not taken go back to their balance (when the center's policy is to ask)."
+    "creditUnusedHint": "Untick to keep the started cycle fully paid."
   },
   "import": {
     "title": "Import from Excel",
@@ -1312,6 +1327,177 @@
       "recent": "Recent marks",
       "emptyTitle": "No attendance yet",
       "emptyHint": "Marks from this student's lessons will appear here."
+    }
+  },
+  "billing": {
+    "title": "Payments",
+    "tab": "Payments",
+    "balance": "Balance",
+    "debt": "Debt {amount}",
+    "credit": "Credit {amount}",
+    "settled": "Settled",
+    "methods": {
+      "cash": "Cash",
+      "card": "Card",
+      "transfer": "Bank transfer",
+      "online": "Online"
+    },
+    "accounts": {
+      "cash": "Cash · {branch}",
+      "terminal": "Card terminal · {branch}",
+      "bank": "Bank account",
+      "online": "Online"
+    },
+    "cycles": {
+      "title": "Lesson cycles",
+      "cycle": "Cycle {no}",
+      "group": "Group",
+      "lessons": "{used} of {total} lessons",
+      "notStarted": "Starts {date}",
+      "ends": "Ends about {date}",
+      "due": "Due {date}",
+      "amount": "Amount",
+      "owed": "Owed",
+      "paid": "Paid",
+      "overdue": "{days, plural, one {# day overdue} other {# days overdue}}",
+      "void": "Void",
+      "emptyTitle": "No charges yet",
+      "emptyHint": "A cycle is charged when the student has their first lesson in a group with a price.",
+      "calc": "{lessons} lessons · {price} → {amount}",
+      "manual": "One-off fee",
+      "colCycle": "Cycle",
+      "colLessons": "Lessons",
+      "colDue": "Due"
+    },
+    "payments": {
+      "title": "Payments",
+      "date": "Date",
+      "receipt": "Receipt",
+      "method": "Method",
+      "account": "Account",
+      "amount": "Amount",
+      "receivedBy": "Received by",
+      "payer": "Payer",
+      "student": "Student",
+      "voided": "Void",
+      "emptyTitle": "No payments yet",
+      "emptyHint": "Recorded payments and their receipts appear here."
+    },
+    "adjustments": {
+      "title": "Adjustments",
+      "kinds": {
+        "opening_balance": "Opening balance",
+        "waive": "Waived",
+        "write_off": "Written off",
+        "correction": "Correction",
+        "refund": "Refund",
+        "promo": "Promo",
+        "unused_lessons": "Unused lessons"
+      },
+      "unusedDetail": "{unused} of {cycleLessons} lessons not taken",
+      "emptyTitle": "No adjustments"
+    },
+    "record": {
+      "button": "Record payment",
+      "title": "Record payment",
+      "hint": "Payment from {name}.",
+      "hintPick": "Choose the student, then the amount.",
+      "student": "Student",
+      "studentPlaceholder": "Choose a student",
+      "studentSearch": "Search by name",
+      "studentEmpty": "No student found",
+      "amount": "Amount",
+      "amountHint": "Prefilled with what is owed now.",
+      "method": "Method",
+      "account": "Account",
+      "accountDefault": "The usual account for this method",
+      "paidAt": "Date",
+      "paidAtHint": "Up to 7 days back.",
+      "payer": "Payer",
+      "payerPlaceholder": "e.g. the student's mother",
+      "note": "Note",
+      "submit": "Record payment",
+      "recorded": "Payment recorded · receipt {receiptNo}",
+      "now": "Balance now",
+      "after": "After this payment"
+    },
+    "receipt": {
+      "print80": "Receipt 80 mm",
+      "printA4": "Receipt A4",
+      "title": "Payment receipt",
+      "date": "Date",
+      "student": "Student",
+      "payer": "Payer",
+      "method": "Method",
+      "account": "Account",
+      "receivedBy": "Received by",
+      "note": "Note",
+      "amount": "Amount",
+      "footer": "Thank you! Keep this receipt.",
+      "void": "VOID · {reason}"
+    },
+    "void": {
+      "reason": "Reason",
+      "reasonPlaceholder": "e.g. entered twice",
+      "paymentTitle": "Void this payment?",
+      "paymentHint": "The receipt will say VOID and the balance goes back. This can't be undone.",
+      "paymentSubmit": "Void payment",
+      "paymentDone": "Payment voided",
+      "chargeTitle": "Void this charge?",
+      "chargeHint": "The charge stops counting. Nothing is deleted.",
+      "reissue": "Issue it again at the current price and discount",
+      "chargeSubmit": "Void charge",
+      "chargeDone": "Charge voided",
+      "adjustmentTitle": "Void this adjustment?",
+      "adjustmentSubmit": "Void adjustment",
+      "adjustmentDone": "Adjustment voided",
+      "rowPayment": "Void payment {receipt}",
+      "rowCharge": "Void {cycle}",
+      "rowAdjustment": "Void adjustment"
+    },
+    "adjust": {
+      "button": "Adjust balance",
+      "title": "Adjust balance",
+      "hint": "Adjustments are kept with their reason; nothing is deleted.",
+      "kind": "What to do",
+      "kinds": {
+        "correction": "Correction (any amount)",
+        "write_off": "Write off the whole debt"
+      },
+      "amount": "Amount",
+      "correctionHint": "Positive reduces the debt, negative adds to it (e.g. -50 000).",
+      "writeOffHint": "Leave empty to write off everything owed now.",
+      "reason": "Reason",
+      "submit": "Save",
+      "done": "Balance adjusted",
+      "waiveTitle": "Waive what is still owed?",
+      "waiveHint": "{cycle} of {group}: the unpaid part is forgiven.",
+      "waiveSubmit": "Waive",
+      "waiveDone": "Waived",
+      "rowWaive": "Waive {cycle}",
+      "after": "After this adjustment"
+    },
+    "end": {
+      "unused": "{count, plural, one {# lesson not taken} other {# lessons not taken}} = {amount}",
+      "unusedCount": "{count, plural, one {# lesson not taken} other {# lessons not taken}}",
+      "policyCredit": "The center credits lessons not taken automatically.",
+      "policyNoCredit": "The center doesn't credit lessons not taken.",
+      "nothingUnused": "No unused lessons in a started cycle."
+    },
+    "page": {
+      "title": "Payments",
+      "listTitle": "Payments",
+      "from": "From",
+      "to": "To",
+      "method": "Method",
+      "allMethods": "All methods",
+      "branch": "Branch",
+      "allBranches": "All branches",
+      "search": "Search by student or receipt",
+      "total": "Total: {amount}",
+      "count": "{count, plural, one {# payment} other {# payments}}",
+      "emptyTitle": "No payments",
+      "emptyHint": "No payments match these filters."
     }
   }
 }

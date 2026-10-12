@@ -20,6 +20,7 @@
     "@uteach/core": "workspace:*",
     "@uteach/db": "workspace:*",
     "@uteach/i18n": "workspace:*",
+    "@uteach/receipts": "workspace:*",
     "class-variance-authority": "^0.7.1",
     "cmdk": "^1.1.1",
     "cn": "^0.4.0",

@@ -3,6 +3,7 @@ import { PageHeader, Section } from "@/components/patterns";
 import { requireAdminContext } from "@/lib/center";
 import { createClient } from "@/lib/supabase/server";
 import { AttendanceForm } from "./attendance-form";
+import { BillingForm } from "./billing-form";
 import { CenterForm } from "./center-form";
 
 export async function generateMetadata() {
@@ -19,7 +20,7 @@ export default async function CenterSettingsPage() {
   const { data: rules } = await supabase
     .from("centers")
     .select(
-      "attendance_edit_hours, absence_alert_delay_min, late_alert_enabled, quiet_hours_start, quiet_hours_end",
+      "attendance_edit_hours, absence_alert_delay_min, late_alert_enabled, quiet_hours_start, quiet_hours_end, rounding_unit_amount, payment_due_days, leave_credit_policy",
     )
     .eq("id", ctx.center.id)
     .single();
@@ -56,6 +57,22 @@ export default async function CenterSettingsPage() {
               lateAlerts: rules.late_alert_enabled,
               quietStart: rules.quiet_hours_start.slice(0, 5),
               quietEnd: rules.quiet_hours_end.slice(0, 5),
+            }}
+          />
+        </Section>
+      ) : null}
+      {rules && (ctx.can.editCenter || ctx.can.billing) ? (
+        <Section
+          className="max-w-3xl"
+          title={t("billingTitle")}
+          description={ctx.can.editCenter ? t("billingHint") : t("readOnlyHint")}
+        >
+          <BillingForm
+            editable={ctx.can.editCenter}
+            settings={{
+              roundingUnit: String(rules.rounding_unit_amount),
+              dueDays: rules.payment_due_days,
+              leavePolicy: rules.leave_credit_policy,
             }}
           />
         </Section>

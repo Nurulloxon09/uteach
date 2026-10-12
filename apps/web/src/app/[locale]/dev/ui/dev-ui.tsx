@@ -27,6 +27,7 @@ import {
   AttendanceMatrix,
   AttendanceRow,
   type AttendanceRowValue,
+  BalancePreview,
   type MatrixColumn,
   type MatrixRow,
   CheckboxField,
@@ -44,6 +45,7 @@ import {
   MobileCard,
   MobileList,
   MobileRecord,
+  MoneyAmount,
   NameCell,
   PageAction,
   PageHeader,
@@ -557,6 +559,32 @@ export function DevUi() {
           </Section>
         </Kit>
       </div>
+
+      <Kit id="money" name="MoneyAmount · BalancePreview (payments, adjustments)">
+        <Section>
+          <div className="flex flex-wrap items-center gap-6">
+            <MoneyAmount minor={54_000_000} currency="UZS" />
+            <MoneyAmount minor={-31_500_000} currency="UZS" tone="balance" />
+            <MoneyAmount minor={2_000_000} currency="UZS" tone="balance" />
+            <MoneyAmount minor={46_800_000} currency="UZS" tone="muted" />
+          </div>
+          <div className="mt-5 max-w-md">
+            <BalancePreview
+              before={-54_000_000}
+              after={0}
+              beforeLabel={t("billing.record.now")}
+              afterLabel={t("billing.record.after")}
+              describe={(minor) =>
+                minor < 0n
+                  ? t("billing.debt", { amount: formatMoney(-minor, "UZS", locale) })
+                  : minor > 0n
+                    ? t("billing.credit", { amount: formatMoney(minor, "UZS", locale) })
+                    : t("billing.settled")
+              }
+            />
+          </div>
+        </Section>
+      </Kit>
 
       <Kit id="attendance-matrix" name="AttendanceMatrix (group page → Attendance)">
         <Section>

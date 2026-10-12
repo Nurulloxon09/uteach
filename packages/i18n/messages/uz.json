@@ -82,7 +82,8 @@
     "courses": "Kurslar",
     "holidays": "Bayramlar",
     "students": "Oʻquvchilar",
-    "attendance": "Davomat"
+    "attendance": "Davomat",
+    "payments": "Toʻlovlar"
   },
   "errors": {
     "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
@@ -104,7 +105,8 @@
       "number": "Ruxsat etilgan oraliqdagi butun son kiriting.",
       "slots": "Dars vaqtlarini tekshiring.",
       "endBeforeStart": "Tugash sanasi boshlanishdan oldin boʻlmaydi.",
-      "percent": "0 dan 100 gacha foiz kiriting."
+      "percent": "0 dan 100 gacha foiz kiriting.",
+      "branchCode": "2 tadan 6 tagacha lotin harfi yoki raqam."
     },
     "auth": {
       "invalidCredentials": "Telefon raqami yoki parol notoʻgʻri.",
@@ -500,7 +502,18 @@
       "lateAlerts": "Kechikish haqida ham ota-onalarga xabar berish",
       "quietStart": "Tinch soatlar boshlanishi",
       "quietEnd": "Tinch soatlar tugashi",
-      "quietHint": "Tinch soatlarga toʻgʻri kelgan xabarlar ular tugaguncha kutadi. Ikkala maydonda bir xil vaqt — tinch soatlar yoʻq."
+      "quietHint": "Tinch soatlarga toʻgʻri kelgan xabarlar ular tugaguncha kutadi. Ikkala maydonda bir xil vaqt — tinch soatlar yoʻq.",
+      "billingTitle": "Hisoblash",
+      "billingHint": "Dars sikllari qanday hisoblanishi va oʻquvchi ketganda nima boʻlishi.",
+      "roundingUnit": "Hisoblarni yaxlitlash",
+      "roundingUnitHint": "Soʻmda, masalan 1 000.",
+      "dueDays": "Toʻlov muddati (sikl boshlangandan keyin necha kun)",
+      "leavePolicy": "Oʻquvchi sikl oʻrtasida ketsa",
+      "policies": {
+        "ask": "Har safar soʻrash",
+        "credit": "Oʻtilmagan darslarni doim qaytarish",
+        "no_credit": "Hech qachon qaytarmaslik"
+      }
     },
     "branches": {
       "title": "Filiallar va xonalar",
@@ -517,7 +530,9 @@
         "address": "Manzil",
         "phone": "Telefon raqami",
         "timezone": "Vaqt mintaqasi",
-        "timezoneHint": "Bu filialning barcha darslari shu vaqt mintaqasida rejalashtiriladi."
+        "timezoneHint": "Bu filialning barcha darslari shu vaqt mintaqasida rejalashtiriladi.",
+        "code": "Kod",
+        "codeHint": "Kvitansiya raqamlari boshi, masalan CHI-2026-000123."
       },
       "addSubmit": "Filial qoʻshish",
       "added": "Filial qoʻshildi.",
@@ -1039,7 +1054,7 @@
     "rosterEmpty": "Bu guruhda hali oʻquvchi yoʻq",
     "rosterEmptyHint": "Roʻyxatingizdan oʻquvchi qoʻshing.",
     "creditUnused": "Foydalanilmagan darslarni qaytarish",
-    "creditUnusedHint": "Oʻquvchi sikl oʻrtasida ketsa, oʻtilmagan darslar balansiga qaytariladi (markaz har safar soʻrasa)."
+    "creditUnusedHint": "Boshlangan sikl toʻliq toʻlangan boʻlib qolishi uchun belgini olib tashlang."
   },
   "import": {
     "title": "Exceldan import",
@@ -1312,6 +1327,177 @@
       "recent": "Soʻnggi belgilar",
       "emptyTitle": "Hali davomat yoʻq",
       "emptyHint": "Oʻquvchi darslaridagi belgilar shu yerda chiqadi."
+    }
+  },
+  "billing": {
+    "title": "Toʻlovlar",
+    "tab": "Toʻlovlar",
+    "balance": "Balans",
+    "debt": "Qarz {amount}",
+    "credit": "Ortiqcha toʻlov {amount}",
+    "settled": "Qarz yoʻq",
+    "methods": {
+      "cash": "Naqd",
+      "card": "Karta",
+      "transfer": "Oʻtkazma",
+      "online": "Onlayn"
+    },
+    "accounts": {
+      "cash": "Kassa · {branch}",
+      "terminal": "Terminal · {branch}",
+      "bank": "Hisob raqam",
+      "online": "Onlayn"
+    },
+    "cycles": {
+      "title": "Dars sikllari",
+      "cycle": "{no}-sikl",
+      "group": "Guruh",
+      "lessons": "{total} tadan {used} ta dars",
+      "notStarted": "{date} da boshlanadi",
+      "ends": "Taxminan {date} da tugaydi",
+      "due": "Toʻlov muddati {date}",
+      "amount": "Summa",
+      "owed": "Qarz",
+      "paid": "Toʻlangan",
+      "overdue": "{days} kun kechikdi",
+      "void": "Bekor qilingan",
+      "emptyTitle": "Hali hisob yoʻq",
+      "emptyHint": "Narxi bor guruhda oʻquvchining birinchi darsi boʻlganda sikl hisoblanadi.",
+      "calc": "{lessons} ta dars · {price} → {amount}",
+      "manual": "Bir martalik toʻlov",
+      "colCycle": "Sikl",
+      "colLessons": "Darslar",
+      "colDue": "Toʻlov muddati"
+    },
+    "payments": {
+      "title": "Toʻlovlar",
+      "date": "Sana",
+      "receipt": "Kvitansiya",
+      "method": "Usul",
+      "account": "Hisob",
+      "amount": "Summa",
+      "receivedBy": "Qabul qildi",
+      "payer": "Toʻlovchi",
+      "student": "Oʻquvchi",
+      "voided": "Bekor qilingan",
+      "emptyTitle": "Hali toʻlovlar yoʻq",
+      "emptyHint": "Qabul qilingan toʻlovlar va kvitansiyalar shu yerda chiqadi."
+    },
+    "adjustments": {
+      "title": "Tuzatishlar",
+      "kinds": {
+        "opening_balance": "Boshlangʻich balans",
+        "waive": "Kechirildi",
+        "write_off": "Qarz hisobdan chiqarildi",
+        "correction": "Tuzatish",
+        "refund": "Qaytarish",
+        "promo": "Promokod",
+        "unused_lessons": "Oʻtilmagan darslar"
+      },
+      "unusedDetail": "{cycleLessons} tadan {unused} ta dars oʻtilmagan",
+      "emptyTitle": "Tuzatishlar yoʻq"
+    },
+    "record": {
+      "button": "Toʻlov qabul qilish",
+      "title": "Toʻlov qabul qilish",
+      "hint": "Toʻlov: {name}.",
+      "hintPick": "Oʻquvchini, keyin summani tanlang.",
+      "student": "Oʻquvchi",
+      "studentPlaceholder": "Oʻquvchini tanlang",
+      "studentSearch": "Ism boʻyicha qidirish",
+      "studentEmpty": "Oʻquvchi topilmadi",
+      "amount": "Summa",
+      "amountHint": "Hozirgi qarz qoʻyildi.",
+      "method": "Usul",
+      "account": "Hisob",
+      "accountDefault": "Shu usul uchun odatdagi hisob",
+      "paidAt": "Sana",
+      "paidAtHint": "Koʻpi bilan 7 kun oldin.",
+      "payer": "Toʻlovchi",
+      "payerPlaceholder": "masalan, oʻquvchining onasi",
+      "note": "Izoh",
+      "submit": "Toʻlovni qabul qilish",
+      "recorded": "Toʻlov qabul qilindi · kvitansiya {receiptNo}",
+      "now": "Hozirgi balans",
+      "after": "Bu toʻlovdan keyin"
+    },
+    "receipt": {
+      "print80": "Kvitansiya 80 mm",
+      "printA4": "Kvitansiya A4",
+      "title": "Toʻlov kvitansiyasi",
+      "date": "Sana",
+      "student": "Oʻquvchi",
+      "payer": "Toʻlovchi",
+      "method": "Usul",
+      "account": "Hisob",
+      "receivedBy": "Qabul qildi",
+      "note": "Izoh",
+      "amount": "Summa",
+      "footer": "Rahmat! Kvitansiyani saqlang.",
+      "void": "BEKOR QILINGAN · {reason}"
+    },
+    "void": {
+      "reason": "Sabab",
+      "reasonPlaceholder": "masalan, ikki marta kiritilgan",
+      "paymentTitle": "Toʻlov bekor qilinsinmi?",
+      "paymentHint": "Kvitansiyada «Bekor qilingan» yoziladi, balans qaytadi. Buni ortga qaytarib boʻlmaydi.",
+      "paymentSubmit": "Toʻlovni bekor qilish",
+      "paymentDone": "Toʻlov bekor qilindi",
+      "chargeTitle": "Hisob bekor qilinsinmi?",
+      "chargeHint": "Hisob endi hisobga olinmaydi. Hech narsa oʻchirilmaydi.",
+      "reissue": "Hozirgi narx va chegirma bilan qayta hisoblash",
+      "chargeSubmit": "Hisobni bekor qilish",
+      "chargeDone": "Hisob bekor qilindi",
+      "adjustmentTitle": "Tuzatish bekor qilinsinmi?",
+      "adjustmentSubmit": "Tuzatishni bekor qilish",
+      "adjustmentDone": "Tuzatish bekor qilindi",
+      "rowPayment": "{receipt} toʻlovini bekor qilish",
+      "rowCharge": "{cycle}ni bekor qilish",
+      "rowAdjustment": "Tuzatishni bekor qilish"
+    },
+    "adjust": {
+      "button": "Balansni tuzatish",
+      "title": "Balansni tuzatish",
+      "hint": "Tuzatishlar sababi bilan saqlanadi; hech narsa oʻchirilmaydi.",
+      "kind": "Nima qilish kerak",
+      "kinds": {
+        "correction": "Tuzatish (istalgan summa)",
+        "write_off": "Butun qarzni hisobdan chiqarish"
+      },
+      "amount": "Summa",
+      "correctionHint": "Musbat qarzni kamaytiradi, manfiy oshiradi (masalan, -50 000).",
+      "writeOffHint": "Hozirgi butun qarzni chiqarish uchun boʻsh qoldiring.",
+      "reason": "Sabab",
+      "submit": "Saqlash",
+      "done": "Balans tuzatildi",
+      "waiveTitle": "Toʻlanmagan qismi kechirilsinmi?",
+      "waiveHint": "{group} guruhi, {cycle}: toʻlanmagan qismi kechiriladi.",
+      "waiveSubmit": "Kechirish",
+      "waiveDone": "Kechirildi",
+      "rowWaive": "{cycle}ni kechirish",
+      "after": "Tuzatishdan keyin"
+    },
+    "end": {
+      "unused": "{count} ta dars oʻtilmagan = {amount}",
+      "unusedCount": "{count} ta dars oʻtilmagan",
+      "policyCredit": "Markaz oʻtilmagan darslarni avtomatik qaytaradi.",
+      "policyNoCredit": "Markaz oʻtilmagan darslarni qaytarmaydi.",
+      "nothingUnused": "Boshlangan siklda oʻtilmagan darslar yoʻq."
+    },
+    "page": {
+      "title": "Toʻlovlar",
+      "listTitle": "Toʻlovlar",
+      "from": "Dan",
+      "to": "Gacha",
+      "method": "Usul",
+      "allMethods": "Barcha usullar",
+      "branch": "Filial",
+      "allBranches": "Barcha filiallar",
+      "search": "Oʻquvchi yoki kvitansiya boʻyicha qidirish",
+      "total": "Jami: {amount}",
+      "count": "{count} ta toʻlov",
+      "emptyTitle": "Toʻlovlar yoʻq",
+      "emptyHint": "Bu filtrlar boʻyicha toʻlov yoʻq."
     }
   }
 }

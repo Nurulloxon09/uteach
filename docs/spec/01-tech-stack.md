@@ -34,6 +34,10 @@ No Vercel Hobby: its terms are non-commercial.
 > receipt-number concurrency test uses **`postgres`** (postgres.js, dev dependency of `packages/db`) to open 20
 > real connections to the local/CI Supabase; it runs in CI's database job.
 
+> PROPOSED (M3b, as built): the TTF files live in `packages/receipts/fonts/` (OFL 1.1) and are referenced with
+> static `new URL("…", import.meta.url)`, so Next copies them next to the server code (standalone included) and
+> the M4 worker can load them the same way. `@react-pdf/renderer` is a `serverExternalPackages` entry in Next.
+
 > PROPOSED (M0): the GitHub repo is linked to a Vercel project (team "student-union"), which deploys every push by default. `vercel.json` sets `git.deploymentEnabled: false` so only our own CI runs on PRs. Remove it if Vercel previews are wanted later.
 
 

@@ -33,7 +33,7 @@ export default async function BranchPage({
   const [{ data: branch }, { data: rooms }] = await Promise.all([
     supabase
       .from("branches")
-      .select("id, name, address, phone, timezone, archived_at")
+      .select("id, name, address, phone, timezone, code, archived_at")
       .eq("id", branchId)
       .eq("center_id", ctx.center.id)
       .maybeSingle(),

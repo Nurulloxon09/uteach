@@ -13,9 +13,12 @@ import { Button } from "@/components/ui/button";
 import { loadBranches, loadGroupOptions } from "@/lib/academics";
 import { requireAdminContext } from "@/lib/center";
 import { dayAsDate } from "@/lib/dates";
+import { loadStudentBalance } from "@/lib/billing";
+import { formatMinor } from "@/lib/money";
 import { createClient } from "@/lib/supabase/server";
 import { EditStudentDialog } from "../student-dialog";
 import { AttendanceSummary } from "./attendance-summary";
+import { BillingPanel } from "./billing-panel";
 import {
   EnrollmentsPanel,
   GuardiansPanel,
@@ -29,7 +32,10 @@ export async function generateMetadata() {
   return { title: t("title") };
 }
 
-/** Student profile (12): contacts and home branch; tabs Enrollments | Attendance | Guardians | Notes. */
+/**
+ * Student profile (12): contacts, home branch and balance (15); tabs Enrollments | Payments | Attendance |
+ * Guardians | Notes. Payments shows for `billing` or `payments`.
+ */
 export default async function StudentPage({ params }: PageProps<"/[locale]/students/[studentId]">) {
   const { studentId } = await params;
   const ctx = await requireAdminContext();
@@ -37,6 +43,7 @@ export default async function StudentPage({ params }: PageProps<"/[locale]/stude
   const ta = await getTranslations("attendance");
   const tn = await getTranslations("nav");
   const tc = await getTranslations("common");
+  const tb = await getTranslations("billing");
   const format = await getFormatter();
   const supabase = await createClient();
 
@@ -144,6 +151,21 @@ export default async function StudentPage({ params }: PageProps<"/[locale]/stude
   }));
 
   const active = enrollmentRows.some((e) => e.status !== "ended");
+  const seesMoney = (ctx.can.billing || ctx.can.payments) && ctx.can.inBranch(student.branch_id);
+  const balance = seesMoney ? await loadStudentBalance(ctx, student.id) : null;
+  const balanceChip =
+    balance === null ? null : BigInt(balance) < 0n ? (
+      <StatusChip tone="destructive">
+        {tb("debt", { amount: formatMinor(-BigInt(balance), ctx.center.currency, ctx.locale) })}
+      </StatusChip>
+    ) : BigInt(balance) > 0n ? (
+      <StatusChip tone="success">
+        {tb("credit", { amount: formatMinor(balance, ctx.center.currency, ctx.locale) })}
+      </StatusChip>
+    ) : (
+      <StatusChip tone="muted">{tb("settled")}</StatusChip>
+    );
+  const payer = guardianRows.find((g) => g.isPrimary)?.fullName ?? "";
   const branchName = branches.find((b) => b.id === student.branch_id)?.name ?? "—";
 
   return (
@@ -202,13 +224,16 @@ export default async function StudentPage({ params }: PageProps<"/[locale]/stude
               ...(student.school ? [{ key: "school", icon: School, value: student.school }] : []),
             ]}
             chip={
-              student.archived_at ? (
-                <StatusChip tone="muted">{tc("archived")}</StatusChip>
-              ) : active ? (
-                <StatusChip tone="success">{t("status.active")}</StatusChip>
-              ) : (
-                <StatusChip tone="muted">{t("status.inactive")}</StatusChip>
-              )
+              <div className="flex flex-wrap gap-2" data-testid="profile-chips">
+                {student.archived_at ? (
+                  <StatusChip tone="muted">{tc("archived")}</StatusChip>
+                ) : active ? (
+                  <StatusChip tone="success">{t("status.active")}</StatusChip>
+                ) : (
+                  <StatusChip tone="muted">{t("status.inactive")}</StatusChip>
+                )}
+                {balanceChip}
+              </div>
             }
           />
         }
@@ -235,6 +260,26 @@ export default async function StudentPage({ params }: PageProps<"/[locale]/stude
               />
             ),
           },
+          ...(seesMoney
+            ? [
+                {
+                  value: "payments",
+                  label: tb("tab"),
+                  content: (
+                    <BillingPanel
+                      ctx={ctx}
+                      student={{
+                        id: student.id,
+                        name: student.full_name,
+                        branchId: student.branch_id,
+                        payer,
+                        archived: student.archived_at !== null,
+                      }}
+                    />
+                  ),
+                },
+              ]
+            : []),
           {
             value: "attendance",
             label: ta("summary.tab"),

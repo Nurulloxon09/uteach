@@ -12,7 +12,7 @@ import {
   type ActionState,
 } from "@/lib/actions";
 import { getCenterContext } from "@/lib/center";
-import { toDbAmount } from "@/lib/money";
+import { formatMinor, toDbAmount } from "@/lib/money";
 import { createClient } from "@/lib/supabase/server";
 import {
   dateField,
@@ -506,4 +506,35 @@ export async function endAction(_prev: ActionState, form: FormData): Promise<Act
 
   refresh(parsed.data.studentId);
   return { ok: true, data: { reason: parsed.data.reason } };
+}
+
+/**
+ * What ending on `endDate` does to billing (15): unused lessons of the started cycle, their credit (formatted,
+ * null without `billing`) and the center's policy. Null when the preview isn't available.
+ */
+export async function unusedLessonsPreviewAction(
+  enrollmentId: string,
+  endDate: string,
+): Promise<{
+  unused: number;
+  credit: string | null;
+  policy: "ask" | "credit" | "no_credit";
+} | null> {
+  if (!uuidField.safeParse(enrollmentId).success || !dateField.safeParse(endDate).success) {
+    return null;
+  }
+  const ctx = await getCenterContext();
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .rpc("unused_lessons_preview", { p_enrollment_id: enrollmentId, p_end_date: endDate })
+    .maybeSingle();
+  if (error || !data) return null;
+  return {
+    unused: data.unused,
+    credit:
+      data.credit === null
+        ? null
+        : formatMinor(String(data.credit), ctx.center.currency, ctx.locale),
+    policy: data.policy,
+  };
 }
