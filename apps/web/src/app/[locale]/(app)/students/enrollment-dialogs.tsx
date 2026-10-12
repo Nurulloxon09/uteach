@@ -2,7 +2,14 @@
 
 import { AlertTriangle, ArrowRightLeft, CircleStop, Snowflake } from "lucide-react";
 import { useTranslations } from "next-intl";
-import { createContext, useContext, useState, type ReactNode } from "react";
+import {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+  useTransition,
+  type ReactNode,
+} from "react";
 import { toast } from "sonner";
 import {
   CheckboxField,
@@ -17,7 +24,13 @@ import {
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Label } from "@/components/ui/label";
 import type { ActionState } from "@/lib/actions";
-import { endAction, enrollAction, freezeAction, transferAction } from "./actions";
+import {
+  endAction,
+  enrollAction,
+  freezeAction,
+  transferAction,
+  unusedLessonsPreviewAction,
+} from "./actions";
 
 export type GroupChoice = {
   id: string;
@@ -210,6 +223,81 @@ export function EnrollDialog({
   );
 }
 
+type Preview = Awaited<ReturnType<typeof unusedLessonsPreviewAction>>;
+
+/**
+ * End date + what it does to billing (15): "7 lessons not taken = 315 000 so'm" from the same SQL the RPC
+ * uses. With the policy `ask` staff choose to credit them (sent as `credit`); with `credit` / `no_credit`
+ * the dialog only says what will happen. Without a preview it falls back to the plain checkbox.
+ */
+function EndBillingFields({
+  enrollmentId,
+  today,
+  state,
+}: {
+  enrollmentId: string;
+  today: string;
+  state: ActionState;
+}) {
+  const t = useTranslations("enrollments");
+  const tb = useTranslations("billing.end");
+  const [endDate, setEndDate] = useState(today);
+  const [preview, setPreview] = useState<Preview | undefined>(undefined);
+  const [, startLoading] = useTransition();
+
+  useEffect(() => {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(endDate)) return;
+    startLoading(async () => {
+      setPreview(await unusedLessonsPreviewAction(enrollmentId, endDate));
+    });
+  }, [enrollmentId, endDate]);
+
+  const unusedLine =
+    preview && preview.unused > 0
+      ? preview.credit !== null
+        ? tb("unused", { count: preview.unused, amount: preview.credit })
+        : tb("unusedCount", { count: preview.unused })
+      : null;
+
+  return (
+    <>
+      <Field
+        name="endDate"
+        type="date"
+        label={t("endDate")}
+        hint={t("endDateHint")}
+        value={endDate}
+        onChange={(ev) => setEndDate(ev.target.value)}
+        state={state}
+        required
+      />
+      {/* Until the preview arrives (or without one) the choice stays visible, so nothing is decided silently. */}
+      {!preview || (preview.policy === "ask" && preview.unused > 0) ? (
+        <div className="space-y-1" data-testid="end-credit">
+          {unusedLine ? (
+            <p className="text-[15px] font-semibold text-foreground" data-testid="end-unused">
+              {unusedLine}
+            </p>
+          ) : null}
+          <CheckboxField
+            name="credit"
+            value="on"
+            label={t("creditUnused")}
+            hint={t("creditUnusedHint")}
+            defaultChecked
+          />
+        </div>
+      ) : (
+        <p className="text-sm text-muted-foreground" data-testid="end-unused">
+          {preview.unused === 0
+            ? tb("nothingUnused")
+            : `${unusedLine} · ${preview.policy === "credit" ? tb("policyCredit") : tb("policyNoCredit")}`}
+        </p>
+      )}
+    </>
+  );
+}
+
 type Kind = "freeze" | "transfer" | "end";
 const EnrollmentActionsContext = createContext<((kind: Kind, e: EnrollmentRef) => void) | null>(
   null,
@@ -351,15 +439,6 @@ export function EnrollmentActionsProvider({
             <>
               <input type="hidden" name="enrollmentId" value={e.id} />
               <input type="hidden" name="studentId" value={e.studentId} />
-              <Field
-                name="endDate"
-                type="date"
-                label={t("endDate")}
-                hint={t("endDateHint")}
-                defaultValue={e.today}
-                state={state}
-                required
-              />
               <SelectField
                 name="reason"
                 label={t("endReason")}
@@ -370,13 +449,7 @@ export function EnrollmentActionsProvider({
                   label: t(`reasons.${r}`),
                 }))}
               />
-              <CheckboxField
-                name="credit"
-                value="on"
-                label={t("creditUnused")}
-                hint={t("creditUnusedHint")}
-                defaultChecked
-              />
+              <EndBillingFields enrollmentId={e.id} today={e.today} state={state} />
             </>
           ) : null
         }

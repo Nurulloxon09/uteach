@@ -8,8 +8,9 @@ Format: newest first. Keep it short and factual.
 
 ## Current milestone
 **M3 · Billing**: ◐ in progress. Plan (2026-10-12, PR #11): M3a data layer → M3b payments & receipts → M3c
-debtors & import. M3a (data layer) is built and in review; 11 of the 13 "done when" items are proven on the
-database side. Left: receipt PDFs (M3b) and the opening-balance import screen (M3c).
+debtors & import. M3a (data layer) merged (#12). M3b (payments & receipts) is built and in review: the receipt
+PDF item is proven (uz/ru/en, logo, 80 mm). Left for M3c: Debtors page, the opening-balance import screen, the
+full M3 e2e and screenshots.
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -18,7 +19,7 @@ database side. Left: receipt PDFs (M3b) and the opening-balance import screen (M
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
 | M1 | Academic core | ☑ done | 2026-10-11 |
 | M2 | Attendance | ☑ done | 2026-10-12 |
-| M3 | Billing | ◐ in progress (M3a built; M3b, M3c) | |
+| M3 | Billing | ◐ in progress (M3a merged; M3b built; M3c) | |
 | M4 | Telegram & SMS | ☐ | |
 | M5 | Leads CRM | ☐ | |
 | M6 | Exam scores | ☐ | |
@@ -115,6 +116,35 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-12 · M3b payments & receipts
+- Student profile: balance chip (debt / credit / settled) and a **Payments** tab: balance with "Record payment"
+  and "Adjust balance", lesson cycles (lessons used, expected end, due date, calc line, FIFO status: paid / owed /
+  overdue / void) with waive and void (+ reissue) row actions, payments with 80 mm / A4 print links and void,
+  adjustments with void. `payments`-only staff see the balance and payments; charges and adjustments need
+  `billing`.
+- **Record payment** dialog (student page; Payments page with a student picker): amount prefilled with the debt,
+  method → default account (or a chosen one), date (7 days back without `void`), payer (primary guardian), note,
+  and the resulting balance before saving (`BalancePreview`); success shows the receipt number and print links.
+- **Payments** page (nav, `billing` or `payments`): period, search by student or receipt, method and branch
+  filters, period total. **Receipts** route `/[locale]/receipts/[id]?size=80mm|a4` renders the PDF on demand with
+  `packages/receipts` (center logo when PNG/JPEG; "VOID · reason" on voided payments).
+- End dialog: "N lessons not taken = X" from `unused_lessons_preview`; the credit choice only for policy `ask`.
+- Center settings → **Billing** (rounding unit, due days, leave policy; owners edit). Branch **code** field
+  (2–6 letters/digits, upper-cased; empty on create = suggested).
+- New patterns `MoneyAmount` and `BalancePreview` (on /dev/ui); `lib/billing.ts` loaders; 7 Server Actions.
+- Receipt fonts moved into `packages/receipts/fonts` (static `new URL(…, import.meta.url)`), because Next can't
+  bundle a runtime `require.resolve`; checked in dev, `next build` (fonts in standalone) and `next start`.
+- e2e `m3b-payments` (3 tests): priced group → enroll → cycle 1 → cash payment → both PDFs → settled → Payments
+  page → void → debt back. ~30 new strings in uz/ru/en.
+- Known gaps: the no-JS form path of Radix selects posts an empty value before hydration (seen on settings
+  forms; app-wide, not new). Debtors (nav + page) wait for M3c.
+
+### 2026-10-12 · Dev tool: one owner login for every local center
+- `pnpm dev:access` (`scripts/dev-owner-access.mjs`): local only (refuses non-localhost), creates
+  `+998990000099` / `uteach-owner` if missing and gives it an active owner membership in every center, so one
+  login sees all demo data (switch centers in the top bar). Idempotent; re-run after `pnpm e2e` / `db:reset`.
+  Uses the normal membership model (03: one membership per center), no bypass in the app.
 
 ### 2026-10-12 · M3a billing data layer
 - Migration `20261016090000_m3_billing.sql`: center billing settings, `branches.code`, `accounts` (defaults by

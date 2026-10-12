@@ -5,9 +5,11 @@ import { z } from "zod";
 import { dbErrorKey, fail, fieldErrorsFrom, str, type ActionState } from "@/lib/actions";
 import { getCenterContext } from "@/lib/center";
 import { createClient } from "@/lib/supabase/server";
+import { toDbAmount } from "@/lib/money";
 import {
   intField,
   localeField,
+  moneyField,
   optionalPhoneField,
   optionalText,
   requiredText,
@@ -98,7 +100,50 @@ export async function updateAttendanceSettingsAction(
   return { ok: true };
 }
 
+/** Center settings → Billing (15): rounding unit, due days, the unused-lessons policy. Owners only. */
+export async function updateBillingSettingsAction(
+  _prev: ActionState,
+  form: FormData,
+): Promise<ActionState> {
+  const ctx = await getCenterContext();
+  const parsed = z
+    .object({
+      roundingUnit: moneyField.refine((v) => BigInt(v) > 0n, { error: "validation.amount" }),
+      dueDays: intField(0, 90),
+      leavePolicy: z.enum(["ask", "credit", "no_credit"], { error: "validation.invalid" }),
+    })
+    .safeParse({
+      roundingUnit: str(form, "roundingUnit"),
+      dueDays: str(form, "dueDays"),
+      leavePolicy: str(form, "leavePolicy"),
+    });
+  if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
+
+  const supabase = await createClient();
+  const { data, error } = await supabase
+    .from("centers")
+    .update({
+      rounding_unit_amount: toDbAmount(parsed.data.roundingUnit),
+      payment_due_days: parsed.data.dueDays,
+      leave_credit_policy: parsed.data.leavePolicy,
+    })
+    .eq("id", ctx.center.id)
+    .select("id");
+  if (error) return fail(dbErrorKey(error), form);
+  if (!changed(data)) return fail("db.forbidden", form);
+
+  refresh();
+  return { ok: true };
+}
+
 // --- Branches ----------------------------------------------------------------
+
+/** Receipt-number prefix (15): 2–6 letters or digits, stored upper case; empty = suggested by the database. */
+const branchCodeField = z
+  .string()
+  .trim()
+  .transform((v) => v.toUpperCase())
+  .refine((v) => v === "" || /^[A-Z0-9]{2,6}$/.test(v), { error: "validation.branchCode" });
 
 const branchSchema = z.object({
   name: requiredText(),
@@ -109,12 +154,13 @@ const branchSchema = z.object({
 export async function createBranchAction(_prev: ActionState, form: FormData): Promise<ActionState> {
   const ctx = await getCenterContext();
   const parsed = branchSchema
-    .extend({ phone: optionalPhoneField(ctx.center.countryCode) })
+    .extend({ phone: optionalPhoneField(ctx.center.countryCode), code: branchCodeField })
     .safeParse({
       name: str(form, "name"),
       address: str(form, "address"),
       timezone: str(form, "timezone"),
       phone: str(form, "phone"),
+      code: str(form, "code"),
     });
   if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
 
@@ -125,6 +171,7 @@ export async function createBranchAction(_prev: ActionState, form: FormData): Pr
     address: parsed.data.address,
     phone: parsed.data.phone,
     timezone: parsed.data.timezone,
+    code: parsed.data.code,
   });
   if (error) return fail(dbErrorKey(error), form);
 
@@ -135,13 +182,18 @@ export async function createBranchAction(_prev: ActionState, form: FormData): Pr
 export async function updateBranchAction(_prev: ActionState, form: FormData): Promise<ActionState> {
   const ctx = await getCenterContext();
   const parsed = branchSchema
-    .extend({ id: uuidField, phone: optionalPhoneField(ctx.center.countryCode) })
+    .extend({
+      id: uuidField,
+      phone: optionalPhoneField(ctx.center.countryCode),
+      code: branchCodeField,
+    })
     .safeParse({
       id: str(form, "id"),
       name: str(form, "name"),
       address: str(form, "address"),
       timezone: str(form, "timezone"),
       phone: str(form, "phone"),
+      code: str(form, "code"),
     });
   if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
 
@@ -153,6 +205,8 @@ export async function updateBranchAction(_prev: ActionState, form: FormData): Pr
       address: parsed.data.address,
       phone: parsed.data.phone,
       timezone: parsed.data.timezone,
+      // Empty keeps the code (the trigger would suggest a new one).
+      ...(parsed.data.code ? { code: parsed.data.code } : {}),
     })
     .eq("id", parsed.data.id)
     .select("id");

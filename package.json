@@ -21,7 +21,8 @@
     "db:types": "supabase gen types typescript --local --schema public > packages/db/src/database.types.ts",
     "e2e": "supabase db reset && pnpm --filter @uteach/web e2e",
     "screenshots": "supabase db reset && pnpm --filter @uteach/web screenshots",
-    "db:test:lite": "node scripts/db-test-lite.mjs supabase"
+    "db:test:lite": "node scripts/db-test-lite.mjs supabase",
+    "dev:access": "node scripts/dev-owner-access.mjs"
   },
   "devDependencies": {
     "@electric-sql/pglite": "0.5.8",

@@ -8,6 +8,7 @@ import {
   Settings,
   UsersRound,
   Users,
+  Wallet,
   type LucideIcon,
 } from "lucide-react";
 
@@ -25,6 +26,7 @@ export const NAV_ICONS = {
   schedule: CalendarDays,
   students: GraduationCap,
   attendance: ClipboardCheck,
+  payments: Wallet,
 } satisfies Record<string, LucideIcon>;
 
 export type NavIconName = keyof typeof NAV_ICONS;

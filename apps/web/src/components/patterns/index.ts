@@ -41,6 +41,7 @@ export { FormDialog } from "./form-dialog";
 export { InitialsAvatar, initials, tintFor } from "./initials-avatar";
 export { LessonList, type LessonListItem } from "./lesson-list";
 export { MobileCard, MobileList, MobileRecord } from "./mobile-list";
+export { BalancePreview, MoneyAmount } from "./money";
 export { PageAction, PageHeader, type Crumb } from "./page-header";
 export {
   DEFAULT_PAGE_SIZE,

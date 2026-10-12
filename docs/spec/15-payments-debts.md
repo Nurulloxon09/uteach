@@ -67,7 +67,10 @@ The `calc` jsonb stores every input and step so the UI can show "12 lessons · 6
 - Refunding credit as cash is a separate action (`refund`, 🟨 M8 for online; cash refunds are just recorded).
 
 > PROPOSED (M3a, as built): until M3b's preview lands, the End dialog has a "Credit the unused lessons" checkbox
-> (on) that is sent as `p_credit`. `generate_cycle_charges` runs hourly over every active enrollment (it is
+> (on) that is sent as `p_credit`. (M3b: the dialog now shows "N lessons not taken = X" for the chosen last day;
+> the checkbox appears only with policy `ask` and something to credit, and stays visible until the preview has
+> loaded so nothing is decided silently. With `credit` / `no_credit` it only says what will happen. No separate
+> reason field: the audit log records who chose.) `generate_cycle_charges` runs hourly over every active enrollment (it is
 > idempotent, so no per-center time window is needed). Without a price (no group price, no own price) no charge
 > is created; the job retries every hour.
 
@@ -95,6 +98,15 @@ Percent (`discount_bp`) and/or a fixed amount per cycle, with a required reason.
 - On save: `record_payment` RPC → receipt number `next_receipt_no(branch)` → `{BRANCH_CODE}-{YYYY}-{000123}` → PDF receipt generated (server, localized, center logo) → stored in `receipts/` → `payment_received` notification enqueued to guardians and the student.
 - Receipt: print (80 mm thermal and A4 layouts), download, or send to Telegram.
 - Payments go to the student's overall balance, not to a specific charge. They're allocated **FIFO** (oldest due date first) for display and aging.
+
+> PROPOSED (M3b, as built): the dialog's date is a local day: today = now, an earlier day = 12:00 that day in the
+> student's branch. The success view shows the receipt number and both print links; the student profile shows
+> the balance chip and a **Payments** tab (balance + "Record payment" / "Adjust balance", lesson cycles with
+> lessons used, due date, amount and FIFO status, payments with print/void icons, adjustments with void). Staff
+> with `payments` but not `billing` see the balance and payments only. "Adjust balance" offers correction and
+> write-off; waive is a per-cycle row action; void (payment, charge with optional reissue, adjustment) asks for a
+> reason. The **Payments** page lists a period (this month by default; from/to in the URL) with search by student
+> name or receipt number, method and branch filters and the period total (voided payments excluded).
 
 > PROPOSED (M3 plan): receipts are rendered **on demand** by `/[locale]/receipts/[paymentId]?size=80mm|a4`
 > (staff session, RLS) from the payment row, so a voided payment's receipt says VOID and nothing goes stale;

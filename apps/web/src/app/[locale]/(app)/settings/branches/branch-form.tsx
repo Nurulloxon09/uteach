@@ -20,6 +20,7 @@ type Branch = {
   address: string | null;
   phone: string | null;
   timezone: string;
+  code: string;
 };
 
 function BranchFields({
@@ -49,6 +50,16 @@ function BranchFields({
         inputMode="tel"
         label={t("phone")}
         defaultValue={branch?.phone ?? ""}
+        state={state}
+      />
+      <Field
+        name="code"
+        label={t("code")}
+        hint={t("codeHint")}
+        defaultValue={branch?.code ?? ""}
+        maxLength={6}
+        autoCapitalize="characters"
+        className="max-w-48"
         state={state}
       />
       <TimezoneField

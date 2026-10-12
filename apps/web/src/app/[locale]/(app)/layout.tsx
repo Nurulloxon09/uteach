@@ -35,6 +35,16 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
         { key: "groups", label: t("groups"), href: "/groups", icon: "groups" },
         { key: "schedule", label: t("schedule"), href: "/schedule", icon: "schedule" },
         { key: "attendance", label: t("attendance"), href: "/attendance", icon: "attendance" },
+        ...(ctx.can.billing || ctx.can.payments
+          ? [
+              {
+                key: "payments",
+                label: t("payments"),
+                href: "/payments",
+                icon: "payments",
+              } as const,
+            ]
+          : []),
         ...(ctx.can.manageStaff
           ? [{ key: "staff", label: t("staff"), href: "/staff", icon: "staff" } as const]
           : []),
