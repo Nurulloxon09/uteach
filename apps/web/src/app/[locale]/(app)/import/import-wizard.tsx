@@ -27,6 +27,7 @@ import {
 import { Link } from "@/i18n/navigation";
 import { createBrowserSupabase } from "@/lib/supabase/client";
 import type { Mapping } from "@/lib/import/validate";
+import { cn } from "@/lib/utils";
 import {
   analyzeImportAction,
   checkImportAction,
@@ -38,6 +39,16 @@ import {
 
 const NOT_IN_FILE = "__none__";
 type Stage = "pick" | "map" | "check" | "done";
+/** Where "Open …" goes after an import. */
+const DONE_LINK: Record<
+  ImportKind,
+  { href: string; label: "openGroups" | "openStudents" | "openDebtors" }
+> = {
+  students: { href: "/students", label: "openStudents" },
+  groups: { href: "/groups", label: "openGroups" },
+  enrollments: { href: "/students", label: "openStudents" },
+  opening_balances: { href: "/debtors", label: "openDebtors" },
+};
 
 /**
  * Import flow (10): pick a kind and a file (template download per kind) → map columns (auto-guessed) →
@@ -162,7 +173,10 @@ export function ImportWizard({
             />
             <a
               href={`/${locale}/import/template/${kind}`}
-              className={buttonVariants({ variant: "outline" })}
+              className={cn(
+                buttonVariants({ variant: "outline" }),
+                "h-auto min-h-11 max-w-full whitespace-normal py-2",
+              )}
               download
             >
               <Download />
@@ -291,11 +305,8 @@ export function ImportWizard({
                 <Button variant="outline" onClick={reset}>
                   {t("another")}
                 </Button>
-                <Link
-                  href={kind === "groups" ? "/groups" : "/students"}
-                  className={buttonVariants()}
-                >
-                  {t(kind === "groups" ? "openGroups" : "openStudents")}
+                <Link href={DONE_LINK[kind].href} className={buttonVariants()}>
+                  {t(DONE_LINK[kind].label)}
                 </Link>
               </div>
             }

@@ -10,15 +10,19 @@ export async function generateMetadata() {
   return { title: t("title") };
 }
 
-const KINDS: ImportKind[] = ["students", "groups", "enrollments"];
-
-/** Excel import (10): students, groups, enrollments. Needs the `import` flag. */
+/** Excel import (10): students, groups, enrollments; opening balances (15) also need `billing` and `adjustments`. */
 export default async function ImportPage({ searchParams }: PageProps<"/[locale]/import">) {
   const ctx = await requireAdminContext();
   if (!ctx.can.import) return redirect({ href: "/home", locale: await getLocale() });
   const t = await getTranslations("import");
   const tn = await getTranslations("nav");
   const tc = await getTranslations("common");
+  const KINDS: ImportKind[] = [
+    "students",
+    "groups",
+    "enrollments",
+    ...(ctx.can.billing && ctx.can.adjustments ? (["opening_balances"] as const) : []),
+  ];
   const raw = await searchParams;
   const wanted = Array.isArray(raw.kind) ? raw.kind[0] : raw.kind;
   const kind = KINDS.find((k) => k === wanted) ?? "students";

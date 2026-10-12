@@ -18,7 +18,7 @@ import { createClient } from "@/lib/supabase/server";
  */
 
 type Fail = { ok: false; error: string };
-const KINDS = ["students", "groups", "enrollments"] as const;
+const KINDS = ["students", "groups", "enrollments", "opening_balances"] as const;
 const kindField = z.enum(KINDS);
 
 export async function startImportAction(
@@ -27,6 +27,8 @@ export async function startImportAction(
 ): Promise<{ ok: true; jobId: string; path: string } | Fail> {
   const ctx = await getCenterContext();
   if (!kindField.safeParse(kind).success) return { ok: false, error: "import.errors.invalid" };
+  if (kind === "opening_balances" && !(ctx.can.billing && ctx.can.adjustments))
+    return { ok: false, error: "errors.db.forbidden" };
   const ext = /\.(xlsx|csv)$/i.exec(fileName)?.[1]?.toLowerCase();
   if (!ext) return { ok: false, error: "import.errors.fileType" };
 
@@ -111,7 +113,12 @@ async function validateJob(jobId: string, mapping: Mapping) {
   if (!loaded) return { error: "errors.db.not_found" } as const;
   if (!loaded.sheet) return { error: "import.errors.unreadable" } as const;
   const kind = loaded.job.kind as ImportKind;
-  const result = validateImport(kind, loaded.sheet as Sheet, mapping, await loadImportContext(ctx));
+  const result = validateImport(
+    kind,
+    loaded.sheet as Sheet,
+    mapping,
+    await loadImportContext(ctx, kind),
+  );
   return { kind, result } as const;
 }
 
@@ -164,12 +171,14 @@ export async function runImportAction(
   if ("error" in validated) return { ok: false, error: validated.error ?? "import.errors.invalid" };
   if (validated.result.issues.length) return { ok: false, error: "import.errors.hasIssues" };
 
-  const rpc =
-    validated.kind === "students"
-      ? "import_students"
-      : validated.kind === "groups"
-        ? "import_groups"
-        : "import_enrollments";
+  const rpc = (
+    {
+      students: "import_students",
+      groups: "import_groups",
+      enrollments: "import_enrollments",
+      opening_balances: "import_opening_balances",
+    } as const
+  )[validated.kind];
   const { data, error } = await supabase.rpc(rpc, {
     p_job_id: jobId,
     p_rows: validated.result.payload as never,
@@ -184,6 +193,7 @@ export async function runImportAction(
 
   revalidatePath("/[locale]/students", "page");
   revalidatePath("/[locale]/groups", "layout");
+  if (validated.kind === "opening_balances") revalidatePath("/[locale]/debtors", "page");
   const counts = (data ?? {}) as { created?: number; skipped?: number };
   return { ok: true, created: counts.created ?? 0, skipped: counts.skipped ?? 0 };
 }

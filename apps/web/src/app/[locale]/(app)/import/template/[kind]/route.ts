@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 import { templateHeaders } from "@/lib/import/labels";
 import { templateWorkbook } from "@/lib/import/read";
 
-const KINDS: ImportKind[] = ["students", "groups", "enrollments"];
+const KINDS: ImportKind[] = ["students", "groups", "enrollments", "opening_balances"];
 
 /** The template file of an import kind: headers in the user's language, plus a sheet of filling hints. */
 export async function GET(

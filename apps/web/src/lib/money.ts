@@ -20,3 +20,18 @@ export function toDbAmount(minor: string | bigint): number {
   if (!Number.isSafeInteger(n)) throw new RangeError(`amount out of range: ${value}`);
   return n;
 }
+
+/**
+ * Minor units → a spreadsheet cell in major units (Excel exports). Whole amounts become numbers so Excel can
+ * sum them; an amount with a fraction stays a decimal string rather than becoming a float. Display only.
+ */
+export function toSheetAmount(minor: string | bigint, minorDigits = 2): number | string {
+  const value = BigInt(minor);
+  const unit = 10n ** BigInt(minorDigits);
+  if (value % unit === 0n) return toDbAmount(value / unit);
+  const abs = value < 0n ? -value : value;
+  const fraction = String(abs % unit)
+    .padStart(minorDigits, "0")
+    .replace(/0+$/, "");
+  return `${value < 0n ? "-" : ""}${abs / unit}.${fraction}`;
+}

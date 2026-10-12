@@ -45,6 +45,9 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
               } as const,
             ]
           : []),
+        ...(ctx.can.billing
+          ? [{ key: "debtors", label: t("debtors"), href: "/debtors", icon: "debtors" } as const]
+          : []),
         ...(ctx.can.manageStaff
           ? [{ key: "staff", label: t("staff"), href: "/staff", icon: "staff" } as const]
           : []),

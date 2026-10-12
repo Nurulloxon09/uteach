@@ -34,6 +34,7 @@ export const IMPORT_FIELDS = {
     "cycleLessons",
   ],
   enrollments: ["studentRef", "studentPhone", "studentName", "group", "branch", "startDate"],
+  opening_balances: ["studentRef", "studentPhone", "studentName", "amount", "note"],
 } as const;
 
 export type ImportKind = keyof typeof IMPORT_FIELDS;
@@ -43,6 +44,7 @@ export const REQUIRED_FIELDS: { [K in ImportKind]: readonly ImportField<K>[] } =
   students: ["fullName"],
   groups: ["name", "course", "startDate"],
   enrollments: ["group"],
+  opening_balances: ["amount"],
 };
 
 /** Common header spellings beyond the template's own (template headers come from the i18n catalogs). */
@@ -87,6 +89,8 @@ export const HEADER_ALIASES: Record<string, string[]> = {
   studentPhone: ["student phone", "phone", "telefon", "телефон"],
   studentName: ["student", "student name", "name", "fio", "фио", "ism"],
   group: ["group", "group name", "guruh", "группа"],
+  amount: ["balance", "amount", "sum", "summa", "qoldiq", "balans", "сумма", "баланс", "остаток"],
+  note: ["note", "comment", "izoh", "комментарий", "примечание"],
 };
 
 /** Lower-case, apostrophes and punctuation removed, single spaces: "F.I.Sh." → "fish". */
