@@ -18,6 +18,7 @@
     "@uteach/config": "workspace:*",
     "@uteach/core": "workspace:*",
     "eslint": "9.39.5",
+    "postgres": "3.4.7",
     "typescript": "5.9.3",
     "vitest": "5.0.3"
   }

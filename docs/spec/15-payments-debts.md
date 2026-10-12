@@ -66,6 +66,11 @@ The `calc` jsonb stores every input and step so the UI can show "12 lessons · 6
 - **Transfer** to another group always credits the unused lessons of the old group, then starts cycle 1 in the new group.
 - Refunding credit as cash is a separate action (`refund`, 🟨 M8 for online; cash refunds are just recorded).
 
+> PROPOSED (M3a, as built): until M3b's preview lands, the End dialog has a "Credit the unused lessons" checkbox
+> (on) that is sent as `p_credit`. `generate_cycle_charges` runs hourly over every active enrollment (it is
+> idempotent, so no per-center time window is needed). Without a price (no group price, no own price) no charge
+> is created; the job retries every hour.
+
 > PROPOSED (M3 plan): `end_enrollment(…, p_credit boolean default null)`: with policy `ask` the End dialog must
 > send true or false (the RPC refuses null with `credit_choice_required`); with `credit` / `no_credit` the
 > parameter is ignored. The dialog shows "N unused lessons = X" from the same SQL the RPC uses

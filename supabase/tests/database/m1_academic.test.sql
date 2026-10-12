@@ -567,8 +567,9 @@ select is((select transferred_to_enrollment_id from public.enrollments where id 
   'the old enrollment points at the new one');
 
 select pg_temp.login(pg_temp.id('admin_s'));
+-- Since M3 the default policy `ask` needs a credit choice when a started cycle has unused lessons.
 select lives_ok(
-  format($$ select public.end_enrollment(%L, %L, 'dropped') $$, pg_temp.id('e2'), pg_temp.d('today') - 1),
+  format($$ select public.end_enrollment(%L, %L, 'dropped', false) $$, pg_temp.id('e2'), pg_temp.d('today') - 1),
   'end an enrollment yesterday'
 );
 select pg_temp.as_admin();

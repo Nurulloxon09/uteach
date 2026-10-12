@@ -159,7 +159,21 @@
       "attendance_too_early": "Davomatni dars boshlanishidan 30 daqiqa oldin belgilash mumkin.",
       "attendance_window_closed": "Bu davomatni tuzatish muddati oʻtgan. Administratordan soʻrang.",
       "student_not_expected": "Dars kunida bu oʻquvchi guruhda emas.",
-      "invalid_attendance": "Baʼzi belgilar notoʻgʻri. Holatlar va kechikish daqiqalarini (1–240) tekshiring."
+      "invalid_attendance": "Baʼzi belgilar notoʻgʻri. Holatlar va kechikish daqiqalarini (1–240) tekshiring.",
+      "credit_choice_required": "Foydalanilmagan darslarni qaytarish-qaytarmaslikni tanlang.",
+      "void_reason_required": "Bekor qilish sababini yozing.",
+      "already_voided": "Bu allaqachon bekor qilingan.",
+      "reason_required": "Sababni yozing.",
+      "nothing_to_waive": "Bu hisob boʻyicha qarz yoʻq.",
+      "nothing_to_write_off": "Oʻquvchining qarzi yoʻq.",
+      "invalid_amount": "Summani tekshiring.",
+      "invalid_account": "Shu filial hisobini tanlang.",
+      "invalid_method": "Bu toʻlov usuli mavjud emas.",
+      "invalid_adjustment": "Bunday tuzatishni bu yerda qoʻshib boʻlmaydi.",
+      "backdate_limit": "7 kundan eski toʻlovni faqat bekor qilish huquqi bor xodim kirita oladi.",
+      "financial_rows_permanent": "Moliyaviy yozuvlarni oʻzgartirib yoki oʻchirib boʻlmaydi. Bekor qilib, qaytadan kiriting.",
+      "currency_locked": "Birinchi hisobdan keyin valyutani oʻzgartirib boʻlmaydi.",
+      "import_student_not_found": "Fayldagi oʻquvchi topilmadi. Ism va telefonlarni tekshiring."
     },
     "groupHasStudents": "Arxivlashdan oldin guruh oʻquvchilarining oʻqishini tugating yoki ularni oʻtkazing.",
     "duplicateStudent": "Bunday ism yoki telefonli oʻquvchi allaqachon bor. Roʻyxatni tekshiring yoki baribir qoʻshish uchun yana saqlang."
@@ -1023,7 +1037,9 @@
     "rosterCount": "{count} ta oʻquvchi",
     "addStudent": "Oʻquvchi qoʻshish",
     "rosterEmpty": "Bu guruhda hali oʻquvchi yoʻq",
-    "rosterEmptyHint": "Roʻyxatingizdan oʻquvchi qoʻshing."
+    "rosterEmptyHint": "Roʻyxatingizdan oʻquvchi qoʻshing.",
+    "creditUnused": "Foydalanilmagan darslarni qaytarish",
+    "creditUnusedHint": "Oʻquvchi sikl oʻrtasida ketsa, oʻtilmagan darslar balansiga qaytariladi (markaz har safar soʻrasa)."
   },
   "import": {
     "title": "Exceldan import",

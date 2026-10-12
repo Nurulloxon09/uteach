@@ -5,7 +5,33 @@ export type Database = {
   
   "public": {
           Tables: {
-            "attendance": {
+            "accounts": {
+                  Row: {
+                    "branch_id": string | null,"center_id": string,"created_at": string,"id": string,"is_active": boolean,"kind": Database["public"]['Enums']["account_kind"],"name": string | null,"provider": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "branch_id"?: string | null,"center_id": string,"created_at"?: string,"id"?: string,"is_active"?: boolean,"kind": Database["public"]['Enums']["account_kind"],"name"?: string | null,"provider"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "branch_id"?: string | null,"center_id"?: string,"created_at"?: string,"id"?: string,"is_active"?: boolean,"kind"?: Database["public"]['Enums']["account_kind"],"name"?: string | null,"provider"?: string | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "accounts_center_id_branch_id_fkey"
+      columns: ["center_id","branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "accounts_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"attendance": {
                   Row: {
                     "center_id": string,"created_at": string,"enrollment_id": string,"group_id": string,"id": string,"last_edited_at": string | null,"last_edited_by": string | null,"late_minutes": number | null,"lesson_id": string,"marked_at": string,"marked_by": string,"note": string | null,"status": Database["public"]['Enums']["attendance_status"],"student_id": string,"updated_at": string
                   }
@@ -35,6 +61,18 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "lessons"
       referencedColumns: ["center_id","group_id","id"]
+    },{
+      foreignKeyName: "attendance_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "attendance_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
     },{
       foreignKeyName: "attendance_center_id_student_id_fkey"
       columns: ["center_id","student_id"]
@@ -81,16 +119,90 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
-                },"branches": {
+                },"balance_adjustments": {
                   Row: {
-                    "address": string | null,"archived_at": string | null,"center_id": string,"created_at": string,"id": string,"name": string,"phone": string | null,"timezone": string,"updated_at": string
+                    "amount": number,"center_id": string,"charge_id": string | null,"created_at": string,"created_by": string | null,"details": NonNullable<Json>,"enrollment_id": string | null,"id": string,"kind": Database["public"]['Enums']["adjustment_kind"],"reason": string | null,"student_id": string,"updated_at": string,"void_reason": string | null,"voided_at": string | null,"voided_by": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "address"?: string | null,"archived_at"?: string | null,"center_id": string,"created_at"?: string,"id"?: string,"name": string,"phone"?: string | null,"timezone": string,"updated_at"?: string
+                    "amount": number,"center_id": string,"charge_id"?: string | null,"created_at"?: string,"created_by"?: string | null,"details"?: NonNullable<Json>,"enrollment_id"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["adjustment_kind"],"reason"?: string | null,"student_id": string,"updated_at"?: string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null
                   }
                   Update: {
-                    "address"?: string | null,"archived_at"?: string | null,"center_id"?: string,"created_at"?: string,"id"?: string,"name"?: string,"phone"?: string | null,"timezone"?: string,"updated_at"?: string
+                    "amount"?: number,"center_id"?: string,"charge_id"?: string | null,"created_at"?: string,"created_by"?: string | null,"details"?: NonNullable<Json>,"enrollment_id"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["adjustment_kind"],"reason"?: string | null,"student_id"?: string,"updated_at"?: string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "balance_adjustments_center_id_charge_id_fkey"
+      columns: ["center_id","charge_id"]
+isOneToOne: false
+      referencedRelation: "charge_cycles"
+      referencedColumns: ["center_id","charge_id"]
+    },{
+      foreignKeyName: "balance_adjustments_center_id_charge_id_fkey"
+      columns: ["center_id","charge_id"]
+isOneToOne: false
+      referencedRelation: "charges"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "balance_adjustments_center_id_enrollment_id_fkey"
+      columns: ["center_id","enrollment_id"]
+isOneToOne: false
+      referencedRelation: "enrollments"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "balance_adjustments_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "balance_adjustments_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "balance_adjustments_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "balance_adjustments_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "balance_adjustments_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "balance_adjustments_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "balance_adjustments_voided_by_fkey"
+      columns: ["voided_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"branches": {
+                  Row: {
+                    "address": string | null,"archived_at": string | null,"center_id": string,"code": string,"created_at": string,"id": string,"name": string,"phone": string | null,"timezone": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "address"?: string | null,"archived_at"?: string | null,"center_id": string,"code"?: string,"created_at"?: string,"id"?: string,"name": string,"phone"?: string | null,"timezone": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "address"?: string | null,"archived_at"?: string | null,"center_id"?: string,"code"?: string,"created_at"?: string,"id"?: string,"name"?: string,"phone"?: string | null,"timezone"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -103,17 +215,91 @@ isOneToOne: false
                   ]
                 },"centers": {
                   Row: {
-                    "absence_alert_delay_min": number,"archived_at": string | null,"attendance_edit_hours": number,"country_code": string,"created_at": string,"currency": string,"default_locale": string,"id": string,"late_alert_enabled": boolean,"logo_path": string | null,"name": string,"quiet_hours_end": string,"quiet_hours_start": string,"settings": NonNullable<Json>,"slug": string,"status": Database["public"]['Enums']["center_status"],"timezone": string,"trial_ends_at": string | null,"updated_at": string
+                    "absence_alert_delay_min": number,"archived_at": string | null,"attendance_edit_hours": number,"billing_mode": Database["public"]['Enums']["billing_mode"],"country_code": string,"created_at": string,"currency": string,"default_locale": string,"id": string,"late_alert_enabled": boolean,"leave_credit_policy": Database["public"]['Enums']["leave_credit_policy"],"logo_path": string | null,"name": string,"payment_due_days": number,"quiet_hours_end": string,"quiet_hours_start": string,"rounding_unit_amount": number,"settings": NonNullable<Json>,"slug": string,"status": Database["public"]['Enums']["center_status"],"timezone": string,"trial_ends_at": string | null,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"id"?: string,"late_alert_enabled"?: boolean,"logo_path"?: string | null,"name": string,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"settings"?: NonNullable<Json>,"slug": string,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
+                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"billing_mode"?: Database["public"]['Enums']["billing_mode"],"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"id"?: string,"late_alert_enabled"?: boolean,"leave_credit_policy"?: Database["public"]['Enums']["leave_credit_policy"],"logo_path"?: string | null,"name": string,"payment_due_days"?: number,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"rounding_unit_amount"?: number,"settings"?: NonNullable<Json>,"slug": string,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
                   }
                   Update: {
-                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"id"?: string,"late_alert_enabled"?: boolean,"logo_path"?: string | null,"name"?: string,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"settings"?: NonNullable<Json>,"slug"?: string,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
+                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"billing_mode"?: Database["public"]['Enums']["billing_mode"],"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"id"?: string,"late_alert_enabled"?: boolean,"leave_credit_policy"?: Database["public"]['Enums']["leave_credit_policy"],"logo_path"?: string | null,"name"?: string,"payment_due_days"?: number,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"rounding_unit_amount"?: number,"settings"?: NonNullable<Json>,"slug"?: string,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
                   }
                   Relationships: [
                     
+                  ]
+                },"charges": {
+                  Row: {
+                    "amount": number,"calc": NonNullable<Json>,"center_id": string,"created_at": string,"created_by": string | null,"cycle_lessons": number | null,"cycle_no": number | null,"cycle_start_date": string,"discount_amount": number,"due_date": string,"enrollment_id": string | null,"id": string,"is_manual": boolean,"price_amount": number,"reissue_of_id": string | null,"status": Database["public"]['Enums']["charge_status"],"student_id": string,"updated_at": string,"void_reason": string | null,"voided_at": string | null,"voided_by": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount": number,"calc"?: NonNullable<Json>,"center_id": string,"created_at"?: string,"created_by"?: string | null,"cycle_lessons"?: number | null,"cycle_no"?: number | null,"cycle_start_date": string,"discount_amount"?: number,"due_date": string,"enrollment_id"?: string | null,"id"?: string,"is_manual"?: boolean,"price_amount": number,"reissue_of_id"?: string | null,"status"?: Database["public"]['Enums']["charge_status"],"student_id": string,"updated_at"?: string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null
+                  }
+                  Update: {
+                    "amount"?: number,"calc"?: NonNullable<Json>,"center_id"?: string,"created_at"?: string,"created_by"?: string | null,"cycle_lessons"?: number | null,"cycle_no"?: number | null,"cycle_start_date"?: string,"discount_amount"?: number,"due_date"?: string,"enrollment_id"?: string | null,"id"?: string,"is_manual"?: boolean,"price_amount"?: number,"reissue_of_id"?: string | null,"status"?: Database["public"]['Enums']["charge_status"],"student_id"?: string,"updated_at"?: string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "charges_center_id_enrollment_id_fkey"
+      columns: ["center_id","enrollment_id"]
+isOneToOne: false
+      referencedRelation: "enrollments"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "charges_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "charges_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "charges_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "charges_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "charges_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "charges_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "charges_reissue_of_id_fkey"
+      columns: ["reissue_of_id"]
+isOneToOne: false
+      referencedRelation: "charge_cycles"
+      referencedColumns: ["charge_id"]
+    },{
+      foreignKeyName: "charges_reissue_of_id_fkey"
+      columns: ["reissue_of_id"]
+isOneToOne: false
+      referencedRelation: "charges"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "charges_voided_by_fkey"
+      columns: ["voided_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"courses": {
                   Row: {
@@ -191,6 +377,18 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "groups"
       referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "enrollments_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "enrollments_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
     },{
       foreignKeyName: "enrollments_center_id_student_id_fkey"
       columns: ["center_id","student_id"]
@@ -545,6 +743,18 @@ isOneToOne: false
       foreignKeyName: "notification_outbox_center_id_student_id_fkey"
       columns: ["center_id","student_id"]
 isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "notification_outbox_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "notification_outbox_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
       referencedRelation: "student_overview"
       referencedColumns: ["center_id","id"]
     },{
@@ -581,6 +791,74 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"payments": {
+                  Row: {
+                    "account_id": string,"amount": number,"branch_id": string,"center_id": string,"created_at": string,"id": string,"method": Database["public"]['Enums']["payment_method"],"note": string | null,"paid_at": string,"payer_name": string | null,"receipt_no": string,"receipt_path": string | null,"received_by": string | null,"student_id": string,"updated_at": string,"void_reason": string | null,"voided_at": string | null,"voided_by": string | null
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "account_id": string,"amount": number,"branch_id": string,"center_id": string,"created_at"?: string,"id"?: string,"method": Database["public"]['Enums']["payment_method"],"note"?: string | null,"paid_at"?: string,"payer_name"?: string | null,"receipt_no": string,"receipt_path"?: string | null,"received_by"?: string | null,"student_id": string,"updated_at"?: string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null
+                  }
+                  Update: {
+                    "account_id"?: string,"amount"?: number,"branch_id"?: string,"center_id"?: string,"created_at"?: string,"id"?: string,"method"?: Database["public"]['Enums']["payment_method"],"note"?: string | null,"paid_at"?: string,"payer_name"?: string | null,"receipt_no"?: string,"receipt_path"?: string | null,"received_by"?: string | null,"student_id"?: string,"updated_at"?: string,"void_reason"?: string | null,"voided_at"?: string | null,"voided_by"?: string | null
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "payments_center_id_account_id_fkey"
+      columns: ["center_id","account_id"]
+isOneToOne: false
+      referencedRelation: "accounts"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "payments_center_id_branch_id_fkey"
+      columns: ["center_id","branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "payments_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payments_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "payments_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "payments_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "payments_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "payments_received_by_fkey"
+      columns: ["received_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "payments_voided_by_fkey"
+      columns: ["voided_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"profiles": {
                   Row: {
                     "created_at": string,"full_name": string,"id": string,"is_super_admin": boolean,"locale": string,"phone": string,"updated_at": string
@@ -594,6 +872,32 @@ isOneToOne: false
                   }
                   Relationships: [
                     
+                  ]
+                },"receipt_sequences": {
+                  Row: {
+                    "branch_id": string,"center_id": string,"next_no": number,"year": number
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "branch_id": string,"center_id": string,"next_no"?: number,"year": number
+                  }
+                  Update: {
+                    "branch_id"?: string,"center_id"?: string,"next_no"?: number,"year"?: number
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "receipt_sequences_center_id_branch_id_fkey"
+      columns: ["center_id","branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "receipt_sequences_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"rooms": {
                   Row: {
@@ -687,6 +991,18 @@ isOneToOne: false
       foreignKeyName: "student_guardians_center_id_student_id_fkey"
       columns: ["center_id","student_id"]
 isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "student_guardians_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "student_guardians_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
       referencedRelation: "student_overview"
       referencedColumns: ["center_id","id"]
     },{
@@ -715,6 +1031,18 @@ isOneToOne: false
 isOneToOne: false
       referencedRelation: "centers"
       referencedColumns: ["id"]
+    },{
+      foreignKeyName: "student_notes_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "student_notes_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
     },{
       foreignKeyName: "student_notes_center_id_student_id_fkey"
       columns: ["center_id","student_id"]
@@ -795,6 +1123,18 @@ isOneToOne: false
       foreignKeyName: "telegram_links_center_id_student_id_fkey"
       columns: ["center_id","student_id"]
 isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "telegram_links_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "telegram_links_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
       referencedRelation: "student_overview"
       referencedColumns: ["center_id","id"]
     },{
@@ -808,7 +1148,99 @@ isOneToOne: false
                 }
           }
           Views: {
-            "student_overview": {
+            "charge_cycles": {
+                  Row: {
+                    "amount": number | null,"center_id": string | null,"charge_id": string | null,"cycle_lessons": number | null,"cycle_no": number | null,"cycle_start_date": string | null,"due_date": string | null,"enrollment_id": string | null,"expected_last_date": string | null,"first_lesson_date": string | null,"lessons_left": number | null,"lessons_used": number | null,"student_id": string | null
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    {
+      foreignKeyName: "charges_center_id_enrollment_id_fkey"
+      columns: ["center_id","enrollment_id"]
+isOneToOne: false
+      referencedRelation: "enrollments"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "charges_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "charges_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "charges_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "charges_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "charges_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["center_id","id"]
+    }
+                  ]
+                },"charge_debts": {
+                  Row: {
+                    "adjustment_id": string | null,"amount": number | null,"center_id": string | null,"charge_id": string | null,"covered": number | null,"days_overdue": number | null,"due_date": string | null,"item_id": string | null,"item_kind": string | null,"outstanding": number | null,"student_id": string | null
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    
+                  ]
+                },"debtors": {
+                  Row: {
+                    "aging_bucket": string | null,"branch_id": string | null,"center_id": string | null,"debt": number | null,"is_overdue": boolean | null,"max_days_overdue": number | null,"oldest_due_date": string | null,"student_id": string | null
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    {
+      foreignKeyName: "students_center_id_branch_id_fkey"
+      columns: ["center_id","branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "students_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"student_balances": {
+                  Row: {
+                    "adjusted": number | null,"balance": number | null,"branch_id": string | null,"center_id": string | null,"charged": number | null,"paid": number | null,"student_id": string | null
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    {
+      foreignKeyName: "students_center_id_branch_id_fkey"
+      columns: ["center_id","branch_id"]
+isOneToOne: false
+      referencedRelation: "branches"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "students_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"student_overview": {
                   Row: {
                     "archived_at": string | null,"birth_date": string | null,"branch_id": string | null,"center_id": string | null,"course_ids": (string)[] | null,"created_at": string | null,"external_ref": string | null,"full_name": string | null,"gender": string | null,"group_ids": (string)[] | null,"id": string | null,"is_active": boolean | null,"phone": string | null,"school": string | null,"search_text": string | null
                   }
@@ -839,6 +1271,9 @@ isOneToOne: false
           Functions: {
             "accept_invite":
 { Args: { "p_token": string }; Returns: string
+                           },
+"add_adjustment":
+{ Args: { "p_amount": number,"p_charge_id"?: string,"p_kind": Database["public"]['Enums']["adjustment_kind"],"p_reason": string,"p_student_id": string }; Returns: string
                            },
 "add_holiday":
 { Args: { "p_branch_id"?: string,"p_center_id": string,"p_date": string,"p_name": string,"p_notify"?: boolean }; Returns: number
@@ -884,7 +1319,7 @@ isOneToOne: false
 { Args: { "p_duration_minutes": number,"p_for_lesson_id"?: string,"p_group_id": string,"p_is_billable"?: boolean,"p_notify"?: boolean,"p_room_id"?: string,"p_starts_at": string,"p_teacher_membership_id"?: string }; Returns: string
                            },
 "end_enrollment":
-{ Args: { "p_end_date": string,"p_enrollment_id": string,"p_reason": Database["public"]['Enums']["enrollment_end_reason"] }; Returns: undefined
+{ Args: { "p_credit"?: boolean,"p_end_date": string,"p_enrollment_id": string,"p_reason": Database["public"]['Enums']["enrollment_end_reason"] }; Returns: undefined
                            },
 "enroll":
 { Args: { "p_discount_amount"?: number,"p_discount_bp"?: number,"p_discount_reason"?: string,"p_group_id": string,"p_price_override_amount"?: number,"p_start_date"?: string,"p_student_id": string }; Returns: string
@@ -911,6 +1346,9 @@ isOneToOne: false
 "import_groups":
 { Args: { "p_job_id": string,"p_rows": Json }; Returns: Json
                            },
+"import_opening_balances":
+{ Args: { "p_job_id": string,"p_rows": Json }; Returns: Json
+                           },
 "import_students":
 { Args: { "p_job_id": string,"p_rows": Json }; Returns: Json
                            },
@@ -929,6 +1367,9 @@ isOneToOne: false
                            },
 "next_lesson_date":
 { Args: { "p_group_id": string }; Returns: string
+                           },
+"record_payment":
+{ Args: { "p_account_id"?: string,"p_amount": number,"p_branch_id"?: string,"p_method": Database["public"]['Enums']["payment_method"],"p_note"?: string,"p_paid_at"?: string,"p_payer_name"?: string,"p_student_id": string }; Returns: Json
                            },
 "regenerate_invite":
 { Args: { "p_membership_id": string }; Returns: string
@@ -951,6 +1392,9 @@ isOneToOne: false
 "set_lesson_topic":
 { Args: { "p_lesson_id": string,"p_topic": string }; Returns: undefined
                            },
+"student_balance":
+{ Args: { "p_student_id": string }; Returns: number
+                           },
 "substitute_teacher":
 { Args: { "p_lesson_id": string,"p_membership_id": string }; Returns: undefined
                            },
@@ -960,15 +1404,29 @@ isOneToOne: false
 "unlink_guardian":
 { Args: { "p_guardian_id": string,"p_student_id": string }; Returns: undefined
                            },
+"unused_lessons_preview":
+{ Args: { "p_end_date": string,"p_enrollment_id": string }; Returns: {
+              "credit": number,"policy": Database["public"]['Enums']["leave_credit_policy"],"unused": number
+            }[]
+                           },
 "update_guardian":
 { Args: { "p_full_name": string,"p_guardian_id": string,"p_locale"?: string,"p_phone": string }; Returns: undefined
                            },
 "upsert_guardian":
 { Args: { "p_full_name": string,"p_is_primary"?: boolean,"p_phone": string,"p_receives_billing"?: boolean,"p_receives_notifications"?: boolean,"p_relation"?: string,"p_student_id": string }; Returns: Json
+                           },
+"void_adjustment":
+{ Args: { "p_adjustment_id": string,"p_reason": string }; Returns: undefined
+                           },
+"void_charge":
+{ Args: { "p_charge_id": string,"p_reason": string,"p_reissue"?: boolean }; Returns: string
+                           },
+"void_payment":
+{ Args: { "p_payment_id": string,"p_reason": string }; Returns: undefined
                            }
           }
           Enums: {
-            "attendance_status": "present"|"late"|"absent"|"excused","center_status": "trial"|"active"|"past_due"|"read_only"|"cancelled","enrollment_end_reason": "completed"|"dropped"|"transferred"|"moved_level","enrollment_status": "active"|"frozen"|"ended","group_status": "forming"|"active"|"finished","lesson_status": "scheduled"|"held"|"cancelled","membership_role": "owner"|"admin"|"teacher","membership_status": "invited"|"active"|"disabled","notification_channel": "telegram"|"sms"|"whatsapp"|"email","outbox_status": "pending"|"sending"|"sent"|"failed"|"cancelled"|"skipped"
+            "account_kind": "cash"|"terminal"|"bank"|"online","adjustment_kind": "opening_balance"|"waive"|"write_off"|"correction"|"refund"|"promo"|"unused_lessons","attendance_status": "present"|"late"|"absent"|"excused","billing_mode": "lesson_cycle"|"calendar_month","center_status": "trial"|"active"|"past_due"|"read_only"|"cancelled","charge_status": "open"|"void","enrollment_end_reason": "completed"|"dropped"|"transferred"|"moved_level","enrollment_status": "active"|"frozen"|"ended","group_status": "forming"|"active"|"finished","leave_credit_policy": "ask"|"credit"|"no_credit","lesson_status": "scheduled"|"held"|"cancelled","membership_role": "owner"|"admin"|"teacher","membership_status": "invited"|"active"|"disabled","notification_channel": "telegram"|"sms"|"whatsapp"|"email","outbox_status": "pending"|"sending"|"sent"|"failed"|"cancelled"|"skipped","payment_method": "cash"|"card"|"transfer"|"online"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1084,7 +1542,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "attendance_status": ["present", "late", "absent", "excused"],"center_status": ["trial", "active", "past_due", "read_only", "cancelled"],"enrollment_end_reason": ["completed", "dropped", "transferred", "moved_level"],"enrollment_status": ["active", "frozen", "ended"],"group_status": ["forming", "active", "finished"],"lesson_status": ["scheduled", "held", "cancelled"],"membership_role": ["owner", "admin", "teacher"],"membership_status": ["invited", "active", "disabled"],"notification_channel": ["telegram", "sms", "whatsapp", "email"],"outbox_status": ["pending", "sending", "sent", "failed", "cancelled", "skipped"]
+            "account_kind": ["cash", "terminal", "bank", "online"],"adjustment_kind": ["opening_balance", "waive", "write_off", "correction", "refund", "promo", "unused_lessons"],"attendance_status": ["present", "late", "absent", "excused"],"billing_mode": ["lesson_cycle", "calendar_month"],"center_status": ["trial", "active", "past_due", "read_only", "cancelled"],"charge_status": ["open", "void"],"enrollment_end_reason": ["completed", "dropped", "transferred", "moved_level"],"enrollment_status": ["active", "frozen", "ended"],"group_status": ["forming", "active", "finished"],"leave_credit_policy": ["ask", "credit", "no_credit"],"lesson_status": ["scheduled", "held", "cancelled"],"membership_role": ["owner", "admin", "teacher"],"membership_status": ["invited", "active", "disabled"],"notification_channel": ["telegram", "sms", "whatsapp", "email"],"outbox_status": ["pending", "sending", "sent", "failed", "cancelled", "skipped"],"payment_method": ["cash", "card", "transfer", "online"]
           }
         }
 } as const

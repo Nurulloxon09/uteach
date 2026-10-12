@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { dbErrorKey, fail, fieldErrorsFrom, str, type ActionState } from "@/lib/actions";
 import { getCenterContext } from "@/lib/center";
+import { toDbAmount } from "@/lib/money";
 import { createClient } from "@/lib/supabase/server";
 import {
   optionalIntField,
@@ -54,7 +55,7 @@ export async function createCourseAction(_prev: ActionState, form: FormData): Pr
       // Money is written only by staff who can see it.
       default_price_amount:
         ctx.can.billing && parsed.data.defaultPrice !== null
-          ? Number(parsed.data.defaultPrice)
+          ? toDbAmount(parsed.data.defaultPrice)
           : null,
       description: parsed.data.description,
     })
@@ -84,7 +85,7 @@ export async function updateCourseAction(_prev: ActionState, form: FormData): Pr
       ...(ctx.can.billing
         ? {
             default_price_amount:
-              parsed.data.defaultPrice !== null ? Number(parsed.data.defaultPrice) : null,
+              parsed.data.defaultPrice !== null ? toDbAmount(parsed.data.defaultPrice) : null,
           }
         : {}),
     })

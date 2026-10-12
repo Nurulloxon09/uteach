@@ -29,6 +29,11 @@ These are non-negotiable. A PR that breaks one of these is wrong even if it work
 - Financial rows are **never deleted or updated in place** after creation (except charge recalculation, which goes through the RPC and is audited). Mistakes are voided or corrected with an adjustment.
 - A balance is always **computed** (views), never stored as a column that can drift.
 
+> PROPOSED (M3a): the lint rule `uteach/no-float-money` (apps/web) bans `parseFloat`, and `Number()` /
+> `parseInt` / unary `+` on money-named values. Amounts reach RPC arguments only through `toDbAmount()`
+> (`src/lib/money.ts`): the generated types declare `bigint` arguments as `number`, so it checks for a safe
+> integer.
+
 ## 3. Time
 
 > PROPOSED: `timestamptz` vs `date` storage rule, "today / this month / 48 h" computed in branch tz, no hardcoded `Asia/Tashkent`.

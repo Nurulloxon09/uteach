@@ -51,6 +51,16 @@ jobs:
       # Applies every migration to an empty database, then runs supabase/tests with pgTAP.
       - run: supabase db reset
       - run: supabase test db
+      # Receipt numbers under 20 concurrent payments need real connections (30-milestones M3).
+      - uses: pnpm/action-setup@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter @uteach/db exec vitest run src/receipt-numbers.concurrency.test.ts
+        env:
+          UTEACH_DB_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
 
   e2e:
     name: End-to-end (Playwright)

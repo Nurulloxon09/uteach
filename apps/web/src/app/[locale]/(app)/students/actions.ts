@@ -12,6 +12,7 @@ import {
   type ActionState,
 } from "@/lib/actions";
 import { getCenterContext } from "@/lib/center";
+import { toDbAmount } from "@/lib/money";
 import { createClient } from "@/lib/supabase/server";
 import {
   dateField,
@@ -402,9 +403,9 @@ export async function enrollAction(_prev: ActionState, form: FormData): Promise<
     p_group_id: v.groupId,
     ...(v.startDate ? { p_start_date: v.startDate } : {}),
     p_discount_bp: v.discountPercent,
-    p_discount_amount: v.discountAmount ? Number(v.discountAmount) : 0,
+    p_discount_amount: v.discountAmount ? toDbAmount(v.discountAmount) : 0,
     ...(v.discountReason ? { p_discount_reason: v.discountReason } : {}),
-    ...(v.priceOverride ? { p_price_override_amount: Number(v.priceOverride) } : {}),
+    ...(v.priceOverride ? { p_price_override_amount: toDbAmount(v.priceOverride) } : {}),
   });
   if (error) return fail(dbErrorKey(error), form);
 
@@ -482,12 +483,14 @@ export async function endAction(_prev: ActionState, form: FormData): Promise<Act
       studentId: uuidField,
       endDate: dateField,
       reason: z.enum(["completed", "dropped", "moved_level"]),
+      credit: z.boolean(),
     })
     .safeParse({
       enrollmentId: str(form, "enrollmentId"),
       studentId: str(form, "studentId"),
       endDate: str(form, "endDate"),
       reason: str(form, "reason"),
+      credit: form.get("credit") === "on",
     });
   if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
 
@@ -496,6 +499,8 @@ export async function endAction(_prev: ActionState, form: FormData): Promise<Act
     p_enrollment_id: parsed.data.enrollmentId,
     p_end_date: parsed.data.endDate,
     p_reason: parsed.data.reason,
+    // Used when the center's policy is "ask" (15); ignored for "credit" / "no credit".
+    p_credit: parsed.data.credit,
   });
   if (error) return fail(dbErrorKey(error), form);
 

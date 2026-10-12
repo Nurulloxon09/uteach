@@ -159,7 +159,21 @@
       "attendance_too_early": "Attendance opens 30 minutes before the lesson starts.",
       "attendance_window_closed": "The time to edit this attendance has passed. Ask an admin to change it.",
       "student_not_expected": "This student isn't in the group on the lesson's date.",
-      "invalid_attendance": "Some marks are invalid. Check the statuses and late minutes (1–240)."
+      "invalid_attendance": "Some marks are invalid. Check the statuses and late minutes (1–240).",
+      "credit_choice_required": "Choose whether to credit the unused lessons.",
+      "void_reason_required": "Write why this is being voided.",
+      "already_voided": "This was already voided.",
+      "reason_required": "Write a reason.",
+      "nothing_to_waive": "Nothing is owed on this charge.",
+      "nothing_to_write_off": "This student has no debt.",
+      "invalid_amount": "Check the amount.",
+      "invalid_account": "Choose an account of this branch.",
+      "invalid_method": "This payment method isn't available.",
+      "invalid_adjustment": "This kind of adjustment can't be added here.",
+      "backdate_limit": "Payments older than 7 days need the void right.",
+      "financial_rows_permanent": "Financial records can't be changed or deleted. Void and re-enter instead.",
+      "currency_locked": "The currency can't change after the first charge.",
+      "import_student_not_found": "A student in the file wasn't found. Check names and phones."
     },
     "groupHasStudents": "End or transfer the group's students before archiving it.",
     "duplicateStudent": "A student with this name or phone already exists. Check the list, or save again to add anyway."
@@ -1023,7 +1037,9 @@
     "rosterCount": "{count, plural, one {# student} other {# students}}",
     "addStudent": "Add student",
     "rosterEmpty": "No students in this group yet",
-    "rosterEmptyHint": "Add students from your list."
+    "rosterEmptyHint": "Add students from your list.",
+    "creditUnused": "Credit the unused lessons",
+    "creditUnusedHint": "If the student leaves mid-cycle, the lessons not taken go back to their balance (when the center's policy is to ask)."
   },
   "import": {
     "title": "Import from Excel",

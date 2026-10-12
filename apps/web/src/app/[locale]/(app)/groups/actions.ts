@@ -5,6 +5,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { dbErrorKey, fail, fieldErrorsFrom, str, type ActionState } from "@/lib/actions";
 import { getCenterContext } from "@/lib/center";
+import { toDbAmount } from "@/lib/money";
 import { createClient } from "@/lib/supabase/server";
 import {
   dateField,
@@ -112,7 +113,7 @@ export async function createGroupAction(_prev: ActionState, form: FormData): Pro
     ...(v.capacity !== null ? { p_capacity: v.capacity } : {}),
     ...(v.endDate ? { p_end_date: v.endDate } : {}),
     ...(v.price !== null
-      ? { p_price_amount: Number(v.price), p_cycle_lessons: v.cycleLessons ?? 12 }
+      ? { p_price_amount: toDbAmount(v.price), p_cycle_lessons: v.cycleLessons ?? 12 }
       : {}),
     p_rules: v.slots,
   });
@@ -276,7 +277,7 @@ export async function setPriceAction(_prev: ActionState, form: FormData): Promis
   const supabase = await createClient();
   const { error } = await supabase.rpc("set_group_price", {
     p_group_id: parsed.data.groupId,
-    p_price_amount: Number(parsed.data.price),
+    p_price_amount: toDbAmount(parsed.data.price),
     p_cycle_lessons: parsed.data.cycleLessons,
     p_effective_from: `${parsed.data.fromMonth}-01`,
   });

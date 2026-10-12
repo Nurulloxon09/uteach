@@ -865,6 +865,21 @@ Read and incremented only inside the `next_receipt_no(branch_id)` function (`upd
 - `debtors(student_id, branch_id, debt, oldest_due_date, max_days_overdue, aging_bucket)`: buckets are `0-30`, `31-60`, `61-90`, `90+`.
 All three views are `security_invoker = true`, so the RLS of the underlying tables applies.
 
+> PROPOSED (M3a, as built):
+> - `charges`: `cycle_no` / `cycle_lessons` / `enrollment_id` are null only for `is_manual` charges;
+>   `reissue_of_id` links a void-and-reissue; `voided_by`. The unique key is `(enrollment_id, cycle_no)` over open,
+>   non-manual charges, so a reissue takes the voided slot.
+> - `balance_adjustments`: `enrollment_id` (unused-lesson credits), `details jsonb` (what the system computed);
+>   `reason` is required except for `unused_lessons` and `opening_balance`.
+> - `accounts.name` null = the translated default name of its kind.
+> - `branches.code` defaults to `''`, which the trigger replaces with a suggestion.
+> - A guard trigger on `charges`, `payments` and `balance_adjustments` refuses deletes, truncates and any
+>   update other than voiding (and `payments.receipt_path`), even for the service role.
+> - `charge_debts` lists **debt items**: open charges and negative adjustments (e.g. an imported opening debt,
+>   due the day it was recorded), FIFO-covered by payments and positive adjustments. `debtors` also lists
+>   students whose debt isn't due yet (`is_overdue = false`), bucket `0-30`.
+> - `student_balances`, `charge_debts` and `debtors` show rows only to staff with `billing`.
+
 > PROPOSED (M3 plan): `charge_cycles` is a fourth view (`security_invoker`): per open cycle charge,
 > `first_lesson_date`, `lessons_used` (billable lessons up to today, branch tz), `lessons_left`,
 > `expected_last_date` (from generated lessons; null if not generated yet). Billable lessons are numbered by
