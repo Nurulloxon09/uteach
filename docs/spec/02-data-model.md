@@ -173,6 +173,11 @@ RLS: select for `authenticated`; writes by service role only.
 
 RLS: select **MBR**; update **OWN** (W) except `status`, `plan_id`, `trial_ends_at`, `past_due_since` (service role only). Insert via the `create_center()` RPC only (creates center + owner membership + first branch atomically).
 
+> PROPOSED (M3 plan): M3 adds `rounding_unit_amount`, `billing_mode` (only `lesson_cycle` accepted),
+> `leave_credit_policy` and `payment_due_days`; `reminder_every_days` comes with reminders in M4 and
+> `billing_day` only with calendar-month billing. `currency` becomes immutable once the center has a charge
+> (trigger).
+
 > PROPOSED (M2 plan): M2 adds `attendance_edit_hours` (1–720), `absence_alert_delay_min` (0–240),
 > `late_alert_enabled`, and `quiet_hours_start` / `quiet_hours_end` (moved here from M4, because enqueue applies
 > quiet hours). Equal start and end mean no quiet hours.
@@ -192,6 +197,10 @@ RLS: select **MBR**; update **OWN** (W) except `status`, `plan_id`, `trial_ends_
 | archived_at | timestamptz | |
 
 RLS: select **MBR**; insert/update **OWN** (W).
+
+> PROPOSED (M3 plan): `code text not null`, 2–6 uppercase letters/digits, `unique (center_id, code)`, used in
+> receipt numbers `{code}-{YYYY}-{000123}`. The migration fills it from the branch name (initials, de-duplicated
+> with a digit); new branches get a suggestion the owner can edit.
 
 ### `rooms` 🟩 [M0]
 
@@ -831,6 +840,10 @@ Where money sits. MVP creates one cash account per branch plus a default termina
 
 RLS: select PERM(billing); write OWN or PERM(finance).
 
+> PROPOSED (M3 plan): created by the M3 migration for existing branches and by a trigger for new ones (cash +
+> terminal per branch, one center-level bank account); no accounts UI until M11. Admins with `payments` may read
+> accounts too (to pick one when recording a payment): select is `PERM(billing) or PERM(payments)`.
+
 ### `receipt_sequences` 🟩 [M3]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
@@ -851,6 +864,13 @@ Read and incremented only inside the `next_receipt_no(branch_id)` function (`upd
 - `charge_debts(charge_id, student_id, due_date, amount, covered, outstanding, days_overdue)`: **FIFO**. A student's credits (payments + positive adjustments) are applied to their open charges ordered by `due_date, created_at`; the remainder is outstanding. Computed with window sums; there is no stored allocation.
 - `debtors(student_id, branch_id, debt, oldest_due_date, max_days_overdue, aging_bucket)`: buckets are `0-30`, `31-60`, `61-90`, `90+`.
 All three views are `security_invoker = true`, so the RLS of the underlying tables applies.
+
+> PROPOSED (M3 plan): `charge_cycles` is a fourth view (`security_invoker`): per open cycle charge,
+> `first_lesson_date`, `lessons_used` (billable lessons up to today, branch tz), `lessons_left`,
+> `expected_last_date` (from generated lessons; null if not generated yet). Billable lessons are numbered by
+> `private.billable_lessons(enrollment_id)`; cycle k covers the lessons after the previous cycles' `cycle_lessons`.
+> A pure TS mirror (`cycleWindows`) and shared fixtures keep the two in step (parity test, as with
+> `expandRules`).
 
 ### `refunds` 🟨 [M8]
 

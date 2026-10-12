@@ -85,6 +85,10 @@ returning *;
 
 System defaults in uz/ru/en for: `absence_alert`, `late_alert`, `payment_received`, `payment_reminder`, `payment_due_soon`, `charge_created` (on by default with cycle billing: tells parents the next cycle is due; PROPOSED), `lesson_cancelled`, `lesson_moved`, `score_posted`, `trial_reminder`, `broadcast`. Centers can override text per locale (settings → Notifications) and enable or disable each key.
 
+> PROPOSED (M3 plan): M3 seeds and queues `payment_received` (to guardians with `receives_billing`, else the
+> student; payload: student, amount in minor units, currency, receipt number, balance after). `charge_created`,
+> `payment_reminder` and `payment_due_soon` are seeded and queued in M4 with the reminder job.
+
 > PROPOSED (M2 plan): M2 creates `notification_templates` and seeds Telegram rows in uz/ru/en for the keys it
 > enqueues: `absence_alert`, `late_alert`, `lesson_cancelled`, `lesson_moved` and the new `lesson_added` (extra
 > lesson). Each later milestone seeds its own keys. SMS rows (with `sms_provider_template_id`) and the

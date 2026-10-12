@@ -50,6 +50,12 @@ The `calc` jsonb stores every input and step so the UI can show "12 lessons · 6
 - **Price or discount change** applies from the **next** cycle. The current cycle's charge keeps its stored price and discount.
 - A wrong charge is **voided and reissued** (reason required, audited). Charges are never edited in place. `is_manual` charges (one-off fees) are outside the cycle logic.
 
+> PROPOSED (M3 plan): if the student has no billable lesson yet (e.g. the group has no generated lessons),
+> `enroll` creates no charge; `generate_cycle_charges` creates cycle 1 as soon as a billable lesson exists. The
+> job runs hourly and acts per center at 00:30 local time (01); it is also called right after `enroll`,
+> `save_schedule_rules` and a freeze ends, so staff see the charge without waiting. A reissue after a void takes
+> the next free `cycle_no` slot of the voided one (the unique key covers open charges only).
+
 ### Leaving or moving mid-cycle
 `unused_lessons = cycle_lessons − lessons_used` (counted up to the end date). Their value is `credit = prorate(charge.amount, unused_lessons, cycle_lessons)`, rounded half up to the tiyin (not to the rounding unit).
 - **End** (completed / dropped / moved_level) follows `centers.leave_credit_policy`:
@@ -59,6 +65,11 @@ The `calc` jsonb stores every input and step so the UI can show "12 lessons · 6
   - Charges for cycles that haven't started yet are voided automatically.
 - **Transfer** to another group always credits the unused lessons of the old group, then starts cycle 1 in the new group.
 - Refunding credit as cash is a separate action (`refund`, 🟨 M8 for online; cash refunds are just recorded).
+
+> PROPOSED (M3 plan): `end_enrollment(…, p_credit boolean default null)`: with policy `ask` the End dialog must
+> send true or false (the RPC refuses null with `credit_choice_required`); with `credit` / `no_credit` the
+> parameter is ignored. The dialog shows "N unused lessons = X" from the same SQL the RPC uses
+> (`unused_lessons_preview`).
 
 **Worked example 3 (leave):** cycle of 12 lessons charged 540 000 UZS (54 000 000 tiyin); the student leaves after 5 lessons → 7 unused → credit = 54 000 000 × 7/12 = **31 500 000 tiyin = 315 000 UZS**.
 
@@ -79,6 +90,12 @@ Percent (`discount_bp`) and/or a fixed amount per cycle, with a required reason.
 - On save: `record_payment` RPC → receipt number `next_receipt_no(branch)` → `{BRANCH_CODE}-{YYYY}-{000123}` → PDF receipt generated (server, localized, center logo) → stored in `receipts/` → `payment_received` notification enqueued to guardians and the student.
 - Receipt: print (80 mm thermal and A4 layouts), download, or send to Telegram.
 - Payments go to the student's overall balance, not to a specific charge. They're allocated **FIFO** (oldest due date first) for display and aging.
+
+> PROPOSED (M3 plan): receipts are rendered **on demand** by `/[locale]/receipts/[paymentId]?size=80mm|a4`
+> (staff session, RLS) from the payment row, so a voided payment's receipt says VOID and nothing goes stale;
+> `receipt_path` stays null until M4 decides whether the bot needs stored copies. The PDF code lives in
+> `packages/receipts` so the worker can reuse it. Payer name defaults to the primary guardian. Backdating beyond
+> 7 days needs `void`.
 
 ## Balances & debtors
 

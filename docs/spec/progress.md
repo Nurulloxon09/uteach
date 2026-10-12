@@ -7,9 +7,9 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M2 · Attendance**: ◐ built; merging. Plan (2026-10-11, PR #7): three PRs. M2a (PR #8) and M2b (PR #9) are
-merged; M2c (matrix, export, student summary) is built and in review, so every M2 "done when" item is checked.
-M2 is done once M2c is merged with green CI. Next: M3 · Billing.
+**M3 · Billing**: ◐ planned 2026-10-12, not started. Three PRs: M3a data layer → M3b payments & receipts →
+M3c debtors & import. The plan and its decisions are in `30-milestones.md` (M3) and the `PROPOSED (M3 plan)`
+notes in 01, 02, 05-ui, 15 and 17.
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -17,8 +17,8 @@ M2 is done once M2c is merged with green CI. Next: M3 · Billing.
 | M0 | Foundation | ☑ done | 2026-10-11 |
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
 | M1 | Academic core | ☑ done | 2026-10-11 |
-| M2 | Attendance | ◐ built; merging (M2a ☑, M2b ☑, M2c) | |
-| M3 | Billing | ☐ | |
+| M2 | Attendance | ☑ done | 2026-10-12 |
+| M3 | Billing | ◐ planned (M3a, M3b, M3c) | |
 | M4 | Telegram & SMS | ☐ | |
 | M5 | Leads CRM | ☐ | |
 | M6 | Exam scores | ☐ | |
@@ -53,6 +53,24 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | `packages/core` money/phone/tz helpers tested | ☑ | 26 unit tests incl. the 15-payments worked example and DST |
 | CI on PRs | ☑ | GitHub Actions on PR #1: checks, Supabase DB tests, e2e and Docker build all green |
 | E2E happy path | ☑ | `pnpm e2e`: 3 tests pass against local Supabase (2026-10-11) |
+
+## M3 "done when" status
+
+| Item (30-milestones) | Status | Evidence |
+|---|---|---|
+| `computeCycleCharge` tests; worked examples 1 and 2 = 540 000 and 468 000 UZS | ☐ | |
+| `charge_cycles`: absences used; cancel/holiday/freeze push the end, never the amount; 8-lesson cycles | ☐ | |
+| Enroll creates cycle 1 from the first billable lesson; `due_date = start + 10` | ☐ | |
+| `generate_cycle_charges` on the last lesson's day, idempotent, none while frozen | ☐ | |
+| Price/discount change applies from the next cycle | ☐ | |
+| Mid-cycle end follows `leave_credit_policy`; example 3 = 315 000 UZS credit; future cycles voided; transfer credits | ☐ | |
+| Receipt numbers unique and gap-free under 20 concurrent inserts | ☐ | |
+| Receipt PDFs in uz/ru/en with the logo; 80 mm prints | ☐ | |
+| Balance and FIFO: `charge_debts` and debtors match fixtures | ☐ | |
+| Voids need `void` + reason; balance updates; nothing deletable | ☐ | |
+| Opening balances import creates adjustments | ☐ | |
+| Teachers can't select any billing table or view | ☐ | |
+| No float money (lint rule) | ☐ | |
 
 ## M2 "done when" status
 
@@ -97,6 +115,15 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-12 · M2 done, M3 planned
+- M2 merged with green CI: M2a (#8), M2b (#9), M2c (#10); every M2 "done when" item is checked.
+- M3 plan: three PRs (M3a data layer → M3b payments & receipts → M3c debtors & import); see `30-milestones.md`.
+- Decisions recorded as `PROPOSED (M3 plan)` in 01, 02, 05-ui, 15, 17 and 30, including: cycle 1 waits for a
+  billable lesson; receipts rendered on demand by `packages/receipts` (`@react-pdf/renderer`); `branches.code`
+  for receipt numbers; default accounts per branch by trigger; reminders and `charge_created` move to M4;
+  `end_enrollment(p_credit)` for the `ask` policy; the group Finance tab waits for M7; amounts never pass
+  through `Number()` (lint rule `uteach/no-float-money`); postgres.js for the concurrency test.
 
 ### 2026-10-12 · M2c attendance matrix and export
 - Group page → **Attendance** tab: the month as a students × lessons matrix (pattern `AttendanceMatrix`: sticky
