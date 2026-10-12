@@ -1,0 +1,101 @@
+[
+  {
+    "name": "worked example 1: 600 000 − 10%",
+    "price": "60000000",
+    "discountBp": 1000,
+    "discountAmount": "0",
+    "roundingUnit": "100000",
+    "amount": "54000000",
+    "discount": "6000000"
+  },
+  {
+    "name": "worked example 2: 550 000 − 15% rounds half up",
+    "price": "55000000",
+    "discountBp": 1500,
+    "discountAmount": "0",
+    "roundingUnit": "100000",
+    "amount": "46800000",
+    "discount": "8250000"
+  },
+  {
+    "name": "no discount",
+    "price": "60000000",
+    "discountBp": 0,
+    "discountAmount": "0",
+    "roundingUnit": "100000",
+    "amount": "60000000",
+    "discount": "0"
+  },
+  {
+    "name": "fixed discount",
+    "price": "60000000",
+    "discountBp": 0,
+    "discountAmount": "5000000",
+    "roundingUnit": "100000",
+    "amount": "55000000",
+    "discount": "5000000"
+  },
+  {
+    "name": "percent then fixed",
+    "price": "60000000",
+    "discountBp": 1000,
+    "discountAmount": "2000000",
+    "roundingUnit": "100000",
+    "amount": "52000000",
+    "discount": "8000000"
+  },
+  {
+    "name": "fixed larger than the price",
+    "price": "10000000",
+    "discountBp": 0,
+    "discountAmount": "20000000",
+    "roundingUnit": "100000",
+    "amount": "0",
+    "discount": "10000000"
+  },
+  {
+    "name": "own price (override) with 12.5%",
+    "price": "48000000",
+    "discountBp": 1250,
+    "discountAmount": "0",
+    "roundingUnit": "100000",
+    "amount": "42000000",
+    "discount": "6000000"
+  },
+  {
+    "name": "percent rounds half up on the tiyin",
+    "price": "33333",
+    "discountBp": 1500,
+    "discountAmount": "0",
+    "roundingUnit": "1",
+    "amount": "28333",
+    "discount": "5000"
+  },
+  {
+    "name": "rounding unit 1 000 UZS rounds down below half",
+    "price": "55040000",
+    "discountBp": 0,
+    "discountAmount": "0",
+    "roundingUnit": "100000",
+    "amount": "55000000",
+    "discount": "0"
+  },
+  {
+    "name": "exactly half rounds up",
+    "price": "55050000",
+    "discountBp": 0,
+    "discountAmount": "0",
+    "roundingUnit": "100000",
+    "amount": "55100000",
+    "discount": "0"
+  },
+  {
+    "name": "100% discount",
+    "price": "60000000",
+    "discountBp": 10000,
+    "discountAmount": "0",
+    "roundingUnit": "100000",
+    "amount": "0",
+    "discount": "60000000"
+  }
+]

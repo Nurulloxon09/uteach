@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from "eslint/config";
 import nextVitals from "eslint-config-next/core-web-vitals";
 import nextTs from "eslint-config-next/typescript";
+import { noFloatMoney } from "./eslint-rules/no-float-money.mjs";
 import uteach from "./eslint-rules/no-raw-colors.mjs";
 
 const eslintConfig = defineConfig([
@@ -19,10 +20,10 @@ const eslintConfig = defineConfig([
     },
   },
   {
-    // Colors come only from theme tokens in globals.css (05-ui.md §2).
+    // Colors come only from theme tokens in globals.css (05-ui.md §2); money is never a float (04-rules §2).
     files: ["src/**/*.{ts,tsx}"],
-    plugins: { uteach },
-    rules: { "uteach/no-raw-colors": "error" },
+    plugins: { uteach: { rules: { ...uteach.rules, "no-float-money": noFloatMoney } } },
+    rules: { "uteach/no-raw-colors": "error", "uteach/no-float-money": "error" },
   },
   {
     rules: {

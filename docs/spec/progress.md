@@ -7,9 +7,9 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M3 · Billing**: ◐ planned 2026-10-12, not started. Three PRs: M3a data layer → M3b payments & receipts →
-M3c debtors & import. The plan and its decisions are in `30-milestones.md` (M3) and the `PROPOSED (M3 plan)`
-notes in 01, 02, 05-ui, 15 and 17.
+**M3 · Billing**: ◐ in progress. Plan (2026-10-12, PR #11): M3a data layer → M3b payments & receipts → M3c
+debtors & import. M3a (data layer) is built and in review; 11 of the 13 "done when" items are proven on the
+database side. Left: receipt PDFs (M3b) and the opening-balance import screen (M3c).
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -18,7 +18,7 @@ notes in 01, 02, 05-ui, 15 and 17.
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
 | M1 | Academic core | ☑ done | 2026-10-11 |
 | M2 | Attendance | ☑ done | 2026-10-12 |
-| M3 | Billing | ◐ planned (M3a, M3b, M3c) | |
+| M3 | Billing | ◐ in progress (M3a built; M3b, M3c) | |
 | M4 | Telegram & SMS | ☐ | |
 | M5 | Leads CRM | ☐ | |
 | M6 | Exam scores | ☐ | |
@@ -58,19 +58,19 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 | Item (30-milestones) | Status | Evidence |
 |---|---|---|
-| `computeCycleCharge` tests; worked examples 1 and 2 = 540 000 and 468 000 UZS | ☐ | |
-| `charge_cycles`: absences used; cancel/holiday/freeze push the end, never the amount; 8-lesson cycles | ☐ | |
-| Enroll creates cycle 1 from the first billable lesson; `due_date = start + 10` | ☐ | |
-| `generate_cycle_charges` on the last lesson's day, idempotent, none while frozen | ☐ | |
-| Price/discount change applies from the next cycle | ☐ | |
-| Mid-cycle end follows `leave_credit_policy`; example 3 = 315 000 UZS credit; future cycles voided; transfer credits | ☐ | |
-| Receipt numbers unique and gap-free under 20 concurrent inserts | ☐ | |
+| `computeCycleCharge` tests; worked examples 1 and 2 = 540 000 and 468 000 UZS | ☑ | Vitest `billing.test.ts` (11 fixtures incl. % + fixed, own price, half up, rounding unit); SQL parity test on the same fixtures; pgTAP |
+| `charge_cycles`: absences used; cancel/holiday/freeze push the end, never the amount; 8-lesson cycles | ☑ | pgTAP `m3_billing` |
+| Enroll creates cycle 1 from the first billable lesson; `due_date = start + 10` | ☑ | pgTAP (incl. a backdated enrollment catching up) |
+| `generate_cycle_charges` on the last lesson's day, idempotent, none while frozen | ☑ | pgTAP; mutation-checked |
+| Price/discount change applies from the next cycle | ☑ | pgTAP (600 000 → 700 000 from the next cycle; issued charges unchanged) |
+| Mid-cycle end follows `leave_credit_policy`; example 3 = 315 000 UZS credit; future cycles voided; transfer credits | ☑ | pgTAP (ask / credit / no_credit, preview, void of unstarted cycles, transfer); Vitest `unusedLessonsCredit`; mutation-checked |
+| Receipt numbers unique and gap-free under 20 concurrent inserts | ☑ | `receipt-numbers.concurrency.test.ts` (postgres.js, 20 connections, 5 rolled back → 000001–000015) in CI's database job; fails with a naive max + 1 numbering |
 | Receipt PDFs in uz/ru/en with the logo; 80 mm prints | ☐ | |
-| Balance and FIFO: `charge_debts` and debtors match fixtures | ☐ | |
-| Voids need `void` + reason; balance updates; nothing deletable | ☐ | |
-| Opening balances import creates adjustments | ☐ | |
-| Teachers can't select any billing table or view | ☐ | |
-| No float money (lint rule) | ☐ | |
+| Balance and FIFO: `charge_debts` and debtors match fixtures | ☑ | pgTAP (FIFO with an opening-debt item, aging buckets, a not-yet-due debtor) |
+| Voids need `void` + reason; balance updates; nothing deletable | ☑ | pgTAP (void payment, charge + reissue, adjustment; guard trigger on delete, update, truncate) |
+| Opening balances import creates adjustments | ◐ | pgTAP `import_opening_balances` (creates, re-import skips, unknown student aborts); import screen in M3c |
+| Teachers can't select any billing table or view | ☑ | pgTAP (8 tables/views + `student_balance()`); other branch, other center, admin without `billing` |
+| No float money (lint rule) | ☑ | `uteach/no-float-money` (unit tested; flagged the 6 existing `Number(price)` calls, now `toDbAmount()`) |
 
 ## M2 "done when" status
 
@@ -115,6 +115,21 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-12 · M3a billing data layer
+- Migration `20261016090000_m3_billing.sql`: center billing settings, `branches.code`, `accounts` (defaults by
+  trigger), `charges`, `payments`, `balance_adjustments`, `receipt_sequences`; views `charge_cycles`,
+  `student_balances`, `charge_debts`, `debtors`; the M1 billing hook filled in (charges on enroll and transfer,
+  credits and voids on end and transfer); `generate_cycle_charges` (pg_cron, hourly); RPCs `record_payment`,
+  `student_balance`, `void_payment`, `void_charge` (+ reissue), `add_adjustment`, `void_adjustment`,
+  `unused_lessons_preview`, `end_enrollment(p_credit)`, `import_opening_balances`; `payment_received` queued.
+- A guard trigger keeps financial rows permanent (no delete, truncate, or edit except voiding).
+- pgTAP `m3_billing.test.sql` (110 checks; 434 in total); 3 mutations caught. `packages/core/billing`
+  (`computeCycleCharge`, `unusedLessonsCredit`, `agingBucket`) with fixtures and a SQL parity test. Receipt-number
+  concurrency test with postgres.js, run in CI's database job.
+- Lint rule `uteach/no-float-money` and `toDbAmount()`. The End dialog sends a credit choice (checkbox) so ending
+  a billed enrollment works before M3b. The M1 test passes `p_credit`; the M2 template count is scoped to M2
+  keys. 14 SQL error codes with uz/ru/en messages.
 
 ### 2026-10-12 · M2 done, M3 planned
 - M2 merged with green CI: M2a (#8), M2b (#9), M2c (#10); every M2 "done when" item is checked.

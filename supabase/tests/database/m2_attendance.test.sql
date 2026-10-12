@@ -635,7 +635,8 @@ select pg_temp.login(pg_temp.id('owner_b'));
 select is((select count(*)::int from public.notification_outbox), 0, 'another center reads none of it');
 
 select pg_temp.login(pg_temp.id('t1'));
-select is((select count(*)::int from public.notification_templates where center_id is null), 15,
+select is((select count(*)::int from public.notification_templates where center_id is null
+            and key in ('absence_alert', 'late_alert', 'lesson_cancelled', 'lesson_moved', 'lesson_added')), 15,
   'everyone signed in reads the system templates');
 select pg_temp.as_admin();
 insert into public.notification_templates (center_id, key, channel, locale, body)

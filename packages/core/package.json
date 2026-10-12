@@ -6,6 +6,8 @@
   "exports": {
     ".": "./src/index.ts",
     "./attendance": "./src/attendance.ts",
+    "./billing": "./src/billing.ts",
+    "./billing.fixtures.json": "./src/billing.fixtures.json",
     "./money": "./src/money.ts",
     "./phone": "./src/phone.ts",
     "./schedule": "./src/schedule.ts",

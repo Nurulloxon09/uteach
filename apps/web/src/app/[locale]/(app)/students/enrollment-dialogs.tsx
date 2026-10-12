@@ -370,6 +370,13 @@ export function EnrollmentActionsProvider({
                   label: t(`reasons.${r}`),
                 }))}
               />
+              <CheckboxField
+                name="credit"
+                value="on"
+                label={t("creditUnused")}
+                hint={t("creditUnusedHint")}
+                defaultChecked
+              />
             </>
           ) : null
         }

@@ -95,6 +95,20 @@ export const DB_ERROR_CODES = [
   "attendance_window_closed",
   "student_not_expected",
   "invalid_attendance",
+  "credit_choice_required",
+  "void_reason_required",
+  "already_voided",
+  "reason_required",
+  "nothing_to_waive",
+  "nothing_to_write_off",
+  "invalid_amount",
+  "invalid_account",
+  "invalid_method",
+  "invalid_adjustment",
+  "backdate_limit",
+  "financial_rows_permanent",
+  "currency_locked",
+  "import_student_not_found",
 ] as const;
 
 export type DbErrorCode = (typeof DB_ERROR_CODES)[number];
