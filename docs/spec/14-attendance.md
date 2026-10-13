@@ -28,6 +28,11 @@ Tables: `attendance`, `lead_trials`, `risk_flags`, `notification_outbox`.
 > changes go to the audit log. Today chips: "To mark" (open, nothing marked), "Not marked" (ended, nothing
 > marked), "12/15 marked" + "2 absent", "Upcoming", "Cancelled".
 
+> PROPOSED (M5 plan): trial guests are listed after the students with a "Trial" badge and the same four
+> buttons; "All present" includes them. Their row has a "Feedback" field (the lesson's teacher or an admin with
+> `leads`). Guests are never billed and don't count in attendance %, the matrix, lesson stats or absence
+> alerts. A guest whose trial was cancelled leaves the sheet unless already marked.
+
 > PROPOSED (M2 plan): the owner/admin nav gets **Attendance**: lessons of one day (default today) in the user's
 > branches with their state (not marked yet, "12 / 14 · 2 absent", cancelled) and a "not marked" filter over the
 > last 7 days. Tapping a lesson opens the sheet; marking needs the `attendance` flag.

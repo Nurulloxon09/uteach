@@ -4,6 +4,12 @@ Milestones: **M5** (board, timeline, follow-ups, trials, convert); **M13** (auto
 Tables: `leads`, `lead_activities`, `lead_trials`, `lost_reasons`.
 Permission: `leads` flag, branch-scoped.
 
+> PROPOSED (M5 plan): how M5 builds this is in `30-milestones.md` (M5 plan) with table notes in 02. In short:
+> status changes only through `move_lead` (lost reopens to new/contacted, won is final and only through
+> Convert); follow-ups are task activities; duplicates match leads, students and guardians and offer a merge;
+> teachers reach trial guests only through the attendance sheet; Convert is one RPC, and the first payment is a
+> separate step through the M3 payment dialog; lost reasons carry a `system_key` translated by the UI.
+
 ## Pipeline board (M5)
 
 > PROPOSED: kanban drag, every move logged, `won` only through Convert, trial picker on move, filters, list view, card contents. Statuses and "lost needs a reason" are from the canvas.

@@ -258,6 +258,57 @@ Global "done when" for every milestone:
 
 **Scope:** pipeline board + list, lead detail and timeline, notes/calls/tasks, follow-ups ("my follow-ups today"), duplicate check against leads and students, trials on real lessons (guest on the sheet), lost reasons (required), convert to student (student + guardian + enrollment + prorated charge + optional first payment).
 **Tables:** leads, lead_activities, lead_trials, lost_reasons.
+
+> PROPOSED (M5 plan, 2026-10-13): started by the owner while M4's real-SMS item is still open (skipped until
+> Eskiz and the hosted Phone provider are set up; see progress.md). Delivered as three PRs.
+> - **M5a · data layer:** migration `m5_leads`:
+>   - enums `lead_status`, `lead_source`, `lead_activity_kind`, `trial_status`;
+>   - tables `leads`, `lead_activities`, `lead_trials`, `lost_reasons` with RLS (PERM(leads) + ADM(branch);
+>     `lost_reasons` select MBR, write PERM(settings)); six reasons seeded per center by `create_center` and
+>     backfilled for existing centers;
+>   - `attendance.lead_trial_id` (the M2 note: drop the two `not null`s, add `num_nonnulls` and
+>     `unique (lesson_id, lead_trial_id)`);
+>   - RPCs: `create_lead`, `move_lead` (the only way to change status; writes the `status_change` activity),
+>     `add_lead_activity` (note / call with outcome / task), `complete_lead_task`, `lead_duplicates(phone)`,
+>     `merge_leads`, `schedule_trial`, `cancel_trial`, `save_trial_feedback`, `convert_lead`;
+>     `my_follow_ups()` for the home widget;
+>   - `attendance_sheet` returns trial guests; `save_attendance` accepts guest rows and moves the trial and
+>     the lead; cancelling a lesson cancels its trials.
+>
+>   Also: `packages/core/leads` (`canMove(from, to)`, the transition table shared by the board and the SQL
+>   parity test) and pgTAP `m5_leads` (every transition, lost without a reason rejected, won only through
+>   convert, duplicates across leads/students/guardians, trial → sheet → `trial_done`, convert re-uses a
+>   guardian and rolls back as one transaction, teachers see guest names only, other center sees nothing).
+> - **M5b · pipeline screens:** Leads page (board with drag + list view with phone search, filters), "New lead"
+>   dialog with the duplicate warning, lead detail (profile, timeline, add note / call / task, edit, merge),
+>   lost dialog, Settings → Lost reasons, the nav item, the "My follow-ups" widget on Home.
+> - **M5c · trials & convert:** trial picker (upcoming lessons filtered by course/level), guest rows with a
+>   "Trial" badge on the attendance sheet and teacher feedback, the Convert dialog (student, guardian,
+>   group, start date, discount, then an optional first payment), the M5 e2e, screenshots.
+>
+> Decisions in the plan (details in 02, 03, 05-ui, 11, 14):
+> - **Status changes only through `move_lead`.** `status`, `lost_reason_id`, `converted_student_id` and
+>   `next_follow_up_at` get no update grant. `move_lead` checks the transition table: any open status can move
+>   to any other open status or to `lost`; `won` only through `convert_lead`; `lost` can reopen to `new` or
+>   `contacted`; `won` is final.
+> - **`trial_scheduled` needs a trial.** Dragging onto that column opens the trial picker, and
+>   `schedule_trial` moves the lead. Dragging onto Won opens Convert, onto Lost opens the reason dialog.
+> - **Follow-ups are task activities.** A trigger keeps `leads.next_follow_up_at` = the earliest open task.
+>   "My follow-ups" on Home lists my open tasks due today or overdue (center timezone), overdue in red.
+> - **Duplicates:** `lead_duplicates(phone)` matches the center's leads, students and guardians (a guardian
+>   match lists their students). It warns, never blocks. Merge moves activities and trials into the kept
+>   lead, fills its empty fields, archives the other with a `system` activity.
+> - **Trial guests:** teachers never get a grant on `leads` or `lead_trials`; they see the guest's name only
+>   through `attendance_sheet` and write the result through `save_attendance` / `save_trial_feedback`.
+>   Present or late → trial `attended` + lead `trial_done`; absent → `no_show`, lead stays. Guests are never
+>   billed and don't count in attendance %, matrix, stats or absence alerts. A lead can have one open trial.
+> - **Convert:** `convert_lead` creates or re-uses the student, upserts the guardian by phone
+>   (`upsert_guardian`), calls `enroll` (which creates the first cycle charge), sets `won` and writes the
+>   activity, all in one transaction. The form asks whether the lead's phone is the student's or a parent's.
+>   The optional first payment is a second step: the existing payment dialog opens prefilled after convert,
+>   so `record_payment` stays the only way to take money.
+> - **Lost reasons** are rows with a `system_key` (price, schedule, location, competitor, no_response, other)
+>   shown through i18n; renamed or new reasons keep their typed label.
 **Done when:**
 - [ ] A lead moves through all statuses; every move writes an activity; `lost` without a reason is rejected by the DB.
 - [ ] Creating a lead with a phone that matches an existing lead or student shows the duplicate warning with links.
