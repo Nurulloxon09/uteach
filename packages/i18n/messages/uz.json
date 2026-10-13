@@ -188,7 +188,18 @@
       "sms_not_available": "SMS orqali xabarnoma hozircha mavjud emas: tasdiqlangan SMS shablon kerak.",
       "invalid_body": "2000 belgigacha xabar yozing.",
       "invalid_channel": "Telegram yoki SMS ni tanlang.",
-      "no_debt": "Bu oʻquvchining qarzi yoʻq."
+      "no_debt": "Bu oʻquvchining qarzi yoʻq.",
+      "invalid_assignee": "Lidni egasi yoki administratorga biriktiring.",
+      "invalid_lead": "Lid maʼlumotlarini tekshiring.",
+      "lead_archived": "Bu lid arxivda.",
+      "trial_required": "Avval sinov darsi uchun darsni tanlang.",
+      "invalid_lead_move": "Lidni bu bosqichga bu yerdan oʻtkazib boʻlmaydi.",
+      "lost_reason_required": "Lid nima sababdan yoʻqotilganini tanlang.",
+      "invalid_activity": "Eslatma, qoʻngʻiroq natijasi yoki vazifa muddatini kiriting.",
+      "merge_same_lead": "Birlashtirish uchun boshqa lidni tanlang.",
+      "lead_closed": "Bu lid allaqachon yutilgan yoki yoʻqotilgan.",
+      "lesson_not_upcoming": "Hali boshlanmagan darsni tanlang.",
+      "trial_not_open": "Bu sinov darsi endi rejalashtirilmagan."
     },
     "groupHasStudents": "Arxivlashdan oldin guruh oʻquvchilarining oʻqishini tugating yoki ularni oʻtkazing.",
     "duplicateStudent": "Bunday ism yoki telefonli oʻquvchi allaqachon bor. Roʻyxatni tekshiring yoki baribir qoʻshish uchun yana saqlang."

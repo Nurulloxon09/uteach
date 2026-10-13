@@ -188,7 +188,18 @@
       "sms_not_available": "SMS isn't available for broadcasts yet: it needs an approved SMS template.",
       "invalid_body": "Write a message of up to 2000 characters.",
       "invalid_channel": "Choose Telegram or SMS.",
-      "no_debt": "This student doesn't owe anything."
+      "no_debt": "This student doesn't owe anything.",
+      "invalid_assignee": "Assign the lead to an owner or admin.",
+      "invalid_lead": "Check the lead's details.",
+      "lead_archived": "This lead is archived.",
+      "trial_required": "Pick a lesson for the trial first.",
+      "invalid_lead_move": "The lead can't move to that stage from here.",
+      "lost_reason_required": "Choose why the lead was lost.",
+      "invalid_activity": "Fill in the note, the call result or the task's due date.",
+      "merge_same_lead": "Pick a different lead to merge with.",
+      "lead_closed": "This lead is already won or lost.",
+      "lesson_not_upcoming": "Pick a lesson that hasn't started yet.",
+      "trial_not_open": "This trial is no longer scheduled."
     },
     "groupHasStudents": "End or transfer the group's students before archiving it.",
     "duplicateStudent": "A student with this name or phone already exists. Check the list, or save again to add anyway."

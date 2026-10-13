@@ -115,6 +115,17 @@ export const DB_ERROR_CODES = [
   "invalid_body",
   "invalid_channel",
   "no_debt",
+  "invalid_assignee",
+  "invalid_lead",
+  "lead_archived",
+  "trial_required",
+  "invalid_lead_move",
+  "lost_reason_required",
+  "invalid_activity",
+  "merge_same_lead",
+  "lead_closed",
+  "lesson_not_upcoming",
+  "trial_not_open",
 ] as const;
 
 export type DbErrorCode = (typeof DB_ERROR_CODES)[number];
