@@ -88,7 +88,9 @@
     "broadcasts": "Рассылки",
     "notifications": "Уведомления",
     "telegram": "Telegram",
-    "health": "Состояние"
+    "health": "Состояние",
+    "leads": "Лиды",
+    "lostReasons": "Причины отказа"
   },
   "errors": {
     "generic": "Что-то пошло не так. Попробуйте ещё раз.",
@@ -375,7 +377,10 @@
     "continueSetupHint": "Готово {done} из {total} шагов. Продолжите с того же места.",
     "continueSetupButton": "Продолжить настройку",
     "connectTelegram": "Подключите Telegram",
-    "connectTelegramHint": "Поделитесь ссылкой на бота, чтобы родители получали уведомления и квитанции."
+    "connectTelegramHint": "Поделитесь ссылкой на бота, чтобы родители получали уведомления и квитанции.",
+    "followUps": "Мои задачи по лидам",
+    "followUpsHint": "Задачи по лидам на сегодня и просроченные.",
+    "followUpsEmpty": "На сегодня задач нет."
   },
   "today": {
     "title": "Сегодня",
@@ -1841,5 +1846,195 @@
     "confirm": "Отправить получателям: {recipients}",
     "confirmHint": "Я проверил(а), кто получит это сообщение.",
     "perLocaleHide": "Один текст для всех языков"
+  },
+  "kanban": {
+    "dragStart": "Карточка {title} взята.",
+    "dragOver": "{title} над колонкой «{column}».",
+    "dragEnd": "{title} перенесена в «{column}».",
+    "dragCancel": "Перенос {title} отменён.",
+    "dragInstructions": "Пробел — взять карточку, стрелки влево и вправо — переместить, пробел — отпустить, Esc — отмена."
+  },
+  "leads": {
+    "title": "Лиды",
+    "boardTitle": "Воронка",
+    "listTitle": "Все лиды",
+    "searchPlaceholder": "Имя или телефон",
+    "searchLabel": "Поиск лидов",
+    "emptyTitle": "Лидов пока нет",
+    "emptyHint": "Добавляйте тех, кто интересовался занятиями, и ведите их до пробного урока и записи.",
+    "filterFollowUp": "Задача",
+    "followUpOverdue": "Просрочена",
+    "addButton": "Новый лид",
+    "addTitle": "Новый лид",
+    "addSubmit": "Добавить лида",
+    "added": "Лид добавлен",
+    "editTitle": "Изменить лида",
+    "moved": "{name}: {status}",
+    "moveTo": "Перевести",
+    "reopen": "Вернуть в работу",
+    "markLost": "Отметить потерянным",
+    "archiveTitle": "Архивировать {name}?",
+    "archiveHint": "Лид исчезнет с доски и из списков; его можно восстановить.",
+    "restoreTitle": "Восстановить {name}?",
+    "archived": "Лид в архиве",
+    "restored": "Лид восстановлен",
+    "nextFollowUpAt": "Следующая задача: {when}",
+    "noFollowUp": "Задач нет",
+    "convertedTitle": "Ученик",
+    "view": {
+      "label": "Вид",
+      "board": "Доска",
+      "list": "Список"
+    },
+    "board": {
+      "empty": "Здесь пусто",
+      "show": "Показать",
+      "statusPicker": "Этап",
+      "limited": "Показаны {count} самых новых лидов. Остальные — через фильтры или список."
+    },
+    "status": {
+      "new": "Новый",
+      "contacted": "Связались",
+      "trial_scheduled": "Пробный назначен",
+      "trial_done": "Пробный пройден",
+      "won": "Записан",
+      "lost": "Потерян"
+    },
+    "source": {
+      "instagram": "Instagram",
+      "telegram": "Telegram",
+      "walk_in": "Пришёл сам",
+      "call": "Звонок",
+      "referral": "По рекомендации",
+      "web_form": "Форма на сайте",
+      "meta_ads": "Реклама Facebook / Instagram",
+      "other": "Другое"
+    },
+    "lostReason": {
+      "price": "Цена",
+      "schedule": "Расписание",
+      "location": "Расположение",
+      "competitor": "Выбрал конкурента",
+      "no_response": "Не отвечает",
+      "other": "Другое"
+    },
+    "fields": {
+      "fullName": "Имя",
+      "phone": "Телефон",
+      "telegram": "Telegram",
+      "source": "Источник",
+      "sourceDetail": "Кампания или кто посоветовал",
+      "sourceDetailPlaceholder": "напр. реклама сентября",
+      "goal": "Цель",
+      "goalPlaceholder": "напр. IELTS 7.0",
+      "targetScore": "Целевой балл",
+      "currentLevel": "Текущий уровень",
+      "currentLevelPlaceholder": "напр. B1",
+      "course": "Интересует курс",
+      "none": "Не выбран",
+      "preferredSchedule": "Удобное время",
+      "preferredSchedulePlaceholder": "напр. вечером, пн/ср/пт",
+      "branch": "Филиал",
+      "assignee": "Ответственный",
+      "nobody": "Не назначен",
+      "firstNote": "Заметка",
+      "nextFollowUp": "Следующая задача",
+      "created": "Добавлен"
+    },
+    "duplicates": {
+      "title": "Возможный дубль",
+      "lead": "лид, {status}",
+      "student": "ученик",
+      "guardian": "этот телефон у родителя",
+      "archived": "в архиве",
+      "hint": "Сохранить всё равно можно; сначала проверьте совпадение."
+    },
+    "lost": {
+      "title": "{name}: отказ",
+      "hint": "Выберите причину. Лида можно будет найти и вернуть в работу.",
+      "submit": "Отметить",
+      "done": "Отмечен как потерянный",
+      "reason": "Причина",
+      "reasonPlaceholder": "Выберите причину",
+      "note": "Комментарий (необязательно)",
+      "noteTitle": "Почему отказ"
+    },
+    "merge": {
+      "button": "Объединить",
+      "title": "Объединить {source} с {target}?",
+      "hint": "История и пробные уроки перейдут туда, пустые поля заполнятся из этого лида, а этот лид уйдёт в архив.",
+      "confirm": "Объединить",
+      "done": "Лиды объединены"
+    },
+    "tabs": {
+      "timeline": "История",
+      "details": "Подробности"
+    },
+    "timeline": {
+      "composerKind": "Что добавить",
+      "kind": {
+        "note": "Заметка",
+        "call": "Звонок",
+        "task": "Задача"
+      },
+      "outcomeLabel": "Результат",
+      "outcomePlaceholder": "Чем закончился звонок?",
+      "outcome": {
+        "reached": "Поговорили",
+        "no_answer": "Не ответил",
+        "call_back": "Просил перезвонить"
+      },
+      "bodyLabel": {
+        "note": "Заметка",
+        "call": "Заметки по звонку (необязательно)",
+        "task": "Что сделать"
+      },
+      "dueDate": "День",
+      "dueTime": "Время",
+      "assignee": "Кому",
+      "submit": {
+        "note": "Добавить заметку",
+        "call": "Записать звонок",
+        "task": "Добавить задачу"
+      },
+      "saved": "Добавлено в историю",
+      "empty": "Пока пусто",
+      "done": "Выполнено",
+      "due": "Срок {when}",
+      "markDone": "Выполнено",
+      "reopenTask": "Не выполнено",
+      "callTitle": "Звонок: {outcome}",
+      "moved": "Переведён: {from} → {to}",
+      "created": "Лид добавлен",
+      "trialScheduled": "Записан на пробный: {lesson}",
+      "trialAttended": "Пришёл на пробный: {lesson}",
+      "trialNoShow": "Не пришёл на пробный: {lesson}",
+      "trialCancelled": "Пробный отменён: {lesson}",
+      "lessonCancelled": "Урок с пробным отменён: {lesson}",
+      "merged": "С этим лидом объединён другой",
+      "converted": "Стал учеником",
+      "openMerged": "Открыть объединённого лида",
+      "openStudent": "Открыть ученика"
+    }
+  },
+  "lostReasons": {
+    "title": "Причины отказа",
+    "listTitle": "Причины",
+    "listHint": "Предлагаются, когда лид отмечается как потерянный. Архивные остаются у старых лидов.",
+    "emptyTitle": "Причин пока нет",
+    "addButton": "Добавить причину",
+    "addTitle": "Новая причина",
+    "addSubmit": "Добавить",
+    "added": "Причина добавлена",
+    "fields": {
+      "label": "Причина"
+    },
+    "moveUp": "Выше",
+    "moveDown": "Ниже",
+    "rename": "Переименовать",
+    "renameTitle": "Переименовать причину",
+    "archiveTitle": "Архивировать «{label}»?",
+    "archiveHint": "Её больше не будут предлагать; у лидов, где она уже указана, она останется.",
+    "restoreTitle": "Восстановить «{label}»?"
   }
 }

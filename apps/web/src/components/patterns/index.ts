@@ -40,6 +40,7 @@ export { FileDrop } from "./file-drop";
 export { FilterButton, type FilterOption } from "./filter-button";
 export { FormDialog } from "./form-dialog";
 export { InitialsAvatar, initials, tintFor } from "./initials-avatar";
+export { KanbanBoard, type KanbanColumn, type KanbanItem } from "./kanban-board";
 export { LessonList, type LessonListItem } from "./lesson-list";
 export { MobileCard, MobileList, MobileRecord } from "./mobile-list";
 export { BalancePreview, MoneyAmount } from "./money";

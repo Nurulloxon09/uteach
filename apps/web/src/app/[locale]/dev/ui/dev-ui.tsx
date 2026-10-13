@@ -43,6 +43,7 @@ import {
   FilterButton,
   FormDialog,
   InitialsAvatar,
+  KanbanBoard,
   LoadingState,
   MobileCard,
   MobileList,
@@ -250,6 +251,12 @@ export function DevUi() {
   ]);
   const [selected, setSelected] = useState<Set<string>>(new Set(["3", "7"]));
   const [attendance, setAttendance] = useState("present");
+  const [kanban, setKanban] = useState([
+    { id: "k1", column: "new", title: "Dilnoza Rahimova" },
+    { id: "k2", column: "new", title: "Jasur Aliyev" },
+    { id: "k3", column: "contacted", title: "Kamola Yusupova" },
+    { id: "k4", column: "trial_done", title: "Bekzod Tursunov" },
+  ]);
   const [audience, setAudience] = useState<Audience>({
     branchIds: [],
     groupIds: ["g2"],
@@ -592,6 +599,29 @@ export function DevUi() {
               }
             />
           </div>
+        </Section>
+      </Kit>
+
+      <Kit id="kanban" name="KanbanBoard (Leads → board)">
+        <Section>
+          <KanbanBoard
+            columns={(["new", "contacted", "trial_scheduled", "trial_done"] as const).map(
+              (key) => ({
+                key,
+                title: t(`leads.status.${key}`),
+                count: kanban.filter((k) => k.column === key).length,
+                tone: key.startsWith("trial") ? ("warning" as const) : ("primary" as const),
+              }),
+            )}
+            items={kanban}
+            onMove={(item, to) =>
+              setKanban((all) => all.map((k) => (k.id === item.id ? { ...k, column: to } : k)))
+            }
+            renderCard={(item) => (
+              <NameCell avatar={<InitialsAvatar name={item.title} size="sm" />} name={item.title} />
+            )}
+            empty={t("leads.board.empty")}
+          />
         </Section>
       </Kit>
 

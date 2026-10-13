@@ -88,7 +88,9 @@
     "broadcasts": "Broadcasts",
     "notifications": "Notifications",
     "telegram": "Telegram",
-    "health": "Health"
+    "health": "Health",
+    "leads": "Leads",
+    "lostReasons": "Lost reasons"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -375,7 +377,10 @@
     "continueSetupHint": "{done} of {total} steps done. Pick up where you left off.",
     "continueSetupButton": "Continue setup",
     "connectTelegram": "Connect Telegram",
-    "connectTelegramHint": "Share the bot link so parents get alerts and receipts."
+    "connectTelegramHint": "Share the bot link so parents get alerts and receipts.",
+    "followUps": "My follow-ups",
+    "followUpsHint": "Lead tasks due today or overdue.",
+    "followUpsEmpty": "Nothing due today."
   },
   "today": {
     "title": "Today",
@@ -1841,5 +1846,195 @@
     "confirm": "{recipients, plural, one {Send to # recipient} other {Send to # recipients}}",
     "confirmHint": "I checked who gets this message.",
     "perLocaleHide": "One text for all languages"
+  },
+  "kanban": {
+    "dragStart": "Picked up {title}.",
+    "dragOver": "{title} is over {column}.",
+    "dragEnd": "{title} was dropped on {column}.",
+    "dragCancel": "Moving {title} was cancelled.",
+    "dragInstructions": "Press space to pick up a card, the left and right arrows to move it, space to drop it, Escape to cancel."
+  },
+  "leads": {
+    "title": "Leads",
+    "boardTitle": "Pipeline",
+    "listTitle": "All leads",
+    "searchPlaceholder": "Name or phone",
+    "searchLabel": "Search leads",
+    "emptyTitle": "No leads yet",
+    "emptyHint": "Add people who asked about classes and follow them up to a trial and enrollment.",
+    "filterFollowUp": "Follow-up",
+    "followUpOverdue": "Overdue",
+    "addButton": "New lead",
+    "addTitle": "New lead",
+    "addSubmit": "Add lead",
+    "added": "Lead added",
+    "editTitle": "Edit lead",
+    "moved": "{name}: {status}",
+    "moveTo": "Move to",
+    "reopen": "Reopen",
+    "markLost": "Mark lost",
+    "archiveTitle": "Archive {name}?",
+    "archiveHint": "The lead leaves the board and lists; you can restore it later.",
+    "restoreTitle": "Restore {name}?",
+    "archived": "Lead archived",
+    "restored": "Lead restored",
+    "nextFollowUpAt": "Next follow-up: {when}",
+    "noFollowUp": "No follow-up planned",
+    "convertedTitle": "Student",
+    "view": {
+      "label": "View",
+      "board": "Board",
+      "list": "List"
+    },
+    "board": {
+      "empty": "No leads here",
+      "show": "Show",
+      "statusPicker": "Stage",
+      "limited": "Showing the newest {count} leads. Use the filters or the list to see the rest."
+    },
+    "status": {
+      "new": "New",
+      "contacted": "Contacted",
+      "trial_scheduled": "Trial scheduled",
+      "trial_done": "Trial done",
+      "won": "Won",
+      "lost": "Lost"
+    },
+    "source": {
+      "instagram": "Instagram",
+      "telegram": "Telegram",
+      "walk_in": "Walk-in",
+      "call": "Phone call",
+      "referral": "Referral",
+      "web_form": "Website form",
+      "meta_ads": "Facebook / Instagram ads",
+      "other": "Other"
+    },
+    "lostReason": {
+      "price": "Price",
+      "schedule": "Schedule",
+      "location": "Location",
+      "competitor": "Chose a competitor",
+      "no_response": "No response",
+      "other": "Other"
+    },
+    "fields": {
+      "fullName": "Name",
+      "phone": "Phone",
+      "telegram": "Telegram",
+      "source": "Source",
+      "sourceDetail": "Campaign or referrer",
+      "sourceDetailPlaceholder": "e.g. September ad",
+      "goal": "Goal",
+      "goalPlaceholder": "e.g. IELTS 7.0",
+      "targetScore": "Target score",
+      "currentLevel": "Current level",
+      "currentLevelPlaceholder": "e.g. B1",
+      "course": "Interested in",
+      "none": "Not chosen",
+      "preferredSchedule": "Preferred time",
+      "preferredSchedulePlaceholder": "e.g. evenings, Mon/Wed/Fri",
+      "branch": "Branch",
+      "assignee": "Responsible",
+      "nobody": "Nobody",
+      "firstNote": "Note",
+      "nextFollowUp": "Next follow-up",
+      "created": "Added"
+    },
+    "duplicates": {
+      "title": "Possible duplicate",
+      "lead": "lead, {status}",
+      "student": "student",
+      "guardian": "a guardian has this phone",
+      "archived": "archived",
+      "hint": "You can still save; check the match first."
+    },
+    "lost": {
+      "title": "{name} is lost",
+      "hint": "Choose why. The lead stays searchable and can be reopened.",
+      "submit": "Mark lost",
+      "done": "Marked lost",
+      "reason": "Reason",
+      "reasonPlaceholder": "Choose a reason",
+      "note": "Note (optional)",
+      "noteTitle": "Why it was lost"
+    },
+    "merge": {
+      "button": "Merge into it",
+      "title": "Merge {source} into {target}?",
+      "hint": "This lead's history and trials move there, its empty fields are filled from this one, and this lead is archived.",
+      "confirm": "Merge",
+      "done": "Leads merged"
+    },
+    "tabs": {
+      "timeline": "Timeline",
+      "details": "Details"
+    },
+    "timeline": {
+      "composerKind": "What to add",
+      "kind": {
+        "note": "Note",
+        "call": "Call",
+        "task": "Task"
+      },
+      "outcomeLabel": "Result",
+      "outcomePlaceholder": "How did the call go?",
+      "outcome": {
+        "reached": "Talked",
+        "no_answer": "No answer",
+        "call_back": "Asked to call back"
+      },
+      "bodyLabel": {
+        "note": "Note",
+        "call": "Notes from the call (optional)",
+        "task": "What to do"
+      },
+      "dueDate": "Day",
+      "dueTime": "Time",
+      "assignee": "For",
+      "submit": {
+        "note": "Add note",
+        "call": "Log call",
+        "task": "Add task"
+      },
+      "saved": "Added to the timeline",
+      "empty": "Nothing here yet",
+      "done": "Done",
+      "due": "Due {when}",
+      "markDone": "Done",
+      "reopenTask": "Not done",
+      "callTitle": "Call: {outcome}",
+      "moved": "Moved from {from} to {to}",
+      "created": "Lead added",
+      "trialScheduled": "Trial lesson booked: {lesson}",
+      "trialAttended": "Came to the trial: {lesson}",
+      "trialNoShow": "Missed the trial: {lesson}",
+      "trialCancelled": "Trial cancelled: {lesson}",
+      "lessonCancelled": "The trial lesson was cancelled: {lesson}",
+      "merged": "Another lead was merged into this one",
+      "converted": "Became a student",
+      "openMerged": "Open the merged lead",
+      "openStudent": "Open the student"
+    }
+  },
+  "lostReasons": {
+    "title": "Lost reasons",
+    "listTitle": "Reasons",
+    "listHint": "Offered when a lead is marked lost. Archived reasons stay on old leads.",
+    "emptyTitle": "No reasons yet",
+    "addButton": "Add reason",
+    "addTitle": "New reason",
+    "addSubmit": "Add",
+    "added": "Reason added",
+    "fields": {
+      "label": "Reason"
+    },
+    "moveUp": "Move up",
+    "moveDown": "Move down",
+    "rename": "Rename",
+    "renameTitle": "Rename reason",
+    "archiveTitle": "Archive “{label}”?",
+    "archiveHint": "It won't be offered any more; leads that already have it keep it.",
+    "restoreTitle": "Restore “{label}”?"
   }
 }
