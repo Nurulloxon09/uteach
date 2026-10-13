@@ -7,9 +7,7 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M3 · Billing**: ◐ last PR in review. Plan (2026-10-12, PR #11): M3a data layer → M3b payments & receipts →
-M3c debtors & import. M3a merged (#12), M3b merged (#13). M3c (Debtors page, opening-balance import, the full M3
-e2e, screenshots) is built; every M3 "done when" item is checked. M3 is done when M3c merges with green CI.
+**M3 · Billing**: ☑ done 2026-10-12 (M3a #12, M3b #13, M3c #14 merged, CI green). Next: M4 · Telegram & SMS (starts in plan mode as a plan PR; picks up debtor reminders, broadcast and the "last reminder" column).
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -18,7 +16,7 @@ e2e, screenshots) is built; every M3 "done when" item is checked. M3 is done whe
 | M0.5 | UI foundation | ☑ done | 2026-10-11 |
 | M1 | Academic core | ☑ done | 2026-10-11 |
 | M2 | Attendance | ☑ done | 2026-10-12 |
-| M3 | Billing | ◐ M3a, M3b merged; M3c in review | |
+| M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
 | M4 | Telegram & SMS | ☐ | |
 | M5 | Leads CRM | ☐ | |
 | M6 | Exam scores | ☐ | |
