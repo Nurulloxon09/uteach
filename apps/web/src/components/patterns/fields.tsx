@@ -2,7 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useFormStatus } from "react-dom";
-import type { ComponentProps, ReactNode } from "react";
+import { useState, type ComponentProps, type ReactNode } from "react";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -155,13 +155,19 @@ export function SelectField({
 }) {
   const { error, echoed } = fieldState(state, name);
   const id = `field-${name}`;
+  const [own, setOwn] = useState(echoed ?? defaultValue ?? "");
+  const current = value ?? own;
+  // Radix renders its native <select> only after hydration, so a form submitted earlier would
+  // lose this value ("Invalid value"). A plain hidden input is in the server HTML from the start.
   return (
     <FieldShell id={id} name={name} label={label} hint={hint} state={state} className={className}>
+      {disabled ? null : <input type="hidden" name={name} value={current} />}
       <Select
-        name={name}
-        defaultValue={value === undefined ? (echoed ?? defaultValue) : undefined}
-        value={value}
-        onValueChange={onValueChange}
+        value={current === "" ? undefined : current}
+        onValueChange={(v) => {
+          setOwn(v);
+          onValueChange?.(v);
+        }}
         disabled={disabled}
       >
         <SelectTrigger id={id} aria-invalid={error ? true : undefined}>
