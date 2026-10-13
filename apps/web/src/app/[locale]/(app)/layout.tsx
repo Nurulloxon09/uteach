@@ -48,6 +48,7 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
         { key: "groups", label: t("groups"), href: "/groups", icon: "groups" },
         { key: "schedule", label: t("schedule"), href: "/schedule", icon: "schedule" },
         { key: "attendance", label: t("attendance"), href: "/attendance", icon: "attendance" },
+        { key: "exams", label: t("exams"), href: "/exams", icon: "exams" },
         ...(ctx.can.billing || ctx.can.payments
           ? [
               {
@@ -72,6 +73,7 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
             { key: "center", label: t("center"), href: "/settings/center" },
             { key: "branches", label: t("branches"), href: "/settings/branches" },
             { key: "courses", label: t("courses"), href: "/settings/courses" },
+            { key: "examTypes", label: t("examTypes"), href: "/settings/exam-types" },
             { key: "holidays", label: t("holidays"), href: "/settings/holidays" },
             ...(ctx.can.leads
               ? [{ key: "lostReasons", label: t("lostReasons"), href: "/settings/lost-reasons" }]
@@ -87,6 +89,7 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
     : [
         { key: "today", label: t("today"), href: "/today", icon: "today" },
         { key: "groups", label: t("myGroups"), href: "/groups", icon: "groups" },
+        { key: "scores", label: t("scores"), href: "/exams", icon: "exams" },
       ];
 
   const tone = STATUS_TONE[ctx.center.status];

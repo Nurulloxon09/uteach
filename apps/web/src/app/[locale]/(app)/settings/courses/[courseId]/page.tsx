@@ -14,6 +14,7 @@ import { requireAdminContext } from "@/lib/center";
 import { formatMinor } from "@/lib/money";
 import { createClient } from "@/lib/supabase/server";
 import { minorToInput } from "@/lib/validation";
+import { loadExamTypes } from "@/lib/exams";
 import { EditCourseDialog } from "../course-dialog";
 import { LevelsPanel } from "./levels";
 
@@ -36,7 +37,7 @@ export default async function CoursePage({
   const [{ data: course }, { data: levels }, prices] = await Promise.all([
     supabase
       .from("courses")
-      .select("id, name, kind, default_lesson_minutes, description, archived_at")
+      .select("id, name, kind, default_lesson_minutes, description, archived_at, exam_type_id")
       .eq("id", courseId)
       .eq("center_id", ctx.center.id)
       .maybeSingle(),
@@ -78,8 +79,12 @@ export default async function CoursePage({
                 defaultLessonMinutes: course.default_lesson_minutes,
                 description: course.description,
                 defaultPrice: minorToInput(price),
+                examTypeId: course.exam_type_id,
               }}
               showPrice={ctx.can.billing}
+              examTypes={(await loadExamTypes(ctx))
+                .filter((x) => !x.archived || x.id === course.exam_type_id)
+                .map((x) => ({ id: x.id, name: x.name }))}
               trigger={
                 <Button variant="outline-primary" size="lg">
                   {tc("edit")}

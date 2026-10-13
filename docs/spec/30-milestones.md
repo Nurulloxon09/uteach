@@ -388,10 +388,27 @@ Global "done when" for every milestone:
 >   (like broadcasts' `bodies`). A correction after the message was sent doesn't send again.
 > - Certificates: `attachments` bucket (private, 10 MB, PDF/JPEG/PNG/WebP); members of the center read and upload
 >   under `{center_id}/certificates/`.
+
+> PROPOSED (M6b, as built, 2026-10-13):
+> - "Enter scores" is its own page (`/groups/{id}/scores?exam=&kind=&date=`), not a dialog: 15+ rows × 4 sections
+>   need the room. It opens with what's saved for that choice ("you're editing them"); one Save sends the grid.
+> - Group page: a Scores tab (exam switcher, gap table: latest with day and kind, the result before it with an
+>   arrow, target, gap or "Reached", exam day, number of results, a target button). Uplift is on the student
+>   page only; it shows "—" until there are two results.
+> - Student profile: a Scores tab (exam switcher over the types the student has, tiles latest / target and gap /
+>   exam day with days left / uplift, `ScoreChart`, the results list with certificate links and delete).
+>   Student profiles stay admin-only (M1), so teachers set targets from the group's table; that dialog leaves
+>   the saved baseline as it is.
+> - Exams (owners/admins) and Scores (teachers) are one page `/exams`: recent entries with an exam filter.
+> - Settings → Exam types: presets listed read-only; a custom type's section names are typed once and used in
+>   every language. Courses get an exam type field ("No exam" by default).
+> - Convert needs no new field: the M6a trigger turns the lead's target score into the student's target.
+> - Certificates upload from the browser straight to storage (like logos and imports), then the path is saved.
+> - `ScoreChart` redraws at its container's width so its 12 px text stays readable on a phone.
 **Done when:**
 - [x] IELTS rounding unit tests pass for all .x25 / .x75 boundary cases, and the DB trigger agrees with `packages/core` on the same fixtures. (M6a: `exams.fixtures.json`, 61 IELTS cases incl. every .x25/.x75 mean 0.25–8.75; `exams.test.ts` + `exams.parity.test.ts`.)
 - [ ] A teacher can enter a 15-student IELTS mock with keyboard only; invalid values (7.3, 10) are rejected inline and by the DB.
-- [ ] The student chart shows scores over time, the target line and the exam date; the group table shows gap to target.
+- [x] The student chart shows scores over time, the target line and the exam date; the group table shows gap to target. (M6b: checked in the browser, local data: 15-student mock + a diagnostic + an official result, target 7.5 with an exam day; group Scores tab shows target, gap and exam day.)
 - [ ] Parents get a score notification and see scores in the bot.
 - [x] Preset exam types can't be edited by centers (RLS). (M6a: pgTAP `m6_exams`: an owner's update leaves the preset unchanged, a preset insert is 42501.)
 - [x] SAT, CEFR and Milliy sertifikat ranges and mappings have been checked against official sources and recorded in 16. (M6 plan: sources in 16 § Exam types.)

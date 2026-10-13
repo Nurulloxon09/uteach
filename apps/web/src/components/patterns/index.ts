@@ -56,6 +56,14 @@ export { Pagination } from "./pagination";
 export { PaletteField } from "./palette-field";
 export { ProfileCard, ProfileChip } from "./profile-card";
 export { RowActions, type RowAction } from "./row-actions";
+export { ScoreChart, type ScorePoint, type ScoreSeries } from "./score-chart";
+export {
+  ScoreGrid,
+  scoreCellError,
+  scoreRowTotal,
+  type ScoreGridRow,
+  type ScoreGridValues,
+} from "./score-grid";
 export { Section } from "./section";
 export { SegmentedControl } from "./segmented-control";
 export { StatTiles, type StatTile, type StatTone } from "./stat-tiles";

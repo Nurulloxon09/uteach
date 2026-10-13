@@ -7,6 +7,7 @@ import {
   HandCoins,
   Home,
   Megaphone,
+  NotebookPen,
   Settings,
   Target,
   UsersRound,
@@ -33,6 +34,7 @@ export const NAV_ICONS = {
   payments: Wallet,
   debtors: HandCoins,
   broadcasts: Megaphone,
+  exams: NotebookPen,
 } satisfies Record<string, LucideIcon>;
 
 export type NavIconName = keyof typeof NAV_ICONS;

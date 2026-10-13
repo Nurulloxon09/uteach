@@ -26,6 +26,7 @@ import {
   type EnrollmentRow,
   type GuardianRow,
 } from "./panels";
+import { ScoresPanel } from "./scores-panel";
 
 export async function generateMetadata() {
   const t = await getTranslations("students");
@@ -34,20 +35,21 @@ export async function generateMetadata() {
 
 /**
  * Student profile (12): contacts, home branch and balance (15); tabs Enrollments | Payments | Attendance |
- * Guardians | Notes. Payments shows for `billing` or `payments`.
+ * Scores (16) | Guardians | Notes. Payments shows for `billing` or `payments`.
  */
 export default async function StudentPage({
   params,
   searchParams,
 }: PageProps<"/[locale]/students/[studentId]">) {
   const { studentId } = await params;
-  const { tab } = await searchParams;
+  const { tab, exam } = await searchParams;
   const ctx = await requireAdminContext();
   const t = await getTranslations("students");
   const ta = await getTranslations("attendance");
   const tn = await getTranslations("nav");
   const tc = await getTranslations("common");
   const tb = await getTranslations("billing");
+  const tx = await getTranslations("exams");
   const format = await getFormatter();
   const supabase = await createClient();
 
@@ -300,6 +302,25 @@ export default async function StudentPage({
             content: (
               <AttendanceSummary
                 studentId={student.id}
+                today={today}
+                groupNames={
+                  new Map((enrollments ?? []).map((e) => [e.group_id, e.groups?.name ?? "—"]))
+                }
+              />
+            ),
+          },
+          {
+            value: "scores",
+            label: tx("student.tab"),
+            content: (
+              <ScoresPanel
+                ctx={ctx}
+                student={{
+                  id: student.id,
+                  branchId: student.branch_id,
+                  archived: student.archived_at !== null,
+                }}
+                examParam={typeof exam === "string" ? exam : undefined}
                 today={today}
                 groupNames={
                   new Map((enrollments ?? []).map((e) => [e.group_id, e.groups?.name ?? "—"]))

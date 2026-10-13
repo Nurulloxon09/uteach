@@ -19,6 +19,7 @@ import { loadGroupOptions, loadRooms, loadTeachers, teachersFor } from "@/lib/ac
 import { MARKING_OPENS_MS, markState, nowMs, type LessonStats } from "@/lib/attendance";
 import { loadMatrix, monthParam, shiftMonth } from "@/lib/attendance-matrix";
 import { getCenterContext } from "@/lib/center";
+import { defaultExamType, loadExamTypes } from "@/lib/exams";
 import { dayAsDate, hhmm, localParts, monthStart, weekdayLabels } from "@/lib/dates";
 import { formatMinor } from "@/lib/money";
 import { Link } from "@/i18n/navigation";
@@ -37,6 +38,7 @@ import { AttendanceTab, type TabLesson } from "./attendance-tab";
 import { PricePanel } from "./price-panel";
 import { RosterPanel, type RosterRow } from "./roster";
 import { RulesEditor } from "./rules-editor";
+import { ScoresTab } from "./scores-tab";
 
 export async function generateMetadata() {
   const t = await getTranslations("groups");
@@ -63,8 +65,9 @@ type LessonRow = LessonRef & {
 };
 
 /**
- * Group page (12): ProfileCard + tabs Lessons | Roster | Attendance | Schedule | Price (billing). Teachers get
- * a read-only view (and mark attendance within their window). `?tab=attendance&month=YYYY-MM` opens a month.
+ * Group page (12): ProfileCard + tabs Lessons | Roster | Attendance | Scores (16) | Schedule | Price (billing).
+ * Teachers get a read-only view (and mark attendance and enter scores). `?tab=attendance&month=YYYY-MM` opens a
+ * month; `?tab=scores&exam=` an exam type.
  */
 export default async function GroupPage({
   params,
@@ -78,13 +81,14 @@ export default async function GroupPage({
   const tn = await getTranslations("nav");
   const tc = await getTranslations("common");
   const tAtt = await getTranslations("attendance");
+  const tx = await getTranslations("exams");
   const format = await getFormatter();
   const supabase = await createClient();
 
   const { data: group } = await supabase
     .from("groups")
     .select(
-      "id, name, branch_id, course_id, level_id, teacher_membership_id, room_id, capacity, status, start_date, end_date, archived_at, courses ( name ), levels ( name )",
+      "id, name, branch_id, course_id, level_id, teacher_membership_id, room_id, capacity, status, start_date, end_date, archived_at, courses ( name, exam_type_id ), levels ( name )",
     )
     .eq("id", groupId)
     .eq("center_id", ctx.center.id)
@@ -394,6 +398,14 @@ export default async function GroupPage({
       ])
     : [[], []];
   const course = group.courses?.name ?? "";
+  // Scores (16): the course's exam type unless `?exam=` picks another.
+  const examTypes = (await loadExamTypes(ctx)).filter((x) => !x.archived);
+  const examType =
+    examTypes.find((x) => x.id === sp.exam) ??
+    defaultExamType(examTypes, group.courses?.exam_type_id);
+  const canEnterScores = isStaff
+    ? ctx.can.academics && ctx.can.inBranch(group.branch_id) && group.archived_at === null
+    : group.archived_at === null;
   const subtitle = [course, group.levels?.name].filter(Boolean).join(" · ");
 
   const tabs = [
@@ -448,6 +460,22 @@ export default async function GroupPage({
         />
       ) : null,
     },
+    ...(examType
+      ? [
+          {
+            value: "scores",
+            label: tx("group.tab"),
+            content: (
+              <ScoresTab
+                groupId={group.id}
+                type={examType}
+                types={examTypes}
+                canEnter={canEnterScores}
+              />
+            ),
+          },
+        ]
+      : []),
     {
       value: "schedule",
       label: t("tabSchedule"),

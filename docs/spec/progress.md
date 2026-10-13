@@ -7,7 +7,7 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M6 · Exam scores**: ◐ in progress. Plan (#27) and M6a data layer built; next M6b (screens), M6c (bot +
+**M6 · Exam scores**: ◐ in progress. Plan (#27), M6a data layer (#28) and M6b screens built; next M6c (bot +
 e2e). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
 Eskiz and the hosted Phone provider. M6's decisions are in `30-milestones.md` (M6) and the `PROPOSED (M6 plan)`
 notes in 02, 03, 05-ui, 16 and 17.
@@ -22,7 +22,7 @@ notes in 02, 03, 05-ui, 16 and 17.
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
 | M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
 | M5 | Leads CRM | ☑ done (#23, #24, #26) | 2026-10-13 |
-| M6 | Exam scores | ◐ in progress (plan #27, M6a built) | |
+| M6 | Exam scores | ◐ in progress (plan #27, M6a #28, M6b built) | |
 | M7 | Launch 🚀 | ☐ | |
 | M8 | Online payments | ☐ | |
 | M9 | Mini App | ☐ | |
@@ -142,6 +142,25 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M6b score screens
+- **Enter scores** (`/groups/{id}/scores`): exam, kind (mock / diagnostic) and day in the URL, the roster as a
+  keyboard grid (`ScoreGrid`: Tab across, Enter down, inline range/step errors, live total), one Save.
+- Group page **Scores** tab (gap table, set target); student profile **Scores** tab (tiles, `ScoreChart` with
+  target line, exam day and section lines, results with certificate links and delete, Add official result
+  with certificate upload, Set target); **Exams** / **Scores** page (recent entries); **Settings → Exam types**
+  (presets read-only, custom types with a section editor); exam type on the course form; nav items.
+- New patterns `ScoreGrid` and `ScoreChart` on `/dev/ui`; `formatScore` / `parseScore` in `packages/core`;
+  `exams.*` messages in uz/ru/en.
+- Checked in the browser (local, Davomat Academy): a 15-student IELTS mock typed with the keyboard only (Tab
+  between cells, Tab to Save, Enter) saved 15 results whose totals match the database; target 7.5 + exam day
+  from the group table; an earlier diagnostic and an official result; the chart, tiles and results on the
+  student page; a custom exam type; the entry page and the student page at 390 px (no sideways scroll).
+  Found and fixed on the way: chart labels overlapped; duplicate React keys when two results share a day;
+  chart text too small on phones (now drawn at the container's width). Test data removed afterwards.
+- Done-when ☑: chart with target line and exam day; group table with gap. The keyboard-only entry was done as
+  the owner; the teacher run comes with the M6c e2e.
+- Decisions: `PROPOSED (M6b, as built)` in 30.
 
 ### 2026-10-13 · M6a exam scores data layer
 - Migration `m6_exams`: `exam_result_kind`; `exam_types` with the four presets (IELTS, SAT, CEFR multilevel,

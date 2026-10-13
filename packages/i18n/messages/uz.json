@@ -90,7 +90,10 @@
     "telegram": "Telegram",
     "health": "Holat",
     "leads": "Lidlar",
-    "lostReasons": "Rad etish sabablari"
+    "lostReasons": "Rad etish sabablari",
+    "exams": "Imtihonlar",
+    "scores": "Ballar",
+    "examTypes": "Imtihon turlari"
   },
   "errors": {
     "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
@@ -115,7 +118,8 @@
       "percent": "0 dan 100 gacha foiz kiriting.",
       "branchCode": "2 tadan 6 tagacha lotin harfi yoki raqam.",
       "template": "Bu matnni ishlatib boʻlmaydi: jingalak qavslardagi nomlarni tekshiring.",
-      "confirmBroadcast": "Qabul qiluvchilarni tekshirganingizni belgilang."
+      "confirmBroadcast": "Qabul qiluvchilarni tekshirganingizni belgilang.",
+      "score": "Ballni kiriting, masalan 6.5."
     },
     "auth": {
       "invalidCredentials": "Telefon raqami yoki parol notoʻgʻri.",
@@ -816,7 +820,10 @@
       "minutesHint": "Yangi guruhlar uchun standart.",
       "price": "Bir sikl uchun standart narx",
       "priceHint": "Bu kursning yangi guruhlariga avtomatik qoʻyiladi.",
-      "description": "Tavsif"
+      "description": "Tavsif",
+      "examType": "Imtihon turi",
+      "examTypeNone": "Imtihonsiz",
+      "examTypeHint": "Bu kurs guruhlarining ballari sukut boʻyicha shu turda kiritiladi."
     },
     "kinds": {
       "language": "Til",
@@ -2100,5 +2107,172 @@
     "archiveTitle": "«{label}» arxivlansinmi?",
     "archiveHint": "U boshqa taklif qilinmaydi; uni tanlagan lidlarda saqlanib qoladi.",
     "restoreTitle": "«{label}» tiklansinmi?"
+  },
+  "exams": {
+    "title": "Imtihonlar",
+    "teacherTitle": "Ballar",
+    "kind": {
+      "diagnostic": "Diagnostika",
+      "mock": "Sinov",
+      "official": "Rasmiy"
+    },
+    "grade": {
+      "below_b1": "B1 dan quyi",
+      "b1": "B1",
+      "b2": "B2",
+      "c1": "C1",
+      "noCertificate": "Sertifikatsiz"
+    },
+    "errors": {
+      "out_of_range": "{min} dan {max} gacha",
+      "off_step": "{step} qadam bilan",
+      "not_a_number": "Son emas",
+      "unknown_section": "Nomaʼlum boʻlim"
+    },
+    "list": {
+      "title": "Soʻnggi kiritilgan ballar",
+      "hint": "Guruhlar uchun kiritilgan barcha sinov va diagnostikalar. Guruh ballarini koʻrish uchun oching.",
+      "empty": "Hali ballar yoʻq",
+      "emptyHint": "Guruhni oching va «Ballarni kiritish» tugmasini bosing.",
+      "date": "Sana",
+      "group": "Guruh",
+      "exam": "Imtihon",
+      "kindLabel": "Turi",
+      "students": "Oʻquvchilar",
+      "average": "Oʻrtacha",
+      "allExams": "Barcha imtihonlar",
+      "open": "{group} ni ochish"
+    },
+    "enter": {
+      "button": "Ballarni kiritish",
+      "title": "Ballarni kiritish · {group}",
+      "exam": "Imtihon",
+      "kindLabel": "Turi",
+      "date": "Sana",
+      "hint": "Tab — oʻngga, Enter — pastga. Boʻsh qator oʻquvchini oʻtkazib yuboradi; saqlangan qatorni tozalasangiz, natija oʻchadi.",
+      "save": "Ballarni saqlash",
+      "saving": "Saqlanmoqda…",
+      "saved": "{saved} ta natija saqlandi{deleted, plural, =0 {} other {, # ta oʻchirildi}}. Ota-onalarga 10 daqiqadan soʻng xabar boradi.",
+      "nothing": "Hech narsa oʻzgarmadi.",
+      "fixErrors": "Avval qizil kataklarni tuzating.",
+      "noStudents": "Bu guruhda hali oʻquvchi yoʻq.",
+      "existing": "Bu kun uchun ballar allaqachon saqlangan: siz ularni tahrirlayapsiz.",
+      "back": "Guruhga qaytish",
+      "student": "Oʻquvchi",
+      "total": "Umumiy",
+      "cell": "{student}, {section}"
+    },
+    "group": {
+      "tab": "Ballar",
+      "examLabel": "Imtihon",
+      "student": "Oʻquvchi",
+      "latest": "Oxirgi",
+      "previous": "Oldingi",
+      "target": "Maqsad",
+      "gap": "Maqsadgacha",
+      "results": "Natijalar",
+      "examDate": "Imtihon sanasi",
+      "uplift": "Oʻsish",
+      "empty": "Hali {exam} ballari yoʻq",
+      "emptyHint": "Guruhning birinchi diagnostikasi yoki sinov imtihonini kiriting.",
+      "trendUp": "Oshdi, avval {value}",
+      "trendDown": "Tushdi, avval {value}",
+      "trendSame": "Avvalgidek",
+      "reached": "Erishildi",
+      "setTarget": "Maqsad qoʻyish",
+      "noStudents": "Guruhda oʻquvchi yoʻq."
+    },
+    "student": {
+      "tab": "Ballar",
+      "empty": "Hali ballar yoʻq",
+      "emptyHint": "Oʻqituvchi guruhning sinov imtihonini kiritganda yoki siz rasmiy natija qoʻshganingizda natijalar shu yerda chiqadi.",
+      "addOfficial": "Rasmiy natija qoʻshish",
+      "chartTitle": "{exam}: umumiy ball oʻzgarishi",
+      "results": "Natijalar",
+      "date": "Sana",
+      "kindLabel": "Turi",
+      "group": "Guruh",
+      "sections": "Boʻlimlar",
+      "total": "Umumiy",
+      "certificate": "Sertifikat",
+      "openCertificate": "Sertifikatni ochish",
+      "delete": "Natijani oʻchirish",
+      "deleteTitle": "{date} dagi {exam} natijasi oʻchirilsinmi?",
+      "deleteHint": "U grafik va guruh jadvalidan yoʻqoladi.",
+      "deleted": "Natija oʻchirildi",
+      "target": "Maqsad",
+      "noTarget": "Maqsad qoʻyilmagan",
+      "examDate": "Imtihon sanasi",
+      "daysLeft": "{days, plural, =0 {(bugun)} other {(# kundan keyin)}}",
+      "examPassed": "(oʻtdi)",
+      "baseline": "Boshlangʻich ball",
+      "uplift": "Oʻsish",
+      "latest": "Oxirgi",
+      "setTarget": "Maqsad qoʻyish",
+      "editTarget": "Maqsadni oʻzgartirish"
+    },
+    "target": {
+      "title": "Maqsad · {exam}",
+      "exam": "Imtihon",
+      "total": "Maqsad ball",
+      "totalHint": "{min} dan {max} gacha.",
+      "examDate": "Rejalashtirilgan imtihon sanasi",
+      "baseline": "Boshlangʻich ball",
+      "baselineHint": "Birinchi diagnostikani olish uchun boʻsh qoldiring.",
+      "clearHint": "Maqsadni olib tashlash uchun ball va sanani boʻsh qoldiring.",
+      "save": "Maqsadni saqlash",
+      "saved": "Maqsad saqlandi"
+    },
+    "official": {
+      "title": "Rasmiy natija",
+      "exam": "Imtihon",
+      "date": "Imtihon sanasi",
+      "certificate": "Sertifikat (PDF yoki rasm)",
+      "certificateHint": "Ixtiyoriy. 10 MB gacha.",
+      "certificateChosen": "Biriktirildi: {name}",
+      "note": "Izoh",
+      "save": "Natijani saqlash",
+      "saved": "Rasmiy natija saqlandi",
+      "uploadFailed": "Sertifikatni yuklab boʻlmadi. Qayta urinib koʻring.",
+      "tooBig": "Fayl 10 MB dan katta."
+    },
+    "types": {
+      "title": "Imtihon turlari",
+      "listTitle": "Imtihon turlari",
+      "listHint": "Standart imtihonlar barcha markazlar uchun bir xil. Ichki testlar uchun oʻzingiznikini qoʻshing.",
+      "preset": "Standart",
+      "custom": "Oʻzimizniki",
+      "sections": "Boʻlimlar",
+      "rule": "Umumiy ball",
+      "range": "Umumiy ball oraligʻi",
+      "rules": {
+        "ielts_band": "IELTS band (oʻrtacha, .5 gacha)",
+        "sum": "Boʻlimlar yigʻindisi",
+        "average": "Boʻlimlar oʻrtachasi",
+        "none": "Bitta ball"
+      },
+      "addButton": "Imtihon turini qoʻshish",
+      "addTitle": "Yangi imtihon turi",
+      "editTitle": "Imtihon turini tahrirlash",
+      "name": "Nomi",
+      "sectionName": "Boʻlim",
+      "min": "Min",
+      "max": "Maks",
+      "step": "Qadam",
+      "addSection": "Boʻlim qoʻshish",
+      "removeSection": "{name} ni olib tashlash",
+      "inUse": "Bu tur boʻyicha ballar bor, shuning uchun boʻlimlar va umumiy ball oʻzgarmaydi.",
+      "added": "Imtihon turi qoʻshildi",
+      "archiveTitle": "{name} arxivlansinmi?",
+      "archiveHint": "Yangi ballar uchun taklif qilinmaydi; saqlangan ballar qoladi.",
+      "restoreTitle": "{name} tiklansinmi?",
+      "emptyTitle": "Imtihon turlari yoʻq"
+    },
+    "chart": {
+      "target": "Maqsad",
+      "examDate": "Imtihon",
+      "total": "Umumiy",
+      "sections": "Boʻlimlar"
+    }
   }
 }

@@ -13,7 +13,11 @@ export type CourseFormValues = {
   description: string | null;
   /** Major units for the input, or "" (only staff with `billing` get it). */
   defaultPrice: string;
+  examTypeId: string | null;
 };
+
+/** Exam types a course can default to (16). */
+export type ExamTypeChoice = { id: string; name: string };
 
 const KINDS = ["language", "exam_prep", "school_subject", "other"] as const;
 
@@ -21,10 +25,12 @@ function CourseFields({
   state,
   course,
   showPrice,
+  examTypes,
 }: {
   state: ActionState;
   course?: CourseFormValues;
   showPrice: boolean;
+  examTypes: ExamTypeChoice[];
 }) {
   const t = useTranslations("courses");
   return (
@@ -43,6 +49,17 @@ function CourseFields({
         state={state}
         defaultValue={course?.kind ?? "language"}
         options={KINDS.map((k) => ({ value: k, label: t(`kinds.${k}`) }))}
+      />
+      <SelectField
+        name="examTypeId"
+        label={t("fields.examType")}
+        hint={t("fields.examTypeHint")}
+        state={state}
+        defaultValue={course?.examTypeId ?? "none"}
+        options={[
+          { value: "none", label: t("fields.examTypeNone") },
+          ...examTypes.map((x) => ({ value: x.id, label: x.name })),
+        ]}
       />
       <Field
         name="defaultLessonMinutes"
@@ -76,7 +93,13 @@ function CourseFields({
 }
 
 /** "+ Add course" page action. */
-export function AddCourseDialog({ showPrice }: { showPrice: boolean }) {
+export function AddCourseDialog({
+  showPrice,
+  examTypes,
+}: {
+  showPrice: boolean;
+  examTypes: ExamTypeChoice[];
+}) {
   const t = useTranslations("courses");
   return (
     <FormDialog
@@ -88,7 +111,7 @@ export function AddCourseDialog({ showPrice }: { showPrice: boolean }) {
       successToast={t("added")}
       testId="course-dialog"
     >
-      {(state) => <CourseFields state={state} showPrice={showPrice} />}
+      {(state) => <CourseFields state={state} showPrice={showPrice} examTypes={examTypes} />}
     </FormDialog>
   );
 }
@@ -97,10 +120,12 @@ export function AddCourseDialog({ showPrice }: { showPrice: boolean }) {
 export function EditCourseDialog({
   course,
   showPrice,
+  examTypes,
   trigger,
 }: {
   course: CourseFormValues;
   showPrice: boolean;
+  examTypes: ExamTypeChoice[];
   trigger: React.ReactNode;
 }) {
   const t = useTranslations("courses");
@@ -113,7 +138,9 @@ export function EditCourseDialog({
       submitLabel={tc("save")}
       successToast={tc("saved")}
     >
-      {(state) => <CourseFields state={state} course={course} showPrice={showPrice} />}
+      {(state) => (
+        <CourseFields state={state} course={course} showPrice={showPrice} examTypes={examTypes} />
+      )}
     </FormDialog>
   );
 }
