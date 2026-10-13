@@ -1,4 +1,4 @@
-import { todayIn, type LeadStatus } from "@uteach/core";
+import { addDays, todayIn, type LeadStatus } from "@uteach/core";
 import {
   BellRing,
   BookOpen,
@@ -21,9 +21,16 @@ import {
   StatusChip,
 } from "@/components/patterns";
 import { Link } from "@/i18n/navigation";
-import { loadBranches, loadCourses, loadGroupOptions } from "@/lib/academics";
+import { loadBranches, loadCourses, loadGroupOptions, loadTeachers } from "@/lib/academics";
+import { loadAccounts } from "@/lib/billing";
 import { requireAdminContext } from "@/lib/center";
-import { LEAD_COLUMNS, loadAssignees, loadLostReasons, type LeadRow } from "@/lib/leads";
+import {
+  LEAD_COLUMNS,
+  loadAssignees,
+  loadLostReasons,
+  loadTrialLessons,
+  type LeadRow,
+} from "@/lib/leads";
 import { createClient } from "@/lib/supabase/server";
 import { DuplicateWarning } from "../lead-dialog";
 import { SOURCE_ICONS, STATUS_TONES } from "../lead-meta";
@@ -31,6 +38,7 @@ import {
   LeadActions,
   LeadTimeline,
   MergeCandidates,
+  OpenTrialCard,
   type MergeCandidate,
   type TimelineEntry,
 } from "./lead-detail";
@@ -58,8 +66,12 @@ const LESSON_CODES = new Set([
  * Lead detail (11): profile with status, source, assignee and next follow-up; actions (edit, move, lost,
  * archive); tabs Timeline (composer + history) and Details. Same-phone leads can be merged into.
  */
-export default async function LeadPage({ params }: PageProps<"/[locale]/leads/[leadId]">) {
+export default async function LeadPage({
+  params,
+  searchParams,
+}: PageProps<"/[locale]/leads/[leadId]">) {
   const { leadId } = await params;
+  const { do: doParam } = await searchParams;
   const ctx = await requireAdminContext();
   if (!ctx.can.leads) notFound();
   const t = await getTranslations("leads");
@@ -77,41 +89,57 @@ export default async function LeadPage({ params }: PageProps<"/[locale]/leads/[l
   if (!data) notFound();
   const lead = data as unknown as LeadRow;
 
-  const [{ data: activities }, branches, courses, assignees, reasons, groups, duplicates] =
-    await Promise.all([
-      supabase
-        .from("lead_activities")
-        .select(
-          "id, kind, body, call_outcome, from_status, to_status, due_at, done_at, created_by, created_at",
-        )
-        .eq("lead_id", leadId)
-        .order("created_at", { ascending: false })
-        .limit(300),
-      loadBranches(ctx),
-      loadCourses(ctx),
-      loadAssignees(ctx),
-      loadLostReasons(ctx),
-      loadGroupOptions(ctx),
-      lead.phone
-        ? supabase
-            .rpc("lead_duplicates", {
-              p_center_id: ctx.center.id,
-              p_phone: lead.phone,
-              p_exclude_lead_id: lead.id,
-            })
-            .then((r) => r.data ?? [])
-        : Promise.resolve([]),
-    ]);
+  const [
+    { data: activities },
+    branches,
+    courses,
+    assignees,
+    reasons,
+    groups,
+    duplicates,
+    teachers,
+    { data: trials },
+  ] = await Promise.all([
+    supabase
+      .from("lead_activities")
+      .select(
+        "id, kind, body, call_outcome, from_status, to_status, due_at, done_at, created_by, created_at",
+      )
+      .eq("lead_id", leadId)
+      .order("created_at", { ascending: false })
+      .limit(300),
+    loadBranches(ctx),
+    loadCourses(ctx),
+    loadAssignees(ctx),
+    loadLostReasons(ctx),
+    loadGroupOptions(ctx),
+    lead.phone
+      ? supabase
+          .rpc("lead_duplicates", {
+            p_center_id: ctx.center.id,
+            p_phone: lead.phone,
+            p_exclude_lead_id: lead.id,
+          })
+          .then((r) => r.data ?? [])
+      : Promise.resolve([]),
+    loadTeachers(ctx),
+    supabase
+      .from("lead_trials")
+      .select("id, lesson_id, status, feedback, created_at")
+      .eq("lead_id", leadId)
+      .order("created_at", { ascending: false }),
+  ]);
 
   // Lessons named by trial rows in the timeline.
   const lessonIds = [
-    ...new Set(
-      (activities ?? [])
+    ...new Set([
+      ...(trials ?? []).map((tr) => tr.lesson_id),
+      ...(activities ?? [])
         .filter((a) => a.kind === "system")
         .map((a) => parseSystem(a.body))
-        .filter((s) => LESSON_CODES.has(s.code) && s.ref)
-        .map((s) => s.ref!),
-    ),
+        .filter((sys) => LESSON_CODES.has(sys.code) && sys.ref)
+        .map((sys) => sys.ref!),
+    ]),
   ];
   const { data: lessons } = lessonIds.length
     ? await supabase.from("lessons").select("id, starts_at, group_id").in("id", lessonIds)
@@ -131,6 +159,60 @@ export default async function LeadPage({ params }: PageProps<"/[locale]/leads/[l
   );
 
   const nowIso = new Date().toISOString();
+  const openTrial = (trials ?? []).find((tr) => tr.status === "scheduled");
+  const attended = (trials ?? []).find((tr) => tr.status === "attended");
+  const lessonGroup = new Map((lessons ?? []).map((l) => [l.id, l.group_id]));
+  const myGroups = groups.filter((g) => ctx.can.inBranch(g.branchId));
+  const trialLessons = await loadTrialLessons(ctx, myGroups, teachers);
+  const trialSetup = {
+    lessons: trialLessons.map((l) => ({
+      id: l.id,
+      groupName: l.groupName,
+      courseId: l.courseId,
+      when: format.dateTime(new Date(l.startsAt), {
+        weekday: "short",
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+        timeZone: ctx.center.timezone,
+      }),
+      teacherName: l.teacherName,
+      count: l.count,
+      capacity: l.capacity,
+    })),
+    courses: courses
+      .filter((c) => trialLessons.some((l) => l.courseId === c.id))
+      .map((c) => ({ id: c.id, name: c.name })),
+    defaultCourseId: lead.interested_course_id,
+  };
+  const accounts = ctx.can.payments ? await loadAccounts(ctx) : [];
+  const today = todayIn(ctx.center.timezone);
+  const convertSetup = ctx.can.students
+    ? {
+        students: duplicates
+          .filter((d) => d.kind === "student" && d.student_id && !d.is_archived)
+          .map((d) => ({ id: d.student_id!, name: d.full_name })),
+        groups: myGroups.map((g) => ({
+          id: g.id,
+          label:
+            g.capacity === null
+              ? `${g.name} · ${t("trial.students", { count: g.count })}`
+              : `${g.name} · ${t("trial.seats", { count: g.count, capacity: g.capacity })}`,
+          courseId: g.courseId,
+        })),
+        defaultGroupId: attended ? (lessonGroup.get(attended.lesson_id) ?? null) : null,
+        canDiscount: ctx.can.discounts,
+        payment: ctx.can.payments
+          ? {
+              accounts,
+              currency: ctx.center.currency,
+              today,
+              minDate: ctx.can.void ? null : addDays(today, -7),
+            }
+          : null,
+      }
+    : null;
   const authorOf = new Map(assignees.filter((a) => a.profileId).map((a) => [a.profileId!, a.name]));
   const when = (iso: string) =>
     format.dateTime(new Date(iso), {
@@ -225,14 +307,17 @@ export default async function LeadPage({ params }: PageProps<"/[locale]/leads/[l
   const SourceIcon = SOURCE_ICONS[lead.source];
   const overdue = lead.next_follow_up_at !== null && lead.next_follow_up_at < nowIso;
 
-  const dupes = duplicates.map((d) => ({
-    kind: d.kind as "lead" | "student" | "guardian",
-    leadId: d.lead_id,
-    studentId: d.student_id,
-    name: d.full_name,
-    status: d.lead_status,
-    archived: d.is_archived,
-  }));
+  // The student this lead became isn't a duplicate of it.
+  const dupes = duplicates
+    .filter((d) => !(d.kind !== "lead" && d.student_id === lead.converted_student_id))
+    .map((d) => ({
+      kind: d.kind as "lead" | "student" | "guardian",
+      leadId: d.lead_id,
+      studentId: d.student_id,
+      name: d.full_name,
+      status: d.lead_status,
+      archived: d.is_archived,
+    }));
   const mergeCandidates: MergeCandidate[] = dupes
     .filter((d) => d.kind === "lead" && d.leadId && !d.archived && d.status !== "won")
     .map((d) => ({ id: d.leadId!, name: d.name, status: d.status! }));
@@ -292,6 +377,9 @@ export default async function LeadPage({ params }: PageProps<"/[locale]/leads/[l
                 assignees,
               }}
               reasons={reasonOptions}
+              trial={trialSetup}
+              convert={convertSetup}
+              autoOpen={doParam === "trial" || doParam === "convert" ? doParam : null}
             />
           ) : undefined
         }
@@ -343,6 +431,40 @@ export default async function LeadPage({ params }: PageProps<"/[locale]/leads/[l
                 </div>
               }
             />
+            {openTrial ? (
+              <Section title={t("trial.openTitle")} titleSize="card">
+                {canWrite ? (
+                  <OpenTrialCard
+                    leadId={lead.id}
+                    trial={{
+                      id: openTrial.id,
+                      lesson: lessonLabel.get(openTrial.lesson_id) ?? "—",
+                      feedback: openTrial.feedback,
+                    }}
+                  />
+                ) : (
+                  <p className="text-[15px] text-foreground">
+                    {lessonLabel.get(openTrial.lesson_id) ?? "—"}
+                  </p>
+                )}
+              </Section>
+            ) : null}
+            {(trials ?? []).some((tr) => tr.feedback && tr.status !== "scheduled") ? (
+              <Section title={t("trial.feedbackTitle")} titleSize="card">
+                <ul className="space-y-2" data-testid="trial-feedback-list">
+                  {(trials ?? [])
+                    .filter((tr) => tr.feedback && tr.status !== "scheduled")
+                    .map((tr) => (
+                      <li key={tr.id} className="space-y-0.5">
+                        <p className="text-sm text-muted-foreground">
+                          {lessonLabel.get(tr.lesson_id) ?? "—"} · {t(`trial.status.${tr.status}`)}
+                        </p>
+                        <p className="text-[15px] text-foreground">{tr.feedback}</p>
+                      </li>
+                    ))}
+                </ul>
+              </Section>
+            ) : null}
             {status === "lost" && lead.lost_note ? (
               <Section title={t("lost.noteTitle")} titleSize="card">
                 <p className="text-[15px] whitespace-pre-line text-secondary-foreground">
@@ -399,7 +521,7 @@ export default async function LeadPage({ params }: PageProps<"/[locale]/leads/[l
                 canWrite={canWrite}
                 assignees={assignees}
                 myMembershipId={ctx.membership.id}
-                today={todayIn(ctx.center.timezone)}
+                today={today}
               />
             ),
           },
