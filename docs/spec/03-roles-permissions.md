@@ -92,6 +92,10 @@ Rules:
 3. **Mutations with side effects** (enroll, freeze, transfer, record payment, void, recalc) are `security definer` RPCs. They check permissions themselves with the same helpers, run in one transaction, and write `audit_log`.
 4. **Read-only centers** (`past_due` past grace → `read_only`): every write policy includes `private.center_writable(center_id)`. Reads keep working, so a center can always see and export its data.
 5. **Service role** is used only in the worker, `/tg/api`, `/api/pay/*` and `/admin`. Every query there filters by an explicit `center_id` / subject derived from a verified identity (Telegram `initData`, provider signature, super-admin session).
+
+   > PROPOSED (M4 plan): the worker is narrower than the service role. It connects as `uteach_worker`, which can
+   > only execute the `worker.*` functions (02, under `system_heartbeats`); the bot's reads take the Telegram user
+   > id (from the update, verified by Telegram) and return only that user's linked subjects.
 6. **Super-admin support view:** opening a center writes `audit_log(action='support_view')`. The support UI is read-only; there is no "log in as user".
 
 ## Student / parent identity

@@ -7,7 +7,9 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M3 · Billing**: ☑ done 2026-10-12 (M3a #12, M3b #13, M3c #14 merged, CI green). Next: M4 · Telegram & SMS (starts in plan mode as a plan PR; picks up debtor reminders, broadcast and the "last reminder" column).
+**M4 · Telegram & SMS**: ◐ planned 2026-10-13, not started. Three PRs: M4a data layer → M4b worker & SMS →
+M4c staff screens. The plan and its decisions are in `30-milestones.md` (M4) and the `PROPOSED (M4 plan)` notes
+in 01, 02, 03, 05-ui, 10, 15 and 17.
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -17,7 +19,7 @@ Format: newest first. Keep it short and factual.
 | M1 | Academic core | ☑ done | 2026-10-11 |
 | M2 | Attendance | ☑ done | 2026-10-12 |
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
-| M4 | Telegram & SMS | ☐ | |
+| M4 | Telegram & SMS | ◐ planned (M4a, M4b, M4c) | |
 | M5 | Leads CRM | ☐ | |
 | M6 | Exam scores | ☐ | |
 | M7 | Launch 🚀 | ☐ | |
@@ -51,6 +53,20 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | `packages/core` money/phone/tz helpers tested | ☑ | 26 unit tests incl. the 15-payments worked example and DST |
 | CI on PRs | ☑ | GitHub Actions on PR #1: checks, Supabase DB tests, e2e and Docker build all green |
 | E2E happy path | ☑ | `pnpm e2e`: 3 tests pass against local Supabase (2026-10-11) |
+
+## M4 "done when" status
+
+| Item (30-milestones) | Status | Evidence |
+|---|---|---|
+| Shared contact links a parent to all children across centers; forwarded contact rejected | ☐ | |
+| Bot menu: schedule, attendance, payments (+ receipt PDF) per child, in the user's language | ☐ | |
+| Absence alert in Telegram ~10 min after marking; blocked bot → SMS (Eskiz sandbox) + unlinked | ☐ | |
+| Worker killed mid-send, restarted → every pending message sent exactly once | ☐ | |
+| Two workers never double-send (SKIP LOCKED) | ☐ | |
+| Broadcast to "debtors of branch X" reaches exactly that set; preview count matches | ☐ | |
+| Reminders every `reminder_every_days`, none in quiet hours, none after paying | ☐ | |
+| Heartbeat older than 2 min shows red on the health page | ☐ | |
+| Sign-up OTP arrives by real SMS in staging | ☐ | |
 
 ## M3 "done when" status
 
@@ -113,6 +129,22 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M4 planned; hosted preview
+- M4 plan: three PRs (M4a data layer → M4b worker & SMS → M4c staff screens); see `30-milestones.md`.
+- Decisions recorded as `PROPOSED (M4 plan)` in 01, 02, 03, 05-ui, 10, 15, 17 and 30, including: the worker
+  uses a `uteach_worker` role limited to a `worker` schema instead of the service role; bot token and Eskiz
+  credentials are environment variables; a dev bot and `@uteach_bot`; no hosted worker until M7; bot texts in the
+  i18n catalogs; SMS stays off until Eskiz approves the templates (SMS broadcasts too); reminders at 10:00 center
+  time, re-checked against the balance before sending; `create_broadcast()` / `preview_broadcast()` share one
+  query; outbox select widens to branch admins; per-phone OTP limit in the hook; Broadcasts in the nav; the
+  notifications bell waits.
+- Hosted preview (team only, Vercel Hobby): Supabase project `uteach` (Singapore) has all six migrations; the
+  web app deploys to Vercel with root `apps/web`. Known gaps: login fails there because the Phone provider is off
+  and the SMS hook isn't connected (both come with M4b); hosted sign-up through the dashboard fails because
+  `on_auth_user_created` needs a phone.
+- Needed from the owner before M4b: create the bots in @BotFather, open an Eskiz account and submit the three SMS
+  templates.
 
 ### 2026-10-12 · M3c debtors & import
 - **Debtors** page (nav after Payments, `billing`): aging tiles that filter, search, filters for bucket, branch,

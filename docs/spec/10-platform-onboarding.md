@@ -19,6 +19,12 @@ Tables: `profiles`, `centers`, `branches`, `rooms`, `memberships`, `plans`, `pla
 
 > PROPOSED (M0): until the full wizard (M1), a first-run **Create center** form asks for the center name, language, time zone and first branch. During the SMS-code step the phone number is kept in a 15-minute httpOnly cookie, never in the URL. The center shown in the app is remembered in the `uteach_center` cookie; switching it never grants access (RLS decides). The per-phone OTP limit (5/hour) moves to M4 with Eskiz; M0 relies on Supabase's limits (one SMS per 60 s per user, 30 per hour per project locally).
 
+> PROPOSED (M4 plan): the per-phone limit (5 codes per phone per hour) is enforced in `/api/auth/sms-hook` in
+> M4b, counted in a small `private.otp_sends` log (phone hash + time, rows older than a day removed by pg_cron).
+> Over the limit the hook returns an error, so Auth shows "too many codes". The onboarding checklist gets
+> "Connect Telegram" in M4c: done once the center has one linked student or guardian; it links to
+> Settings → Telegram.
+
 > PROPOSED: the whole section (`create_center()` RPC, what it seeds, one cash account per branch).
 
 Signing up as a new owner leads to the onboarding wizard. `create_center()` RPC creates, in one transaction: the center (status `trial`, `trial_ends_at = now()+14d`), the owner membership (`active`), the first branch (timezone = center timezone), and seed data (lost reasons, system templates are global, one cash account per branch).

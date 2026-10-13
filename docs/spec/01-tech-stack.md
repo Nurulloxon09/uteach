@@ -38,6 +38,12 @@ No Vercel Hobby: its terms are non-commercial.
 > static `new URL("…", import.meta.url)`, so Next copies them next to the server code (standalone included) and
 > the M4 worker can load them the same way. `@react-pdf/renderer` is a `serverExternalPackages` entry in Next.
 
+> PROPOSED (M4 plan): libraries joining in M4: **grammY** (worker, already in the table), **`postgres`**
+> (postgres.js) as a runtime dependency of the worker, and **`qrcode`** (web, renders the center's bot deep link
+> as a printable QR). The worker gets Vitest for its integration test. The hosted Vercel project
+> (`uteach-black.vercel.app`, Hobby) is a preview for the team only, never for a paying center; production stays
+> the VPS (M7).
+
 > PROPOSED (M0): the GitHub repo is linked to a Vercel project (team "student-union"), which deploys every push by default. `vercel.json` sets `git.deploymentEnabled: false` so only our own CI runs on PRs. Remove it if Vercel previews are wanted later.
 
 
@@ -108,6 +114,14 @@ Pure business logic (money maths, proration, schedule expansion, rounding, payro
 - Heartbeat: upserts `system_heartbeats` every 30 s. Super-admin health shows stale workers.
 - Runs as a single instance at first. SKIP LOCKED makes running two safe.
 
+> PROPOSED (M4 plan): the worker does **not** use the service-role key. It connects with postgres.js
+> (`WORKER_DATABASE_URL`) as the `uteach_worker` database role, which can only execute functions in the `worker`
+> schema (claim, mark sent/retry/failed, stale recovery, heartbeat, contact linking, the bot's reads). The
+> migration creates the role without a login; local `seed.sql` gives it a test password, and on hosted projects
+> the owner sets one. Its secrets are environment variables: `TELEGRAM_BOT_TOKEN`, `ESKIZ_EMAIL`,
+> `ESKIZ_PASSWORD`, `SMS_PROVIDER`. There are two bots: a dev bot (local and staging) and `@uteach_bot`
+> (production). Until the VPS exists (M7) the worker runs on a laptop; Vercel can't host long polling.
+
 ### Supabase
 
 > PROPOSED (M0): OTP texts go through Supabase Auth's **Send SMS hook (HTTP)** → `apps/web` `/api/auth/sms-hook` (Standard Webhooks signature) → `SmsProvider` adapter. The text comes from the i18n catalogs in the user's locale. The console adapter prints codes in dev; Eskiz plugs in at M4. Locally, `supabase/config.toml` lists fixed test codes for `+99899000000x` numbers (e2e tests); they never trigger an SMS.
@@ -118,6 +132,10 @@ Pure business logic (money maths, proration, schedule expansion, rounding, payro
 - Auth: phone + password; OTP for sign-up and reset is delivered through the **Send SMS hook → Eskiz**.
 - Storage buckets: `center-assets` (logos), `receipts` (PDF), `attachments` (expenses, homework), `imports` (uploaded Excel). Each bucket has RLS by `center_id` path prefix: `{center_id}/…`.
 - Vault: payment provider secrets, Eskiz credentials, bot token.
+
+> PROPOSED (M4 plan): the bot token and Eskiz credentials belong to our own server processes, so they are
+> environment variables of the worker and web (for the SMS hook), not Vault entries. Vault keeps per-center
+> secrets (payment providers, M8).
 - pg_cron: scheduled jobs (below).
 
 ### Scheduled jobs (all idempotent)
