@@ -88,7 +88,9 @@
     "broadcasts": "Xabarnomalar",
     "notifications": "Bildirishnomalar",
     "telegram": "Telegram",
-    "health": "Holat"
+    "health": "Holat",
+    "leads": "Lidlar",
+    "lostReasons": "Rad etish sabablari"
   },
   "errors": {
     "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
@@ -188,7 +190,18 @@
       "sms_not_available": "SMS orqali xabarnoma hozircha mavjud emas: tasdiqlangan SMS shablon kerak.",
       "invalid_body": "2000 belgigacha xabar yozing.",
       "invalid_channel": "Telegram yoki SMS ni tanlang.",
-      "no_debt": "Bu oʻquvchining qarzi yoʻq."
+      "no_debt": "Bu oʻquvchining qarzi yoʻq.",
+      "invalid_assignee": "Lidni egasi yoki administratorga biriktiring.",
+      "invalid_lead": "Lid maʼlumotlarini tekshiring.",
+      "lead_archived": "Bu lid arxivda.",
+      "trial_required": "Avval sinov darsi uchun darsni tanlang.",
+      "invalid_lead_move": "Lidni bu bosqichga bu yerdan oʻtkazib boʻlmaydi.",
+      "lost_reason_required": "Lid nima sababdan yoʻqotilganini tanlang.",
+      "invalid_activity": "Eslatma, qoʻngʻiroq natijasi yoki vazifa muddatini kiriting.",
+      "merge_same_lead": "Birlashtirish uchun boshqa lidni tanlang.",
+      "lead_closed": "Bu lid allaqachon yutilgan yoki yoʻqotilgan.",
+      "lesson_not_upcoming": "Hali boshlanmagan darsni tanlang.",
+      "trial_not_open": "Bu sinov darsi endi rejalashtirilmagan."
     },
     "groupHasStudents": "Arxivlashdan oldin guruh oʻquvchilarining oʻqishini tugating yoki ularni oʻtkazing.",
     "duplicateStudent": "Bunday ism yoki telefonli oʻquvchi allaqachon bor. Roʻyxatni tekshiring yoki baribir qoʻshish uchun yana saqlang."
@@ -364,7 +377,10 @@
     "continueSetupHint": "{total} bosqichdan {done} tasi bajarildi. Toʻxtagan joyingizdan davom eting.",
     "continueSetupButton": "Sozlashni davom ettirish",
     "connectTelegram": "Telegramni ulang",
-    "connectTelegramHint": "Ota-onalar xabar va kvitansiyalarni olishi uchun bot havolasini ulashing."
+    "connectTelegramHint": "Ota-onalar xabar va kvitansiyalarni olishi uchun bot havolasini ulashing.",
+    "followUps": "Mening vazifalarim",
+    "followUpsHint": "Bugunga va muddati oʻtgan lid vazifalari.",
+    "followUpsEmpty": "Bugun vazifa yoʻq."
   },
   "today": {
     "title": "Bugun",
@@ -1830,5 +1846,195 @@
     "confirm": "{recipients} ta qabul qiluvchiga yuborish",
     "confirmHint": "Xabarni kim olishini tekshirdim.",
     "perLocaleHide": "Barcha tillar uchun bitta matn"
+  },
+  "kanban": {
+    "dragStart": "{title} olindi.",
+    "dragOver": "{title} «{column}» ustida.",
+    "dragEnd": "{title} «{column}» ga oʻtkazildi.",
+    "dragCancel": "{title} koʻchirilishi bekor qilindi.",
+    "dragInstructions": "Kartani olish uchun boʻsh joy tugmasini, koʻchirish uchun chap va oʻng strelkalarni, qoʻyish uchun yana boʻsh joyni, bekor qilish uchun Esc ni bosing."
+  },
+  "leads": {
+    "title": "Lidlar",
+    "boardTitle": "Voronka",
+    "listTitle": "Barcha lidlar",
+    "searchPlaceholder": "Ism yoki telefon",
+    "searchLabel": "Lidlarni qidirish",
+    "emptyTitle": "Hozircha lidlar yoʻq",
+    "emptyHint": "Darslar bilan qiziqqanlarni qoʻshing va ularni sinov darsi hamda yozilishgacha olib boring.",
+    "filterFollowUp": "Vazifa",
+    "followUpOverdue": "Muddati oʻtgan",
+    "addButton": "Yangi lid",
+    "addTitle": "Yangi lid",
+    "addSubmit": "Lidni qoʻshish",
+    "added": "Lid qoʻshildi",
+    "editTitle": "Lidni tahrirlash",
+    "moved": "{name}: {status}",
+    "moveTo": "Oʻtkazish",
+    "reopen": "Qayta ochish",
+    "markLost": "Yoʻqotilgan deb belgilash",
+    "archiveTitle": "{name} arxivlansinmi?",
+    "archiveHint": "Lid doska va roʻyxatlardan yoʻqoladi; keyin tiklash mumkin.",
+    "restoreTitle": "{name} tiklansinmi?",
+    "archived": "Lid arxivlandi",
+    "restored": "Lid tiklandi",
+    "nextFollowUpAt": "Keyingi vazifa: {when}",
+    "noFollowUp": "Vazifa rejalashtirilmagan",
+    "convertedTitle": "Oʻquvchi",
+    "view": {
+      "label": "Koʻrinish",
+      "board": "Doska",
+      "list": "Roʻyxat"
+    },
+    "board": {
+      "empty": "Bu yerda lid yoʻq",
+      "show": "Koʻrsatish",
+      "statusPicker": "Bosqich",
+      "limited": "Eng yangi {count} ta lid koʻrsatilmoqda. Qolganlari uchun filtrlar yoki roʻyxatdan foydalaning."
+    },
+    "status": {
+      "new": "Yangi",
+      "contacted": "Bogʻlanildi",
+      "trial_scheduled": "Sinov darsi belgilangan",
+      "trial_done": "Sinov darsi oʻtildi",
+      "won": "Yozildi",
+      "lost": "Yoʻqotildi"
+    },
+    "source": {
+      "instagram": "Instagram",
+      "telegram": "Telegram",
+      "walk_in": "Oʻzi keldi",
+      "call": "Qoʻngʻiroq",
+      "referral": "Tavsiya orqali",
+      "web_form": "Saytdagi forma",
+      "meta_ads": "Facebook / Instagram reklamasi",
+      "other": "Boshqa"
+    },
+    "lostReason": {
+      "price": "Narx",
+      "schedule": "Dars jadvali",
+      "location": "Manzil",
+      "competitor": "Raqobatchini tanladi",
+      "no_response": "Javob bermayapti",
+      "other": "Boshqa"
+    },
+    "fields": {
+      "fullName": "Ism",
+      "phone": "Telefon",
+      "telegram": "Telegram",
+      "source": "Manba",
+      "sourceDetail": "Kampaniya yoki tavsiya qilgan",
+      "sourceDetailPlaceholder": "masalan, sentabr reklamasi",
+      "goal": "Maqsad",
+      "goalPlaceholder": "masalan, IELTS 7.0",
+      "targetScore": "Maqsadli ball",
+      "currentLevel": "Hozirgi daraja",
+      "currentLevelPlaceholder": "masalan, B1",
+      "course": "Qiziqqan kurs",
+      "none": "Tanlanmagan",
+      "preferredSchedule": "Qulay vaqt",
+      "preferredSchedulePlaceholder": "masalan, kechqurun, du/chor/ju",
+      "branch": "Filial",
+      "assignee": "Masʼul",
+      "nobody": "Biriktirilmagan",
+      "firstNote": "Eslatma",
+      "nextFollowUp": "Keyingi vazifa",
+      "created": "Qoʻshilgan"
+    },
+    "duplicates": {
+      "title": "Ehtimoliy takror",
+      "lead": "lid, {status}",
+      "student": "oʻquvchi",
+      "guardian": "bu telefon ota-onada",
+      "archived": "arxivda",
+      "hint": "Baribir saqlash mumkin; avval moslikni tekshiring."
+    },
+    "lost": {
+      "title": "{name}: rad etildi",
+      "hint": "Sababini tanlang. Lidni keyin topish va qayta ochish mumkin.",
+      "submit": "Belgilash",
+      "done": "Yoʻqotilgan deb belgilandi",
+      "reason": "Sabab",
+      "reasonPlaceholder": "Sababni tanlang",
+      "note": "Izoh (ixtiyoriy)",
+      "noteTitle": "Nima uchun rad etildi"
+    },
+    "merge": {
+      "button": "Birlashtirish",
+      "title": "{source} {target} bilan birlashtirilsinmi?",
+      "hint": "Bu lid tarixi va sinov darslari oʻsha lidga oʻtadi, boʻsh maydonlar shundan toʻldiriladi, bu lid esa arxivlanadi.",
+      "confirm": "Birlashtirish",
+      "done": "Lidlar birlashtirildi"
+    },
+    "tabs": {
+      "timeline": "Tarix",
+      "details": "Maʼlumotlar"
+    },
+    "timeline": {
+      "composerKind": "Nima qoʻshiladi",
+      "kind": {
+        "note": "Eslatma",
+        "call": "Qoʻngʻiroq",
+        "task": "Vazifa"
+      },
+      "outcomeLabel": "Natija",
+      "outcomePlaceholder": "Qoʻngʻiroq qanday boʻldi?",
+      "outcome": {
+        "reached": "Gaplashildi",
+        "no_answer": "Javob bermadi",
+        "call_back": "Qayta qoʻngʻiroq qilishni soʻradi"
+      },
+      "bodyLabel": {
+        "note": "Eslatma",
+        "call": "Qoʻngʻiroq boʻyicha izoh (ixtiyoriy)",
+        "task": "Nima qilish kerak"
+      },
+      "dueDate": "Kun",
+      "dueTime": "Vaqt",
+      "assignee": "Kimga",
+      "submit": {
+        "note": "Eslatma qoʻshish",
+        "call": "Qoʻngʻiroqni yozish",
+        "task": "Vazifa qoʻshish"
+      },
+      "saved": "Tarixga qoʻshildi",
+      "empty": "Hozircha boʻsh",
+      "done": "Bajarildi",
+      "due": "Muddat {when}",
+      "markDone": "Bajarildi",
+      "reopenTask": "Bajarilmadi",
+      "callTitle": "Qoʻngʻiroq: {outcome}",
+      "moved": "Oʻtkazildi: {from} → {to}",
+      "created": "Lid qoʻshildi",
+      "trialScheduled": "Sinov darsiga yozildi: {lesson}",
+      "trialAttended": "Sinov darsiga keldi: {lesson}",
+      "trialNoShow": "Sinov darsiga kelmadi: {lesson}",
+      "trialCancelled": "Sinov darsi bekor qilindi: {lesson}",
+      "lessonCancelled": "Sinov darsi boʻladigan dars bekor qilindi: {lesson}",
+      "merged": "Bu lidga boshqa lid birlashtirildi",
+      "converted": "Oʻquvchi boʻldi",
+      "openMerged": "Birlashtirilgan lidni ochish",
+      "openStudent": "Oʻquvchini ochish"
+    }
+  },
+  "lostReasons": {
+    "title": "Rad etish sabablari",
+    "listTitle": "Sabablar",
+    "listHint": "Lid yoʻqotilgan deb belgilanganda taklif qilinadi. Arxivdagilar eski lidlarda qoladi.",
+    "emptyTitle": "Hozircha sabablar yoʻq",
+    "addButton": "Sabab qoʻshish",
+    "addTitle": "Yangi sabab",
+    "addSubmit": "Qoʻshish",
+    "added": "Sabab qoʻshildi",
+    "fields": {
+      "label": "Sabab"
+    },
+    "moveUp": "Yuqoriga",
+    "moveDown": "Pastga",
+    "rename": "Nomini oʻzgartirish",
+    "renameTitle": "Sabab nomini oʻzgartirish",
+    "archiveTitle": "«{label}» arxivlansinmi?",
+    "archiveHint": "U boshqa taklif qilinmaydi; uni tanlagan lidlarda saqlanib qoladi.",
+    "restoreTitle": "«{label}» tiklansinmi?"
   }
 }

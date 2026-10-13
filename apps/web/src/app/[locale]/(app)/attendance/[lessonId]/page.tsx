@@ -52,14 +52,17 @@ export default async function AttendanceSheetPage({
   const editable = lesson.mode === "teacher" || lesson.mode === "admin";
   const afterWindow = lesson.mode === "admin" && nowMs() >= Date.parse(lesson.closes_at);
 
-  const rows: SheetRow[] = (sheet ?? []).map((r) => ({
-    studentId: r.student_id,
-    name: r.full_name,
-    isExpected: r.is_expected,
-    status: isAttendanceStatus(r.status) ? r.status : null,
-    lateMinutes: r.late_minutes,
-    note: r.note,
-  }));
+  // Trial guests (lead_trial_id) get their own rows in M5c; until then the sheet shows students only.
+  const rows: SheetRow[] = (sheet ?? [])
+    .filter((r) => r.lead_trial_id === null)
+    .map((r) => ({
+      studentId: r.student_id,
+      name: r.full_name,
+      isExpected: r.is_expected,
+      status: isAttendanceStatus(r.status) ? r.status : null,
+      lateMinutes: r.late_minutes,
+      note: r.note,
+    }));
   // Remount the sheet whenever what's saved changes (after a save, or someone else's edit).
   const version = [
     lesson.topic ?? "",

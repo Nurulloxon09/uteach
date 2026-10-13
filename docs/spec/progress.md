@@ -9,7 +9,7 @@ Format: newest first. Keep it short and factual.
 ## Current milestone
 **M5 · Leads CRM**: ◐ plan. Started by the owner on 2026-10-13 while M4's last item (real SMS) waits for Eskiz
 and the hosted Phone provider. The plan and its decisions are in `30-milestones.md` (M5) and the
-`PROPOSED (M5 plan)` notes in 02, 03, 05-ui, 11 and 14. Next: M5a (data layer).
+`PROPOSED (M5 plan)` notes in 02, 03, 05-ui, 11 and 14. M5a (data layer) and M5b (pipeline screens) built; next: M5c (trials & convert).
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -20,7 +20,7 @@ and the hosted Phone provider. The plan and its decisions are in `30-milestones.
 | M2 | Attendance | ☑ done | 2026-10-12 |
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
 | M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
-| M5 | Leads CRM | ◐ plan | |
+| M5 | Leads CRM | ◐ in progress (M5a ☑, M5b built) | |
 | M6 | Exam scores | ☐ | |
 | M7 | Launch 🚀 | ☐ | |
 | M8 | Online payments | ☐ | |
@@ -58,12 +58,12 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 | Item (30-milestones) | Status | Evidence |
 |---|---|---|
-| A lead moves through all statuses; every move writes an activity; `lost` without a reason rejected by the DB | ☐ | |
-| Phone matching a lead or student shows the duplicate warning with links | ☐ | |
-| Scheduling a trial puts the guest on the sheet; teacher marking present sets `trial_done` | ☐ | |
-| Convert: student, guardian (re-used by phone), enrollment, first cycle charge in one transaction; `won` | ☐ | |
-| Teachers can't read leads except trial guests on their lessons (name only) | ☐ | |
-| Overdue follow-ups appear on the admin dashboard widget | ☐ | |
+| A lead moves through all statuses; every move writes an activity; `lost` without a reason rejected by the DB | ◐ | pgTAP `m5_leads` (moves, activities, check constraints for lost/won, the move table = `canMoveLead` in a PGlite parity test); screens in M5b |
+| Phone matching a lead or student shows the duplicate warning with links | ◐ | pgTAP (`lead_duplicates`: lead, student, guardian's student, own branches only); New lead dialog shows the warning with links (checked in the browser); e2e in M5c |
+| Scheduling a trial puts the guest on the sheet; teacher marking present sets `trial_done` | ◐ | pgTAP (guest on `attendance_sheet`, present → attended + `trial_done`, absent → no_show and back, no alerts, stats/matrix leave guests out, cancelled lesson cancels the trial); sheet UI in M5c |
+| Convert: student, guardian (re-used by phone), enrollment, first cycle charge in one transaction; `won` | ◐ | pgTAP (guardian re-used, charge created, won + student; a failing enroll rolls back student and guardian); dialog in M5c |
+| Teachers can't read leads except trial guests on their lessons (name only) | ◐ | pgTAP (no rows in leads / lead_trials, duplicate check refused, the name only through the sheet) |
+| Overdue follow-ups appear on the admin dashboard widget | ◐ | pgTAP (`my_follow_ups`: overdue task in, future and others' tasks out, done tasks leave); Home "My follow-ups" checked in the browser; e2e in M5c |
 | E2E: lead → contacted → trial → teacher marks present → convert → student in the group with a charge | ☐ | |
 
 ## M4 "done when" status
@@ -141,6 +141,42 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M5b leads screens
+- **Leads** in the nav (flag `leads`): board (New, Contacted, Trial scheduled, Trial done + Won/Lost counts) with
+  drag and keyboard moves, a phone layout (stage switch + list + "Move to"), and a list view (search by name or
+  phone, filters: branch, source, responsible, course, overdue follow-up, status incl. archived).
+- **New lead** / **Edit** dialogs with a live "Possible duplicate" warning (leads, students, guardians' students)
+  under the phone field; **Lost** dialog (reason + note); lead page with profile, Move / Reopen, Mark lost,
+  Archive / Restore, same-phone leads with "Merge into it", tabs Timeline (note, call with result, task with
+  day/time/responsible; Done toggle; system rows for trials, merges, conversion) and Details.
+- **Settings → Lost reasons** (add, rename, reorder, archive); **Home → My follow-ups**.
+- New pattern `KanbanBoard` on `/dev/ui`; `can.leads` in the center context; `kanban.*`, `leads.*`,
+  `lostReasons.*` messages in uz/ru/en.
+- Checked in the browser (local, dev data): create with duplicate warning, note, overdue task → Home widget,
+  move, lost with reason → Reopen, keyboard move on the board saved with its activity, uz list, ru lost reasons
+  reorder; screenshot of the board at 1440. Found and fixed on the way: maps imported from a "use client"
+  module arrive empty in server pages (icons moved to `lead-meta.ts`).
+- Decisions: `PROPOSED (M5b, as built)` in 05-ui. The M5 e2e comes with M5c (plan).
+
+### 2026-10-13 · M5a leads data layer
+- Migration `m5_leads`: enums; `lost_reasons` (six `system_key` rows per center, seeded on create and backfilled),
+  `leads`, `lead_activities`, `lead_trials` with RLS (owners and branch admins with `leads`; teachers nothing);
+  `attendance.lead_trial_id` (the two `not null`s relaxed, `num_nonnulls` check, unique per lesson).
+- RPCs: `create_lead`, `move_lead`, `add_lead_activity`, `complete_lead_task`, `lead_duplicates`, `merge_leads`,
+  `schedule_trial`, `cancel_trial`, `save_trial_feedback`, `convert_lead`, `my_follow_ups`. `attendance_sheet`
+  returns guests (name, trial id, feedback); `save_attendance` takes `leadTrialId` rows; `lesson_attendance_stats`
+  skips guests. Triggers: `next_follow_up_at` = earliest open task; a cancelled lesson cancels its trials (lead
+  back to contacted); regeneration keeps lessons with live trials. System timeline rows use codes
+  (`created`, `trial_scheduled:{lesson}`, `trial_attended:…`, `trial_no_show:…`, `trial_cancelled:…`,
+  `lesson_cancelled:…`, `merged:{lead}`, `converted:{student}`) for M5b to render.
+- `packages/core/leads` (`canMoveLead`, `leadDropAction`, status/source/reason lists); 11 new DB error codes in
+  uz/ru/en. The attendance sheet page hides guest rows until M5c builds them.
+- Tests: pgTAP `m5_leads` (93); `leads.parity.test.ts` (SQL vs TS move table); core unit tests.
+- Local note: `supabase link` (13:38) pinned the hosted service versions in `supabase/.temp`, so `supabase
+  start` tried to download other images; the pins were moved aside and local runs on the images already
+  present. pgTAP `m1_academic` / `m4_telegram` fail locally only because the dev database has data (they pass
+  on a clean one).
 
 ### 2026-10-13 · M5 plan
 - The owner asked to start M5 while M4's real-SMS item is skipped (Eskiz account, approved texts and the hosted

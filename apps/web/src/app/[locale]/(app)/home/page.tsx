@@ -1,6 +1,8 @@
 import {
   ArrowRight,
+  BellRing,
   Building2,
+  CalendarCheck2,
   DoorOpen,
   GraduationCap,
   Send,
@@ -12,6 +14,7 @@ import {
 import { getFormatter, getTranslations } from "next-intl/server";
 import {
   ActivityList,
+  EmptyState,
   Section,
   StatTiles,
   StatusChip,
@@ -69,6 +72,29 @@ export default async function HomePage() {
       .is("unlinked_at", null)
       .is("membership_id", null),
   ]);
+  // "My follow-ups" (11): my open lead tasks due today or overdue.
+  const { data: followUps } = ctx.can.leads
+    ? await supabase.rpc("my_follow_ups", { p_center_id: ctx.center.id })
+    : { data: null };
+  const followUpItems: ActivityItem[] = (followUps ?? []).map((f) => ({
+    key: f.activity_id,
+    icon: BellRing,
+    tone: f.is_overdue ? "orange" : "blue",
+    title: f.lead_name,
+    description: f.body ?? undefined,
+    meta: (
+      <StatusChip tone={f.is_overdue ? "destructive" : "muted"}>
+        {format.dateTime(new Date(f.due_at), {
+          day: "numeric",
+          month: "short",
+          hour: "2-digit",
+          minute: "2-digit",
+          timeZone: ctx.center.timezone,
+        })}
+      </StatusChip>
+    ),
+    href: `/leads/${f.lead_id}`,
+  }));
   const counts = {
     branches: branches.count ?? 0,
     rooms: rooms.count ?? 0,
@@ -218,6 +244,23 @@ export default async function HomePage() {
           ]}
         />
       </Section>
+
+      {ctx.can.leads ? (
+        <Section
+          title={t("followUps")}
+          titleSize="card"
+          description={t("followUpsHint")}
+          id="follow-ups"
+        >
+          {followUpItems.length > 0 ? (
+            <div data-testid="follow-ups">
+              <ActivityList items={followUpItems} />
+            </div>
+          ) : (
+            <EmptyState icon={CalendarCheck2} title={t("followUpsEmpty")} />
+          )}
+        </Section>
+      ) : null}
 
       <Section title={t("nextSteps")} titleSize="card" description={t("nextStepsHint")}>
         <ActivityList items={steps} />
