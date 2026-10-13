@@ -12,6 +12,9 @@ const MONEY_KEYS = new Set(["amount", "balance", "debt"]);
 /** Payload keys holding calendar days ("YYYY-MM-DD"). */
 const DATE_KEYS = new Set(["date", "oldDate", "dueDate", "startDate", "oldestDueDate"]);
 
+/** Payload keys holding `{uz, ru, en}` text: the recipient's language is used. */
+const LOCALIZED_KEYS = ["sections"] as const;
+
 const ISO_DAY = /^(\d{4})-(\d{2})-(\d{2})$/;
 const MINOR_UNITS = /^-?\d+$/;
 
@@ -62,6 +65,14 @@ export function templateValues(
     const own = (bodies as Record<string, unknown>)[options.locale];
     if (typeof own === "string" && own.trim()) values.body = own;
   }
+  // Text the database wrote once per language (score_posted's section line).
+  for (const key of LOCALIZED_KEYS) {
+    const byLocale = payload[key];
+    if (byLocale && typeof byLocale === "object") {
+      const own = (byLocale as Record<string, unknown>)[options.locale];
+      values[key] = typeof own === "string" ? own : "";
+    }
+  }
   return values;
 }
 
@@ -90,6 +101,7 @@ export const TEMPLATE_KEYS = [
   "charge_created",
   "payment_reminder",
   "payment_due_soon",
+  "score_posted",
   "broadcast",
   "substitute_assigned",
   "schedule_conflict",
@@ -156,6 +168,23 @@ export function samplePayload(key: TemplateKey, center: string): Record<string, 
         amount: "60000000",
         currency: "UZS",
         dueDate: "2026-10-15",
+      };
+    case "score_posted":
+      return {
+        student: "Ali Valiyev",
+        center,
+        exam: "IELTS",
+        kind: "mock",
+        date: "2026-10-12",
+        sections: {
+          uz: "Tinglash 6.5 · Oʻqish 7.0 · Yozish 6.0 · Gapirish 6.5",
+          ru: "Аудирование 6.5 · Чтение 7.0 · Письмо 6.0 · Говорение 6.5",
+          en: "Listening 6.5 · Reading 7.0 · Writing 6.0 · Speaking 6.5",
+        },
+        hasTotal: true,
+        total: "6.5",
+        hasTarget: true,
+        target: "7.0",
       };
     case "broadcast":
       return { center, body: "…" };

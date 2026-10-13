@@ -7,7 +7,7 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M6 · Exam scores**: ◐ planned 2026-10-13 (plan PR), building next as M6a (data), M6b (screens), M6c (bot +
+**M6 · Exam scores**: ◐ in progress. Plan (#27) and M6a data layer built; next M6b (screens), M6c (bot +
 e2e). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
 Eskiz and the hosted Phone provider. M6's decisions are in `30-milestones.md` (M6) and the `PROPOSED (M6 plan)`
 notes in 02, 03, 05-ui, 16 and 17.
@@ -22,7 +22,7 @@ notes in 02, 03, 05-ui, 16 and 17.
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
 | M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
 | M5 | Leads CRM | ☑ done (#23, #24, #26) | 2026-10-13 |
-| M6 | Exam scores | ◐ planned | |
+| M6 | Exam scores | ◐ in progress (plan #27, M6a built) | |
 | M7 | Launch 🚀 | ☐ | |
 | M8 | Online payments | ☐ | |
 | M9 | Mini App | ☐ | |
@@ -142,6 +142,22 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M6a exam scores data layer
+- Migration `m6_exams`: `exam_result_kind`; `exam_types` with the four presets (IELTS, SAT, CEFR multilevel,
+  Milliy sertifikat) read-only for centers, custom types frozen once used; `exam_results` (trigger validates
+  range/step, drops empty values, computes the total; `nulls not distinct` re-entry key); `student_targets`;
+  `courses.exam_type_id`; RLS (branch staff and the student's teachers read; writes only through RPCs).
+- RPCs: `save_group_scores` (upsert per student, empty row deletes, queues `score_posted`),
+  `save_official_result`, `delete_exam_result`, `set_student_target`, `group_scores` (gap table: latest,
+  previous, target, gap, baseline, uplift), `score_entries`. Converting a lead with a target score writes the
+  target when the course has an exam type. `attachments` bucket for certificates.
+- `score_posted` Telegram templates (uz/ru/en), 10 minutes after a save, a re-save replaces the waiting message;
+  listed in Settings → Notifications.
+- `packages/core/exams` (`ieltsBand`, `examTotal`, `validateScores`, `cefrLevel`, `milliyGrade`, presets) with
+  `exams.fixtures.json` (77 cases) shared by the unit test and the SQL parity test; pgTAP `m6_exams` (61).
+- Done-when ☑: IELTS rounding fixtures + parity; presets not editable by centers.
+- Decisions: `PROPOSED (M6a, as built)` in 30.
 
 ### 2026-10-13 · M6 plan
 - The owner said to start M6. Plan recorded as `PROPOSED (M6 plan)` in 30 (three PRs: M6a data layer, M6b score

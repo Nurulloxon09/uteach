@@ -1,0 +1,973 @@
+[
+  {
+    "name": "IELTS mean 0.125",
+    "type": "ielts",
+    "scores": {
+      "listening": 0.0,
+      "reading": 0.0,
+      "writing": 0.0,
+      "speaking": 0.5
+    },
+    "total": 0.0
+  },
+  {
+    "name": "IELTS mean 0.25",
+    "type": "ielts",
+    "scores": {
+      "listening": 0.0,
+      "reading": 0.0,
+      "writing": 0.0,
+      "speaking": 1.0
+    },
+    "total": 0.5
+  },
+  {
+    "name": "IELTS mean 0.375",
+    "type": "ielts",
+    "scores": {
+      "listening": 0.0,
+      "reading": 0.0,
+      "writing": 0.0,
+      "speaking": 1.5
+    },
+    "total": 0.5
+  },
+  {
+    "name": "IELTS mean 0.625",
+    "type": "ielts",
+    "scores": {
+      "listening": 0.0,
+      "reading": 0.0,
+      "writing": 1.0,
+      "speaking": 1.5
+    },
+    "total": 0.5
+  },
+  {
+    "name": "IELTS mean 0.75",
+    "type": "ielts",
+    "scores": {
+      "listening": 0.0,
+      "reading": 0.0,
+      "writing": 1.5,
+      "speaking": 1.5
+    },
+    "total": 1.0
+  },
+  {
+    "name": "IELTS mean 0.875",
+    "type": "ielts",
+    "scores": {
+      "listening": 0.0,
+      "reading": 0.5,
+      "writing": 1.5,
+      "speaking": 1.5
+    },
+    "total": 1.0
+  },
+  {
+    "name": "IELTS mean 1.125",
+    "type": "ielts",
+    "scores": {
+      "listening": 0.0,
+      "reading": 1.5,
+      "writing": 1.5,
+      "speaking": 1.5
+    },
+    "total": 1.0
+  },
+  {
+    "name": "IELTS mean 1.25",
+    "type": "ielts",
+    "scores": {
+      "listening": 0.5,
+      "reading": 0.5,
+      "writing": 2.0,
+      "speaking": 2.0
+    },
+    "total": 1.5
+  },
+  {
+    "name": "IELTS mean 1.375",
+    "type": "ielts",
+    "scores": {
+      "listening": 0.5,
+      "reading": 1.0,
+      "writing": 2.0,
+      "speaking": 2.0
+    },
+    "total": 1.5
+  },
+  {
+    "name": "IELTS mean 1.625",
+    "type": "ielts",
+    "scores": {
+      "listening": 0.5,
+      "reading": 2.0,
+      "writing": 2.0,
+      "speaking": 2.0
+    },
+    "total": 1.5
+  },
+  {
+    "name": "IELTS mean 1.75",
+    "type": "ielts",
+    "scores": {
+      "listening": 1.0,
+      "reading": 1.0,
+      "writing": 2.5,
+      "speaking": 2.5
+    },
+    "total": 2.0
+  },
+  {
+    "name": "IELTS mean 1.875",
+    "type": "ielts",
+    "scores": {
+      "listening": 1.0,
+      "reading": 1.5,
+      "writing": 2.5,
+      "speaking": 2.5
+    },
+    "total": 2.0
+  },
+  {
+    "name": "IELTS mean 2.125",
+    "type": "ielts",
+    "scores": {
+      "listening": 1.0,
+      "reading": 2.5,
+      "writing": 2.5,
+      "speaking": 2.5
+    },
+    "total": 2.0
+  },
+  {
+    "name": "IELTS mean 2.25",
+    "type": "ielts",
+    "scores": {
+      "listening": 1.5,
+      "reading": 1.5,
+      "writing": 3.0,
+      "speaking": 3.0
+    },
+    "total": 2.5
+  },
+  {
+    "name": "IELTS mean 2.375",
+    "type": "ielts",
+    "scores": {
+      "listening": 1.5,
+      "reading": 2.0,
+      "writing": 3.0,
+      "speaking": 3.0
+    },
+    "total": 2.5
+  },
+  {
+    "name": "IELTS mean 2.625",
+    "type": "ielts",
+    "scores": {
+      "listening": 1.5,
+      "reading": 3.0,
+      "writing": 3.0,
+      "speaking": 3.0
+    },
+    "total": 2.5
+  },
+  {
+    "name": "IELTS mean 2.75",
+    "type": "ielts",
+    "scores": {
+      "listening": 2.0,
+      "reading": 2.0,
+      "writing": 3.5,
+      "speaking": 3.5
+    },
+    "total": 3.0
+  },
+  {
+    "name": "IELTS mean 2.875",
+    "type": "ielts",
+    "scores": {
+      "listening": 2.0,
+      "reading": 2.5,
+      "writing": 3.5,
+      "speaking": 3.5
+    },
+    "total": 3.0
+  },
+  {
+    "name": "IELTS mean 3.125",
+    "type": "ielts",
+    "scores": {
+      "listening": 2.0,
+      "reading": 3.5,
+      "writing": 3.5,
+      "speaking": 3.5
+    },
+    "total": 3.0
+  },
+  {
+    "name": "IELTS mean 3.25",
+    "type": "ielts",
+    "scores": {
+      "listening": 2.5,
+      "reading": 2.5,
+      "writing": 4.0,
+      "speaking": 4.0
+    },
+    "total": 3.5
+  },
+  {
+    "name": "IELTS mean 3.375",
+    "type": "ielts",
+    "scores": {
+      "listening": 2.5,
+      "reading": 3.0,
+      "writing": 4.0,
+      "speaking": 4.0
+    },
+    "total": 3.5
+  },
+  {
+    "name": "IELTS mean 3.625",
+    "type": "ielts",
+    "scores": {
+      "listening": 2.5,
+      "reading": 4.0,
+      "writing": 4.0,
+      "speaking": 4.0
+    },
+    "total": 3.5
+  },
+  {
+    "name": "IELTS mean 3.75",
+    "type": "ielts",
+    "scores": {
+      "listening": 3.0,
+      "reading": 3.0,
+      "writing": 4.5,
+      "speaking": 4.5
+    },
+    "total": 4.0
+  },
+  {
+    "name": "IELTS mean 3.875",
+    "type": "ielts",
+    "scores": {
+      "listening": 3.0,
+      "reading": 3.5,
+      "writing": 4.5,
+      "speaking": 4.5
+    },
+    "total": 4.0
+  },
+  {
+    "name": "IELTS mean 4.125",
+    "type": "ielts",
+    "scores": {
+      "listening": 3.0,
+      "reading": 4.5,
+      "writing": 4.5,
+      "speaking": 4.5
+    },
+    "total": 4.0
+  },
+  {
+    "name": "IELTS mean 4.25",
+    "type": "ielts",
+    "scores": {
+      "listening": 3.5,
+      "reading": 3.5,
+      "writing": 5.0,
+      "speaking": 5.0
+    },
+    "total": 4.5
+  },
+  {
+    "name": "IELTS mean 4.375",
+    "type": "ielts",
+    "scores": {
+      "listening": 3.5,
+      "reading": 4.0,
+      "writing": 5.0,
+      "speaking": 5.0
+    },
+    "total": 4.5
+  },
+  {
+    "name": "IELTS mean 4.625",
+    "type": "ielts",
+    "scores": {
+      "listening": 3.5,
+      "reading": 5.0,
+      "writing": 5.0,
+      "speaking": 5.0
+    },
+    "total": 4.5
+  },
+  {
+    "name": "IELTS mean 4.75",
+    "type": "ielts",
+    "scores": {
+      "listening": 4.0,
+      "reading": 4.0,
+      "writing": 5.5,
+      "speaking": 5.5
+    },
+    "total": 5.0
+  },
+  {
+    "name": "IELTS mean 4.875",
+    "type": "ielts",
+    "scores": {
+      "listening": 4.0,
+      "reading": 4.5,
+      "writing": 5.5,
+      "speaking": 5.5
+    },
+    "total": 5.0
+  },
+  {
+    "name": "IELTS mean 5.125",
+    "type": "ielts",
+    "scores": {
+      "listening": 4.0,
+      "reading": 5.5,
+      "writing": 5.5,
+      "speaking": 5.5
+    },
+    "total": 5.0
+  },
+  {
+    "name": "IELTS mean 5.25",
+    "type": "ielts",
+    "scores": {
+      "listening": 4.5,
+      "reading": 4.5,
+      "writing": 6.0,
+      "speaking": 6.0
+    },
+    "total": 5.5
+  },
+  {
+    "name": "IELTS mean 5.375",
+    "type": "ielts",
+    "scores": {
+      "listening": 4.5,
+      "reading": 5.0,
+      "writing": 6.0,
+      "speaking": 6.0
+    },
+    "total": 5.5
+  },
+  {
+    "name": "IELTS mean 5.625",
+    "type": "ielts",
+    "scores": {
+      "listening": 4.5,
+      "reading": 6.0,
+      "writing": 6.0,
+      "speaking": 6.0
+    },
+    "total": 5.5
+  },
+  {
+    "name": "IELTS mean 5.75",
+    "type": "ielts",
+    "scores": {
+      "listening": 5.0,
+      "reading": 5.0,
+      "writing": 6.5,
+      "speaking": 6.5
+    },
+    "total": 6.0
+  },
+  {
+    "name": "IELTS mean 5.875",
+    "type": "ielts",
+    "scores": {
+      "listening": 5.0,
+      "reading": 5.5,
+      "writing": 6.5,
+      "speaking": 6.5
+    },
+    "total": 6.0
+  },
+  {
+    "name": "IELTS mean 6.125",
+    "type": "ielts",
+    "scores": {
+      "listening": 5.0,
+      "reading": 6.5,
+      "writing": 6.5,
+      "speaking": 6.5
+    },
+    "total": 6.0
+  },
+  {
+    "name": "IELTS mean 6.25",
+    "type": "ielts",
+    "scores": {
+      "listening": 5.5,
+      "reading": 5.5,
+      "writing": 7.0,
+      "speaking": 7.0
+    },
+    "total": 6.5
+  },
+  {
+    "name": "IELTS mean 6.375",
+    "type": "ielts",
+    "scores": {
+      "listening": 5.5,
+      "reading": 6.0,
+      "writing": 7.0,
+      "speaking": 7.0
+    },
+    "total": 6.5
+  },
+  {
+    "name": "IELTS mean 6.625",
+    "type": "ielts",
+    "scores": {
+      "listening": 5.5,
+      "reading": 7.0,
+      "writing": 7.0,
+      "speaking": 7.0
+    },
+    "total": 6.5
+  },
+  {
+    "name": "IELTS mean 6.75",
+    "type": "ielts",
+    "scores": {
+      "listening": 6.0,
+      "reading": 6.0,
+      "writing": 7.5,
+      "speaking": 7.5
+    },
+    "total": 7.0
+  },
+  {
+    "name": "IELTS mean 6.875",
+    "type": "ielts",
+    "scores": {
+      "listening": 6.0,
+      "reading": 6.5,
+      "writing": 7.5,
+      "speaking": 7.5
+    },
+    "total": 7.0
+  },
+  {
+    "name": "IELTS mean 7.125",
+    "type": "ielts",
+    "scores": {
+      "listening": 6.0,
+      "reading": 7.5,
+      "writing": 7.5,
+      "speaking": 7.5
+    },
+    "total": 7.0
+  },
+  {
+    "name": "IELTS mean 7.25",
+    "type": "ielts",
+    "scores": {
+      "listening": 6.5,
+      "reading": 6.5,
+      "writing": 8.0,
+      "speaking": 8.0
+    },
+    "total": 7.5
+  },
+  {
+    "name": "IELTS mean 7.375",
+    "type": "ielts",
+    "scores": {
+      "listening": 6.5,
+      "reading": 7.0,
+      "writing": 8.0,
+      "speaking": 8.0
+    },
+    "total": 7.5
+  },
+  {
+    "name": "IELTS mean 7.625",
+    "type": "ielts",
+    "scores": {
+      "listening": 6.5,
+      "reading": 8.0,
+      "writing": 8.0,
+      "speaking": 8.0
+    },
+    "total": 7.5
+  },
+  {
+    "name": "IELTS mean 7.75",
+    "type": "ielts",
+    "scores": {
+      "listening": 7.0,
+      "reading": 7.0,
+      "writing": 8.5,
+      "speaking": 8.5
+    },
+    "total": 8.0
+  },
+  {
+    "name": "IELTS mean 7.875",
+    "type": "ielts",
+    "scores": {
+      "listening": 7.0,
+      "reading": 7.5,
+      "writing": 8.5,
+      "speaking": 8.5
+    },
+    "total": 8.0
+  },
+  {
+    "name": "IELTS mean 8.125",
+    "type": "ielts",
+    "scores": {
+      "listening": 7.0,
+      "reading": 8.5,
+      "writing": 8.5,
+      "speaking": 8.5
+    },
+    "total": 8.0
+  },
+  {
+    "name": "IELTS mean 8.25",
+    "type": "ielts",
+    "scores": {
+      "listening": 7.5,
+      "reading": 7.5,
+      "writing": 9.0,
+      "speaking": 9.0
+    },
+    "total": 8.5
+  },
+  {
+    "name": "IELTS mean 8.375",
+    "type": "ielts",
+    "scores": {
+      "listening": 7.5,
+      "reading": 8.0,
+      "writing": 9.0,
+      "speaking": 9.0
+    },
+    "total": 8.5
+  },
+  {
+    "name": "IELTS mean 8.625",
+    "type": "ielts",
+    "scores": {
+      "listening": 7.5,
+      "reading": 9.0,
+      "writing": 9.0,
+      "speaking": 9.0
+    },
+    "total": 8.5
+  },
+  {
+    "name": "IELTS mean 8.75",
+    "type": "ielts",
+    "scores": {
+      "listening": 8.0,
+      "reading": 9.0,
+      "writing": 9.0,
+      "speaking": 9.0
+    },
+    "total": 9.0
+  },
+  {
+    "name": "IELTS mean 8.875",
+    "type": "ielts",
+    "scores": {
+      "listening": 8.5,
+      "reading": 9.0,
+      "writing": 9.0,
+      "speaking": 9.0
+    },
+    "total": 9.0
+  },
+  {
+    "name": "IELTS 16 worked example 1",
+    "type": "ielts",
+    "scores": {
+      "listening": 6.5,
+      "reading": 6.5,
+      "writing": 5.0,
+      "speaking": 7.0
+    },
+    "total": 6.5
+  },
+  {
+    "name": "IELTS 16 worked example 2",
+    "type": "ielts",
+    "scores": {
+      "listening": 6.5,
+      "reading": 6.5,
+      "writing": 5.5,
+      "speaking": 6.0
+    },
+    "total": 6.0
+  },
+  {
+    "name": "IELTS all nines",
+    "type": "ielts",
+    "scores": {
+      "listening": 9,
+      "reading": 9,
+      "writing": 9,
+      "speaking": 9
+    },
+    "total": 9.0
+  },
+  {
+    "name": "IELTS partial: no total",
+    "type": "ielts",
+    "scores": {
+      "listening": 7,
+      "reading": 6.5
+    },
+    "total": null
+  },
+  {
+    "name": "IELTS 7.3 off step",
+    "type": "ielts",
+    "scores": {
+      "listening": 7.3
+    },
+    "total": null,
+    "errors": {
+      "listening": "off_step"
+    }
+  },
+  {
+    "name": "IELTS 10 out of range",
+    "type": "ielts",
+    "scores": {
+      "reading": 10
+    },
+    "total": null,
+    "errors": {
+      "reading": "out_of_range"
+    }
+  },
+  {
+    "name": "IELTS unknown section",
+    "type": "ielts",
+    "scores": {
+      "grammar": 5
+    },
+    "total": null,
+    "errors": {
+      "grammar": "unknown_section"
+    }
+  },
+  {
+    "name": "SAT sum",
+    "type": "sat",
+    "scores": {
+      "reading_writing": 650,
+      "math": 720
+    },
+    "total": 1370.0
+  },
+  {
+    "name": "SAT 655 off step",
+    "type": "sat",
+    "scores": {
+      "reading_writing": 655,
+      "math": 700
+    },
+    "total": null,
+    "errors": {
+      "reading_writing": "off_step"
+    }
+  },
+  {
+    "name": "SAT 150 out of range",
+    "type": "sat",
+    "scores": {
+      "reading_writing": 150,
+      "math": 700
+    },
+    "total": null,
+    "errors": {
+      "reading_writing": "out_of_range"
+    }
+  },
+  {
+    "name": "CEFR average exact",
+    "type": "cefr",
+    "scores": {
+      "listening": 65,
+      "reading": 66,
+      "writing": 60,
+      "speaking": 61
+    },
+    "total": 63.0
+  },
+  {
+    "name": "CEFR average .25 keeps one decimal",
+    "type": "cefr",
+    "scores": {
+      "listening": 64,
+      "reading": 65,
+      "writing": 64,
+      "speaking": 64
+    },
+    "total": 64.3
+  },
+  {
+    "name": "CEFR average .75 rounds half up",
+    "type": "cefr",
+    "scores": {
+      "listening": 50,
+      "reading": 51,
+      "writing": 51,
+      "speaking": 51
+    },
+    "total": 50.8
+  },
+  {
+    "name": "CEFR average 37.75 rounds up to 37.8",
+    "type": "cefr",
+    "scores": {
+      "listening": 37,
+      "reading": 38,
+      "writing": 38,
+      "speaking": 38
+    },
+    "total": 37.8
+  },
+  {
+    "name": "CEFR 76 out of range",
+    "type": "cefr",
+    "scores": {
+      "listening": 76
+    },
+    "total": null,
+    "errors": {
+      "listening": "out_of_range"
+    }
+  },
+  {
+    "name": "CEFR 50.5 off step",
+    "type": "cefr",
+    "scores": {
+      "writing": 50.5
+    },
+    "total": null,
+    "errors": {
+      "writing": "off_step"
+    }
+  },
+  {
+    "name": "Milliy single score",
+    "type": "milliy",
+    "scores": {
+      "score": 68.4
+    },
+    "total": 68.4
+  },
+  {
+    "name": "Milliy 75",
+    "type": "milliy",
+    "scores": {
+      "score": 75
+    },
+    "total": 75.0
+  },
+  {
+    "name": "Milliy 68.45 off step",
+    "type": "milliy",
+    "scores": {
+      "score": 68.45
+    },
+    "total": null,
+    "errors": {
+      "score": "off_step"
+    }
+  },
+  {
+    "name": "custom average of three halves",
+    "type": {
+      "totalRule": "average",
+      "sections": [
+        {
+          "key": "grammar",
+          "label": {
+            "uz": "G",
+            "ru": "G",
+            "en": "G"
+          },
+          "min": 0,
+          "max": 10,
+          "step": 0.5
+        },
+        {
+          "key": "vocab",
+          "label": {
+            "uz": "V",
+            "ru": "V",
+            "en": "V"
+          },
+          "min": 0,
+          "max": 10,
+          "step": 0.5
+        },
+        {
+          "key": "essay",
+          "label": {
+            "uz": "E",
+            "ru": "E",
+            "en": "E"
+          },
+          "min": 0,
+          "max": 10,
+          "step": 0.5
+        }
+      ]
+    },
+    "scores": {
+      "grammar": 7,
+      "vocab": 7.5,
+      "essay": 8
+    },
+    "total": 7.5
+  },
+  {
+    "name": "custom average rounds 7.1666 to 7.2",
+    "type": {
+      "totalRule": "average",
+      "sections": [
+        {
+          "key": "grammar",
+          "label": {
+            "uz": "G",
+            "ru": "G",
+            "en": "G"
+          },
+          "min": 0,
+          "max": 10,
+          "step": 0.5
+        },
+        {
+          "key": "vocab",
+          "label": {
+            "uz": "V",
+            "ru": "V",
+            "en": "V"
+          },
+          "min": 0,
+          "max": 10,
+          "step": 0.5
+        },
+        {
+          "key": "essay",
+          "label": {
+            "uz": "E",
+            "ru": "E",
+            "en": "E"
+          },
+          "min": 0,
+          "max": 10,
+          "step": 0.5
+        }
+      ]
+    },
+    "scores": {
+      "grammar": 7,
+      "vocab": 7,
+      "essay": 7.5
+    },
+    "total": 7.2
+  },
+  {
+    "name": "custom average 7.3333 to 7.3",
+    "type": {
+      "totalRule": "average",
+      "sections": [
+        {
+          "key": "grammar",
+          "label": {
+            "uz": "G",
+            "ru": "G",
+            "en": "G"
+          },
+          "min": 0,
+          "max": 10,
+          "step": 0.5
+        },
+        {
+          "key": "vocab",
+          "label": {
+            "uz": "V",
+            "ru": "V",
+            "en": "V"
+          },
+          "min": 0,
+          "max": 10,
+          "step": 0.5
+        },
+        {
+          "key": "essay",
+          "label": {
+            "uz": "E",
+            "ru": "E",
+            "en": "E"
+          },
+          "min": 0,
+          "max": 10,
+          "step": 0.5
+        }
+      ]
+    },
+    "scores": {
+      "grammar": 7,
+      "vocab": 7.5,
+      "essay": 7.5
+    },
+    "total": 7.3
+  },
+  {
+    "name": "custom sum of tenths is exact",
+    "type": {
+      "totalRule": "sum",
+      "sections": [
+        {
+          "key": "a",
+          "label": {
+            "uz": "A",
+            "ru": "A",
+            "en": "A"
+          },
+          "min": 0,
+          "max": 50,
+          "step": 0.1
+        },
+        {
+          "key": "b",
+          "label": {
+            "uz": "B",
+            "ru": "B",
+            "en": "B"
+          },
+          "min": 0,
+          "max": 50,
+          "step": 0.1
+        }
+      ]
+    },
+    "scores": {
+      "a": 0.1,
+      "b": 0.2
+    },
+    "total": 0.3
+  }
+]
