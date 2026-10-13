@@ -7,8 +7,8 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M4 · Telegram & SMS**: ◐ in progress. Plan (#17), M4a (#18) and M4b (#19) merged; M4c staff screens built and
-in review. Left for "done": the real-phone checklist and real SMS (need the bot token and an Eskiz account). The plan and its decisions are in `30-milestones.md` (M4) and the `PROPOSED (M4 plan)` notes
+**M4 · Telegram & SMS**: ◐ in progress. Plan (#17), M4a (#18), M4b (#19) and M4c (#20) merged; bot checked on a
+real phone. Left for "done": real SMS (new Send-SMS hook secret on hosted Supabase, Eskiz account and approved texts). The plan and its decisions are in `30-milestones.md` (M4) and the `PROPOSED (M4 plan)` notes
 in 01, 02, 03, 05-ui, 10, 15 and 17.
 
 ## Milestones
@@ -59,8 +59,8 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Item (30-milestones) | Status | Evidence |
 |---|---|---|
 | Shared contact links a parent to all children across centers; forwarded contact rejected | ☑ | pgTAP `m4_telegram` (guardian phone in two centers → both links, idempotent); worker integration test (someone else's contact rejected, own contact links) |
-| Bot menu: schedule, attendance, payments (+ receipt PDF) per child, in the user's language | ◐ | Worker integration test (schedule and payments in Russian, receipt PDF from the menu and with `payment_received`); real-phone check pending (needs the bot token) |
-| Absence alert in Telegram ~10 min after marking; blocked bot → SMS (Eskiz sandbox) + unlinked | ◐ | Worker integration test (alert delivered; 403 → unlinked, SMS fallback sent through a fake provider); Eskiz sandbox pending (account) |
+| Bot menu: schedule, attendance, payments (+ receipt PDF) per child, in the user's language | ☑ | Worker integration test (schedule and payments in Russian, receipt PDF from the menu and with `payment_received`); real phone 2026-10-13 (dev bot, local worker): deep link → contact → linked, menu in Uzbek, payment notice with receipt PDF |
+| Absence alert in Telegram ~10 min after marking; blocked bot → SMS (Eskiz sandbox) + unlinked | ◐ | Worker integration test (alert delivered; 403 → unlinked, SMS fallback sent through a fake provider); real phone 2026-10-13: alert arrived 10 min after marking, in the linked chat's language (Uzbek); Eskiz sandbox pending (account) |
 | Worker killed mid-send, restarted → every pending message sent exactly once | ☑ | Worker integration test (claimed and abandoned → stale recovery → one delivery); at-least-once after Telegram accepted (17, M4b note) |
 | Two workers never double-send (SKIP LOCKED) | ☑ | `outbox-claim.concurrency.test.ts` (60 rows, two logins); worker integration test (two senders drain 30 rows, each delivered once) |
 | Broadcast to "debtors of branch X" reaches exactly that set; preview count matches | ☑ | e2e `m4-notifications` (branch + only debtors → preview 1 recipient → queued 1, the guardian of the one debtor; a failed send keeps the audience); pgTAP `m4_telegram` |
@@ -129,6 +129,16 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M4 real-phone check
+- Dev bot `@uteachnrgBot` (token rotated after it was pasted in chat), worker running locally against local
+  Supabase. A local student's phone set to the tester's; deep link `c_{slug}` → language → shared contact → linked.
+- Arrived on the phone, in Uzbek: payment notice, absence alert (10 min after marking), receipt PDF.
+- Fixed: in `pnpm --filter @uteach/worker dev` the receipt PDF crashed ("React is not defined") and the payment
+  notice went out as text only. tsx applies `apps/worker/tsconfig.json` only to the worker's own files, so
+  `packages/receipts` got the classic JSX transform; `receipt.tsx` now pins the automatic runtime with pragmas.
+  The tsup build and Vitest were never affected.
+- Note: this machine's clock ran ~3 min slow, which delays every scheduled send by the same amount.
 
 ### 2026-10-13 · M4c staff screens
 - Settings → **Notifications** (reminder cadence, "due soon", SMS on/off and monthly cap with this month's

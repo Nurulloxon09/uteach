@@ -1,3 +1,6 @@
+/** @jsxRuntime automatic */
+/** @jsxImportSource react */
+// Explicit, so runners that skip this package's tsconfig (tsx from apps/worker) still use the automatic runtime.
 import { fileURLToPath } from "node:url";
 import {
   Document,
