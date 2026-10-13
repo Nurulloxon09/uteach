@@ -13,11 +13,12 @@ import {
   type Translate,
 } from "./i18n";
 import { receiptPdf } from "./receipt";
+import { scoresText } from "./scores";
 
 /**
  * The uteach bot for students and parents (17): /start → language → share contact → linked to every matching
  * student, guardian and staff member across centers; then a menu with schedule, attendance and payments per
- * child (a child picker and a center switcher when needed), scores (M6) and settings. Staff only get alerts.
+ * child (a child picker and a center switcher when needed), scores and settings. Staff only get alerts.
  * Every read goes through `worker.*` functions scoped to the Telegram user's own links.
  */
 export type BotDeps = {
@@ -25,7 +26,7 @@ export type BotDeps = {
   log?: (line: string) => void;
 };
 
-type Item = "s" | "a" | "p";
+type Item = "s" | "a" | "p" | "x";
 const MAX_TEXT = 4000;
 
 type Turn = {
@@ -191,6 +192,13 @@ export function createBot(token: string, deps: BotDeps, config?: BotConfig<Conte
       );
       return;
     }
+    if (item === "x") {
+      const cards = await db.scores(tu.uid, subject.student_id);
+      await ctx.reply(clip(scoresText(subject.student_name, cards, today, locale, t)), {
+        reply_markup: backKeyboard(t),
+      });
+      return;
+    }
     const summary = await db.payments(tu.uid, subject.student_id);
     const money = (minor: bigint) => formatMoney(minor, summary.currency, locale);
     const balance = BigInt(summary.balance);
@@ -304,11 +312,8 @@ export function createBot(token: string, deps: BotDeps, config?: BotConfig<Conte
     if (!tu) return;
     const what = ctx.match[1];
     if (what === "menu") return showMenu(ctx, tu);
-    if (what === "s" || what === "a" || what === "p") return openItem(ctx, tu, what);
-    if (what === "x") {
-      await ctx.reply(tu.t("bot.scoresSoon"), { reply_markup: backKeyboard(tu.t) });
-      return;
-    }
+    if (what === "s" || what === "a" || what === "p" || what === "x")
+      return openItem(ctx, tu, what);
     if (what === "c") return pickCenter(ctx, tu, (await scope(tu)).centers);
     await ctx.reply(tu.t("bot.settingsTitle"), {
       reply_markup: new InlineKeyboard()
@@ -320,7 +325,7 @@ export function createBot(token: string, deps: BotDeps, config?: BotConfig<Conte
     });
   });
 
-  bot.callbackQuery(/^s:([sap]):([0-9a-f-]{36})$/, async (ctx) => {
+  bot.callbackQuery(/^s:([sapx]):([0-9a-f-]{36})$/, async (ctx) => {
     await ctx.answerCallbackQuery();
     const tu = await turn(ctx);
     if (!tu) return;

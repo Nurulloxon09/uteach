@@ -1400,7 +1400,7 @@ RLS: PERM(import).
 > (a permanent Telegram error also sets the link's `unlinked_at` and queues the SMS fallback row),
 > `recover_stale()`, `beat(service, info)`, `link_contact(telegram_user_id, chat_id, phone, locale)`,
 > `unlink_chat(chat_id)`, `get_session` / `set_session`, and the bot's reads (`bot_subjects`, `bot_schedule`,
-> `bot_attendance`, `bot_payments`), each limited to subjects linked to the given Telegram user.
+> `bot_attendance`, `bot_payments`, `bot_scores` (M6c)), each limited to subjects linked to the given Telegram user.
 > **`private.otp_sends`** (`phone_hash text, sent_at timestamptz`): the per-phone OTP limit log written by the auth
 > SMS hook (10); no grants, rows older than a day are removed by pg_cron.
 

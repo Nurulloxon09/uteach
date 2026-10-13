@@ -405,11 +405,25 @@ Global "done when" for every milestone:
 > - Convert needs no new field: the M6a trigger turns the lead's target score into the student's target.
 > - Certificates upload from the browser straight to storage (like logos and imports), then the path is saved.
 > - `ScoreChart` redraws at its container's width so its 12 px text stays readable on a phone.
+
+> PROPOSED (M6c, as built, 2026-10-13):
+> - The worker sends `score_posted` through the existing outbox path; nothing score-specific in the sender.
+> - New `worker.bot_scores(telegram_user, student)` returns raw numbers per exam type (sections, latest result,
+>   target, last five totals); the bot formats them with `packages/core/exams` (`formatScore`, `examGradeLabel`,
+>   `scoreUplift`), so the web and the bot show the same numbers. Exam types are listed newest result first; a
+>   type with only a target still shows.
+> - Bot Scores text: the latest result's kind and day, its sections (left out when the only section is the total,
+>   e.g. Milliy sertifikat), the total with the CEFR level or Milliy grade ("No certificate" below 46), target with
+>   "x to go" or "reached", exam day with days left, and the last five totals with ↑/↓ against the one before.
+> - Uplift on the student page shows "—" until there are two results, unless a baseline was saved (fixes M6b,
+>   which showed 0.0 for a single result).
+> - The M6 E2E seeds the 15 students and the target straight into the database (M2's E2E already covers the Excel
+>   import), so it only tests score entry.
 **Done when:**
 - [x] IELTS rounding unit tests pass for all .x25 / .x75 boundary cases, and the DB trigger agrees with `packages/core` on the same fixtures. (M6a: `exams.fixtures.json`, 61 IELTS cases incl. every .x25/.x75 mean 0.25–8.75; `exams.test.ts` + `exams.parity.test.ts`.)
-- [ ] A teacher can enter a 15-student IELTS mock with keyboard only; invalid values (7.3, 10) are rejected inline and by the DB.
+- [x] A teacher can enter a 15-student IELTS mock with keyboard only; invalid values (7.3, 10) are rejected inline and by the DB. (M6c: e2e `m6-exams`, logged in as the group's teacher: 60 cells typed with Tab only, every row total checked, 7.3 and 10 red inline, Save refuses while a cell is red, then "15 results saved"; DB rejection in pgTAP `m6_exams`, `exam_score_invalid`.)
 - [x] The student chart shows scores over time, the target line and the exam date; the group table shows gap to target. (M6b: checked in the browser, local data: 15-student mock + a diagnostic + an official result, target 7.5 with an exam day; group Scores tab shows target, gap and exam day.)
-- [ ] Parents get a score notification and see scores in the bot.
+- [x] Parents get a score notification and see scores in the bot. (M6c: worker integration test against a real database and a fake Telegram API: a saved mock's `score_posted` reaches the parent in Russian with sections, total and target; the Scores item shows total, "Цель: 7.0 · осталось 0.5" and days to the exam; someone not linked is refused. Text cases in `scores.test.ts`.)
 - [x] Preset exam types can't be edited by centers (RLS). (M6a: pgTAP `m6_exams`: an owner's update leaves the preset unchanged, a preset insert is 42501.)
 - [x] SAT, CEFR and Milliy sertifikat ranges and mappings have been checked against official sources and recorded in 16. (M6 plan: sources in 16 § Exam types.)
 **E2E:** teacher enters a mock for a group → student profile chart shows the new point vs target.

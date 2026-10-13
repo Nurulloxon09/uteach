@@ -138,3 +138,37 @@ export function addLessonSoon(center: string, group: string, minutes: number): P
     return row!.id;
   });
 }
+
+/**
+ * M6 exams: `count` students ("Pupil 01 Karimov", …) enrolled in a group since `daysAgo` days, and an IELTS
+ * target for the first one (total, exam day `examInDays` from today). Students come from Excel in M2's E2E; here
+ * only the score entry is under test.
+ */
+export function seedScoreGroup(
+  center: string,
+  group: string,
+  count: number,
+  target: { total: number; examInDays: number },
+): Promise<{ groupId: string; studentIds: string[] }> {
+  return withDb(async (sql) => {
+    const [g] = await sql<{ id: string; center_id: string; branch_id: string }[]>`
+      select g.id, g.center_id, g.branch_id from public.groups g
+      join public.centers c on c.id = g.center_id
+      where c.name = ${center} and g.name = ${group}`;
+    const students = await sql<{ id: string }[]>`
+      insert into public.students (center_id, branch_id, full_name)
+      select ${g!.center_id}, ${g!.branch_id}, format('Pupil %s Karimov', lpad(n::text, 2, '0'))
+      from generate_series(1, ${count}::int) n
+      order by n
+      returning id`;
+    const ids = students.map((s) => s.id);
+    await sql`
+      insert into public.enrollments (center_id, student_id, group_id, start_date)
+      select ${g!.center_id}, s, ${g!.id}, current_date - 7 from unnest(${ids}::uuid[]) s`;
+    await sql`
+      insert into public.student_targets (center_id, student_id, exam_type_id, target_total, exam_date)
+      select ${g!.center_id}, ${ids[0]!}, t.id, ${target.total}, current_date + ${target.examInDays}::int
+      from public.exam_types t where t.center_id is null and t.code = 'ielts'`;
+    return { groupId: g!.id, studentIds: ids };
+  });
+}

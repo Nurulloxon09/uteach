@@ -47,6 +47,8 @@ Inline keyboard. A parent with several children picks a child first.
 > level / Milliy grade), target and gap, exam date with days left, and the last five totals with ↑/↓. The
 > chart image comes with the Mini App (M9). `score_posted` (Telegram only, uz/ru/en, on by default) goes to
 > the student and guardians 10 minutes after a save; a re-save inside that window updates the waiting row.
+> PROPOSED (M6c, as built): the Scores item reads `worker.bot_scores` and is formatted in the worker with
+> `packages/core/exams` (details in 30, M6c).
 - ⚙️ **Settings**: language, unlink.
 - 🟨 "Open app" button → Mini App (M9).
 
@@ -101,7 +103,7 @@ returning *;
 >   Also `mark_sent`, `mark_retry(id, error, min_delay_seconds)` (backoff in SQL, mirrored and parity-tested by
 >   `outboxBackoffSeconds`), `mark_failed(id, error, telegram_blocked)`, `mark_skipped`, `recover_stale`,
 >   `beat`, `link_contact`, `unlink(telegram_user_id)`, `set_locale`, `get/set/delete_session`, `bot_subjects`,
->   `bot_schedule`, `bot_attendance` (both at most 63 days), `bot_payments`.
+>   `bot_schedule`, `bot_attendance` (both at most 63 days), `bot_payments`, `bot_scores` (M6c).
 > - **Channel choice** is `pickChannel` in `packages/core/notifications`. **Rendering** is `renderTemplate` in
 >   `@uteach/i18n/notifications` (not core: formatting belongs with the locales and `formatMoney`). Payload keys
 >   `amount`, `balance`, `debt` are money in minor units and `date`, `oldDate`, `dueDate`, `startDate`,

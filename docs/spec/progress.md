@@ -7,8 +7,7 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M6 · Exam scores**: ◐ in progress. Plan (#27), M6a data layer (#28) and M6b screens built; next M6c (bot +
-e2e). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
+**M6 · Exam scores**: ☑ done (#27, #28, #29, M6c). Next: M7 (Launch), only when the owner says so. M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
 Eskiz and the hosted Phone provider. M6's decisions are in `30-milestones.md` (M6) and the `PROPOSED (M6 plan)`
 notes in 02, 03, 05-ui, 16 and 17.
 
@@ -22,7 +21,7 @@ notes in 02, 03, 05-ui, 16 and 17.
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
 | M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
 | M5 | Leads CRM | ☑ done (#23, #24, #26) | 2026-10-13 |
-| M6 | Exam scores | ◐ in progress (plan #27, M6a #28, M6b built) | |
+| M6 | Exam scores | ☑ done (#27, #28, #29, M6c) | 2026-10-13 |
 | M7 | Launch 🚀 | ☐ | |
 | M8 | Online payments | ☐ | |
 | M9 | Mini App | ☐ | |
@@ -54,6 +53,17 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | `packages/core` money/phone/tz helpers tested | ☑ | 26 unit tests incl. the 15-payments worked example and DST |
 | CI on PRs | ☑ | GitHub Actions on PR #1: checks, Supabase DB tests, e2e and Docker build all green |
 | E2E happy path | ☑ | `pnpm e2e`: 3 tests pass against local Supabase (2026-10-11) |
+
+## M6 "done when" status
+
+| Item (30-milestones) | Status | Evidence |
+|---|---|---|
+| IELTS rounding for every .x25 / .x75 case; DB trigger agrees with `packages/core` | ☑ | `exams.fixtures.json` (61 IELTS cases), `exams.test.ts` + PGlite parity test (M6a) |
+| A teacher enters a 15-student IELTS mock with keyboard only; 7.3 and 10 rejected inline and by the DB | ☑ | e2e `m6-exams` as the teacher (Tab only, totals checked, red cells, Save refuses); pgTAP `m6_exams` |
+| Student chart: scores over time, target line, exam date; group table shows gap | ☑ | M6b browser check; e2e `m6-exams` (new point, target line and exam marker; group row 6.5 / 7.0 / 0.5) |
+| Parents get a score notification and see scores in the bot | ☑ | Worker integration test (fake Telegram, real DB): `score_posted` delivered, Scores item shows total, target, gap, days left |
+| Presets can't be edited by centers | ☑ | pgTAP `m6_exams` |
+| SAT, CEFR, Milliy sertifikat checked against official sources | ☑ | 16 § Exam types (M6 plan) |
 
 ## M5 "done when" status
 
@@ -142,6 +152,20 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M6c bot scores & e2e; M6 done
+- Migration `m6c_bot_scores`: `worker.bot_scores` (per exam type: sections, latest, target, last five totals),
+  only for students linked to the Telegram user.
+- Bot: the Scores item now answers (replaces "coming soon"): latest result with sections, total with CEFR level /
+  Milliy grade, target and gap or "reached", exam day with days left, last five totals with ↑/↓. Texts in
+  uz/ru/en (`bot.scores*`); formatting in `apps/worker/src/scores.ts` with `packages/core/exams`.
+- `score_posted` goes through the existing sender; the worker integration test now covers it end to end.
+- E2E `m6-exams`: teacher types a 15-student mock with the keyboard only, invalid cells, save; owner sees the
+  new point vs target on the chart. Passes locally (3 tests).
+- Fix: Uplift tile showed 0.0 with one result; now "—" until a second result (or a saved baseline).
+- Screenshots at 1440/390: group-scores, score-entry, student-scores, exams, settings-exam-types.
+- Decisions: `PROPOSED (M6c, as built)` in 30, a note in 17.
+- Known gaps: the chart image in the bot waits for M9 (as planned); real SMS (M4) still skipped.
 
 ### 2026-10-13 · M6b score screens
 - **Enter scores** (`/groups/{id}/scores`): exam, kind (mock / diagnostic) and day in the URL, the roster as a
