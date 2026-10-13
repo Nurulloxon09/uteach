@@ -5,6 +5,8 @@ import {
   examSectionsError,
   examTotal,
   examTotalRange,
+  formatScore,
+  parseScore,
   ieltsBand,
   isExamPresetCode,
   milliyGrade,
@@ -124,5 +126,22 @@ describe("scoreUplift", () => {
     expect(scoreUplift(1370, 1210)).toBe(160);
     expect(scoreUplift(63.3, 60.1)).toBe(3.2);
     expect(scoreUplift(null, 5)).toBeNull();
+  });
+});
+
+describe("formatScore / parseScore", () => {
+  it("formats like the database", () => {
+    expect(formatScore(7, "ielts_band")).toBe("7.0");
+    expect(formatScore(6.5, "ielts_band")).toBe("6.5");
+    expect(formatScore(1370, "sum")).toBe("1370");
+    expect(formatScore(63.3, "average")).toBe("63.3");
+    expect(formatScore(null, "sum")).toBe("—");
+  });
+  it("parses typed scores", () => {
+    expect(parseScore("6,5")).toBe(6.5);
+    expect(parseScore(" 7 ")).toBe(7);
+    expect(parseScore("")).toBeNull();
+    expect(parseScore("abc")).toBeNaN();
+    expect(parseScore("-1")).toBeNaN();
   });
 });

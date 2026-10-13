@@ -1,5 +1,6 @@
 "use client";
 
+import { EXAM_PRESETS, formatScore } from "@uteach/core";
 import { formatMoney, isLocale, type Locale } from "@uteach/i18n";
 import {
   Building2,
@@ -56,6 +57,8 @@ import {
   ProfileCard,
   ProfileChip,
   RowActions,
+  ScoreChart,
+  ScoreGrid,
   Section,
   SelectField,
   StatTiles,
@@ -251,6 +254,11 @@ export function DevUi() {
   ]);
   const [selected, setSelected] = useState<Set<string>>(new Set(["3", "7"]));
   const [attendance, setAttendance] = useState("present");
+  const [scores, setScores] = useState<Record<string, Record<string, string>>>({
+    a: { listening: "6.5", reading: "7", writing: "6", speaking: "6.5" },
+    b: { listening: "7.3", reading: "10", writing: "", speaking: "" },
+    c: {},
+  });
   const [kanban, setKanban] = useState([
     { id: "k1", column: "new", title: "Dilnoza Rahimova" },
     { id: "k2", column: "new", title: "Jasur Aliyev" },
@@ -621,6 +629,72 @@ export function DevUi() {
               <NameCell avatar={<InitialsAvatar name={item.title} size="sm" />} name={item.title} />
             )}
             empty={t("leads.board.empty")}
+          />
+        </Section>
+      </Kit>
+
+      <Kit id="score-grid" name="ScoreGrid (Group → Enter scores)">
+        <Section>
+          <ScoreGrid
+            sections={EXAM_PRESETS.ielts.sections}
+            totalRule="ielts_band"
+            rows={[
+              { id: "a", name: "Ali Valiyev" },
+              { id: "b", name: "Madina Karimova" },
+              { id: "c", name: "Sardor Aliyev" },
+            ]}
+            values={scores}
+            onChange={(row, key, text) =>
+              setScores((all) => ({ ...all, [row]: { ...all[row], [key]: text } }))
+            }
+            sectionLabel={(sec) => sec.label[locale] ?? sec.label.en}
+            formatTotal={(v) => formatScore(v, "ielts_band")}
+            labels={{
+              student: t("exams.enter.student"),
+              total: t("exams.enter.total"),
+              cell: (row, sec) =>
+                t("exams.enter.cell", { student: row.name, section: sec.label.en }),
+              error: (sec, error) =>
+                error === "out_of_range"
+                  ? t("exams.errors.out_of_range", { min: sec.min, max: sec.max })
+                  : error === "off_step"
+                    ? t("exams.errors.off_step", { step: sec.step })
+                    : t(`exams.errors.${error}`),
+            }}
+          />
+        </Section>
+      </Kit>
+
+      <Kit id="score-chart" name="ScoreChart (Student → Scores)">
+        <Section>
+          <ScoreChart
+            points={[
+              { date: "2026-06-01", value: 5.5, label: "1 Jun · Diagnostic · 5.5" },
+              { date: "2026-07-10", value: 6, label: "10 Jul · Mock · 6.0" },
+              { date: "2026-08-20", value: 6.5, label: "20 Aug · Mock · 6.5" },
+              { date: "2026-09-25", value: 6.5, official: true, label: "25 Sep · Official · 6.5" },
+              { date: "2026-10-10", value: 7, label: "10 Oct · Mock · 7.0" },
+            ]}
+            sections={EXAM_PRESETS.ielts.sections.map((sec, i) => ({
+              key: sec.key,
+              label: sec.label[locale] ?? sec.label.en,
+              points: ["2026-06-01", "2026-07-10", "2026-08-20", "2026-09-25", "2026-10-10"].map(
+                (date, j) => ({ date, value: 5 + ((i + j) % 4) * 0.5, label: date }),
+              ),
+            }))}
+            min={0}
+            max={9}
+            target={7.5}
+            examDate="2026-11-28"
+            format={(v) => formatScore(v, "ielts_band")}
+            formatDate={(d) => d.slice(5)}
+            labels={{
+              title: t("exams.student.chartTitle", { exam: "IELTS" }),
+              target: t("exams.chart.target"),
+              examDate: t("exams.chart.examDate"),
+              total: t("exams.chart.total"),
+              sections: t("exams.chart.sections"),
+            }}
           />
         </Section>
       </Kit>

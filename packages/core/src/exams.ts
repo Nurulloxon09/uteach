@@ -241,3 +241,20 @@ export function scoreUplift(latest: number | null, baseline: number | null): num
   if (latest === null || baseline === null) return null;
   return (Math.round(latest * 10) - Math.round(baseline * 10)) / 10;
 }
+
+/**
+ * A score for display, like `private.score_text`: IELTS keeps its decimal (7.0); other whole values drop it
+ * (1370, 63); others show one decimal (63.3).
+ */
+export function formatScore(value: number | null | undefined, rule: ExamTotalRule): string {
+  if (value === null || value === undefined) return "—";
+  if (rule !== "ielts_band" && Number.isInteger(value)) return String(value);
+  return value.toFixed(1);
+}
+
+/** Parses a typed score ("6,5" or "6.5"); null when empty, NaN when not a number. */
+export function parseScore(text: string): number | null {
+  const trimmed = text.trim().replace(",", ".");
+  if (trimmed === "") return null;
+  return /^\d{1,5}(\.\d+)?$/.test(trimmed) ? Number(trimmed) : Number.NaN;
+}

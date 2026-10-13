@@ -27,6 +27,7 @@ const courseSchema = z.object({
   defaultLessonMinutes: optionalIntField(15, 480),
   defaultPrice: optionalMoneyField,
   description: optionalText(500),
+  examTypeId: z.union([uuidField, z.literal("none")]).transform((v) => (v === "none" ? null : v)),
 });
 
 function readCourse(form: FormData) {
@@ -36,6 +37,7 @@ function readCourse(form: FormData) {
     defaultLessonMinutes: str(form, "defaultLessonMinutes"),
     defaultPrice: str(form, "defaultPrice"),
     description: str(form, "description"),
+    examTypeId: str(form, "examTypeId") || "none",
   };
 }
 
@@ -58,6 +60,7 @@ export async function createCourseAction(_prev: ActionState, form: FormData): Pr
           ? toDbAmount(parsed.data.defaultPrice)
           : null,
       description: parsed.data.description,
+      exam_type_id: parsed.data.examTypeId,
     })
     .select("id")
     .single();
@@ -82,6 +85,7 @@ export async function updateCourseAction(_prev: ActionState, form: FormData): Pr
       kind: parsed.data.kind,
       default_lesson_minutes: parsed.data.defaultLessonMinutes,
       description: parsed.data.description,
+      exam_type_id: parsed.data.examTypeId,
       ...(ctx.can.billing
         ? {
             default_price_amount:

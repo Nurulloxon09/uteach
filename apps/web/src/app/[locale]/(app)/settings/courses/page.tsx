@@ -20,6 +20,7 @@ import { requireAdminContext } from "@/lib/center";
 import { ilikePattern } from "@/lib/search";
 import { createClient } from "@/lib/supabase/server";
 import { formatMinor } from "@/lib/money";
+import { loadExamTypes } from "@/lib/exams";
 import { AddCourseDialog } from "./course-dialog";
 import { CourseRowActions } from "./course-row-actions";
 
@@ -105,7 +106,16 @@ export default async function CoursesPage({
           { label: tn("settings") },
           { label: t("title") },
         ]}
-        action={ctx.can.academics ? <AddCourseDialog showPrice={ctx.can.billing} /> : undefined}
+        action={
+          ctx.can.academics ? (
+            <AddCourseDialog
+              showPrice={ctx.can.billing}
+              examTypes={(await loadExamTypes(ctx))
+                .filter((x) => !x.archived)
+                .map((x) => ({ id: x.id, name: x.name }))}
+            />
+          ) : undefined
+        }
       />
 
       <Section

@@ -90,7 +90,10 @@
     "telegram": "Telegram",
     "health": "Health",
     "leads": "Leads",
-    "lostReasons": "Lost reasons"
+    "lostReasons": "Lost reasons",
+    "exams": "Exams",
+    "scores": "Scores",
+    "examTypes": "Exam types"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -115,7 +118,8 @@
       "percent": "Enter a percentage from 0 to 100.",
       "branchCode": "Use 2 to 6 Latin letters or digits.",
       "template": "This text can't be used: check the names in curly braces.",
-      "confirmBroadcast": "Tick the box to confirm who gets this message."
+      "confirmBroadcast": "Tick the box to confirm who gets this message.",
+      "score": "Enter a score, e.g. 6.5."
     },
     "auth": {
       "invalidCredentials": "Wrong phone number or password.",
@@ -816,7 +820,10 @@
       "minutesHint": "The default for new groups.",
       "price": "Default price per cycle",
       "priceHint": "Prefilled into new groups of this course.",
-      "description": "Description"
+      "description": "Description",
+      "examType": "Exam type",
+      "examTypeNone": "No exam",
+      "examTypeHint": "Scores of this course's groups default to it."
     },
     "kinds": {
       "language": "Language",
@@ -2100,5 +2107,172 @@
     "archiveTitle": "Archive “{label}”?",
     "archiveHint": "It won't be offered any more; leads that already have it keep it.",
     "restoreTitle": "Restore “{label}”?"
+  },
+  "exams": {
+    "title": "Exams",
+    "teacherTitle": "Scores",
+    "kind": {
+      "diagnostic": "Diagnostic",
+      "mock": "Mock",
+      "official": "Official"
+    },
+    "grade": {
+      "below_b1": "Below B1",
+      "b1": "B1",
+      "b2": "B2",
+      "c1": "C1",
+      "noCertificate": "No certificate"
+    },
+    "errors": {
+      "out_of_range": "From {min} to {max}",
+      "off_step": "In steps of {step}",
+      "not_a_number": "Not a number",
+      "unknown_section": "Unknown section"
+    },
+    "list": {
+      "title": "Recent score entries",
+      "hint": "Every mock and diagnostic entered for a group. Open one to see the group's scores.",
+      "empty": "No scores yet",
+      "emptyHint": "Open a group and press “Enter scores”.",
+      "date": "Date",
+      "group": "Group",
+      "exam": "Exam",
+      "kindLabel": "Kind",
+      "students": "Students",
+      "average": "Average",
+      "allExams": "All exams",
+      "open": "Open {group}"
+    },
+    "enter": {
+      "button": "Enter scores",
+      "title": "Enter scores · {group}",
+      "exam": "Exam",
+      "kindLabel": "Kind",
+      "date": "Date",
+      "hint": "Tab moves across, Enter moves down. Leave a row empty to skip a student; clearing a saved row removes that result.",
+      "save": "Save scores",
+      "saving": "Saving…",
+      "saved": "{saved, plural, one {# result saved} other {# results saved}}{deleted, plural, =0 {} one {, # removed} other {, # removed}}. Parents get a message in 10 minutes.",
+      "nothing": "Nothing changed.",
+      "fixErrors": "Fix the red cells first.",
+      "noStudents": "This group has no students yet.",
+      "existing": "Scores for this day are already saved: you're editing them.",
+      "back": "Back to the group",
+      "student": "Student",
+      "total": "Total",
+      "cell": "{student}, {section}"
+    },
+    "group": {
+      "tab": "Scores",
+      "examLabel": "Exam",
+      "student": "Student",
+      "latest": "Latest",
+      "previous": "Before",
+      "target": "Target",
+      "gap": "Gap",
+      "results": "Results",
+      "examDate": "Exam date",
+      "uplift": "Uplift",
+      "empty": "No {exam} scores yet",
+      "emptyHint": "Enter the group's first diagnostic or mock.",
+      "trendUp": "Up from {value}",
+      "trendDown": "Down from {value}",
+      "trendSame": "Same as before",
+      "reached": "Reached",
+      "setTarget": "Set target",
+      "noStudents": "No students in this group."
+    },
+    "student": {
+      "tab": "Scores",
+      "empty": "No scores yet",
+      "emptyHint": "Results appear here when a teacher enters a group's mock, or when you add an official result.",
+      "addOfficial": "Add official result",
+      "chartTitle": "{exam}: total score over time",
+      "results": "Results",
+      "date": "Date",
+      "kindLabel": "Kind",
+      "group": "Group",
+      "sections": "Sections",
+      "total": "Total",
+      "certificate": "Certificate",
+      "openCertificate": "Open certificate",
+      "delete": "Delete result",
+      "deleteTitle": "Delete the {exam} result of {date}?",
+      "deleteHint": "It disappears from the chart and the group's table.",
+      "deleted": "Result deleted",
+      "target": "Target",
+      "noTarget": "No target yet",
+      "examDate": "Exam date",
+      "daysLeft": "{days, plural, =0 {(today)} one {(in # day)} other {(in # days)}}",
+      "examPassed": "(passed)",
+      "baseline": "Baseline",
+      "uplift": "Uplift",
+      "latest": "Latest",
+      "setTarget": "Set target",
+      "editTarget": "Edit target"
+    },
+    "target": {
+      "title": "Target · {exam}",
+      "exam": "Exam",
+      "total": "Target score",
+      "totalHint": "From {min} to {max}.",
+      "examDate": "Planned exam date",
+      "baseline": "Starting score",
+      "baselineHint": "Leave empty to use the first diagnostic.",
+      "clearHint": "Leave the score and the date empty to remove the target.",
+      "save": "Save target",
+      "saved": "Target saved"
+    },
+    "official": {
+      "title": "Official result",
+      "exam": "Exam",
+      "date": "Exam date",
+      "certificate": "Certificate (PDF or photo)",
+      "certificateHint": "Optional. Up to 10 MB.",
+      "certificateChosen": "Attached: {name}",
+      "note": "Note",
+      "save": "Save result",
+      "saved": "Official result saved",
+      "uploadFailed": "The certificate couldn't be uploaded. Try again.",
+      "tooBig": "The file is larger than 10 MB."
+    },
+    "types": {
+      "title": "Exam types",
+      "listTitle": "Exam types",
+      "listHint": "Standard exams are the same for every center. Add your own for internal tests.",
+      "preset": "Standard",
+      "custom": "Your own",
+      "sections": "Sections",
+      "rule": "Total",
+      "range": "Total range",
+      "rules": {
+        "ielts_band": "IELTS band (average to .5)",
+        "sum": "Sum of sections",
+        "average": "Average of sections",
+        "none": "Single score"
+      },
+      "addButton": "Add exam type",
+      "addTitle": "New exam type",
+      "editTitle": "Edit exam type",
+      "name": "Name",
+      "sectionName": "Section",
+      "min": "Min",
+      "max": "Max",
+      "step": "Step",
+      "addSection": "Add section",
+      "removeSection": "Remove {name}",
+      "inUse": "Scores already use this type, so its sections and total stay as they are.",
+      "added": "Exam type added",
+      "archiveTitle": "Archive {name}?",
+      "archiveHint": "It's no longer offered for new scores; saved scores stay.",
+      "restoreTitle": "Restore {name}?",
+      "emptyTitle": "No exam types"
+    },
+    "chart": {
+      "target": "Target",
+      "examDate": "Exam",
+      "total": "Total",
+      "sections": "Sections"
+    }
   }
 }
