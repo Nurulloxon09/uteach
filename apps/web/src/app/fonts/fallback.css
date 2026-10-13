@@ -1,0 +1,22 @@
+/*
+ * Metric-adjusted Arial fallbacks, with the exact values next/font/google generated before the fonts were
+ * self-hosted (next/font/local measures the files and gets slightly different numbers). The Jakarta fallback
+ * covers every code point, so it also draws Cyrillic text (it comes before Manrope in the stack).
+ */
+@font-face {
+  font-family: "Plus Jakarta Sans Fallback";
+  src: local("Arial");
+  ascent-override: 98.88%;
+  descent-override: 21.15%;
+  line-gap-override: 0%;
+  size-adjust: 104.98%;
+}
+
+@font-face {
+  font-family: "Manrope Fallback";
+  src: local("Arial");
+  ascent-override: 103.31%;
+  descent-override: 29.07%;
+  line-gap-override: 0%;
+  size-adjust: 103.19%;
+}

@@ -142,6 +142,14 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 ## Log
 
+### 2026-10-13 · Self-hosted fonts (CI fix)
+- CI's `pnpm build` failed at random on #22 and #23 (Turbopack could not resolve `next/font/google`: the Google
+  Fonts fetch at build time). The web app now loads Plus Jakarta Sans and Manrope with `next/font/local` from
+  `apps/web/src/app/fonts/` (variable woff2 + OFL 1.1 licenses + README), with the old Arial fallback metrics
+  copied into `fonts/fallback.css`. Same variables, weights and subsets. Checked in the browser: every text run on
+  `/uz/home` and `/ru/home` has the same width before and after (within 0.005 px).
+- New decision, recorded as `> PROPOSED (CI fix)` in 05-ui §3: fonts are self-hosted, not fetched from Google.
+
 ### 2026-10-13 · M5 plan
 - The owner asked to start M5 while M4's real-SMS item is skipped (Eskiz account, approved texts and the hosted
   Phone provider are still to do; the 12 Eskiz texts are written up for the owner outside the repo).
@@ -492,6 +500,10 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
   - Charges are per enrollment per month; unexcused absences are still billed.
 
 ## Known gaps / follow-ups
+- Russian text doesn't use Manrope: the metric-adjusted "Plus Jakarta Sans Fallback" (Arial) face covers every code
+  point and comes before Manrope in `--font-sans`, so Cyrillic is drawn in Arial and Manrope never loads (05-ui §3
+  wants Manrope). Fix = narrow that fallback's `unicode-range` in `apps/web/src/app/fonts/fallback.css` (or drop it),
+  then check the `ru` pages visually; it changes how Russian looks, so it's its own change.
 - `pnpm screenshots` doesn't seed attendance yet; the M2 screenshots came from the e2e demo data. Add an
   attendance step to its seed when the screenshots are next refreshed.
 - Phone numbers show unformatted in staff lists (`+998931234567`); formatting with `packages/core` phone helpers can come with M1 lists.
