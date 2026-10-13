@@ -298,6 +298,9 @@ RLS: select **MBR**; write PERM(academics) or OWN (W).
 > PROPOSED (M1): `exam_type_id` is added in **M6** together with `exam_types` (the column can't reference a table
 > that doesn't exist yet). Course presets of kind `exam_prep` get linked then.
 
+> PROPOSED (M6 plan): added in `m6_exams`. The course form shows it for kind `exam_prep`; "Enter scores"
+> defaults to it. There are no seeded course rows to link.
+
 ### `levels` 🟩 [M1]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
@@ -1034,6 +1037,11 @@ RLS: select OWN (support); writes service role only.
 
 RLS: select MBR or `center_id is null`; write PERM(academics) for own center rows only. Presets are read-only.
 
+> PROPOSED (M6 plan): adds `meta jsonb` (display-only: CEFR levels, Milliy grades). `code` is `ielts`, `sat`,
+> `cefr`, `milliy` for presets. `total_min`/`total_max` are filled for every type. Once a result exists,
+> `sections` and `total_rule` can't change (trigger, `exam_type_in_use`); name and `archived_at` can. Preset
+> rows get no write grant.
+
 ### `exam_results` 🟩 [M6]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
@@ -1054,6 +1062,12 @@ RLS: select MBR or `center_id is null`; write PERM(academics) for own center row
 Unique (student_id, exam_type_id, group_id, taken_on, kind) (re-entry updates the same row).
 RLS: select ADM or OWN or TCH(group_id) / teacher of the student; insert/update ADM, or the teacher of group_id (W).
 
+> PROPOSED (M6 plan): unique key uses `nulls not distinct`. Written only through `save_group_scores`,
+> `save_official_result` and `delete_exam_result` (no direct write grant). Trigger `exam_results_check`:
+> section keys must exist on the type, values within min–max and on the step (`exam_score_invalid`), at least
+> one section; `total_score` = total rule when every section has a value, else null. `kind = 'official'`
+> needs `group_id` null; mock/diagnostic need a group. Admin scope = the group's (or the student's) branch.
+
 ### `student_targets` 🟩 [M6]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
@@ -1068,6 +1082,10 @@ RLS: select ADM or OWN or TCH(group_id) / teacher of the student; insert/update 
 | baseline_total | numeric(6,1) | first diagnostic, for "uplift" |
 
 RLS: as exam_results.
+
+> PROPOSED (M6 plan): written through `set_student_target` (upsert by student + type); `convert_lead` writes
+> one when the course has an exam type and the lead has `target_score`. `baseline_total` stays optional:
+> without it the baseline is the first diagnostic, then the first result.
 
 ---
 

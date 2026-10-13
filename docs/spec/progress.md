@@ -7,10 +7,10 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M5 · Leads CRM**: ☑ done 2026-10-13 (plan #22, M5a #23, M5b #24, M5c #26). Next is **M6 · Exam scores**, not
-started: it waits for the owner's go. M4's last item (sign-up OTP by real SMS) is still open: it waits for Eskiz
-and the hosted Phone provider. M5's decisions are in `30-milestones.md` (M5) and the `PROPOSED (M5 …)` notes in
-02, 03, 05-ui, 11 and 14.
+**M6 · Exam scores**: ◐ planned 2026-10-13 (plan PR), building next as M6a (data), M6b (screens), M6c (bot +
+e2e). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
+Eskiz and the hosted Phone provider. M6's decisions are in `30-milestones.md` (M6) and the `PROPOSED (M6 plan)`
+notes in 02, 03, 05-ui, 16 and 17.
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -22,7 +22,7 @@ and the hosted Phone provider. M5's decisions are in `30-milestones.md` (M5) and
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
 | M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
 | M5 | Leads CRM | ☑ done (#23, #24, #26) | 2026-10-13 |
-| M6 | Exam scores | ☐ | |
+| M6 | Exam scores | ◐ planned | |
 | M7 | Launch 🚀 | ☐ | |
 | M8 | Online payments | ☐ | |
 | M9 | Mini App | ☐ | |
@@ -150,6 +150,18 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
   copied into `fonts/fallback.css`. Same variables, weights and subsets. Checked in the browser: every text run on
   `/uz/home` and `/ru/home` has the same width before and after (within 0.005 px).
 - New decision, recorded as `> PROPOSED (CI fix)` in 05-ui §3: fonts are self-hosted, not fetched from Google.
+
+### 2026-10-13 · M6 plan
+- The owner said to start M6. Plan recorded as `PROPOSED (M6 plan)` in 30 (three PRs: M6a data layer, M6b score
+  screens, M6c bot + e2e) and in 02, 03, 05-ui, 16, 17.
+- Official sources checked (done-when item 6 ☑): IELTS rounding (ielts.org), SAT ranges (College Board), CEFR
+  multilevel (UzBMB Multilevel-bm.pdf: four sections 0–75, level from their **average**), Milliy sertifikat
+  (UzBMB 17-01-2024: Rasch, A+ ≥ 70 … C ≥ 46). Spec corrections in 16: CEFR total is `average` (was `sum`);
+  Milliy sertifikat is 0–75, step 0.1 (was 0–100). SAT's step of 10 and Milliy's 75 cap come from secondary
+  sources (noted in 16).
+- New decisions: partial section entry (total null until complete); `nulls not distinct` re-entry key;
+  custom types frozen once used; `score_posted` Telegram-only with a 10-minute window; plain-SVG `ScoreChart`;
+  the bot's Scores is text in M6 and the chart image moves to M9.
 
 ### 2026-10-13 · M5 done
 - Every M5 "done when" item is checked (table above); M5c (#26) merged with CI green, which includes this note.
