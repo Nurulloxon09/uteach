@@ -88,8 +88,8 @@ test.describe.serial("M0.5 UI foundation", () => {
     const drawer = page.getByRole("dialog", { name: en.nav.menu });
     await expect(drawer).toBeVisible();
     const links = drawer.getByRole("navigation").getByRole("link");
-    await expect(links).toHaveCount(2);
-    await expect(links).toHaveText([en.nav.today, en.nav.myGroups]);
+    await expect(links).toHaveCount(3);
+    await expect(links).toHaveText([en.nav.today, en.nav.myGroups, en.nav.scores]);
 
     // Esc closes it and focus goes back to the menu button.
     await page.keyboard.press("Escape");

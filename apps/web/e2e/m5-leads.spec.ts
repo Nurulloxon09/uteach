@@ -135,7 +135,10 @@ test.describe.serial("M5 · leads: lead → trial → convert", () => {
     await sheet
       .getByLabel(en.attendance.trialFeedback.replace("{name}", LEAD.name))
       .fill("Level B1");
-    await sheet.getByRole("button", { name: en.attendance.trialFeedbackSave }).click();
+    await sheet
+      .getByTestId("trial-feedback")
+      .getByRole("button", { name: en.attendance.trialFeedbackSave })
+      .click();
     await expect(sheet.getByText(en.attendance.trialFeedbackSaved)).toBeVisible();
     await teacher.close();
 
