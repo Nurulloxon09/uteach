@@ -661,6 +661,14 @@ Check: `status <> 'lost' or lost_reason_id is not null`; `status <> 'won' or con
 Index (center_id, phone) for the duplicate check (warn, don't block).
 RLS: select/write PERM(leads) and ADM(branch) (W). Teachers: none.
 
+> PROPOSED (M5 plan): `branch_id` not null. `source` defaults to `'other'`. Phone indexed (center_id, phone);
+> `lead_duplicates(phone)` (security definer, PERM(leads)) returns matching leads, students and guardians'
+> students. Insert and plain-field updates go through RLS with column grants; `status`, `lost_reason_id`,
+> `lost_note`, `converted_student_id` and `next_follow_up_at` are written only by `move_lead`,
+> `convert_lead`, `merge_leads` and the follow-up trigger. Composite fks keep `branch_id`,
+> `interested_course_id`, `assigned_membership_id` and `lost_reason_id` inside the same center. `utm`,
+> `external_id` and `referral_id` are added by M13/M15, not M5.
+
 ### `lead_activities` 🟩 [M5]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
@@ -679,6 +687,10 @@ RLS: select/write PERM(leads) and ADM(branch) (W). Teachers: none.
 
 RLS: as leads. Activities are append-only, except that tasks can update `done_at`.
 
+> PROPOSED (M5 plan): written only through `add_lead_activity`, `complete_lead_task` and the lead RPCs (no
+> insert/update grants). A call stores its outcome in `body` with `call_outcome` (`reached`, `no_answer`,
+> `call_back`). Check: `kind = 'task'` ⇔ `due_at is not null`; `done_at` only on tasks.
+
 ### `lead_trials` 🟩 [M5]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
@@ -694,6 +706,11 @@ RLS: as leads. Activities are append-only, except that tasks can update `done_at
 Unique (lead_id, lesson_id).
 RLS: ADM with PERM(leads); teachers of the lesson can select (name only, through the attendance sheet view) and set status/feedback.
 
+> PROPOSED (M5 plan): teachers get no grant on `lead_trials`; the name reaches them through
+> `attendance_sheet` and they write through `save_attendance` / `save_trial_feedback` (lesson's teacher or
+> TCH(group), same edit window as attendance). Partial unique index: one `scheduled` trial per lead.
+> Cancelling the lesson sets its scheduled trials `cancelled` (lead back to `contacted`, `system` activity).
+
 ### `lost_reasons` 🟩 [M5]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
@@ -707,6 +724,10 @@ RLS: ADM with PERM(leads); teachers of the lesson can select (name only, through
 | archived_at | timestamptz | |
 
 RLS: select MBR; write PERM(settings).
+
+> PROPOSED (M5 plan): adds `system_key text` (`price`, `schedule`, `location`, `competitor`, `no_response`,
+> `other`), unique per center; `label` may be null while `system_key` is set (the UI translates the key).
+> Seeded by `create_center` and backfilled for existing centers. Archive instead of delete.
 
 ---
 
@@ -752,6 +773,11 @@ RLS:
 >   and enqueues or cancels alerts. Reads for teachers go through `attendance_sheet(lesson_id)` and
 >   `attendance_matrix(group_id, from, to)`; `lesson_attendance_stats(lesson_ids)` gives per-lesson counts for lists.
 >   Select policy: ADM(branch of group), or TCH(group), or the lesson's teacher.
+
+> PROPOSED (M5 plan): guest rows have `lead_trial_id` set and `student_id`, `enrollment_id` null; the trial's
+> lesson must be the row's lesson (composite fk `(center_id, lesson_id, lead_trial_id)` → `lead_trials`).
+> `save_attendance` upserts guests on `(lesson_id, lead_trial_id)`; `attendance_matrix`,
+> `lesson_attendance_stats`, rates, billing (`charge_cycles`) and absence alerts ignore guest rows.
 
 ---
 

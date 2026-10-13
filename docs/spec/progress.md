@@ -7,9 +7,9 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M4 · Telegram & SMS**: ◐ in progress. Plan (#17), M4a (#18), M4b (#19) and M4c (#20) merged; bot checked on a
-real phone. Left for "done": real SMS (new Send-SMS hook secret on hosted Supabase, Eskiz account and approved texts). The plan and its decisions are in `30-milestones.md` (M4) and the `PROPOSED (M4 plan)` notes
-in 01, 02, 03, 05-ui, 10, 15 and 17.
+**M5 · Leads CRM**: ◐ plan. Started by the owner on 2026-10-13 while M4's last item (real SMS) waits for Eskiz
+and the hosted Phone provider. The plan and its decisions are in `30-milestones.md` (M5) and the
+`PROPOSED (M5 plan)` notes in 02, 03, 05-ui, 11 and 14. Next: M5a (data layer).
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -19,8 +19,8 @@ in 01, 02, 03, 05-ui, 10, 15 and 17.
 | M1 | Academic core | ☑ done | 2026-10-11 |
 | M2 | Attendance | ☑ done | 2026-10-12 |
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
-| M4 | Telegram & SMS | ◐ in progress (M4a ☑, M4b ☑, M4c built) | |
-| M5 | Leads CRM | ☐ | |
+| M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
+| M5 | Leads CRM | ◐ plan | |
 | M6 | Exam scores | ☐ | |
 | M7 | Launch 🚀 | ☐ | |
 | M8 | Online payments | ☐ | |
@@ -53,6 +53,18 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | `packages/core` money/phone/tz helpers tested | ☑ | 26 unit tests incl. the 15-payments worked example and DST |
 | CI on PRs | ☑ | GitHub Actions on PR #1: checks, Supabase DB tests, e2e and Docker build all green |
 | E2E happy path | ☑ | `pnpm e2e`: 3 tests pass against local Supabase (2026-10-11) |
+
+## M5 "done when" status
+
+| Item (30-milestones) | Status | Evidence |
+|---|---|---|
+| A lead moves through all statuses; every move writes an activity; `lost` without a reason rejected by the DB | ☐ | |
+| Phone matching a lead or student shows the duplicate warning with links | ☐ | |
+| Scheduling a trial puts the guest on the sheet; teacher marking present sets `trial_done` | ☐ | |
+| Convert: student, guardian (re-used by phone), enrollment, first cycle charge in one transaction; `won` | ☐ | |
+| Teachers can't read leads except trial guests on their lessons (name only) | ☐ | |
+| Overdue follow-ups appear on the admin dashboard widget | ☐ | |
+| E2E: lead → contacted → trial → teacher marks present → convert → student in the group with a charge | ☐ | |
 
 ## M4 "done when" status
 
@@ -129,6 +141,17 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M5 plan
+- The owner asked to start M5 while M4's real-SMS item is skipped (Eskiz account, approved texts and the hosted
+  Phone provider are still to do; the 12 Eskiz texts are written up for the owner outside the repo).
+- Plan: three PRs (M5a data layer, M5b pipeline screens, M5c trials & convert), in `30-milestones.md`.
+- Decisions (`PROPOSED (M5 plan)`): status only through `move_lead` with a shared transition table (lost
+  reopens, won final and only through Convert); follow-ups = task activities with a trigger for
+  `next_follow_up_at`; duplicates across leads, students and guardians with merge; teachers reach trial guests
+  only through the attendance sheet; guests never billed or counted in rates; one open trial per lead;
+  `convert_lead` in one transaction re-using `upsert_guardian` and `enroll`, first payment as a separate step;
+  lost reasons with a translated `system_key`; `KanbanBoard` pattern on `@dnd-kit/core`.
 
 ### 2026-10-13 · M4 real-phone check
 - Dev bot `@uteachnrgBot` (token rotated after it was pasted in chat), worker running locally against local

@@ -93,6 +93,11 @@ Rules:
 4. **Read-only centers** (`past_due` past grace → `read_only`): every write policy includes `private.center_writable(center_id)`. Reads keep working, so a center can always see and export its data.
 5. **Service role** is used only in the worker, `/tg/api`, `/api/pay/*` and `/admin`. Every query there filters by an explicit `center_id` / subject derived from a verified identity (Telegram `initData`, provider signature, super-admin session).
 
+> PROPOSED (M5 plan): **Leads** need the `leads` flag and the lead's branch for admins (owners always). Teachers
+> have no grant on any lead table: a trial guest's name reaches them only through `attendance_sheet`, and the
+> result through `save_attendance` / `save_trial_feedback`. Lost reasons are read by every member and edited
+> with `settings`. Convert also needs what `enroll` needs (students + enrollments for the branch).
+
    > PROPOSED (M4 plan): the worker is narrower than the service role. It connects as `uteach_worker`, which can
    > only execute the `worker.*` functions (02, under `system_heartbeats`); the bot's reads take the Telegram user
    > id (from the update, verified by Telegram) and return only that user's linked subjects.
