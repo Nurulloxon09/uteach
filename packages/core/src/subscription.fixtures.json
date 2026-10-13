@@ -1,0 +1,96 @@
+[
+  {
+    "name": "trial before its end",
+    "status": "trial",
+    "trialEndsAt": "2026-11-01T10:00:00Z",
+    "now": "2026-11-01T09:59:00Z",
+    "expect": "trial",
+    "since": null
+  },
+  {
+    "name": "trial at its end",
+    "status": "trial",
+    "trialEndsAt": "2026-11-01T10:00:00Z",
+    "now": "2026-11-01T10:00:00Z",
+    "expect": "past_due",
+    "since": "2026-11-01T10:00:00Z"
+  },
+  {
+    "name": "grace 6d 23:59",
+    "status": "past_due",
+    "pastDueSince": "2026-11-01T10:00:00Z",
+    "now": "2026-11-08T09:59:00Z",
+    "expect": "past_due",
+    "since": "2026-11-01T10:00:00Z"
+  },
+  {
+    "name": "grace over",
+    "status": "past_due",
+    "pastDueSince": "2026-11-01T10:00:00Z",
+    "now": "2026-11-08T10:00:00Z",
+    "expect": "read_only",
+    "since": "2026-11-01T10:00:00Z"
+  },
+  {
+    "name": "late job: trial straight to read_only",
+    "status": "trial",
+    "trialEndsAt": "2026-11-01T10:00:00Z",
+    "now": "2026-11-12T00:00:00Z",
+    "expect": "read_only",
+    "since": "2026-11-01T10:00:00Z"
+  },
+  {
+    "name": "active through the last paid day",
+    "status": "active",
+    "paidUntil": "2026-11-30",
+    "now": "2026-11-30T18:59:00Z",
+    "expect": "active",
+    "since": null
+  },
+  {
+    "name": "active after the last paid day (Tashkent midnight)",
+    "status": "active",
+    "paidUntil": "2026-11-30",
+    "now": "2026-11-30T19:00:00Z",
+    "expect": "past_due",
+    "since": "2026-11-30T19:00:00Z"
+  },
+  {
+    "name": "active long after: read_only",
+    "status": "active",
+    "paidUntil": "2026-11-30",
+    "now": "2026-12-08T00:00:00Z",
+    "expect": "read_only",
+    "since": "2026-11-30T19:00:00Z"
+  },
+  {
+    "name": "active without paid_until",
+    "status": "active",
+    "now": "2030-01-01T00:00:00Z",
+    "expect": "active",
+    "since": null
+  },
+  {
+    "name": "past_due without a start",
+    "status": "past_due",
+    "now": "2026-11-01T00:00:00Z",
+    "expect": "past_due",
+    "since": "2026-11-01T00:00:00Z"
+  },
+  {
+    "name": "read_only stays",
+    "status": "read_only",
+    "pastDueSince": "2026-11-01T10:00:00Z",
+    "now": "2030-01-01T00:00:00Z",
+    "expect": "read_only",
+    "since": "2026-11-01T10:00:00Z"
+  },
+  {
+    "name": "cancelled stays",
+    "status": "cancelled",
+    "trialEndsAt": "2026-11-01T10:00:00Z",
+    "now": "2030-01-01T00:00:00Z",
+    "expect": "cancelled",
+    "since": null
+  }
+]

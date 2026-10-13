@@ -7,7 +7,7 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M7 · Launch**: ◐ planned (M7 plan): five parts, M7a subscriptions & limits first. M6 · Exam scores is ☑ done (#27, #28, #29, #30). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
+**M7 · Launch**: ◐ in progress (plan #31; M7a subscriptions & limits built; next M7b super-admin). M6 · Exam scores is ☑ done (#27, #28, #29, #30). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
 Eskiz and the hosted Phone provider. M6's decisions are in `30-milestones.md` (M6) and the `PROPOSED (M6 plan)`
 notes in 02, 03, 05-ui, 16 and 17.
 
@@ -22,7 +22,7 @@ notes in 02, 03, 05-ui, 16 and 17.
 | M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
 | M5 | Leads CRM | ☑ done (#23, #24, #26) | 2026-10-13 |
 | M6 | Exam scores | ☑ done (#27, #28, #29, M6c) | 2026-10-13 |
-| M7 | Launch 🚀 | ◐ planned | |
+| M7 | Launch 🚀 | ◐ in progress (plan #31, M7a built) | |
 | M8 | Online payments | ☐ | |
 | M9 | Mini App | ☐ | |
 | M10 | Payroll | ☐ | |
@@ -152,6 +152,21 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-14 · M7a subscriptions & limits
+- Migration `m7_plans`: `plans` (trial, starter, growth, pro; placeholder prices), `platform_invoices`,
+  `platform_settings`, `centers.plan_id / past_due_since / paid_until`; the status machine
+  (`private.center_status_next`) and the hourly `expire_centers` job; the read-only guard trigger on every tenant
+  table; student and branch limits; `center_usage`; invoice functions for the service role.
+- `packages/core/subscription` (`centerStatusNext`, `subscriptionBanner`, `daysUntil`) with a PGlite parity test.
+- Settings → Subscription (owners): plan, status, usage, how to pay, plans, invoices. App banner for the last 3
+  trial days, the grace period and read-only.
+- Tests: pgTAP `m7_plans` (56 checks), core unit tests, parity test. Browser: every banner and a refused write in
+  read-only on the local center (restored afterwards); screenshots at 1440/390.
+- Decisions: `PROPOSED (M7a, as built)` in 30, notes in 02.
+- Known gaps: the limit's message is not yet clicked through in the browser (M7e E2E); invoices are issued from
+  /admin in M7b; until then the owner's own live center will become past_due when its trial ends (super-admin can
+  extend it once M7b is in).
 
 ### 2026-10-13 · M7 plan
 - The owner said to start M7. Plan recorded as `PROPOSED (M7 plan)` in 30 (five PRs: M7a subscriptions & limits,

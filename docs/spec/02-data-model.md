@@ -136,6 +136,15 @@ Global (not tenant). The uteach subscription plans.
 
 RLS: select for `authenticated`; writes by service role only.
 
+> PROPOSED (M7a, as built): also `sort_order smallint`, `archived_at timestamptz`; a hidden `trial` row holds the
+> trial limits (centers with `plan_id` null use it).
+
+### `platform_settings` 🟩 [M7]
+
+> PROPOSED (M7a): uteach-wide settings. `key text pk`, `value jsonb not null default '{}'`, `updated_at`.
+> `payment_instructions` = `{uz, ru, en}` text for the Subscription page. RLS: select for `authenticated`;
+> writes by the service role only.
+
 ### `centers` 🟩 [M0]
 
 > PROPOSED (M0): the M0 migration creates only the columns M0 uses: `id, name, slug, country_code, currency, default_locale, timezone, status, trial_ends_at, settings, archived_at`. The others arrive with the milestone that needs them: `attendance_edit_hours`, `absence_alert_delay_min` (M2); `rounding_unit_amount`, `billing_day`, `payment_due_days` (M3); `reminder_every_days`, `quiet_hours_*` (M4); `plan_id`, `past_due_since` (M7); `logo_path` (M1 wizard).

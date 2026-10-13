@@ -1,6 +1,10 @@
+import { subscriptionBanner } from "@uteach/core";
 import type { CenterStatus } from "@uteach/db";
+import { CircleAlert } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { AppShell, type NavEntry, type ShellChip } from "@/components/patterns";
+import { Alert } from "@/components/ui/alert";
+import { Link } from "@/i18n/navigation";
 import { teachesLessons } from "@/lib/academics";
 import { getCenterContext } from "@/lib/center";
 import { logoutAction } from "../(auth)/actions";
@@ -81,7 +85,10 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
             { key: "notifications", label: t("notifications"), href: "/settings/notifications" },
             { key: "telegram", label: t("telegram"), href: "/settings/telegram" },
             ...(ctx.membership.role === "owner"
-              ? [{ key: "health", label: t("health"), href: "/settings/health" }]
+              ? [
+                  { key: "subscription", label: t("subscription"), href: "/settings/subscription" },
+                  { key: "health", label: t("health"), href: "/settings/health" },
+                ]
               : []),
           ],
         },
@@ -93,6 +100,23 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
       ];
 
   const tone = STATUS_TONE[ctx.center.status];
+  const tb = await getTranslations("subscription.banner");
+  // A server render: "now" is the request time.
+  const now = new Date();
+  const banner = subscriptionBanner(
+    {
+      status: ctx.center.status,
+      trialEndsAt: ctx.center.trialEndsAt ? new Date(ctx.center.trialEndsAt) : null,
+      pastDueSince: ctx.center.pastDueSince ? new Date(ctx.center.pastDueSince) : null,
+      timeZone: ctx.center.timezone,
+    },
+    now,
+  );
+  const bannerText = !banner
+    ? null
+    : banner.kind === "read_only"
+      ? tb("readOnly")
+      : tb(banner.kind === "past_due" ? "pastDue" : "trialEnding", { days: banner.days });
 
   return (
     <AppShell
@@ -104,6 +128,24 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
       switchCenter={switchCenterAction}
       logout={logoutAction}
     >
+      {banner && bannerText ? (
+        <Alert
+          variant={banner.kind === "trial_ending" ? "default" : "destructive"}
+          data-testid="subscription-banner"
+        >
+          <CircleAlert />
+          <p>
+            {bannerText}{" "}
+            {ctx.membership.role === "owner" ? (
+              <Link href="/settings/subscription" className="font-semibold underline">
+                {tb("open")}
+              </Link>
+            ) : (
+              tb("askOwner")
+            )}
+          </p>
+        </Alert>
+      ) : null}
       {children}
     </AppShell>
   );

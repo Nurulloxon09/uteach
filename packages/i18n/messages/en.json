@@ -88,6 +88,7 @@
     "broadcasts": "Broadcasts",
     "notifications": "Notifications",
     "telegram": "Telegram",
+    "subscription": "Subscription",
     "health": "Health",
     "leads": "Leads",
     "lostReasons": "Lost reasons",
@@ -210,7 +211,10 @@
       "exam_type_in_use": "Scores already use this exam type, so its sections and total can't change. Rename or archive it instead.",
       "exam_score_invalid": "Some scores are outside the allowed range or step.",
       "invalid_exam_result": "Check the result: kind, day and certificate.",
-      "invalid_target": "The target must be within the exam's score range."
+      "invalid_target": "The target must be within the exam's score range.",
+      "student_limit_reached": "Your plan's student limit is reached. Upgrade the plan in Settings → Subscription to add more students.",
+      "branch_limit_reached": "Your plan doesn't allow more branches. Upgrade the plan in Settings → Subscription.",
+      "invalid_invoice": "This invoice can't be changed in its current state."
     },
     "groupHasStudents": "End or transfer the group's students before archiving it.",
     "duplicateStudent": "A student with this name or phone already exists. Check the list, or save again to add anyway."
@@ -2117,6 +2121,51 @@
     "archiveTitle": "Archive “{label}”?",
     "archiveHint": "It won't be offered any more; leads that already have it keep it.",
     "restoreTitle": "Restore “{label}”?"
+  },
+  "subscription": {
+    "title": "Subscription",
+    "planTitle": "Your plan",
+    "plan": "Plan",
+    "trialPlan": "Free trial",
+    "students": "Active students",
+    "branches": "Branches",
+    "used": "{used} of {limit}",
+    "unlimited": "no limit",
+    "trialEnds": "Trial ends",
+    "paidThrough": "Paid through",
+    "trialUntil": "Free trial with every feature until {date}.",
+    "paidUntil": "Paid through {date}.",
+    "graceUntil": "Payment is overdue. Everything works until {date}; after that the center becomes read-only.",
+    "readOnlyHint": "The center is read-only: you can see and export everything, but not change it. Paying restores full access.",
+    "payTitle": "How to pay",
+    "payHint": "uteach sends an invoice for the plan you choose. Pay it by bank transfer or Payme; we mark it paid within a working day.",
+    "payFallback": "Write to the uteach team in Telegram to choose a plan and get an invoice.",
+    "plansTitle": "Plans",
+    "plansHint": "Prices per month. To change your plan, ask the uteach team for an invoice.",
+    "current": "Current",
+    "pricePerMonth": "Price a month",
+    "invoicesTitle": "Invoices",
+    "noInvoices": "No invoices yet",
+    "noInvoicesHint": "Invoices from uteach appear here.",
+    "number": "Number",
+    "periodLabel": "Period",
+    "period": "{from} – {to}",
+    "amount": "Amount",
+    "status": "Status",
+    "paidOn": "Paid on",
+    "invoiceStatus": {
+      "draft": "Draft",
+      "issued": "To pay",
+      "paid": "Paid",
+      "void": "Void"
+    },
+    "banner": {
+      "trialEnding": "{days, plural, =0 {Your free trial ends today.} one {Your free trial ends in # day.} other {Your free trial ends in # days.}}",
+      "pastDue": "{days, plural, =0 {Payment is overdue: the center becomes read-only today.} one {Payment is overdue: the center becomes read-only in # day.} other {Payment is overdue: the center becomes read-only in # days.}}",
+      "readOnly": "The center is read-only until the subscription is paid. You can still see and export everything.",
+      "open": "Open Subscription",
+      "askOwner": "Ask the center owner to pay."
+    }
   },
   "exams": {
     "title": "Exams",

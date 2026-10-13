@@ -504,8 +504,24 @@ Global "done when" for every milestone:
 **Scope:** plans + 14-day trial + past_due (7-day grace) → read_only, student limit enforcement; uteach invoices (manual); super-admin (centers, plans, invoices, support view audited, system health); role dashboards (owner, admin, teacher); audit log viewer (owner); production infra (VPS, Docker Compose, Caddy TLS, Supabase Pro, backups, error monitoring, uptime check), legal pages (terms, privacy), landing page.
 **Tables:** plans, platform_invoices.
 **Done when:**
-- [ ] A trial center flips to `past_due` at trial end and to `read_only` 7 days later (job test); in read_only every write is rejected by RLS and every read still works; marking an invoice paid restores `active`.
-- [ ] Enrolling beyond the plan's student limit is blocked with an upgrade message.
+> PROPOSED (M7a, as built, 2026-10-14):
+> - Read-only = the guard trigger `a_center_writable` (named to run before other triggers) on every table with
+>   `center_id` and on `centers` (a new center's insert passes). "End user" = the request's JWT role is
+>   `authenticated` / `anon`; pg_cron, the worker and the service role carry none or `service_role`, so they pass.
+>   Direct table updates in read-only change nothing (RLS hides the rows); RPCs and inserts raise
+>   `center_read_only`.
+> - Trial limits live in a hidden `trial` plan row (50 students, no branch limit), so super-admin can change them
+>   like any plan. `plans` also has `sort_order` and `archived_at`.
+> - New table `platform_settings` (key → jsonb; `payment_instructions` = `{uz, ru, en}` text on the Subscription
+>   page). Read by signed-in people, written by the service role.
+> - Invoices are created `issued` (no drafts yet); `issue_platform_invoice`, `mark_platform_invoice_paid`,
+>   `void_platform_invoice` are callable by the service role only (the /admin screens in M7b).
+> - The student limit is a trigger on `enrollments` inserts (so `enroll`, `convert_lead`, imports and transfers
+>   all get it), with a per-center lock so two people can't take the last place. The branch limit is a trigger
+>   on `branches` inserts.
+> - Banner days are calendar days in the center's timezone ("ends today", "in 2 days"), matching the dates shown.
+- [x] A trial center flips to `past_due` at trial end and to `read_only` 7 days later (job test); in read_only every write is rejected by RLS and every read still works; marking an invoice paid restores `active`. (M7a: pgTAP `m7_plans`: the machine's edges, `expire_centers`, read-only inserts/RPCs/updates rejected and reads working, platform writes passing, the guard on every tenant table, paid → active with `paid_until`; SQL and `centerStatusNext` agree on `subscription.fixtures.json`; banners and a refused write checked in the browser.)
+- [x] Enrolling beyond the plan's student limit is blocked with an upgrade message. (M7a: pgTAP `m7_plans`: the student over the limit is refused with `student_limit_reached`, an active student can join another group; the message points to Settings → Subscription in uz/ru/en. Not yet clicked through in the browser: the full-loop E2E in M7e covers it.)
 - [ ] Super-admin can list centers, extend a trial, issue and mark invoices, and open the read-only support view; each open is in `audit_log`.
 - [ ] Owner/admin/teacher dashboards show the numbers defined in 20, verified against fixture data.
 - [ ] Prod: `docker compose up` on the VPS serves HTTPS; deploy from CI; worker and web restart automatically; daily DB backup verified by a restore test; error tracking receives a test error; an uptime alert reaches Telegram.
