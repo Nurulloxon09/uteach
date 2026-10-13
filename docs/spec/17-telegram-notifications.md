@@ -88,6 +88,30 @@ returning *;
 > caption. A shutdown signal stops claiming and lets in-flight sends finish (up to 10 s); anything left is
 > recovered as stale.
 
+> PROPOSED (M4a, as built): migration `m4_telegram`.
+> - **Worker functions:** `worker.claim_outbox(limit)` returns each claimed row with what the sender needs (the
+>   recipient's live chat id and bot language, their phone, the Telegram and SMS template in effect with
+>   on/off and Eskiz id, the center's name, timezone, currency, SMS switch and SMS left this month). Before
+>   claiming it skips (`skipped`, "settled") due `payment_reminder` / `payment_due_soon` rows whose debt was paid.
+>   Also `mark_sent`, `mark_retry(id, error, min_delay_seconds)` (backoff in SQL, mirrored and parity-tested by
+>   `outboxBackoffSeconds`), `mark_failed(id, error, telegram_blocked)`, `mark_skipped`, `recover_stale`,
+>   `beat`, `link_contact`, `unlink(telegram_user_id)`, `set_locale`, `get/set/delete_session`, `bot_subjects`,
+>   `bot_schedule`, `bot_attendance` (both at most 63 days), `bot_payments`.
+> - **Channel choice** is `pickChannel` in `packages/core/notifications`. **Rendering** is `renderTemplate` in
+>   `@uteach/i18n/notifications` (not core: formatting belongs with the locales and `formatMoney`). Payload keys
+>   `amount`, `balance`, `debt` are money in minor units and `date`, `oldDate`, `dueDate`, `startDate`,
+>   `oldestDueDate` are days; a broadcast's `bodies[locale]` replaces `body`. A test renders every system template
+>   with its key's payload in every language.
+> - **Staff alerts** are triggers: a substitution queues `substitute_assigned` to the substitute (undoing it
+>   cancels the pending one); a new schedule conflict queues `schedule_conflict` to owners and branch admins with
+>   `academics`, once per group per day.
+> - **Broadcasts:** `status` is only `queued` or `cancelled`; delivery comes from the outbox (`broadcast_stats`).
+>   `branch_ids` records the branches reached (admins see a broadcast only inside their branches). The audience
+>   also takes `student_ids` (broadcast to a selection). Recipients `guardians` means guardians who receive
+>   notifications, else the student.
+> - Debtors' **last reminder** comes from the view `last_payment_reminders`. The per-phone OTP limit
+>   (`private.otp_sends`) moves to M4b with the hook that uses it.
+
 ## SMS fallback (Eskiz)
 
 > PROPOSED: which templates fall back to SMS, broadcasts by SMS only when chosen, a per-center monthly SMS cap. Canvas: Eskiz adapter, approved templates, OTP.

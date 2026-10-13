@@ -5,6 +5,7 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
+    "./notifications": "./src/notifications.ts",
     "./messages/en.json": "./messages/en.json",
     "./messages/uz.json": "./messages/uz.json",
     "./messages/ru.json": "./messages/ru.json"
@@ -20,5 +21,8 @@
     "eslint": "9.39.5",
     "typescript": "5.9.3",
     "vitest": "5.0.3"
+  },
+  "dependencies": {
+    "intl-messageformat": "11.2.15"
   }
 }

@@ -7,8 +7,8 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M4 · Telegram & SMS**: ◐ planned 2026-10-13, not started. Three PRs: M4a data layer → M4b worker & SMS →
-M4c staff screens. The plan and its decisions are in `30-milestones.md` (M4) and the `PROPOSED (M4 plan)` notes
+**M4 · Telegram & SMS**: ◐ in progress. Plan merged (#17). M4a data layer built and in review; next M4b worker & SMS,
+then M4c staff screens. The plan and its decisions are in `30-milestones.md` (M4) and the `PROPOSED (M4 plan)` notes
 in 01, 02, 03, 05-ui, 10, 15 and 17.
 
 ## Milestones
@@ -19,7 +19,7 @@ in 01, 02, 03, 05-ui, 10, 15 and 17.
 | M1 | Academic core | ☑ done | 2026-10-11 |
 | M2 | Attendance | ☑ done | 2026-10-12 |
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
-| M4 | Telegram & SMS | ◐ planned (M4a, M4b, M4c) | |
+| M4 | Telegram & SMS | ◐ in progress (M4a built) | |
 | M5 | Leads CRM | ☐ | |
 | M6 | Exam scores | ☐ | |
 | M7 | Launch 🚀 | ☐ | |
@@ -62,9 +62,9 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Bot menu: schedule, attendance, payments (+ receipt PDF) per child, in the user's language | ☐ | |
 | Absence alert in Telegram ~10 min after marking; blocked bot → SMS (Eskiz sandbox) + unlinked | ☐ | |
 | Worker killed mid-send, restarted → every pending message sent exactly once | ☐ | |
-| Two workers never double-send (SKIP LOCKED) | ☐ | |
+| Two workers never double-send (SKIP LOCKED) | ◐ | M4a: `outbox-claim.concurrency.test.ts` (two `uteach_worker` logins claim 60 rows in parallel: disjoint, all claimed); the sender loop comes in M4b |
 | Broadcast to "debtors of branch X" reaches exactly that set; preview count matches | ☐ | |
-| Reminders every `reminder_every_days`, none in quiet hours, none after paying | ☐ | |
+| Reminders every `reminder_every_days`, none in quiet hours, none after paying | ☑ | pgTAP `m4_telegram` (first reminder once overdue, none 2 days later, next after 3, cadence follows the setting, quiet hours push `send_after`, paid → skipped as settled and no new reminder) |
 | Heartbeat older than 2 min shows red on the health page | ☐ | |
 | Sign-up OTP arrives by real SMS in staging | ☐ | |
 
@@ -129,6 +129,24 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M4a data layer
+- Migration `m4_telegram`: center reminder/SMS settings; `broadcasts`, `bot_sessions`, `system_heartbeats`,
+  `notification_outbox.broadcast_id`; the `uteach_worker` role and `worker` schema (claim with SKIP LOCKED,
+  mark sent/retry/failed/skipped, stale recovery, heartbeat, contact linking across centers, unlink, sessions,
+  the bot's schedule/attendance/payments reads scoped to the user's links); `enqueue_payment_reminders` (hourly
+  pg_cron, centers at local 10:xx) with overdue cadence and "due soon"; `charge_created` from
+  `create_next_charge`; staff alerts by trigger; `create_broadcast` / `preview_broadcast` / `cancel_broadcast` /
+  `broadcast_stats`; `send_payment_reminder`; `worker_health`; `last_payment_reminders`; template overrides
+  for owners/`settings`; outbox reads widened to branch admins; new Telegram and SMS system templates.
+- `packages/core/notifications` (`outboxBackoffSeconds`, `pickChannel`), `@uteach/i18n/notifications`
+  (`renderTemplate`), new DB error codes with messages.
+- Tests: pgTAP `m4_telegram` (117 checks, PGlite and real Supabase); M2 test updated for the widened outbox
+  reads and template writes; parity test (backoff SQL = TS, every system template renders in uz/ru/en); the
+  two-worker claim test (real Postgres, CI database job).
+- Decisions: `PROPOSED (M4a, as built)` in 01 and 17.
+- Known gaps: locally `supabase test db` fails `m1_academic` test 14 on a database with dev data (the daily
+  lesson job also fills the dev groups); clean databases (PGlite, CI) pass.
 
 ### 2026-10-13 · M4 planned; hosted preview
 - M4 plan: three PRs (M4a data layer → M4b worker & SMS → M4c staff screens); see `30-milestones.md`.

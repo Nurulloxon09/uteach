@@ -9,6 +9,7 @@
     "./billing": "./src/billing.ts",
     "./billing.fixtures.json": "./src/billing.fixtures.json",
     "./money": "./src/money.ts",
+    "./notifications": "./src/notifications.ts",
     "./phone": "./src/phone.ts",
     "./schedule": "./src/schedule.ts",
     "./schedule.fixtures.json": "./src/schedule.fixtures.json",

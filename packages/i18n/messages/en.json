@@ -176,7 +176,13 @@
       "backdate_limit": "Payments older than 7 days need the void right.",
       "financial_rows_permanent": "Financial records can't be changed or deleted. Void and re-enter instead.",
       "currency_locked": "The currency can't change after the first charge.",
-      "import_student_not_found": "A student in the file wasn't found. Check names and phones."
+      "import_student_not_found": "A student in the file wasn't found. Check names and phones.",
+      "invalid_audience": "Choose who should get the message.",
+      "empty_audience": "Nobody matches this audience.",
+      "sms_not_available": "SMS isn't available for broadcasts yet: it needs an approved SMS template.",
+      "invalid_body": "Write a message of up to 2000 characters.",
+      "invalid_channel": "Choose Telegram or SMS.",
+      "no_debt": "This student doesn't owe anything."
     },
     "groupHasStudents": "End or transfer the group's students before archiving it.",
     "duplicateStudent": "A student with this name or phone already exists. Check the list, or save again to add anyway."

@@ -193,6 +193,26 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"bot_sessions": {
+                  Row: {
+                    "active_center_id": string | null,"state": NonNullable<Json>,"telegram_user_id": number,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "active_center_id"?: string | null,"state"?: NonNullable<Json>,"telegram_user_id": number,"updated_at"?: string
+                  }
+                  Update: {
+                    "active_center_id"?: string | null,"state"?: NonNullable<Json>,"telegram_user_id"?: number,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "bot_sessions_active_center_id_fkey"
+      columns: ["active_center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"branches": {
                   Row: {
                     "address": string | null,"archived_at": string | null,"center_id": string,"code": string,"created_at": string,"id": string,"name": string,"phone": string | null,"timezone": string,"updated_at": string
@@ -213,16 +233,42 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
-                },"centers": {
+                },"broadcasts": {
                   Row: {
-                    "absence_alert_delay_min": number,"archived_at": string | null,"attendance_edit_hours": number,"billing_mode": Database["public"]['Enums']["billing_mode"],"country_code": string,"created_at": string,"currency": string,"default_locale": string,"id": string,"late_alert_enabled": boolean,"leave_credit_policy": Database["public"]['Enums']["leave_credit_policy"],"logo_path": string | null,"name": string,"payment_due_days": number,"quiet_hours_end": string,"quiet_hours_start": string,"rounding_unit_amount": number,"settings": NonNullable<Json>,"slug": string,"status": Database["public"]['Enums']["center_status"],"timezone": string,"trial_ends_at": string | null,"updated_at": string
+                    "audience": NonNullable<Json>,"body": string,"body_by_locale": NonNullable<Json>,"branch_ids": (string)[],"cancelled_at": string | null,"center_id": string,"channel": Database["public"]['Enums']["notification_channel"],"created_at": string,"created_by": string | null,"id": string,"recipient_count": number,"scheduled_at": string | null,"status": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"billing_mode"?: Database["public"]['Enums']["billing_mode"],"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"id"?: string,"late_alert_enabled"?: boolean,"leave_credit_policy"?: Database["public"]['Enums']["leave_credit_policy"],"logo_path"?: string | null,"name": string,"payment_due_days"?: number,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"rounding_unit_amount"?: number,"settings"?: NonNullable<Json>,"slug": string,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
+                    "audience": NonNullable<Json>,"body": string,"body_by_locale"?: NonNullable<Json>,"branch_ids"?: (string)[],"cancelled_at"?: string | null,"center_id": string,"channel"?: Database["public"]['Enums']["notification_channel"],"created_at"?: string,"created_by"?: string | null,"id"?: string,"recipient_count"?: number,"scheduled_at"?: string | null,"status"?: string,"updated_at"?: string
                   }
                   Update: {
-                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"billing_mode"?: Database["public"]['Enums']["billing_mode"],"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"id"?: string,"late_alert_enabled"?: boolean,"leave_credit_policy"?: Database["public"]['Enums']["leave_credit_policy"],"logo_path"?: string | null,"name"?: string,"payment_due_days"?: number,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"rounding_unit_amount"?: number,"settings"?: NonNullable<Json>,"slug"?: string,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
+                    "audience"?: NonNullable<Json>,"body"?: string,"body_by_locale"?: NonNullable<Json>,"branch_ids"?: (string)[],"cancelled_at"?: string | null,"center_id"?: string,"channel"?: Database["public"]['Enums']["notification_channel"],"created_at"?: string,"created_by"?: string | null,"id"?: string,"recipient_count"?: number,"scheduled_at"?: string | null,"status"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "broadcasts_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "broadcasts_created_by_fkey"
+      columns: ["created_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"centers": {
+                  Row: {
+                    "absence_alert_delay_min": number,"archived_at": string | null,"attendance_edit_hours": number,"billing_mode": Database["public"]['Enums']["billing_mode"],"country_code": string,"created_at": string,"currency": string,"default_locale": string,"due_soon_reminder_enabled": boolean,"id": string,"late_alert_enabled": boolean,"leave_credit_policy": Database["public"]['Enums']["leave_credit_policy"],"logo_path": string | null,"name": string,"payment_due_days": number,"quiet_hours_end": string,"quiet_hours_start": string,"reminder_every_days": number,"rounding_unit_amount": number,"settings": NonNullable<Json>,"slug": string,"sms_enabled": boolean,"sms_monthly_cap": number,"status": Database["public"]['Enums']["center_status"],"timezone": string,"trial_ends_at": string | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"billing_mode"?: Database["public"]['Enums']["billing_mode"],"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"due_soon_reminder_enabled"?: boolean,"id"?: string,"late_alert_enabled"?: boolean,"leave_credit_policy"?: Database["public"]['Enums']["leave_credit_policy"],"logo_path"?: string | null,"name": string,"payment_due_days"?: number,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"reminder_every_days"?: number,"rounding_unit_amount"?: number,"settings"?: NonNullable<Json>,"slug": string,"sms_enabled"?: boolean,"sms_monthly_cap"?: number,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"billing_mode"?: Database["public"]['Enums']["billing_mode"],"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"due_soon_reminder_enabled"?: boolean,"id"?: string,"late_alert_enabled"?: boolean,"leave_credit_policy"?: Database["public"]['Enums']["leave_credit_policy"],"logo_path"?: string | null,"name"?: string,"payment_due_days"?: number,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"reminder_every_days"?: number,"rounding_unit_amount"?: number,"settings"?: NonNullable<Json>,"slug"?: string,"sms_enabled"?: boolean,"sms_monthly_cap"?: number,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
                   }
                   Relationships: [
                     
@@ -711,17 +757,23 @@ isOneToOne: false
                   ]
                 },"notification_outbox": {
                   Row: {
-                    "attempts": number,"center_id": string,"channel": Database["public"]['Enums']["notification_channel"] | null,"created_at": string,"dedupe_key": string | null,"fallback_of_id": string | null,"guardian_id": string | null,"id": string,"last_error": string | null,"locale": string,"locked_at": string | null,"membership_id": string | null,"payload": NonNullable<Json>,"phone": string | null,"provider_message_id": string | null,"send_after": string,"sent_at": string | null,"status": Database["public"]['Enums']["outbox_status"],"student_id": string | null,"telegram_chat_id": number | null,"template_key": string,"updated_at": string
+                    "attempts": number,"broadcast_id": string | null,"center_id": string,"channel": Database["public"]['Enums']["notification_channel"] | null,"created_at": string,"dedupe_key": string | null,"fallback_of_id": string | null,"guardian_id": string | null,"id": string,"last_error": string | null,"locale": string,"locked_at": string | null,"membership_id": string | null,"payload": NonNullable<Json>,"phone": string | null,"provider_message_id": string | null,"send_after": string,"sent_at": string | null,"status": Database["public"]['Enums']["outbox_status"],"student_id": string | null,"telegram_chat_id": number | null,"template_key": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "attempts"?: number,"center_id": string,"channel"?: Database["public"]['Enums']["notification_channel"] | null,"created_at"?: string,"dedupe_key"?: string | null,"fallback_of_id"?: string | null,"guardian_id"?: string | null,"id"?: string,"last_error"?: string | null,"locale": string,"locked_at"?: string | null,"membership_id"?: string | null,"payload"?: NonNullable<Json>,"phone"?: string | null,"provider_message_id"?: string | null,"send_after"?: string,"sent_at"?: string | null,"status"?: Database["public"]['Enums']["outbox_status"],"student_id"?: string | null,"telegram_chat_id"?: number | null,"template_key": string,"updated_at"?: string
+                    "attempts"?: number,"broadcast_id"?: string | null,"center_id": string,"channel"?: Database["public"]['Enums']["notification_channel"] | null,"created_at"?: string,"dedupe_key"?: string | null,"fallback_of_id"?: string | null,"guardian_id"?: string | null,"id"?: string,"last_error"?: string | null,"locale": string,"locked_at"?: string | null,"membership_id"?: string | null,"payload"?: NonNullable<Json>,"phone"?: string | null,"provider_message_id"?: string | null,"send_after"?: string,"sent_at"?: string | null,"status"?: Database["public"]['Enums']["outbox_status"],"student_id"?: string | null,"telegram_chat_id"?: number | null,"template_key": string,"updated_at"?: string
                   }
                   Update: {
-                    "attempts"?: number,"center_id"?: string,"channel"?: Database["public"]['Enums']["notification_channel"] | null,"created_at"?: string,"dedupe_key"?: string | null,"fallback_of_id"?: string | null,"guardian_id"?: string | null,"id"?: string,"last_error"?: string | null,"locale"?: string,"locked_at"?: string | null,"membership_id"?: string | null,"payload"?: NonNullable<Json>,"phone"?: string | null,"provider_message_id"?: string | null,"send_after"?: string,"sent_at"?: string | null,"status"?: Database["public"]['Enums']["outbox_status"],"student_id"?: string | null,"telegram_chat_id"?: number | null,"template_key"?: string,"updated_at"?: string
+                    "attempts"?: number,"broadcast_id"?: string | null,"center_id"?: string,"channel"?: Database["public"]['Enums']["notification_channel"] | null,"created_at"?: string,"dedupe_key"?: string | null,"fallback_of_id"?: string | null,"guardian_id"?: string | null,"id"?: string,"last_error"?: string | null,"locale"?: string,"locked_at"?: string | null,"membership_id"?: string | null,"payload"?: NonNullable<Json>,"phone"?: string | null,"provider_message_id"?: string | null,"send_after"?: string,"sent_at"?: string | null,"status"?: Database["public"]['Enums']["outbox_status"],"student_id"?: string | null,"telegram_chat_id"?: number | null,"template_key"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
+      foreignKeyName: "notification_outbox_center_id_broadcast_id_fkey"
+      columns: ["center_id","broadcast_id"]
+isOneToOne: false
+      referencedRelation: "broadcasts"
+      referencedColumns: ["center_id","id"]
+    },{
       foreignKeyName: "notification_outbox_center_id_fkey"
       columns: ["center_id"]
 isOneToOne: false
@@ -1089,6 +1141,20 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"system_heartbeats": {
+                  Row: {
+                    "info": NonNullable<Json>,"last_beat_at": string,"service": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "info"?: NonNullable<Json>,"last_beat_at"?: string,"service": string
+                  }
+                  Update: {
+                    "info"?: NonNullable<Json>,"last_beat_at"?: string,"service"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"telegram_links": {
                   Row: {
                     "center_id": string,"chat_id": number,"created_at": string,"guardian_id": string | null,"id": string,"linked_at": string,"locale": string,"membership_id": string | null,"phone": string,"student_id": string | null,"telegram_user_id": number,"unlinked_at": string | null,"updated_at": string
@@ -1220,6 +1286,20 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"last_payment_reminders": {
+                  Row: {
+                    "center_id": string | null,"last_queued_at": string | null,"last_sent_at": string | null,"student_id": string | null
+                  }
+                  ComputedFields: never
+                  Relationships: [
+                    {
+      foreignKeyName: "notification_outbox_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"student_balances": {
                   Row: {
                     "adjusted": number | null,"balance": number | null,"branch_id": string | null,"center_id": string | null,"charged": number | null,"paid": number | null,"student_id": string | null
@@ -1293,6 +1373,14 @@ isOneToOne: false
               "enrollment_id": string,"full_name": string,"is_expected": boolean,"late_minutes": number,"marked_at": string,"note": string,"status": Database["public"]['Enums']["attendance_status"],"student_id": string
             }[]
                            },
+"broadcast_stats":
+{ Args: { "p_broadcast_ids": (string)[] }; Returns: {
+              "broadcast_id": string,"cancelled": number,"failed": number,"pending": number,"sent": number,"skipped": number
+            }[]
+                           },
+"cancel_broadcast":
+{ Args: { "p_broadcast_id": string }; Returns: number
+                           },
 "cancel_lesson":
 { Args: { "p_center_fault"?: boolean,"p_lesson_id": string,"p_notify"?: boolean,"p_reason": string }; Returns: undefined
                            },
@@ -1305,6 +1393,9 @@ isOneToOne: false
 { Args: { "p_center_id": string }; Returns: {
               "course_id": string,"default_price_amount": number
             }[]
+                           },
+"create_broadcast":
+{ Args: { "p_audience": Json,"p_body": string,"p_body_by_locale"?: Json,"p_center_id": string,"p_channel"?: Database["public"]['Enums']["notification_channel"],"p_scheduled_at"?: string }; Returns: Json
                            },
 "create_center":
 { Args: { "p_branch_address"?: string,"p_branch_name": string,"p_locale": string,"p_name": string,"p_timezone": string }; Returns: string
@@ -1368,6 +1459,9 @@ isOneToOne: false
 "next_lesson_date":
 { Args: { "p_group_id": string }; Returns: string
                            },
+"preview_broadcast":
+{ Args: { "p_audience": Json,"p_center_id": string }; Returns: Json
+                           },
 "record_payment":
 { Args: { "p_account_id"?: string,"p_amount": number,"p_branch_id"?: string,"p_method": Database["public"]['Enums']["payment_method"],"p_note"?: string,"p_paid_at"?: string,"p_payer_name"?: string,"p_student_id": string }; Returns: Json
                            },
@@ -1385,6 +1479,9 @@ isOneToOne: false
                            },
 "save_schedule_rules":
 { Args: { "p_group_id": string,"p_rules": Json }; Returns: Json
+                           },
+"send_payment_reminder":
+{ Args: { "p_student_id": string }; Returns: number
                            },
 "set_group_price":
 { Args: { "p_cycle_lessons": number,"p_effective_from": string,"p_group_id": string,"p_price_amount": number }; Returns: string
@@ -1423,6 +1520,11 @@ isOneToOne: false
                            },
 "void_payment":
 { Args: { "p_payment_id": string,"p_reason": string }; Returns: undefined
+                           },
+"worker_health":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "last_beat_at": string,"service": string
+            }[]
                            }
           }
           Enums: {

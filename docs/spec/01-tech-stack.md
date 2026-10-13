@@ -38,6 +38,11 @@ No Vercel Hobby: its terms are non-commercial.
 > static `new URL("…", import.meta.url)`, so Next copies them next to the server code (standalone included) and
 > the M4 worker can load them the same way. `@react-pdf/renderer` is a `serverExternalPackages` entry in Next.
 
+> PROPOSED (M4a, as built): **`intl-messageformat`** (the ICU engine next-intl already uses) is a dependency of
+> `packages/i18n`, which renders outbox templates for the worker and the settings preview.
+> `supabase/seed.sql` (local only) gives `uteach_worker` the password `uteach-worker-local`; CI's database job
+> logs in with it for the two-worker claim test.
+
 > PROPOSED (M4 plan): libraries joining in M4: **grammY** (worker, already in the table), **`postgres`**
 > (postgres.js) as a runtime dependency of the worker, and **`qrcode`** (web, renders the center's bot deep link
 > as a printable QR). The worker gets Vitest for its integration test. The hosted Vercel project

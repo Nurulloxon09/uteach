@@ -628,14 +628,15 @@ select throws_ok(
             values (%L, 'absence_alert', 'uz', %L) $$, pg_temp.id('center_a'), pg_temp.id('s1')),
   '42501', null, 'nobody inserts outbox rows directly');
 select pg_temp.login(pg_temp.id('adm_att'));
-select is((select count(*)::int from public.notification_outbox), 0, 'admins do not read the outbox yet (M4)');
+select ok((select count(*) from public.notification_outbox) > 0,
+  'admins read the rows about their branch''s students (M4 widened it from owners only)');
 select pg_temp.login(pg_temp.id('t1'));
 select is((select count(*)::int from public.notification_outbox), 0, 'teachers never read the outbox');
 select pg_temp.login(pg_temp.id('owner_b'));
 select is((select count(*)::int from public.notification_outbox), 0, 'another center reads none of it');
 
 select pg_temp.login(pg_temp.id('t1'));
-select is((select count(*)::int from public.notification_templates where center_id is null
+select is((select count(*)::int from public.notification_templates where center_id is null and channel = 'telegram'
             and key in ('absence_alert', 'late_alert', 'lesson_cancelled', 'lesson_moved', 'lesson_added')), 15,
   'everyone signed in reads the system templates');
 select pg_temp.as_admin();
@@ -647,8 +648,9 @@ select is((select count(*)::int from public.notification_templates where center_
 select pg_temp.login(pg_temp.id('owner_b'));
 select is((select count(*)::int from public.notification_templates where center_id is not null), 1,
   'a center reads its own override');
-select throws_ok($$ update public.notification_templates set body = 'x' $$, '42501', null,
-  'templates are not editable until M4');
+update public.notification_templates set body = 'x' where center_id is null;
+select is((select count(*)::int from public.notification_templates where body = 'x'), 0,
+  'system templates stay read-only (centers edit only their own overrides, M4)');
 select pg_temp.as_admin();
 select is(
   (select count(*)::int from (values ('absence_alert'), ('late_alert'), ('lesson_cancelled'), ('lesson_moved'), ('lesson_added')) k (key)
