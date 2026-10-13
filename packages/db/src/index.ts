@@ -126,6 +126,11 @@ export const DB_ERROR_CODES = [
   "lead_closed",
   "lesson_not_upcoming",
   "trial_not_open",
+  "invalid_exam_type",
+  "exam_type_in_use",
+  "exam_score_invalid",
+  "invalid_exam_result",
+  "invalid_target",
 ] as const;
 
 export type DbErrorCode = (typeof DB_ERROR_CODES)[number];

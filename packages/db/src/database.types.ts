@@ -355,14 +355,14 @@ isOneToOne: false
                   ]
                 },"courses": {
                   Row: {
-                    "archived_at": string | null,"center_id": string,"created_at": string,"default_lesson_minutes": number | null,"default_price_amount": number | null,"description": string | null,"id": string,"kind": string,"name": string,"updated_at": string
+                    "archived_at": string | null,"center_id": string,"created_at": string,"default_lesson_minutes": number | null,"default_price_amount": number | null,"description": string | null,"exam_type_id": string | null,"id": string,"kind": string,"name": string,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "archived_at"?: string | null,"center_id": string,"created_at"?: string,"default_lesson_minutes"?: number | null,"default_price_amount"?: number | null,"description"?: string | null,"id"?: string,"kind"?: string,"name": string,"updated_at"?: string
+                    "archived_at"?: string | null,"center_id": string,"created_at"?: string,"default_lesson_minutes"?: number | null,"default_price_amount"?: number | null,"description"?: string | null,"exam_type_id"?: string | null,"id"?: string,"kind"?: string,"name": string,"updated_at"?: string
                   }
                   Update: {
-                    "archived_at"?: string | null,"center_id"?: string,"created_at"?: string,"default_lesson_minutes"?: number | null,"default_price_amount"?: number | null,"description"?: string | null,"id"?: string,"kind"?: string,"name"?: string,"updated_at"?: string
+                    "archived_at"?: string | null,"center_id"?: string,"created_at"?: string,"default_lesson_minutes"?: number | null,"default_price_amount"?: number | null,"description"?: string | null,"exam_type_id"?: string | null,"id"?: string,"kind"?: string,"name"?: string,"updated_at"?: string
                   }
                   Relationships: [
                     {
@@ -370,6 +370,12 @@ isOneToOne: false
       columns: ["center_id"]
 isOneToOne: false
       referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "courses_exam_type_id_fkey"
+      columns: ["exam_type_id"]
+isOneToOne: false
+      referencedRelation: "exam_types"
       referencedColumns: ["id"]
     }
                   ]
@@ -464,6 +470,88 @@ isOneToOne: false
       columns: ["created_by"]
 isOneToOne: false
       referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"exam_results": {
+                  Row: {
+                    "center_id": string,"certificate_path": string | null,"created_at": string,"entered_by": string | null,"exam_type_id": string,"group_id": string | null,"id": string,"kind": Database["public"]['Enums']["exam_result_kind"],"note": string | null,"section_scores": NonNullable<Json>,"student_id": string,"taken_on": string,"total_score": number | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "center_id": string,"certificate_path"?: string | null,"created_at"?: string,"entered_by"?: string | null,"exam_type_id": string,"group_id"?: string | null,"id"?: string,"kind": Database["public"]['Enums']["exam_result_kind"],"note"?: string | null,"section_scores": NonNullable<Json>,"student_id": string,"taken_on": string,"total_score"?: number | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "center_id"?: string,"certificate_path"?: string | null,"created_at"?: string,"entered_by"?: string | null,"exam_type_id"?: string,"group_id"?: string | null,"id"?: string,"kind"?: Database["public"]['Enums']["exam_result_kind"],"note"?: string | null,"section_scores"?: NonNullable<Json>,"student_id"?: string,"taken_on"?: string,"total_score"?: number | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "exam_results_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "exam_results_center_id_group_id_fkey"
+      columns: ["center_id","group_id"]
+isOneToOne: false
+      referencedRelation: "groups"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "exam_results_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "exam_results_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "exam_results_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "exam_results_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "exam_results_entered_by_fkey"
+      columns: ["entered_by"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "exam_results_exam_type_id_fkey"
+      columns: ["exam_type_id"]
+isOneToOne: false
+      referencedRelation: "exam_types"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"exam_types": {
+                  Row: {
+                    "archived_at": string | null,"center_id": string | null,"code": string,"created_at": string,"id": string,"meta": NonNullable<Json>,"name": string,"sections": NonNullable<Json>,"total_max": number,"total_min": number,"total_rule": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "archived_at"?: string | null,"center_id"?: string | null,"code": string,"created_at"?: string,"id"?: string,"meta"?: NonNullable<Json>,"name": string,"sections": NonNullable<Json>,"total_max": number,"total_min": number,"total_rule": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "archived_at"?: string | null,"center_id"?: string | null,"code"?: string,"created_at"?: string,"id"?: string,"meta"?: NonNullable<Json>,"name"?: string,"sections"?: NonNullable<Json>,"total_max"?: number,"total_min"?: number,"total_rule"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "exam_types_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
       referencedColumns: ["id"]
     }
                   ]
@@ -1291,6 +1379,56 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"student_targets": {
+                  Row: {
+                    "baseline_total": number | null,"center_id": string,"created_at": string,"exam_date": string | null,"exam_type_id": string,"id": string,"student_id": string,"target_sections": Json | null,"target_total": number | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "baseline_total"?: number | null,"center_id": string,"created_at"?: string,"exam_date"?: string | null,"exam_type_id": string,"id"?: string,"student_id": string,"target_sections"?: Json | null,"target_total"?: number | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "baseline_total"?: number | null,"center_id"?: string,"created_at"?: string,"exam_date"?: string | null,"exam_type_id"?: string,"id"?: string,"student_id"?: string,"target_sections"?: Json | null,"target_total"?: number | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "student_targets_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "student_targets_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "debtors"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "student_targets_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_balances"
+      referencedColumns: ["center_id","student_id"]
+    },{
+      foreignKeyName: "student_targets_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "student_overview"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "student_targets_center_id_student_id_fkey"
+      columns: ["center_id","student_id"]
+isOneToOne: false
+      referencedRelation: "students"
+      referencedColumns: ["center_id","id"]
+    },{
+      foreignKeyName: "student_targets_exam_type_id_fkey"
+      columns: ["exam_type_id"]
+isOneToOne: false
+      referencedRelation: "exam_types"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"students": {
                   Row: {
                     "archived_at": string | null,"birth_date": string | null,"branch_id": string,"center_id": string,"created_at": string,"external_ref": string | null,"full_name": string,"gender": string | null,"id": string,"phone": string | null,"school": string | null,"updated_at": string
@@ -1600,6 +1738,9 @@ isOneToOne: false
 "create_makeup_lesson":
 { Args: { "p_duration_minutes": number,"p_for_lesson_id"?: string,"p_group_id": string,"p_is_billable"?: boolean,"p_notify"?: boolean,"p_room_id"?: string,"p_starts_at": string,"p_teacher_membership_id"?: string }; Returns: string
                            },
+"delete_exam_result":
+{ Args: { "p_result_id": string }; Returns: undefined
+                           },
 "end_enrollment":
 { Args: { "p_credit"?: boolean,"p_end_date": string,"p_enrollment_id": string,"p_reason": Database["public"]['Enums']["enrollment_end_reason"] }; Returns: undefined
                            },
@@ -1620,6 +1761,11 @@ isOneToOne: false
 "group_roster":
 { Args: { "p_group_id": string }; Returns: {
               "end_date": string,"enrollment_id": string,"full_name": string,"start_date": string,"status": Database["public"]['Enums']["enrollment_status"],"student_id": string
+            }[]
+                           },
+"group_scores":
+{ Args: { "p_exam_type_id": string,"p_group_id": string }; Returns: {
+              "baseline_total": number,"exam_date": string,"full_name": string,"gap": number,"latest_kind": Database["public"]['Enums']["exam_result_kind"],"latest_on": string,"latest_sections": Json,"latest_total": number,"previous_total": number,"results_count": number,"student_id": string,"target_total": number,"uplift": number
             }[]
                            },
 "import_enrollments":
@@ -1690,6 +1836,12 @@ isOneToOne: false
 "save_attendance":
 { Args: { "p_lesson_id": string,"p_rows": Json,"p_topic"?: string }; Returns: Json
                            },
+"save_group_scores":
+{ Args: { "p_exam_type_id": string,"p_group_id": string,"p_kind": Database["public"]['Enums']["exam_result_kind"],"p_rows": Json,"p_taken_on": string }; Returns: Json
+                           },
+"save_official_result":
+{ Args: { "p_certificate_path"?: string,"p_exam_type_id": string,"p_note"?: string,"p_scores": Json,"p_student_id": string,"p_taken_on": string }; Returns: string
+                           },
 "save_schedule_rules":
 { Args: { "p_group_id": string,"p_rules": Json }; Returns: Json
                            },
@@ -1699,6 +1851,11 @@ isOneToOne: false
 "schedule_trial":
 { Args: { "p_lead_id": string,"p_lesson_id": string }; Returns: string
                            },
+"score_entries":
+{ Args: { "p_center_id": string,"p_exam_type_id"?: string,"p_from"?: string,"p_group_id"?: string,"p_to"?: string }; Returns: {
+              "average_total": number,"exam_name": string,"exam_type_id": string,"group_id": string,"group_name": string,"kind": Database["public"]['Enums']["exam_result_kind"],"students": number,"taken_on": string
+            }[]
+                           },
 "send_payment_reminder":
 { Args: { "p_student_id": string }; Returns: number
                            },
@@ -1707,6 +1864,9 @@ isOneToOne: false
                            },
 "set_lesson_topic":
 { Args: { "p_lesson_id": string,"p_topic": string }; Returns: undefined
+                           },
+"set_student_target":
+{ Args: { "p_baseline_total"?: number,"p_exam_date"?: string,"p_exam_type_id": string,"p_student_id": string,"p_target_sections"?: Json,"p_target_total": number }; Returns: string
                            },
 "student_balance":
 { Args: { "p_student_id": string }; Returns: number
@@ -1747,7 +1907,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "account_kind": "cash"|"terminal"|"bank"|"online","adjustment_kind": "opening_balance"|"waive"|"write_off"|"correction"|"refund"|"promo"|"unused_lessons","attendance_status": "present"|"late"|"absent"|"excused","billing_mode": "lesson_cycle"|"calendar_month","center_status": "trial"|"active"|"past_due"|"read_only"|"cancelled","charge_status": "open"|"void","enrollment_end_reason": "completed"|"dropped"|"transferred"|"moved_level","enrollment_status": "active"|"frozen"|"ended","group_status": "forming"|"active"|"finished","lead_activity_kind": "note"|"call"|"status_change"|"task"|"message"|"system","lead_source": "instagram"|"telegram"|"walk_in"|"call"|"referral"|"web_form"|"meta_ads"|"other","lead_status": "new"|"contacted"|"trial_scheduled"|"trial_done"|"won"|"lost","leave_credit_policy": "ask"|"credit"|"no_credit","lesson_status": "scheduled"|"held"|"cancelled","membership_role": "owner"|"admin"|"teacher","membership_status": "invited"|"active"|"disabled","notification_channel": "telegram"|"sms"|"whatsapp"|"email","outbox_status": "pending"|"sending"|"sent"|"failed"|"cancelled"|"skipped","payment_method": "cash"|"card"|"transfer"|"online","trial_status": "scheduled"|"attended"|"no_show"|"cancelled"
+            "account_kind": "cash"|"terminal"|"bank"|"online","adjustment_kind": "opening_balance"|"waive"|"write_off"|"correction"|"refund"|"promo"|"unused_lessons","attendance_status": "present"|"late"|"absent"|"excused","billing_mode": "lesson_cycle"|"calendar_month","center_status": "trial"|"active"|"past_due"|"read_only"|"cancelled","charge_status": "open"|"void","enrollment_end_reason": "completed"|"dropped"|"transferred"|"moved_level","enrollment_status": "active"|"frozen"|"ended","exam_result_kind": "diagnostic"|"mock"|"official","group_status": "forming"|"active"|"finished","lead_activity_kind": "note"|"call"|"status_change"|"task"|"message"|"system","lead_source": "instagram"|"telegram"|"walk_in"|"call"|"referral"|"web_form"|"meta_ads"|"other","lead_status": "new"|"contacted"|"trial_scheduled"|"trial_done"|"won"|"lost","leave_credit_policy": "ask"|"credit"|"no_credit","lesson_status": "scheduled"|"held"|"cancelled","membership_role": "owner"|"admin"|"teacher","membership_status": "invited"|"active"|"disabled","notification_channel": "telegram"|"sms"|"whatsapp"|"email","outbox_status": "pending"|"sending"|"sent"|"failed"|"cancelled"|"skipped","payment_method": "cash"|"card"|"transfer"|"online","trial_status": "scheduled"|"attended"|"no_show"|"cancelled"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -1863,7 +2023,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "account_kind": ["cash", "terminal", "bank", "online"],"adjustment_kind": ["opening_balance", "waive", "write_off", "correction", "refund", "promo", "unused_lessons"],"attendance_status": ["present", "late", "absent", "excused"],"billing_mode": ["lesson_cycle", "calendar_month"],"center_status": ["trial", "active", "past_due", "read_only", "cancelled"],"charge_status": ["open", "void"],"enrollment_end_reason": ["completed", "dropped", "transferred", "moved_level"],"enrollment_status": ["active", "frozen", "ended"],"group_status": ["forming", "active", "finished"],"lead_activity_kind": ["note", "call", "status_change", "task", "message", "system"],"lead_source": ["instagram", "telegram", "walk_in", "call", "referral", "web_form", "meta_ads", "other"],"lead_status": ["new", "contacted", "trial_scheduled", "trial_done", "won", "lost"],"leave_credit_policy": ["ask", "credit", "no_credit"],"lesson_status": ["scheduled", "held", "cancelled"],"membership_role": ["owner", "admin", "teacher"],"membership_status": ["invited", "active", "disabled"],"notification_channel": ["telegram", "sms", "whatsapp", "email"],"outbox_status": ["pending", "sending", "sent", "failed", "cancelled", "skipped"],"payment_method": ["cash", "card", "transfer", "online"],"trial_status": ["scheduled", "attended", "no_show", "cancelled"]
+            "account_kind": ["cash", "terminal", "bank", "online"],"adjustment_kind": ["opening_balance", "waive", "write_off", "correction", "refund", "promo", "unused_lessons"],"attendance_status": ["present", "late", "absent", "excused"],"billing_mode": ["lesson_cycle", "calendar_month"],"center_status": ["trial", "active", "past_due", "read_only", "cancelled"],"charge_status": ["open", "void"],"enrollment_end_reason": ["completed", "dropped", "transferred", "moved_level"],"enrollment_status": ["active", "frozen", "ended"],"exam_result_kind": ["diagnostic", "mock", "official"],"group_status": ["forming", "active", "finished"],"lead_activity_kind": ["note", "call", "status_change", "task", "message", "system"],"lead_source": ["instagram", "telegram", "walk_in", "call", "referral", "web_form", "meta_ads", "other"],"lead_status": ["new", "contacted", "trial_scheduled", "trial_done", "won", "lost"],"leave_credit_policy": ["ask", "credit", "no_credit"],"lesson_status": ["scheduled", "held", "cancelled"],"membership_role": ["owner", "admin", "teacher"],"membership_status": ["invited", "active", "disabled"],"notification_channel": ["telegram", "sms", "whatsapp", "email"],"outbox_status": ["pending", "sending", "sent", "failed", "cancelled", "skipped"],"payment_method": ["cash", "card", "transfer", "online"],"trial_status": ["scheduled", "attended", "no_show", "cancelled"]
           }
         }
 } as const

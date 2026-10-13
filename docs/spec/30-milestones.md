@@ -375,12 +375,25 @@ Global "done when" for every milestone:
 >   lines behind a toggle.
 > - **Bot:** text only in M6. The chart image moves to M9 (Mini App); it needs an SVG-to-PNG renderer the worker
 >   doesn't have.
+
+> PROPOSED (M6a, as built, 2026-10-13):
+> - No `student_scores` RPC: the profile reads `exam_results` and `student_targets` directly (RLS lets branch
+>   staff and the student's teachers read them). `score_entries` runs as the caller for the same reason.
+> - `group_scores` counts only results with a total (a partial mock isn't a point on the chart); the baseline is
+>   the target's, else the first diagnostic, else the first result.
+> - Errors reuse `student_not_expected` (student not in the group) and `invalid_dates` (a future day); new codes
+>   `invalid_exam_type`, `exam_type_in_use`, `exam_score_invalid`, `invalid_exam_result`, `invalid_target`.
+> - Custom type codes are generated (`c_…`), never typed; display totals drop `.0` except for IELTS (7.0).
+> - `score_posted` payloads carry `sections` as `{uz, ru, en}` text; the renderer picks the recipient's language
+>   (like broadcasts' `bodies`). A correction after the message was sent doesn't send again.
+> - Certificates: `attachments` bucket (private, 10 MB, PDF/JPEG/PNG/WebP); members of the center read and upload
+>   under `{center_id}/certificates/`.
 **Done when:**
-- [ ] IELTS rounding unit tests pass for all .x25 / .x75 boundary cases, and the DB trigger agrees with `packages/core` on the same fixtures.
+- [x] IELTS rounding unit tests pass for all .x25 / .x75 boundary cases, and the DB trigger agrees with `packages/core` on the same fixtures. (M6a: `exams.fixtures.json`, 61 IELTS cases incl. every .x25/.x75 mean 0.25–8.75; `exams.test.ts` + `exams.parity.test.ts`.)
 - [ ] A teacher can enter a 15-student IELTS mock with keyboard only; invalid values (7.3, 10) are rejected inline and by the DB.
 - [ ] The student chart shows scores over time, the target line and the exam date; the group table shows gap to target.
 - [ ] Parents get a score notification and see scores in the bot.
-- [ ] Preset exam types can't be edited by centers (RLS).
+- [x] Preset exam types can't be edited by centers (RLS). (M6a: pgTAP `m6_exams`: an owner's update leaves the preset unchanged, a preset insert is 42501.)
 - [x] SAT, CEFR and Milliy sertifikat ranges and mappings have been checked against official sources and recorded in 16. (M6 plan: sources in 16 § Exam types.)
 **E2E:** teacher enters a mock for a group → student profile chart shows the new point vs target.
 

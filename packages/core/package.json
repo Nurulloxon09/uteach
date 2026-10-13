@@ -8,6 +8,8 @@
     "./attendance": "./src/attendance.ts",
     "./billing": "./src/billing.ts",
     "./billing.fixtures.json": "./src/billing.fixtures.json",
+    "./exams": "./src/exams.ts",
+    "./exams.fixtures.json": "./src/exams.fixtures.json",
     "./money": "./src/money.ts",
     "./notifications": "./src/notifications.ts",
     "./phone": "./src/phone.ts",

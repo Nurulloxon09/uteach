@@ -46,6 +46,18 @@ describe("renderTemplate", () => {
     );
   });
 
+  it("uses the section line written for the recipient's language", () => {
+    const payload = {
+      sections: { uz: "Tinglash 6.5", ru: "Аудирование 6.5", en: "Listening 6.5" },
+    };
+    expect(renderTemplate("{sections}", payload, { locale: "ru", currency: "UZS" })).toBe(
+      "Аудирование 6.5",
+    );
+    expect(renderTemplate("{sections}", payload, { locale: "uz", currency: "UZS" })).toBe(
+      "Tinglash 6.5",
+    );
+  });
+
   it("does not interpret braces or apostrophes inside values", () => {
     expect(
       renderTemplate("{body}", { body: "Don't {forget}" }, { locale: "en", currency: "UZS" }),
