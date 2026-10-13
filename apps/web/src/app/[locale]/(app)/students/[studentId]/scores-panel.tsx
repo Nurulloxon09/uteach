@@ -150,7 +150,11 @@ export async function ScoresPanel({
   const daysLeft = target?.examDate
     ? Math.round((Date.parse(target.examDate) - Date.parse(today)) / 86_400_000)
     : null;
-  const uplift = scoreUplift(latest?.total ?? null, baseline);
+  // Without a saved baseline, one result is its own baseline: "—" until there is a second one.
+  const uplift =
+    (target?.baselineTotal ?? null) !== null || withTotal.length > 1
+      ? scoreUplift(latest?.total ?? null, baseline)
+      : null;
 
   // Signed links for certificates (private bucket).
   const supabase = await createClient();

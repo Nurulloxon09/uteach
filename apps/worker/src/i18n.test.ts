@@ -17,6 +17,11 @@ const values = {
   date: "14 Oct",
   days: 3,
   receiptNo: "CHI-2026-000001",
+  kind: "Mock",
+  total: "6.5",
+  target: "7.0",
+  gap: "0.5",
+  list: "6.0 · 6.5↑",
 };
 
 function keys(node: unknown, prefix: string): string[] {

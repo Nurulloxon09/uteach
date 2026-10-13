@@ -1,4 +1,5 @@
 import postgres from "postgres";
+import type { ScoreCard } from "./scores";
 
 /**
  * The worker's only door into the database: the `worker.*` functions (02, under system_heartbeats), called as
@@ -183,6 +184,11 @@ export function workerDb(sql: Sql) {
         await sql<{ p: PaymentsSummary }[]>`
           select worker.bot_payments(${telegramUserId}::bigint, ${studentId}) as p`
       )[0]!.p,
+    scores: async (telegramUserId: number, studentId: string) =>
+      (
+        await sql<{ s: ScoreCard[] }[]>`
+          select worker.bot_scores(${telegramUserId}::bigint, ${studentId}) as s`
+      )[0]!.s,
     receiptData: async (paymentId: string, telegramUserId: number | null = null) =>
       (
         await sql<{ r: ReceiptData }[]>`

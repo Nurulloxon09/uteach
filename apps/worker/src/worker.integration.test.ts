@@ -320,6 +320,40 @@ describe.skipIf(!enabled)("worker with a fake Telegram API", () => {
     await expect(bot.handleUpdate(press(otherId, `r:${r.paymentId}`))).rejects.toThrow(/forbidden/);
   });
 
+  it("a mock's scores reach the parent, and the Scores item shows them against the target", async () => {
+    const [{ id: ielts }] = (await admin`
+      select id from public.exam_types where center_id is null and code = 'ielts'`) as unknown as [
+      { id: string },
+    ];
+    await asOwner(async (tx) => {
+      await tx`select public.set_student_target(${ctx.student}, ${ielts}, 7.0, current_date + 30)`;
+      await tx`
+        select public.save_group_scores(${ctx.group}, ${ielts}, 'mock', current_date,
+          ${tx.json([{ studentId: ctx.student, scores: { listening: 6.5, reading: 7, writing: 6, speaking: 6.5 } }])})`;
+    });
+    // score_posted waits 10 minutes so a typo can be fixed; make it due now.
+    await admin`
+      update public.notification_outbox set send_after = now()
+      where center_id = ${ctx.center} and template_key = 'score_posted' and status = 'pending'`;
+    const before = fake.sentTo(parentId).length;
+    await sender.tick();
+    const sent = fake.sentTo(parentId).slice(before);
+    expect(sent).toHaveLength(1);
+    expect(sent[0]!.text).toContain("Ali Valiyev: IELTS, пробный экзамен");
+    expect(sent[0]!.text).toContain("Аудирование 6.5 · Чтение 7.0 · Письмо 6.0 · Говорение 6.5");
+    expect(sent[0]!.text).toContain("Общий балл: 6.5");
+    expect(sent[0]!.text).toContain("Цель: 7.0");
+
+    await bot.handleUpdate(press(parentId, "m:x"));
+    const reply = fake.sentTo(parentId).at(-1)?.text ?? "";
+    expect(reply).toContain("Ali Valiyev · баллы");
+    expect(reply).toContain("Общий балл: 6.5");
+    expect(reply).toContain("Цель: 7.0 · осталось 0.5");
+    expect(reply).toContain("(через 30 дней)");
+    // Someone not linked to the student: the database refuses.
+    await expect(db.scores(otherId, ctx.student)).rejects.toThrow(/forbidden/);
+  });
+
   it("two senders working together never send a row twice", async () => {
     await admin`
       insert into public.notification_outbox (center_id, template_key, locale, payload, guardian_id, dedupe_key)
