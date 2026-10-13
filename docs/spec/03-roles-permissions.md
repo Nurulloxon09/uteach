@@ -98,6 +98,12 @@ Rules:
 > result through `save_attendance` / `save_trial_feedback`. Lost reasons are read by every member and edited
 > with `settings`. Convert also needs what `enroll` needs (students + enrollments for the branch).
 
+> PROPOSED (M6 plan): **Exam scores** — owners everything; admins in their branches need `academics` to write
+> (read without it); teachers enter mock/diagnostic results for their own groups, official results and
+> targets for students in their groups, and read results of those students only. Exam types: every member
+> reads presets and their center's types; custom types are edited with `academics`. Parents/students see
+> their own scores through the bot (service role, M6c).
+
    > PROPOSED (M4 plan): the worker is narrower than the service role. It connects as `uteach_worker`, which can
    > only execute the `worker.*` functions (02, under `system_heartbeats`); the bot's reads take the Telegram user
    > id (from the update, verified by Telegram) and return only that user's linked subjects.

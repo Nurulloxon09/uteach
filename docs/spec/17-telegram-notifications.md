@@ -42,6 +42,11 @@ Inline keyboard. A parent with several children picks a child first.
 - ✅ **Attendance**: this month's marks and %.
 - 💳 **Payments**: balance, open charges, last 5 payments, receipt PDFs. 🟨 "Pay" button (pay link).
 - 📊 **Scores**: latest results vs target, and a chart image.
+
+> PROPOSED (M6 plan): in M6 the Scores item is text: per exam type the latest result (sections + total, CEFR
+> level / Milliy grade), target and gap, exam date with days left, and the last five totals with ↑/↓. The
+> chart image comes with the Mini App (M9). `score_posted` (Telegram only, uz/ru/en, on by default) goes to
+> the student and guardians 10 minutes after a save; a re-save inside that window updates the waiting row.
 - ⚙️ **Settings**: language, unlink.
 - 🟨 "Open app" button → Mini App (M9).
 
