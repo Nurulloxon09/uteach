@@ -63,6 +63,11 @@ jobs:
         env:
           UTEACH_DB_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
           UTEACH_WORKER_DB_URL: postgresql://uteach_worker:uteach-worker-local@127.0.0.1:54322/postgres
+      # The worker against this database and a fake Telegram Bot API (30-milestones M4 E2E).
+      - run: pnpm --filter @uteach/worker exec vitest run src/worker.integration.test.ts
+        env:
+          UTEACH_DB_URL: postgresql://postgres:postgres@127.0.0.1:54322/postgres
+          UTEACH_WORKER_DB_URL: postgresql://uteach_worker:uteach-worker-local@127.0.0.1:54322/postgres
 
   e2e:
     name: End-to-end (Playwright)

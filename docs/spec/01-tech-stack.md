@@ -38,6 +38,11 @@ No Vercel Hobby: its terms are non-commercial.
 > static `new URL("…", import.meta.url)`, so Next copies them next to the server code (standalone included) and
 > the M4 worker can load them the same way. `@react-pdf/renderer` is a `serverExternalPackages` entry in Next.
 
+> PROPOSED (M4b, as built): the SMS hook (`/api/auth/sms-hook`) may use the secret key (`SUPABASE_SECRET_KEY`)
+> to call `record_otp_send` (the per-phone limit); the key is required when `SMS_PROVIDER=eskiz` and optional
+> locally (no limit). That is the only service-role use in `apps/web` so far (`lib/supabase/service.ts`). The
+> worker image keeps the built bundle with the repo's production dependencies (simple; M7 may slim it).
+
 > PROPOSED (M4a, as built): **`intl-messageformat`** (the ICU engine next-intl already uses) is a dependency of
 > `packages/i18n`, which renders outbox templates for the worker and the settings preview.
 > `supabase/seed.sql` (local only) gives `uteach_worker` the password `uteach-worker-local`; CI's database job

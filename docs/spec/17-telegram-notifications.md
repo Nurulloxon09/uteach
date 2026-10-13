@@ -112,6 +112,17 @@ returning *;
 > - Debtors' **last reminder** comes from the view `last_payment_reminders`. The per-phone OTP limit
 >   (`private.otp_sends`) moves to M4b with the hook that uses it.
 
+> PROPOSED (M4b, as built): `apps/worker` = grammY bot (long polling) + sender loop (every
+> `SEND_INTERVAL_MS`, default 5 s) + heartbeat with stale recovery (every 30 s). Bot flow: `/start [c_{slug}]` → language
+> (inline uz/ru/en) → `request_contact` (rejected unless `contact.user_id = from.id`) → "Linked: …" → menu. Callback
+> data: `m:*` menu items, `s:{item}:{student}` child picker, `c:{center}` center switcher, `r:{payment}` receipt,
+> `u:*` unlink, `l:{locale}` language. Schedule shows the next 7 days, attendance this month with the rate, payments
+> the balance, unpaid items, the last 5 payments with receipt buttons. Telegram receipts (80 mm PDF) leave out the
+> logo, account and cashier. Errors: 403 and "chat not found" = blocked (unlink + SMS fallback); 429 waits
+> `retry_after` and pauses all sends; 5xx/network retry; other 400s fail. Sending is at-least-once: a crash after
+> Telegram accepted a message but before `mark_sent` sends it again after stale recovery (dedupe covers queueing,
+> not delivery).
+
 ## SMS fallback (Eskiz)
 
 > PROPOSED: which templates fall back to SMS, broadcasts by SMS only when chosen, a per-center monthly SMS cap. Canvas: Eskiz adapter, approved templates, OTP.

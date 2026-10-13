@@ -7,8 +7,8 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M4 · Telegram & SMS**: ◐ in progress. Plan merged (#17). M4a data layer built and in review; next M4b worker & SMS,
-then M4c staff screens. The plan and its decisions are in `30-milestones.md` (M4) and the `PROPOSED (M4 plan)` notes
+**M4 · Telegram & SMS**: ◐ in progress. Plan (#17) and M4a (#18) merged. M4b worker & SMS built and in review;
+next M4c staff screens. The plan and its decisions are in `30-milestones.md` (M4) and the `PROPOSED (M4 plan)` notes
 in 01, 02, 03, 05-ui, 10, 15 and 17.
 
 ## Milestones
@@ -19,7 +19,7 @@ in 01, 02, 03, 05-ui, 10, 15 and 17.
 | M1 | Academic core | ☑ done | 2026-10-11 |
 | M2 | Attendance | ☑ done | 2026-10-12 |
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
-| M4 | Telegram & SMS | ◐ in progress (M4a built) | |
+| M4 | Telegram & SMS | ◐ in progress (M4a ☑, M4b built) | |
 | M5 | Leads CRM | ☐ | |
 | M6 | Exam scores | ☐ | |
 | M7 | Launch 🚀 | ☐ | |
@@ -58,11 +58,11 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 | Item (30-milestones) | Status | Evidence |
 |---|---|---|
-| Shared contact links a parent to all children across centers; forwarded contact rejected | ☐ | |
-| Bot menu: schedule, attendance, payments (+ receipt PDF) per child, in the user's language | ☐ | |
-| Absence alert in Telegram ~10 min after marking; blocked bot → SMS (Eskiz sandbox) + unlinked | ☐ | |
-| Worker killed mid-send, restarted → every pending message sent exactly once | ☐ | |
-| Two workers never double-send (SKIP LOCKED) | ◐ | M4a: `outbox-claim.concurrency.test.ts` (two `uteach_worker` logins claim 60 rows in parallel: disjoint, all claimed); the sender loop comes in M4b |
+| Shared contact links a parent to all children across centers; forwarded contact rejected | ☑ | pgTAP `m4_telegram` (guardian phone in two centers → both links, idempotent); worker integration test (someone else's contact rejected, own contact links) |
+| Bot menu: schedule, attendance, payments (+ receipt PDF) per child, in the user's language | ◐ | Worker integration test (schedule and payments in Russian, receipt PDF from the menu and with `payment_received`); real-phone check pending (needs the bot token) |
+| Absence alert in Telegram ~10 min after marking; blocked bot → SMS (Eskiz sandbox) + unlinked | ◐ | Worker integration test (alert delivered; 403 → unlinked, SMS fallback sent through a fake provider); Eskiz sandbox pending (account) |
+| Worker killed mid-send, restarted → every pending message sent exactly once | ☑ | Worker integration test (claimed and abandoned → stale recovery → one delivery); at-least-once after Telegram accepted (17, M4b note) |
+| Two workers never double-send (SKIP LOCKED) | ☑ | `outbox-claim.concurrency.test.ts` (60 rows, two logins); worker integration test (two senders drain 30 rows, each delivered once) |
 | Broadcast to "debtors of branch X" reaches exactly that set; preview count matches | ☐ | |
 | Reminders every `reminder_every_days`, none in quiet hours, none after paying | ☑ | pgTAP `m4_telegram` (first reminder once overdue, none 2 days later, next after 3, cadence follows the setting, quiet hours push `send_after`, paid → skipped as settled and no new reminder) |
 | Heartbeat older than 2 min shows red on the health page | ☐ | |
@@ -129,6 +129,24 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M4b worker & SMS
+- `apps/worker`: grammY bot (language, contact linking, menu with child picker and center switcher, schedule,
+  attendance, payments with receipt PDFs, scores placeholder, settings: language/unlink, blocked → unlinked), the
+  outbox sender (`pickChannel`, `renderTemplate`, rate limiter, Telegram error handling, receipts as documents,
+  SMS), heartbeat + stale recovery, graceful shutdown; config from env; postgres.js as `uteach_worker`.
+- `EskizSmsProvider` (`packages/adapters`): token login, renewal on 401, permanent vs temporary errors.
+- SMS hook: Eskiz when `SMS_PROVIDER=eskiz`; per-phone limit (5/hour) via `record_otp_send` with the secret key.
+- Migration `m4b_worker`: `private.otp_sends` + `record_otp_send` (service role) + daily prune;
+  `worker.receipt_data`, `worker.center_by_slug`; `bot_subjects` gains timezone and currency.
+- Bot texts `bot.*` in uz/ru/en.
+- Tests: worker unit tests (errors, rate limiter, texts in every language, dates, receipt view); worker integration
+  test against a real database and a fake Bot API (link, menu, absence alert, blocked → SMS, crash recovery, two
+  senders, receipts), in CI's database job; Eskiz tests with a fake API; pgTAP `m4b_worker`. The built bundle was
+  smoke-run against a fake Bot API and local Supabase (polling + heartbeat).
+- Decisions: `PROPOSED (M4b, as built)` in 01 and 17.
+- Needed from the owner: the bots from @BotFather (token in `apps/worker/.env.local`), an Eskiz account with the
+  OTP and three fallback templates approved, then `SMS_PROVIDER=eskiz` + `SUPABASE_SECRET_KEY` on the web host.
 
 ### 2026-10-13 · M4a data layer
 - Migration `m4_telegram`: center reminder/SMS settings; `broadcasts`, `bot_sessions`, `system_heartbeats`,
