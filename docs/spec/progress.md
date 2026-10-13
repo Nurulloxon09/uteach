@@ -9,7 +9,7 @@ Format: newest first. Keep it short and factual.
 ## Current milestone
 **M5 · Leads CRM**: ◐ plan. Started by the owner on 2026-10-13 while M4's last item (real SMS) waits for Eskiz
 and the hosted Phone provider. The plan and its decisions are in `30-milestones.md` (M5) and the
-`PROPOSED (M5 plan)` notes in 02, 03, 05-ui, 11 and 14. M5a, M5b and M5c built; every M5 "done when" item has its test. M5 is done once #23–#25 are merged with CI green.
+`PROPOSED (M5 plan)` notes in 02, 03, 05-ui, 11 and 14. M5a, M5b and M5c built; every M5 "done when" item has its test. M5 is done once #26 (M5c) is merged with CI green (#23, #24 merged).
 
 ## Milestones
 | # | Milestone | Status | Finished |
