@@ -16,10 +16,15 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { attendanceOptions } from "@/lib/attendance";
-import { saveAttendanceAction } from "../actions";
+import { saveAttendanceAction, saveTrialFeedbackAction } from "../actions";
 
 export type SheetRow = {
-  studentId: string;
+  /** `studentId`, or `t:{leadTrialId}` for a trial guest. */
+  key: string;
+  studentId: string | null;
+  /** Set for trial guests (11, M5). */
+  trialId: string | null;
+  feedback: string | null;
   name: string;
   isExpected: boolean;
   status: AttendanceStatus | null;
@@ -108,7 +113,7 @@ export function AttendanceSheet({
   const t = useTranslations("attendance");
   const te = useTranslations("errors");
   const saved = useMemo<Marks>(
-    () => Object.fromEntries(rows.map((r) => [r.studentId, toValue(r)])),
+    () => Object.fromEntries(rows.map((r) => [r.key, toValue(r)])),
     [rows],
   );
   // A draft of this same version survives a reload (e.g. the phone lost the page before Save). Read from
@@ -158,13 +163,16 @@ export function AttendanceSheet({
   async function save() {
     if (busy.current) return;
     busy.current = true;
+    const byKey = new Map(rows.map((r) => [r.key, r]));
     const payload = {
       lessonId,
-      rows: Object.entries(marks).flatMap(([studentId, v]) =>
+      rows: Object.entries(marks).flatMap(([key, v]) =>
         isAttendanceStatus(v.status)
           ? [
               {
-                studentId,
+                ...(byKey.get(key)?.trialId
+                  ? { leadTrialId: byKey.get(key)!.trialId! }
+                  : { studentId: key }),
                 status: v.status,
                 lateMinutes: v.status === "late" ? lateMinutes(v.lateMinutes) : null,
                 note: v.note,
@@ -237,11 +245,11 @@ export function AttendanceSheet({
       <MobileList>
         {rows.map((r) => (
           <AttendanceRow
-            key={r.studentId}
+            key={r.key}
             testId="attendance-row"
             name={r.name}
-            value={marks[r.studentId] ?? toValue(r)}
-            onChange={(v) => setMarks({ ...marks, [r.studentId]: v })}
+            value={marks[r.key] ?? toValue(r)}
+            onChange={(v) => setMarks({ ...marks, [r.key]: v })}
             options={options}
             legend={t("legend", { name: r.name })}
             labels={{
@@ -252,9 +260,20 @@ export function AttendanceSheet({
               notePlaceholder: t("notePlaceholder"),
             }}
             badge={
-              r.isExpected ? undefined : <StatusChip tone="muted">{t("notExpected")}</StatusChip>
+              r.trialId ? (
+                <StatusChip tone="warning">{t("trial")}</StatusChip>
+              ) : r.isExpected ? undefined : (
+                <StatusChip tone="muted">{t("notExpected")}</StatusChip>
+              )
             }
             disabled={!editable}
+            extra={
+              r.trialId && editable ? (
+                <TrialFeedback trialId={r.trialId} saved={r.feedback ?? ""} name={r.name} />
+              ) : r.trialId && r.feedback ? (
+                <p className="text-sm text-secondary-foreground">{r.feedback}</p>
+              ) : undefined
+            }
           />
         ))}
       </MobileList>
@@ -292,6 +311,50 @@ export function AttendanceSheet({
           </Button>
         </div>
       ) : null}
+    </div>
+  );
+}
+
+/** The teacher's note about a trial guest ("level B1, recommend group X"), saved on its own (11). */
+function TrialFeedback({ trialId, saved, name }: { trialId: string; saved: string; name: string }) {
+  const t = useTranslations("attendance");
+  const te = useTranslations("errors");
+  const [value, setValue] = useState(saved);
+  const [base, setBase] = useState(saved);
+  const [pending, setPending] = useState(false);
+  const id = `trial-feedback-${trialId}`;
+  async function save() {
+    setPending(true);
+    const result = await saveTrialFeedbackAction(trialId, value);
+    setPending(false);
+    if (result.ok) {
+      setBase(value);
+      toast.success(t("trialFeedbackSaved"));
+    } else toast.error(te(result.error as never));
+  }
+  return (
+    <div className="space-y-2" data-testid="trial-feedback">
+      <Label htmlFor={id} className="text-sm text-secondary-foreground">
+        {t("trialFeedback", { name })}
+      </Label>
+      <div className="flex gap-2">
+        <Input
+          id={id}
+          value={value}
+          onChange={(e) => setValue(e.target.value)}
+          placeholder={t("trialFeedbackPlaceholder")}
+          maxLength={1000}
+        />
+        <Button
+          type="button"
+          variant="outline"
+          onClick={save}
+          disabled={pending || value.trim() === base.trim()}
+        >
+          {pending ? <LoaderCircle className="animate-spin" /> : null}
+          {t("trialFeedbackSave")}
+        </Button>
+      </div>
     </div>
   );
 }

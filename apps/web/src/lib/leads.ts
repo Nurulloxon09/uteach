@@ -1,6 +1,7 @@
 import "server-only";
 import type { LeadSource, LeadStatus, LostReasonKey } from "@uteach/core";
 import { cache } from "react";
+import type { GroupOption } from "@/lib/academics";
 import type { CenterContext } from "@/lib/center";
 import { createClient } from "@/lib/supabase/server";
 
@@ -73,3 +74,62 @@ export const loadLostReasons = cache(async (ctx: CenterContext): Promise<LostRea
     archived: r.archived_at !== null,
   }));
 });
+
+export type TrialLessonOption = {
+  id: string;
+  groupId: string;
+  groupName: string;
+  courseId: string;
+  levelId: string | null;
+  branchId: string;
+  startsAt: string;
+  teacherName: string;
+  /** Students in the group now, and its capacity (null = no limit). */
+  count: number;
+  capacity: number | null;
+};
+
+/** Upcoming lessons (next 3 weeks) of live groups in the user's branches, for the trial picker (11). */
+export async function loadTrialLessons(
+  ctx: CenterContext,
+  groups: GroupOption[],
+  teachers: { id: string; name: string }[],
+): Promise<TrialLessonOption[]> {
+  const mine = groups.filter((g) => ctx.can.inBranch(g.branchId));
+  if (mine.length === 0) return [];
+  const supabase = await createClient();
+  const now = Date.now();
+  const { data } = await supabase
+    .from("lessons")
+    .select("id, group_id, starts_at, teacher_membership_id")
+    .eq("center_id", ctx.center.id)
+    .eq("status", "scheduled")
+    .in(
+      "group_id",
+      mine.map((g) => g.id),
+    )
+    .gt("starts_at", new Date(now).toISOString())
+    .lt("starts_at", new Date(now + 21 * 86_400_000).toISOString())
+    .order("starts_at")
+    .limit(300);
+  const group = new Map(mine.map((g) => [g.id, g]));
+  const teacher = new Map(teachers.map((t) => [t.id, t.name]));
+  return (data ?? []).flatMap((l) => {
+    const g = group.get(l.group_id);
+    if (!g) return [];
+    return [
+      {
+        id: l.id,
+        groupId: g.id,
+        groupName: g.name,
+        courseId: g.courseId,
+        levelId: g.levelId,
+        branchId: g.branchId,
+        startsAt: l.starts_at,
+        teacherName: teacher.get(l.teacher_membership_id) ?? "—",
+        count: g.count,
+        capacity: g.capacity,
+      },
+    ];
+  });
+}

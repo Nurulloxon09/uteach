@@ -7,9 +7,10 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M5 · Leads CRM**: ◐ plan. Started by the owner on 2026-10-13 while M4's last item (real SMS) waits for Eskiz
-and the hosted Phone provider. The plan and its decisions are in `30-milestones.md` (M5) and the
-`PROPOSED (M5 plan)` notes in 02, 03, 05-ui, 11 and 14. M5a (data layer) and M5b (pipeline screens) built; next: M5c (trials & convert).
+**M5 · Leads CRM**: ☑ done 2026-10-13 (plan #22, M5a #23, M5b #24, M5c #26). Next is **M6 · Exam scores**, not
+started: it waits for the owner's go. M4's last item (sign-up OTP by real SMS) is still open: it waits for Eskiz
+and the hosted Phone provider. M5's decisions are in `30-milestones.md` (M5) and the `PROPOSED (M5 …)` notes in
+02, 03, 05-ui, 11 and 14.
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -20,7 +21,7 @@ and the hosted Phone provider. The plan and its decisions are in `30-milestones.
 | M2 | Attendance | ☑ done | 2026-10-12 |
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
 | M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
-| M5 | Leads CRM | ◐ in progress (M5a ☑, M5b built) | |
+| M5 | Leads CRM | ☑ done (#23, #24, #26) | 2026-10-13 |
 | M6 | Exam scores | ☐ | |
 | M7 | Launch 🚀 | ☐ | |
 | M8 | Online payments | ☐ | |
@@ -58,13 +59,13 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 | Item (30-milestones) | Status | Evidence |
 |---|---|---|
-| A lead moves through all statuses; every move writes an activity; `lost` without a reason rejected by the DB | ◐ | pgTAP `m5_leads` (moves, activities, check constraints for lost/won, the move table = `canMoveLead` in a PGlite parity test); screens in M5b |
-| Phone matching a lead or student shows the duplicate warning with links | ◐ | pgTAP (`lead_duplicates`: lead, student, guardian's student, own branches only); New lead dialog shows the warning with links (checked in the browser); e2e in M5c |
-| Scheduling a trial puts the guest on the sheet; teacher marking present sets `trial_done` | ◐ | pgTAP (guest on `attendance_sheet`, present → attended + `trial_done`, absent → no_show and back, no alerts, stats/matrix leave guests out, cancelled lesson cancels the trial); sheet UI in M5c |
-| Convert: student, guardian (re-used by phone), enrollment, first cycle charge in one transaction; `won` | ◐ | pgTAP (guardian re-used, charge created, won + student; a failing enroll rolls back student and guardian); dialog in M5c |
-| Teachers can't read leads except trial guests on their lessons (name only) | ◐ | pgTAP (no rows in leads / lead_trials, duplicate check refused, the name only through the sheet) |
-| Overdue follow-ups appear on the admin dashboard widget | ◐ | pgTAP (`my_follow_ups`: overdue task in, future and others' tasks out, done tasks leave); Home "My follow-ups" checked in the browser; e2e in M5c |
-| E2E: lead → contacted → trial → teacher marks present → convert → student in the group with a charge | ☐ | |
+| A lead moves through all statuses; every move writes an activity; `lost` without a reason rejected by the DB | ☑ | pgTAP `m5_leads` (moves, activities, check constraints for lost/won, the move table = `canMoveLead` in a PGlite parity test); screens in M5b |
+| Phone matching a lead or student shows the duplicate warning with links | ☑ | pgTAP (`lead_duplicates`: lead, student, guardian's student, own branches only); New lead dialog shows the warning with links (checked in the browser); e2e `m5-leads` |
+| Scheduling a trial puts the guest on the sheet; teacher marking present sets `trial_done` | ☑ | pgTAP (guest on `attendance_sheet`, present → attended + `trial_done`, absent → no_show and back, no alerts, stats/matrix leave guests out, cancelled lesson cancels the trial); e2e `m5-leads` (teacher at 390 px sees the guest with a "Trial" chip, marks present) |
+| Convert: student, guardian (re-used by phone), enrollment, first cycle charge in one transaction; `won` | ☑ | pgTAP (guardian re-used, charge created, won + student; a failing enroll rolls back student and guardian); e2e `m5-leads` (Convert → student page shows the group and a 600,000 cycle) |
+| Teachers can't read leads except trial guests on their lessons (name only) | ☑ | pgTAP (no rows in leads / lead_trials, duplicate check refused, the name only through the sheet) |
+| Overdue follow-ups appear on the admin dashboard widget | ☑ | pgTAP (`my_follow_ups`: overdue task in, future and others' tasks out, done tasks leave); Home "My follow-ups" checked in the browser; e2e `m5-leads` |
+| E2E: lead → contacted → trial → teacher marks present → convert → student in the group with a charge | ☑ | e2e `m5-leads` (5 tests, also the duplicate warning and the teacher's feedback; passes locally) |
 
 ## M4 "done when" status
 
@@ -141,6 +142,27 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M5 done
+- Every M5 "done when" item is checked (table above); M5c (#26) merged with CI green, which includes this note.
+
+### 2026-10-13 · M5c trials & convert
+- Lead page: **Book a trial** (next 3 weeks' lessons of my groups, by course, with teacher and seats; replaces an
+  open trial), the booked trial with **Cancel trial**, the teacher's feedback; **Convert to student** (new or
+  existing same-phone student, whose phone it is, guardian, group, start day, discount) with "Record first
+  payment" (M3 dialog) and "Open the student" after it. A board drop on Trial scheduled / Won opens these.
+- Attendance sheet: trial guests after the students with a "Trial" chip and a feedback field; `save_attendance`
+  rows carry `leadTrialId`.
+- e2e `m5-leads` (5 tests): set-up with a teacher and a lesson in 20 minutes (`addLessonSoon`), new lead +
+  duplicate warning + Contacted, trial booking, teacher marks the guest present at 390 px + feedback → Trial
+  done, convert → student in the group with the 600,000 cycle → listed under Won.
+- Found and fixed on the way: the Convert dialog vanished before its success step because the lead turned won
+  and the page stopped rendering it; the converted student showed as a "possible duplicate" of its own lead;
+  revalidation used a literal lead path (now the whole leads layout), so a move sometimes didn't show until a
+  reload.
+- Local note: the e2e ran against the dev database without `pnpm e2e`'s reset (owner +998990000019, teacher
+  +998990000018); its data was removed afterwards.
+- Decisions: `PROPOSED (M5c, as built)` in 05-ui.
 
 ### 2026-10-13 · M5b leads screens
 - **Leads** in the nav (flag `leads`): board (New, Contacted, Trial scheduled, Trial done + Won/Lost counts) with

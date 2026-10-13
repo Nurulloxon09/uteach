@@ -11,12 +11,16 @@ const sheetSchema = z.object({
   lessonId: uuidField,
   rows: z
     .array(
-      z.object({
-        studentId: uuidField,
-        status: z.enum(ATTENDANCE_STATUSES),
-        lateMinutes: z.number().int().min(1).max(240).nullable(),
-        note: z.string().trim().max(500),
-      }),
+      z
+        .object({
+          /** A student, or a trial guest (`leadTrialId`, 11). */
+          studentId: uuidField.optional(),
+          leadTrialId: uuidField.optional(),
+          status: z.enum(ATTENDANCE_STATUSES),
+          lateMinutes: z.number().int().min(1).max(240).nullable(),
+          note: z.string().trim().max(500),
+        })
+        .refine((r) => Boolean(r.studentId) !== Boolean(r.leadTrialId)),
     )
     .max(300),
   /** null leaves the topic as it is. */
@@ -42,7 +46,7 @@ export async function saveAttendanceAction(
   const { data, error } = await supabase.rpc("save_attendance", {
     p_lesson_id: lessonId,
     p_rows: rows.map((r) => ({
-      studentId: r.studentId,
+      ...(r.leadTrialId ? { leadTrialId: r.leadTrialId } : { studentId: r.studentId }),
       status: r.status,
       lateMinutes: r.status === "late" ? r.lateMinutes : null,
       note: r.note,
@@ -54,6 +58,27 @@ export async function saveAttendanceAction(
   revalidatePath("/[locale]/attendance", "layout");
   revalidatePath("/[locale]/today", "page");
   revalidatePath("/[locale]/groups", "layout");
+  if (rows.some((r) => r.leadTrialId)) revalidatePath("/[locale]/leads", "layout");
   const result = (data ?? {}) as { saved?: number; alerts?: number };
   return { ok: true, saved: result.saved ?? 0, alerts: result.alerts ?? 0 };
+}
+
+/** The teacher's (or an admin's) note about a trial guest (11). */
+export async function saveTrialFeedbackAction(
+  trialId: string,
+  feedback: string,
+): Promise<{ ok: true } | { ok: false; error: string }> {
+  const parsed = z
+    .object({ trialId: uuidField, feedback: z.string().trim().max(1000) })
+    .safeParse({ trialId, feedback });
+  if (!parsed.success) return { ok: false, error: "validation.tooLong" };
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("save_trial_feedback", {
+    p_trial_id: parsed.data.trialId,
+    p_feedback: parsed.data.feedback,
+  });
+  if (error) return { ok: false, error: dbErrorKey(error) };
+  revalidatePath("/[locale]/attendance", "layout");
+  revalidatePath("/[locale]/leads", "layout");
+  return { ok: true };
 }

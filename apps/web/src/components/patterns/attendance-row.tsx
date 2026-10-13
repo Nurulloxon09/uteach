@@ -29,6 +29,7 @@ export function AttendanceRow({
   labels,
   badge,
   disabled,
+  extra,
   testId,
 }: {
   name: string;
@@ -47,6 +48,8 @@ export function AttendanceRow({
   };
   badge?: ReactNode;
   disabled?: boolean;
+  /** Shown under the marks (e.g. a trial guest's feedback field). */
+  extra?: ReactNode;
   testId?: string;
 }) {
   const id = useId();
@@ -120,6 +123,7 @@ export function AttendanceRow({
           className="mt-3 h-11"
         />
       ) : null}
+      {extra ? <div className="mt-3">{extra}</div> : null}
     </MobileCard>
   );
 }

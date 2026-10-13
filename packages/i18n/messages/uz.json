@@ -1505,7 +1505,12 @@
       "recent": "Soʻnggi belgilar",
       "emptyTitle": "Hali davomat yoʻq",
       "emptyHint": "Oʻquvchi darslaridagi belgilar shu yerda chiqadi."
-    }
+    },
+    "trial": "Sinov",
+    "trialFeedback": "{name} haqida fikr",
+    "trialFeedbackPlaceholder": "masalan, B1 daraja, X guruhini tavsiya qilaman",
+    "trialFeedbackSave": "Saqlash",
+    "trialFeedbackSaved": "Fikr saqlandi"
   },
   "billing": {
     "title": "Toʻlovlar",
@@ -2015,6 +2020,56 @@
       "converted": "Oʻquvchi boʻldi",
       "openMerged": "Birlashtirilgan lidni ochish",
       "openStudent": "Oʻquvchini ochish"
+    },
+    "trial": {
+      "button": "Sinov darsiga yozish",
+      "title": "{name} uchun sinov darsi",
+      "hint": "Keyingi 3 haftadagi darsni tanlang. Lid shu darsning davomat roʻyxatida mehmon sifatida chiqadi.",
+      "submit": "Yozish",
+      "done": "Sinov darsi belgilandi",
+      "course": "Kurs",
+      "allCourses": "Barcha kurslar",
+      "empty": "Yaqin darslar yoʻq",
+      "emptyHint": "Bu kurs guruhlarida keyingi 3 haftada dars yoʻq.",
+      "lesson": "Dars",
+      "students": "{count} oʻquvchi",
+      "seats": "{count}/{capacity} oʻrin",
+      "full": "Joy yoʻq",
+      "openTitle": "Sinov darsi",
+      "feedbackTitle": "Oʻqituvchi fikri",
+      "cancel": "Sinov darsini bekor qilish",
+      "cancelTitle": "Sinov darsi bekor qilinsinmi?",
+      "cancelHint": "Lid dars roʻyxatidan chiqadi va «Bogʻlanildi» bosqichiga qaytadi.",
+      "cancelled": "Sinov darsi bekor qilindi",
+      "status": {
+        "scheduled": "belgilangan",
+        "attended": "keldi",
+        "no_show": "kelmadi",
+        "cancelled": "bekor qilingan"
+      }
+    },
+    "convert": {
+      "button": "Oʻquvchiga aylantirish",
+      "title": "{name}ni yozish",
+      "hint": "Oʻquvchini yaratadi, ota-onani bogʻlaydi, birinchi hisob bilan guruhga yozadi va lidni «Yozildi» deb belgilaydi.",
+      "submit": "Yozish",
+      "done": "{name} endi oʻquvchi va guruhga yozildi.",
+      "firstPayment": "Birinchi toʻlovni qabul qilish",
+      "openStudent": "Oʻquvchini ochish",
+      "student": "Oʻquvchi",
+      "newStudent": "Yangi oʻquvchi",
+      "existingStudent": "Mavjud oʻquvchi",
+      "phoneOwner": "Bu kimning telefoni?",
+      "phoneIsStudent": "Oʻquvchining",
+      "phoneIsParent": "Ota-onaning",
+      "guardian": "Ota-ona",
+      "guardianHint": "Ixtiyoriy. Telefon allaqachon ota-onada boʻlsa, oʻsha ota-ona bogʻlanadi (aka-ukalarda umumiy).",
+      "group": "Guruh",
+      "groupPlaceholder": "Guruhni tanlang",
+      "startDate": "Boshlanish kuni",
+      "startDateHint": "Boʻsh = guruhning keyingi darsi.",
+      "discountPercent": "Chegirma, %",
+      "discountReason": "Chegirma sababi"
     }
   },
   "lostReasons": {

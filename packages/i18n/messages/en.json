@@ -1505,7 +1505,12 @@
       "recent": "Recent marks",
       "emptyTitle": "No attendance yet",
       "emptyHint": "Marks from this student's lessons will appear here."
-    }
+    },
+    "trial": "Trial",
+    "trialFeedback": "Feedback on {name}",
+    "trialFeedbackPlaceholder": "e.g. level B1, recommend group X",
+    "trialFeedbackSave": "Save",
+    "trialFeedbackSaved": "Feedback saved"
   },
   "billing": {
     "title": "Payments",
@@ -2015,6 +2020,56 @@
       "converted": "Became a student",
       "openMerged": "Open the merged lead",
       "openStudent": "Open the student"
+    },
+    "trial": {
+      "button": "Book a trial",
+      "title": "Trial lesson for {name}",
+      "hint": "Pick a lesson in the next 3 weeks. The lead appears on its attendance sheet as a guest.",
+      "submit": "Book",
+      "done": "Trial booked",
+      "course": "Course",
+      "allCourses": "All courses",
+      "empty": "No upcoming lessons",
+      "emptyHint": "Groups of this course have no lessons in the next 3 weeks.",
+      "lesson": "Lesson",
+      "students": "{count, plural, one {# student} other {# students}}",
+      "seats": "{count}/{capacity} seats",
+      "full": "Full",
+      "openTitle": "Trial lesson",
+      "feedbackTitle": "Teacher's feedback",
+      "cancel": "Cancel trial",
+      "cancelTitle": "Cancel this trial?",
+      "cancelHint": "The lead leaves the lesson's sheet and goes back to Contacted.",
+      "cancelled": "Trial cancelled",
+      "status": {
+        "scheduled": "booked",
+        "attended": "came",
+        "no_show": "didn't come",
+        "cancelled": "cancelled"
+      }
+    },
+    "convert": {
+      "button": "Convert to student",
+      "title": "Enroll {name}",
+      "hint": "Creates the student, links the guardian, enrolls them in the group with the first charge, and marks the lead won.",
+      "submit": "Enroll",
+      "done": "{name} is now a student and enrolled in the group.",
+      "firstPayment": "Record first payment",
+      "openStudent": "Open the student",
+      "student": "Student",
+      "newStudent": "New student",
+      "existingStudent": "Existing student",
+      "phoneOwner": "Whose phone is it?",
+      "phoneIsStudent": "The student's",
+      "phoneIsParent": "A parent's",
+      "guardian": "Guardian",
+      "guardianHint": "Optional. A phone that's already a guardian links that guardian (siblings share one).",
+      "group": "Group",
+      "groupPlaceholder": "Choose a group",
+      "startDate": "Start day",
+      "startDateHint": "Empty = the group's next lesson.",
+      "discountPercent": "Discount, %",
+      "discountReason": "Discount reason"
     }
   },
   "lostReasons": {
