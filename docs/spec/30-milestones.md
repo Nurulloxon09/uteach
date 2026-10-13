@@ -324,13 +324,64 @@ Global "done when" for every milestone:
 
 **Scope:** exam type presets (IELTS, SAT, CEFR, Milliy sertifikat) + custom, group score entry grid, IELTS band rounding, official results with certificate, targets with exam date, student progress chart, group scores table, score uplift, `score_posted` notification, bot "Scores" menu.
 **Tables:** exam_types, exam_results, student_targets.
+
+> PROPOSED (M6 plan, 2026-10-13): started by the owner while M4's real-SMS item is still open. Delivered as
+> three PRs.
+> - **M6a · data layer:** migration `m6_exams`:
+>   - tables `exam_types` (four global presets seeded: `ielts`, `sat`, `cefr`, `milliy`), `exam_results`,
+>     `student_targets` with RLS; `courses.exam_type_id`; the `attachments` storage bucket (01) for
+>     certificates under `{center_id}/certificates/…`;
+>   - trigger `exam_results_check` validates `section_scores` against the type (known keys, range, step) and
+>     computes `total_score` by the total rule; parity with `packages/core/exams` on shared fixtures
+>     (`exams.fixtures.json`, like billing);
+>   - RPCs: `save_group_scores(group, exam_type, kind, taken_on, rows)` (upsert per student, an all-empty row
+>     deletes that student's result, enqueues `score_posted`), `save_official_result`, `delete_exam_result`,
+>     `set_student_target`, `group_scores(group, exam_type)` (latest, target, gap, mocks, trend, uplift),
+>     `student_scores(student)` (history + targets for the chart), `score_entries(filters)` (the Exams list);
+>     `convert_lead` also writes a target when the course has an exam type and the lead has a target score;
+>   - `score_posted` Telegram templates (uz/ru/en), on by default;
+>   - `packages/core/exams` (`ieltsBand`, `examTotal`, `validateScores`, `cefrLevel`, `milliyGrade`) and
+>     pgTAP `m6_exams`.
+> - **M6b · score screens:** "Enter scores" grid on the group page (keyboard only, inline errors, live total),
+>   group Scores tab (gap table), student profile Scores panel with the chart, official result dialog with
+>   certificate upload, target dialog, the Exams page (owners/admins) and Scores (teachers), Settings → Exam
+>   types (custom types), the exam type on the course form and on Convert. New pattern `ScoreChart` on `/dev/ui`.
+> - **M6c · parents & e2e:** the worker renders `score_posted`; the bot's Scores item (latest result per exam
+>   type with sections, target, gap, exam date, last five results with arrows); the M6 e2e; screenshots.
+>
+> Decisions in the plan (details in 02, 03, 05-ui, 16, 17):
+> - **Preset rules** are the verified ones in 16 (CEFR total = average, Milliy sertifikat 0–75).
+> - **One rounding rule, two places.** `ielts_band`: mean of the four bands, `.25` → up to `.5`, `.75` → up to
+>   the next whole, else nearest half. `sum` and `average` keep one decimal (`average` rounds half up). The SQL
+>   trigger and `packages/core` read the same fixtures in their tests.
+> - **Partial entry is allowed:** a mock can have only some sections. `total_score` is null until every
+>   section has a value. Values off the range or step (IELTS 7.3, 10) are rejected inline and by the trigger
+>   (`exam_score_invalid`).
+> - **Re-entry edits, never duplicates:** unique (student, exam type, group, taken_on, kind) with
+>   `nulls not distinct` (official results have no group).
+> - **Who writes:** owners; admins with `academics` in their branches; teachers for their own groups
+>   (mock/diagnostic) and targets of students in their groups. Official results: owners/admins and the
+>   student's teachers. Teachers read results of students in their groups only. Presets: no write grant for
+>   anyone (the "presets read-only" check).
+> - **Custom types:** sections and total rule are fixed once a result exists (name and archive stay
+>   editable), so old totals never change meaning.
+> - **`score_posted`** goes to the student's and guardians' Telegram (no SMS template). It is enqueued
+>   10 minutes after a save and a re-save inside that window updates the waiting row, so fixing a typo
+>   doesn't send twice. It lists the sections, total and the gap to the target.
+> - **Baseline and uplift:** baseline = `student_targets.baseline_total`, else the first diagnostic, else the
+>   first result of that type. Uplift = latest total − baseline. Trend = last vs previous total.
+> - **Chart:** `ScoreChart` is plain SVG with chart tokens (no chart library). Points = totals by date (mock,
+>   diagnostic and official, official with a badge), a dashed target line, an exam-date marker, and section
+>   lines behind a toggle.
+> - **Bot:** text only in M6. The chart image moves to M9 (Mini App); it needs an SVG-to-PNG renderer the worker
+>   doesn't have.
 **Done when:**
 - [ ] IELTS rounding unit tests pass for all .x25 / .x75 boundary cases, and the DB trigger agrees with `packages/core` on the same fixtures.
 - [ ] A teacher can enter a 15-student IELTS mock with keyboard only; invalid values (7.3, 10) are rejected inline and by the DB.
 - [ ] The student chart shows scores over time, the target line and the exam date; the group table shows gap to target.
 - [ ] Parents get a score notification and see scores in the bot.
 - [ ] Preset exam types can't be edited by centers (RLS).
-- [ ] SAT, CEFR and Milliy sertifikat ranges and mappings have been checked against official sources and recorded in 16.
+- [x] SAT, CEFR and Milliy sertifikat ranges and mappings have been checked against official sources and recorded in 16. (M6 plan: sources in 16 § Exam types.)
 **E2E:** teacher enters a mock for a group → student profile chart shows the new point vs target.
 
 ## M7 · Launch 🚀

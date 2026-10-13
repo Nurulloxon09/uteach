@@ -13,11 +13,32 @@ Global presets (`center_id is null`, read-only), and centers can add custom type
 |---|---|---|
 | **IELTS** (Academic/General) | Listening, Reading, Writing, Speaking (0–9, 0.5) | `ielts_band` |
 | **SAT** | Reading & Writing (200–800, 10), Math (200–800, 10) | `sum` (400–1600) |
-| **CEFR** (multilevel test, UZ) | Listening, Reading, Writing, Speaking (0–75, 1) | `sum` + level mapping (A1…C1) shown |
-| **Milliy sertifikat** | Single score (0–100, 0.1) | `none` (score = total) + grade mapping (A+, A, B+, B, C+, C) |
+| **CEFR** (multilevel test, UZ) | Listening, Reading, Writing, Speaking (0–75, 1) | `average` (0–75) + level mapping (B1 dan quyi, B1, B2, C1) shown |
+| **Milliy sertifikat** | Single score (0–75, 0.1) | `none` (score = total) + grade mapping (A+, A, B+, B, C+, C) |
 | **Custom** | any sections | `sum` / `average` / `none` |
 
 Level and grade mapping tables live in `exam_types.sections` metadata or in code constants per preset code, and are verified against official sources before M6.
+
+> PROPOSED (M6 plan, 2026-10-13): ranges and mappings checked against official sources (done-when item 6):
+> - **IELTS:** overall = mean of the four bands; a mean ending in .25 rounds up to the next half band, .75 up to
+>   the next whole band, anything else to the nearest half band (ielts.org, "How IELTS is scored").
+> - **SAT:** sections 200–800, total = sum, 400–1600 (College Board, "What do my SAT Suite scores mean?").
+>   Steps of 10 are not stated on that page; every published score report and third-party guide uses them, so
+>   the step stays 10.
+> - **CEFR multilevel:** UzBMB "Ko'p darajali test formati uchun baholash mezonlari" (Multilevel-bm.pdf, in force
+>   from March 2023): each of the four sections is scored 0–75 (75 is the cap); the level comes from the
+>   **average of the four sections**: C1 65–75, B2 51–64, B1 38–50, "B1 dan quyi" 0–37. So the total rule is
+>   `average`, not `sum` (the old row said sum). Sections are whole numbers on certificates; the total keeps
+>   one decimal and the level uses ≥ 65 / ≥ 51 / ≥ 38.
+> - **Milliy sertifikat:** UzBMB news of 17-01-2024 (Cabinet resolution amending No. 646): results by the Rasch
+>   model; A+ ≥ 70, A 65–69.9, B+ 60–64.9, B 55–59.9, C+ 50–54.9, C 46–49.9; below 46 no certificate (shown as
+>   "No certificate"). UzBMB's page gives only the thresholds; the 75-point maximum comes from press reports
+>   (uzreport.news, "maksimal natija 75 ball") and matches UzBMB's multilevel scale, so the range is 0–75 with
+>   step 0.1. Re-check if a certificate above 75 ever turns up. Certificates issued before 1 March 2024 used a 100-point scale: a center
+>   that needs them adds a custom type.
+> - The mappings live in `packages/core/exams` constants keyed by preset `code` (`ielts`, `sat`, `cefr`,
+>   `milliy`) and in `exam_types.sections`/`meta` for display; the SQL trigger only needs ranges, steps and the
+>   total rule.
 
 ### IELTS band rounding (`ielts_band`)
 Overall = mean of the 4 bands, rounded to the nearest 0.5. **x.25 rounds up to x.5, and x.75 rounds up to (x+1).0.** Example: 6.5, 6.5, 5.0, 7.0 → 6.25 → **6.5**. 6.5, 6.5, 5.5, 6.0 → 6.125 → **6.0**.
