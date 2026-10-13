@@ -135,6 +135,17 @@ Percent (`discount_bp`) and/or a fixed amount per cycle, with a required reason.
 
 - **Reminders:** `enqueue_payment_reminders` daily. Students with outstanding debt past due_date get a reminder every `reminder_every_days` (dedupe key `reminder:{student}:{date}`). There's also a "due soon" reminder 2 days before due_date (setting, default on). Templates include the amount and (🟨) a pay link.
 
+> PROPOSED (M4 plan): `enqueue_payment_reminders` runs daily at 10:00 in each center's time zone (an hourly
+> pg_cron job picks centers whose local hour is 10). A student with outstanding debt past its due date gets
+> `payment_reminder` when the last reminder was at least `reminder_every_days` ago (the first one on the day
+> after the due date); the payload holds the debt in minor units, currency and the oldest due date. "Due soon"
+> (`payment_due_soon`, dedupe `due_soon:{charge}`) goes out 2 days before a charge's due date while it is
+> unpaid. Recipients follow `payment_received`: guardians with `receives_billing`, else the student. Paying
+> before the row is sent doesn't cancel it in SQL; the sender re-checks the balance for these two keys and marks
+> the row `skipped` when nothing is owed. Debtors' **Send reminder** queues the same template now (dedupe
+> `reminder:{student}:{date}:manual`, at most once a day per student). `charge_created` is queued by
+> `generate_cycle_charges` and `enroll` for each new cycle charge.
+
 ## Adjustments & voids
 
 > PROPOSED: who can do each action, the void rules (reason required, closed-kassa days owner-only), "nothing financial is ever deleted", correction adjustments. Canvas: waive month (now: waive cycle), opening balances, write-offs.

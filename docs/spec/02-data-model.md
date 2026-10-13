@@ -182,6 +182,11 @@ RLS: select **MBR**; update **OWN** (W) except `status`, `plan_id`, `trial_ends_
 > `late_alert_enabled`, and `quiet_hours_start` / `quiet_hours_end` (moved here from M4, because enqueue applies
 > quiet hours). Equal start and end mean no quiet hours.
 
+> PROPOSED (M4 plan): M4 adds `reminder_every_days` (1–30, default 3), `due_soon_reminder_enabled boolean not
+> null default true`, `sms_enabled boolean not null default false` and `sms_monthly_cap integer not null default
+> 0` (0 = no SMS; counted from `notification_outbox` rows with channel `sms` sent this month, center tz). Owners
+> update them like the M2/M3 settings. The bot deep link is derived from `slug`, not stored.
+
 ### `branches` 🟩 [M0]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
@@ -1060,6 +1065,12 @@ RLS: as exam_results.
 Unique (coalesce(center_id, zero uuid), key, channel, locale).
 RLS: select MBR + system rows; write PERM(settings) for own rows.
 
+> PROPOSED (M4 plan): M4 seeds Telegram rows (uz/ru/en) for `charge_created`, `payment_reminder`,
+> `payment_due_soon`, `broadcast`, and the staff keys `substitute_assigned` and `schedule_conflict`, and SMS rows
+> for `absence_alert`, `payment_reminder` and `lesson_cancelled` with `sms_provider_template_id` null. A row
+> without an Eskiz id is never sent by SMS. Centers edit their own override rows from Settings →
+> Notifications; "Reset to default" deletes the override, so the system row applies again.
+
 ### `notification_outbox` 🟩 [M2 enqueue, M4 send]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name. Also proposed: the dedupe key formats, channel resolved at send time, max 5 attempts.
@@ -1097,6 +1108,12 @@ RLS: select ADM (history screens); insert only through `enqueue_notification()` 
 > recipient student's branch) comes with M4's history screen.
 > Templates: select MBR for the center's rows and everyone signed in for system rows; no write grants until M4.
 
+> PROPOSED (M4 plan): `broadcast_id uuid` is added (same-center fk to `broadcasts`). Select widens from OWN to
+> ADM scoped by the recipient student's branch (a guardian row follows the guardian's students); staff-alert rows
+> (`membership_id`) stay OWN only. The Debtors "last reminder" column reads the latest `sent` row with key
+> `payment_reminder` per student. The worker changes rows only through `worker.*` functions (below, under
+> `system_heartbeats`); the outbox gets no update grant.
+
 ### `broadcasts` 🟩 [M4]
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
@@ -1114,6 +1131,14 @@ RLS: select ADM (history screens); insert only through `enqueue_notification()` 
 | created_by | uuid fk | |
 
 RLS: PERM(broadcasts) and ADM(branch).
+
+> PROPOSED (M4 plan): also `body_by_locale jsonb` (optional per-locale texts; `body` is the fallback),
+> `delivered_count` / `failed_count` read from the outbox rather than stored, and `created_at`. Broadcasts are
+> created and queued only through `create_broadcast()` (security definer): it checks `broadcasts`, limits the
+> audience to the caller's branches, expands it to outbox rows (`broadcast:{id}:{recipient}`), and sets
+> `recipient_count`. `preview_broadcast()` returns the same count plus how many have no Telegram link. SMS is used
+> only when the broadcast chooses it, and never past `sms_monthly_cap`. No deletes; a scheduled broadcast can be
+> cancelled, which cancels its pending rows.
 
 ### `bot_sessions` 🟩 [M4]
 
@@ -1323,6 +1348,17 @@ RLS: PERM(import).
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
 
 `service text pk, last_beat_at timestamptz, info jsonb`. RLS: none (service role); shown in super-admin.
+
+> PROPOSED (M4 plan): until super-admin exists, owners see the worker's health through `public.worker_health()`
+> (security definer, returns only `service` and `last_beat_at`).
+> **`worker` schema:** the worker's only way into the database, executable only by the `uteach_worker` role (01):
+> `claim_outbox(limit)`, `mark_sent`, `mark_retry(id, error, retry_at)`, `mark_failed(id, error, permanent)`
+> (a permanent Telegram error also sets the link's `unlinked_at` and queues the SMS fallback row),
+> `recover_stale()`, `beat(service, info)`, `link_contact(telegram_user_id, chat_id, phone, locale)`,
+> `unlink_chat(chat_id)`, `get_session` / `set_session`, and the bot's reads (`bot_subjects`, `bot_schedule`,
+> `bot_attendance`, `bot_payments`), each limited to subjects linked to the given Telegram user.
+> **`private.otp_sends`** (`phone_hash text, sent_at timestamptz`): the per-phone OTP limit log written by the auth
+> SMS hook (10); no grants, rows older than a day are removed by pg_cron.
 
 ---
 

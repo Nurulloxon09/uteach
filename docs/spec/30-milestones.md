@@ -189,6 +189,57 @@ Global "done when" for every milestone:
 
 **Scope:** worker: grammY bot (long polling), language + contact linking, bot menu (schedule, attendance, payments + receipts, scores placeholder until M6), multi-child and multi-center switching; outbox sender (SKIP LOCKED, retries/backoff, stale lock recovery, Telegram rate limits); Eskiz SMS adapter + fallback for critical templates; Supabase SMS hook switched to Eskiz in staging/prod; broadcasts (branch/group/course/debtors); payment reminders job (overdue every N days + due-soon); staff alerts (substitute, conflicts); heartbeats.
 **Tables:** telegram_links, bot_sessions, broadcasts, system_heartbeats (+ outbox in use).
+
+> PROPOSED (M4 plan, 2026-10-13): delivered as three PRs.
+> - **M4a · data layer:** migration `m4_telegram`:
+>   - `bot_sessions`, `broadcasts`, `system_heartbeats`, `notification_outbox.broadcast_id`;
+>   - center settings `reminder_every_days` (default 3), `due_soon_reminder_enabled` (default on),
+>     `sms_enabled` (default off), `sms_monthly_cap`;
+>   - a `worker` schema whose functions are the worker's only way into the database: `claim_outbox` (the SKIP
+>     LOCKED claim from 17), `mark_sent`, `mark_retry`, `mark_failed` (+ SMS fallback row), `recover_stale`,
+>     `beat`, `link_contact`, `unlink_chat`, and the bot's read functions (schedule, attendance, payments),
+>     each scoped by the caller's `telegram_links` rows;
+>   - `enqueue_payment_reminders` (pg_cron, daily) for overdue and "due soon"; `generate_cycle_charges` also
+>     queues `charge_created`;
+>   - staff alerts: `substitute_assigned` (to the substitute) and `schedule_conflict` (to admins);
+>   - Telegram templates for the new keys and SMS rows for `absence_alert`, `payment_reminder`,
+>     `lesson_cancelled` (Eskiz template id empty until approved).
+>
+>   Also: `packages/core/notifications` (`renderTemplate`, `pickChannel`, `backoff`) with an SQL parity test for
+>   the backoff, and pgTAP `m4_telegram` (two sessions never claim the same row, stale recovery, reminder
+>   cadence, cross-center contact matching, RLS of the new tables).
+> - **M4b · worker & SMS:**
+>   - `apps/worker`: grammY bot (linking, menu, child picker, center switcher, settings, blocked → unlinked),
+>     outbox sender (rate limits, retries, SMS fallback), heartbeat, graceful shutdown;
+>   - `EskizSmsProvider` in `packages/adapters` (token refresh, approved texts only), used by the worker and,
+>     with `SMS_PROVIDER=eskiz`, by the auth SMS hook, which also gets the per-phone OTP limit (5/hour);
+>   - the worker integration test with a fake Bot API and a fake Eskiz server.
+> - **M4c · staff screens:**
+>   - Settings → Notifications (templates per key and locale, on/off, quiet hours, reminders, SMS cap and
+>     this month's count) and Settings → Telegram (deep link, QR code, linked count);
+>   - Broadcasts page (compose, preview count, history);
+>   - Debtors: send reminder, broadcast to selection, last reminder column; Students: "Telegram not linked"
+>     filter, bulk broadcast, Telegram status on the profile; onboarding "Connect Telegram" item;
+>   - the temporary health page; the M4 e2e; screenshots; the real-phone checklist.
+>
+> Decisions in the plan (details in 01, 02, 05-ui, 10, 15, 17):
+> - **The worker never holds the service-role key.** It connects with postgres.js as a `uteach_worker` role
+>   that can only execute `worker.*` functions. The migration creates the role without login; each environment
+>   gives it a password (local: in `seed.sql`; hosted: set by the owner).
+> - **Bot token and Eskiz credentials are environment variables** of the server processes (worker; web for
+>   the hook). Vault keeps per-center secrets (payment providers, M8).
+> - **Two bots:** a dev bot for local and staging, `@uteach_bot` for production.
+> - **No hosted worker until M7.** Vercel can't run long polling. In M4 the worker runs on a laptop (`pnpm
+>   --filter @uteach/worker dev`) against local or hosted Supabase; the VPS comes with launch.
+> - **Bot texts live in the i18n catalogs** (`bot.*`), so `check:i18n` covers them. Outbox texts stay in
+>   `notification_templates`.
+> - **SMS stays off until Eskiz approves the templates.** SMS rows are seeded with an empty Eskiz id, and
+>   `pickChannel` never chooses SMS for a row without one. Tests use a fake Eskiz server.
+> - **"Send reminder" from Debtors** uses the `payment_reminder` template with the dedupe key
+>   `reminder:{student}:{date}:manual`, so it never blocks or repeats the daily job's reminder.
+> - **Health page:** owners see it at Settings → Health until super-admin exists. It reads
+>   `public.worker_health()` (security definer, returns only service name and last beat).
+> - **The notifications bell waits.** Staff alerts go through the bot in M4.
 **Done when:**
 - [ ] A parent sharing their contact gets linked to all their children across centers; a forwarded contact is rejected.
 - [ ] Bot menu answers schedule, attendance, payments (with receipt PDF) for each linked child, in the user's language.

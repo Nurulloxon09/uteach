@@ -12,6 +12,15 @@ Runs in `apps/worker`.
 - grammY, **long polling**, a single worker instance (SKIP LOCKED makes a second instance safe).
 - Each center gets a deep link `t.me/uteach_bot?start=c_{center_slug}` to print and share. The start parameter sets `bot_sessions.active_center_id`.
 
+> PROPOSED (M4 plan): two bots: a dev bot for local and staging, and `@uteach_bot` for production. The username
+> comes from `NEXT_PUBLIC_TELEGRAM_BOT_USERNAME` (web) and the token from `TELEGRAM_BOT_TOKEN` (worker). Bot
+> texts (menus, replies, errors) live in the i18n catalogs under `bot.*` and are checked by `check:i18n`;
+> outbox messages keep using `notification_templates`. The user's language is stored on their `telegram_links`
+> rows and in `bot_sessions.state` before they're linked. Settings → Unlink sets `unlinked_at` on all the
+> user's links. Staff who share their contact get linked through `memberships` and receive only staff alerts
+> (`substitute_assigned`, `schedule_conflict`); they have no menu in M4. The Scores item says "coming soon"
+> until M6.
+
 ## Bot linking
 
 > PROPOSED: language picker first, rejecting forwarded contacts, matching across all centers, the no-match reply, center switcher, blocking the bot → `unlinked_at`. Canvas: share contact → linked to students/guardians/staff.
@@ -70,6 +79,15 @@ returning *;
 - Stale `sending` rows (locked over 2 min ago) return to `pending` (worker crash recovery).
 - Heartbeat: `system_heartbeats('worker')` every 30 s.
 
+> PROPOSED (M4 plan): the sender calls only `worker.*` functions (02). The pure parts live in
+> `packages/core/notifications`: `renderTemplate` (ICU body + payload, money from minor units and dates in the
+> center's locale and time zone), `pickChannel` (link → Telegram; approved SMS row + `sms_enabled` + under the cap
+> → SMS; else `skipped`) and `backoff` (30 s, 2 min, 10 min, 1 h; `failed` after 5 attempts), with an SQL parity
+> test for the backoff. Templates turned off (`is_enabled = false`, center override first) are `skipped`.
+> `payment_received` is sent as a document: the receipt PDF from `packages/receipts` with the text as its
+> caption. A shutdown signal stops claiming and lets in-flight sends finish (up to 10 s); anything left is
+> recovered as stale.
+
 ## SMS fallback (Eskiz)
 
 > PROPOSED: which templates fall back to SMS, broadcasts by SMS only when chosen, a per-center monthly SMS cap. Canvas: Eskiz adapter, approved templates, OTP.
@@ -78,6 +96,13 @@ returning *;
 - Eskiz requires **pre-approved templates**. Only templates with `sms_provider_template_id` can go by SMS. Text must match the approved template exactly, with variables substituted.
 - SMS is used for: auth OTP (through the Supabase hook, not the outbox), fallback for critical templates (`absence_alert`, `payment_reminder`, `lesson_cancelled`), and broadcasts only if explicitly chosen.
 - SMS costs money. A per-center monthly SMS cap (setting) applies, and the count is shown in settings.
+
+> PROPOSED (M4 plan): `EskizSmsProvider` in `packages/adapters/sms` logs in with `ESKIZ_EMAIL` /
+> `ESKIZ_PASSWORD` (environment, see 01), keeps the token in memory and logs in again on a 401. The auth hook
+> uses it when `SMS_PROVIDER=eskiz`; local and CI keep `console`, and tests use a fake Eskiz HTTP server. SMS
+> rows are seeded with an empty Eskiz id, so nothing goes by SMS until the owner gets the templates approved
+> and fills the ids. Free-text broadcasts can't match an approved template, so the SMS choice in the broadcast
+> form is shown disabled until a center has an approved `broadcast` SMS template.
 
 ## Templates
 
@@ -104,6 +129,11 @@ System defaults in uz/ru/en for: `absence_alert`, `late_alert`, `payment_receive
 - The preview shows the recipient count and how many have no Telegram.
 - Send: expands to outbox rows with `broadcast_id`; dedupe `broadcast:{id}:{recipient}`.
 - History: delivered / failed counts.
+
+> PROPOSED (M4 plan): staff create broadcasts through `create_broadcast()` and preview them with
+> `preview_broadcast()` (02). "Debtors" means a negative balance today, and the preview and the queued rows use
+> the same query, so the count matches. "Broadcast to selection" on Debtors and Students sends to the chosen
+> students only (audience `student_ids`).
 
 ## Reminders
 
