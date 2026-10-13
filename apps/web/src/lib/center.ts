@@ -65,6 +65,8 @@ export type CenterContext = {
     settings: boolean;
     /** Send broadcasts (17). */
     broadcasts: boolean;
+    /** The Leads CRM (11). */
+    leads: boolean;
     /** Is this branch in the user's scope (owners: every branch). */
     inBranch: (branchId: string) => boolean;
   };
@@ -167,6 +169,7 @@ export const getCenterContext = cache(async (): Promise<CenterContext> => {
       import: has("import"),
       settings: has("settings"),
       broadcasts: has("broadcasts"),
+      leads: has("leads"),
       inBranch,
     },
   };

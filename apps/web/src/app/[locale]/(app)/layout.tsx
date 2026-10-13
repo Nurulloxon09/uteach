@@ -31,6 +31,9 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
         ...(teaches
           ? [{ key: "today", label: t("today"), href: "/today", icon: "today" } as const]
           : []),
+        ...(ctx.can.leads
+          ? [{ key: "leads", label: t("leads"), href: "/leads", icon: "leads" } as const]
+          : []),
         { key: "students", label: t("students"), href: "/students", icon: "students" },
         ...(ctx.can.broadcasts
           ? [
@@ -70,6 +73,9 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
             { key: "branches", label: t("branches"), href: "/settings/branches" },
             { key: "courses", label: t("courses"), href: "/settings/courses" },
             { key: "holidays", label: t("holidays"), href: "/settings/holidays" },
+            ...(ctx.can.leads
+              ? [{ key: "lostReasons", label: t("lostReasons"), href: "/settings/lost-reasons" }]
+              : []),
             { key: "notifications", label: t("notifications"), href: "/settings/notifications" },
             { key: "telegram", label: t("telegram"), href: "/settings/telegram" },
             ...(ctx.membership.role === "owner"
