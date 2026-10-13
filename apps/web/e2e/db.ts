@@ -60,3 +60,58 @@ export function lessonIds(center: string, group: string): Promise<string[]> {
     return rows.map((r) => r.id);
   });
 }
+
+/**
+ * M4 notifications: a second branch and four students in a center: in the first branch an owing student with a
+ * guardian and one who owes nothing, in the second an owing student; debts are opening balances.
+ */
+export function seedNotifyCenter(
+  center: string,
+  branches: { first: string; second: string },
+): Promise<void> {
+  return withDb(async (sql) => {
+    const [{ id: centerId }] = (await sql`
+      select id from public.centers where name = ${center}`) as unknown as [{ id: string }];
+    await sql`
+      insert into public.branches (center_id, name, timezone)
+      values (${centerId}, ${branches.second}, 'Asia/Tashkent')`;
+    const [{ b1, b2 }] = (await sql`
+      select (select id from public.branches where center_id = ${centerId} and name = ${branches.first}) as b1,
+             (select id from public.branches where center_id = ${centerId} and name = ${branches.second}) as b2
+    `) as unknown as [{ b1: string; b2: string }];
+    const students = await sql<{ id: string; full_name: string }[]>`
+      insert into public.students (center_id, branch_id, full_name, phone)
+      values (${centerId}, ${b1}, 'Aziz Debtor', '+998931230001'),
+             (${centerId}, ${b1}, 'Bahrom Paid', '+998931230002'),
+             (${centerId}, ${b2}, 'Charos Debtor', '+998931230003')
+      returning id, full_name`;
+    const id = (name: string) => students.find((s) => s.full_name === name)!.id;
+    const [{ id: guardian }] = (await sql`
+      insert into public.guardians (center_id, full_name, phone)
+      values (${centerId}, 'Aziza Mother', '+998931239001') returning id`) as unknown as [
+      { id: string },
+    ];
+    await sql`
+      insert into public.student_guardians (center_id, student_id, guardian_id, is_primary)
+      values (${centerId}, ${id("Aziz Debtor")}, ${guardian}, true)`;
+    await sql`
+      insert into public.balance_adjustments (center_id, student_id, kind, amount, details)
+      values (${centerId}, ${id("Aziz Debtor")}, 'opening_balance', -50000000, '{}'),
+             (${centerId}, ${id("Charos Debtor")}, 'opening_balance', -30000000, '{}')`;
+  });
+}
+
+/** Who a center's broadcasts went to: guardian or student names, sorted. */
+export function broadcastRecipients(center: string): Promise<string[]> {
+  return withDb(async (sql) => {
+    const rows = await sql<{ name: string }[]>`
+      select coalesce(g.full_name, s.full_name) as name
+      from public.notification_outbox o
+      join public.centers c on c.id = o.center_id
+      left join public.guardians g on g.id = o.guardian_id
+      left join public.students s on s.id = o.student_id
+      where c.name = ${center} and o.broadcast_id is not null
+      order by 1`;
+    return rows.map((r) => r.name);
+  });
+}

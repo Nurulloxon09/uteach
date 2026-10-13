@@ -84,7 +84,11 @@
     "students": "Students",
     "attendance": "Attendance",
     "payments": "Payments",
-    "debtors": "Debtors"
+    "debtors": "Debtors",
+    "broadcasts": "Broadcasts",
+    "notifications": "Notifications",
+    "telegram": "Telegram",
+    "health": "Health"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -107,7 +111,9 @@
       "slots": "Check the lesson times.",
       "endBeforeStart": "The end date can't be before the start.",
       "percent": "Enter a percentage from 0 to 100.",
-      "branchCode": "Use 2 to 6 Latin letters or digits."
+      "branchCode": "Use 2 to 6 Latin letters or digits.",
+      "template": "This text can't be used: check the names in curly braces.",
+      "confirmBroadcast": "Tick the box to confirm who gets this message."
     },
     "auth": {
       "invalidCredentials": "Wrong phone number or password.",
@@ -356,7 +362,9 @@
     "addStudentsHint": "One by one or from Excel",
     "continueSetup": "Finish setting up your center",
     "continueSetupHint": "{done} of {total} steps done. Pick up where you left off.",
-    "continueSetupButton": "Continue setup"
+    "continueSetupButton": "Continue setup",
+    "connectTelegram": "Connect Telegram",
+    "connectTelegramHint": "Share the bot link so parents get alerts and receipts."
   },
   "today": {
     "title": "Today",
@@ -576,6 +584,126 @@
       "added": "Room added.",
       "emptyHint": "Add the rooms of this branch.",
       "capacityValue": "{count, plural, one {# seat} other {# seats}}"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "deliveryTitle": "Reminders and SMS",
+      "deliveryHint": "Payment reminders and when messages may go by SMS.",
+      "readOnlyHint": "Only the owner can change these.",
+      "quietHours": "Nothing is sent between {from} and {to}.",
+      "quietHoursLink": "Change quiet hours",
+      "smsUsage": "SMS this month: {sent} of {cap}.",
+      "reminderEveryDays": "Remind debtors every (days)",
+      "reminderEveryDaysHint": "Starting the day after a payment is due.",
+      "smsMonthlyCap": "SMS per month",
+      "smsMonthlyCapHint": "0 = no SMS. SMS costs money.",
+      "dueSoon": "Remind 2 days before a payment is due",
+      "dueSoonHint": "Sent once per lesson cycle while it is unpaid.",
+      "smsEnabled": "Send by SMS when Telegram can't",
+      "smsEnabledHint": "Only absences, payment reminders and cancellations, with approved texts.",
+      "messagesTitle": "Messages",
+      "messagesHint": "What parents and staff get. Change a text or turn a message off.",
+      "message": "Message",
+      "sms": "SMS",
+      "smsApproved": "Approved",
+      "smsNotApproved": "Not approved",
+      "on": "On",
+      "off": "Off",
+      "customized": "Edited",
+      "view": "View",
+      "preview": "Preview",
+      "previewInvalid": "This text can't be shown: check the names in curly braces.",
+      "enabled": "Send this message",
+      "enabledHint": "Turn it off to stop it in Telegram and SMS.",
+      "language": "Language",
+      "telegramText": "Telegram text",
+      "smsText": "SMS text",
+      "eskizId": "Eskiz template ID",
+      "eskizIdHint": "After Eskiz approves this exact text.",
+      "smsHint": "SMS texts must match the text Eskiz approved.",
+      "reset": "Reset to default",
+      "resetTitle": "Reset this message?",
+      "resetHint": "Your texts and settings for it are removed; the standard texts apply again.",
+      "keys": {
+        "absence_alert": {
+          "title": "Absence alert",
+          "hint": "To parents when a student misses a lesson."
+        },
+        "late_alert": {
+          "title": "Late alert",
+          "hint": "To parents when a student is late (if late alerts are on)."
+        },
+        "lesson_cancelled": {
+          "title": "Lesson cancelled",
+          "hint": "When a lesson is cancelled."
+        },
+        "lesson_moved": {
+          "title": "Lesson moved",
+          "hint": "When a lesson moves to another time."
+        },
+        "lesson_added": {
+          "title": "Extra lesson",
+          "hint": "When an extra or makeup lesson is added."
+        },
+        "payment_received": {
+          "title": "Payment received",
+          "hint": "After a payment, with the receipt PDF."
+        },
+        "charge_created": {
+          "title": "New cycle to pay",
+          "hint": "When the next lesson cycle is charged."
+        },
+        "payment_reminder": {
+          "title": "Payment reminder",
+          "hint": "To debtors, every few days, and from Debtors."
+        },
+        "payment_due_soon": {
+          "title": "Payment due soon",
+          "hint": "Two days before a payment is due."
+        },
+        "broadcast": {
+          "title": "Broadcast",
+          "hint": "The frame around your broadcast messages."
+        },
+        "substitute_assigned": {
+          "title": "Substitute assigned",
+          "hint": "To a teacher who substitutes a lesson."
+        },
+        "schedule_conflict": {
+          "title": "Schedule conflict",
+          "hint": "To admins when the schedule has a conflict."
+        }
+      }
+    },
+    "telegram": {
+      "title": "Telegram",
+      "linkTitle": "Bot link",
+      "linkHint": "Parents and students open this link, choose a language and share their phone number.",
+      "linkLabel": "Your center's bot link",
+      "linkShare": "Send it in your groups or print the QR code at reception.",
+      "qrLabel": "QR code of the bot link",
+      "qrHint": "Print it for reception and classrooms.",
+      "notSetUp": "The Telegram bot isn't connected yet",
+      "notSetUpHint": "Once uteach connects the bot, its link and QR code appear here.",
+      "reachTitle": "Who the bot reaches",
+      "reachHint": "Students reached directly or through a parent.",
+      "reached": "Students reached",
+      "guardians": "Parents linked",
+      "students": "Students linked",
+      "staff": "Staff linked"
+    },
+    "health": {
+      "title": "Health",
+      "servicesTitle": "Background services",
+      "servicesHint": "The worker sends Telegram messages and SMS. Red means it stopped checking in.",
+      "never": "No service has checked in yet",
+      "neverHint": "Start the worker; it checks in every 30 seconds.",
+      "services": {
+        "worker": "Message worker"
+      },
+      "lastBeat": "Last check-in {when}",
+      "ok": "Working",
+      "down": "Not responding"
     }
   },
   "sms": {
@@ -983,7 +1111,16 @@
       "deleteTitle": "Delete this note?",
       "deleted": "Note deleted"
     },
-    "importButton": "Import from Excel"
+    "importButton": "Import from Excel",
+    "telegram": {
+      "linked": "Telegram linked",
+      "filter": "Telegram",
+      "yes": "Linked",
+      "no": "Not linked",
+      "notLinked": "Telegram not linked"
+    },
+    "broadcast": "Message this list",
+    "broadcastPreset": "{count, plural, one {# student in this list} other {All # students in this list}}"
   },
   "enrollments": {
     "search": "Search…",
@@ -1562,7 +1699,14 @@
     "oldestDue": "Oldest unpaid due date",
     "overdueDays": "Days overdue",
     "lastPaymentAmount": "Last payment amount",
-    "fileName": "debtors"
+    "fileName": "debtors",
+    "lastReminder": "Last reminder",
+    "remind": "Send a payment reminder to {name}",
+    "reminderQueued": "Reminder for {name} is on its way.",
+    "reminderAlready": "{name} already got a reminder today.",
+    "broadcast": "Message this list",
+    "broadcastPreset": "{count, plural, one {# debtor in this list} other {All # debtors in this list}}",
+    "noReminder": "Not yet"
   },
   "bot": {
     "chooseLanguage": "Choose your language",
@@ -1617,5 +1761,74 @@
     "unlinkNo": "No",
     "unlinked": "Done. Send /start to link again.",
     "error": "Something went wrong. Please try again."
+  },
+  "broadcasts": {
+    "title": "Broadcasts",
+    "new": "New broadcast",
+    "newTitle": "New broadcast",
+    "newHint": "A message to parents or students in Telegram.",
+    "send": "Send",
+    "queued": "{recipients, plural, one {Queued for # recipient.} other {Queued for # recipients.}}",
+    "historyTitle": "Sent and scheduled",
+    "historyHint": "The last 100 broadcasts.",
+    "emptyTitle": "No broadcasts yet",
+    "emptyHint": "Send news, holidays or schedule changes to parents.",
+    "whenColumn": "When",
+    "message": "Message",
+    "channel": "Channel",
+    "recipients": "Recipients",
+    "delivery": "Delivery",
+    "delivered": "{count} delivered",
+    "waiting": "{count} waiting",
+    "notDelivered": "{count} not delivered",
+    "status": {
+      "cancelled": "Cancelled",
+      "scheduled": "Scheduled",
+      "sending": "Sending",
+      "done": "Done"
+    },
+    "cancel": "Cancel",
+    "cancelTitle": "Cancel this broadcast?",
+    "cancelHint": "Messages not sent yet are stopped. Sent ones stay sent.",
+    "cancelled": "Broadcast cancelled.",
+    "summary": {
+      "students": "{count, plural, one {# student} other {# students}}",
+      "debtors": "Debtors",
+      "groups": "{count, plural, one {# group} other {# groups}}",
+      "courses": "{count, plural, one {# course} other {# courses}}",
+      "branches": "{count, plural, one {# branch} other {# branches}}",
+      "everyone": "Everyone"
+    },
+    "audience": {
+      "branches": "Branches",
+      "groups": "Groups",
+      "courses": "Courses",
+      "all": "All",
+      "debtors": "Only those who owe",
+      "recipients": "Send to",
+      "guardians": "Parents",
+      "students": "Students",
+      "both": "Both",
+      "everyone": "All students"
+    },
+    "counting": "Counting recipients…",
+    "previewCount": "{recipients, plural, one {# recipient} other {# recipients}} ({students, plural, one {# student} other {# students}}); {withoutTelegram} without Telegram won't get it.",
+    "text": "Message",
+    "textHint": "Up to 2000 characters. Your center's name is added in front.",
+    "perLocale": "Different text per language",
+    "channels": {
+      "telegram": "Telegram",
+      "sms": "SMS"
+    },
+    "smsCost": "SMS costs money and counts toward the monthly limit.",
+    "smsUnavailable": "SMS broadcasts need an SMS text approved by Eskiz.",
+    "when": "When",
+    "now": "Now",
+    "later": "Later",
+    "date": "Date",
+    "time": "Time",
+    "confirm": "{recipients, plural, one {Send to # recipient} other {Send to # recipients}}",
+    "confirmHint": "I checked who gets this message.",
+    "perLocaleHide": "One text for all languages"
   }
 }

@@ -32,6 +32,16 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
           ? [{ key: "today", label: t("today"), href: "/today", icon: "today" } as const]
           : []),
         { key: "students", label: t("students"), href: "/students", icon: "students" },
+        ...(ctx.can.broadcasts
+          ? [
+              {
+                key: "broadcasts",
+                label: t("broadcasts"),
+                href: "/broadcasts",
+                icon: "broadcasts",
+              } as const,
+            ]
+          : []),
         { key: "groups", label: t("groups"), href: "/groups", icon: "groups" },
         { key: "schedule", label: t("schedule"), href: "/schedule", icon: "schedule" },
         { key: "attendance", label: t("attendance"), href: "/attendance", icon: "attendance" },
@@ -60,6 +70,11 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
             { key: "branches", label: t("branches"), href: "/settings/branches" },
             { key: "courses", label: t("courses"), href: "/settings/courses" },
             { key: "holidays", label: t("holidays"), href: "/settings/holidays" },
+            { key: "notifications", label: t("notifications"), href: "/settings/notifications" },
+            { key: "telegram", label: t("telegram"), href: "/settings/telegram" },
+            ...(ctx.membership.role === "owner"
+              ? [{ key: "health", label: t("health"), href: "/settings/health" }]
+              : []),
           ],
         },
       ]

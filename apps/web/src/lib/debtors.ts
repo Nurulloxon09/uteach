@@ -35,6 +35,8 @@ export type DebtorRow = {
   daysOverdue: number;
   bucket: AgingBucket;
   lastPayment: { paidAt: string; amount: string } | null;
+  /** When the last payment reminder was queued (job or "Send reminder"), if ever (17). */
+  lastReminderAt: string | null;
 };
 
 export type DebtorSummary = Record<AgingBucket, { count: number; total: bigint }>;
@@ -91,8 +93,9 @@ export async function loadDebtors(
     guardians: { full_name: string; phone: string | null } | null;
   };
   type Payment = { student_id: string; paid_at: string; amount: number };
+  type Reminder = { student_id: string | null; last_queued_at: string | null };
 
-  const [students, guardians, payments] = await Promise.all([
+  const [students, guardians, payments, reminders] = await Promise.all([
     Promise.all(
       chunks(ids).map((part) =>
         supabase
@@ -127,6 +130,15 @@ export async function loadDebtors(
         ),
       ),
     ).then((parts) => parts.flat() as Payment[]),
+    Promise.all(
+      chunks(ids).map((part) =>
+        supabase
+          .from("last_payment_reminders")
+          .select("student_id, last_queued_at")
+          .in("student_id", part)
+          .then(({ data }) => (data ?? []) as Reminder[]),
+      ),
+    ).then((parts) => parts.flat()),
   ]);
 
   const groupIds = [...new Set(students.flatMap((s) => s.group_ids ?? []))];
@@ -144,6 +156,7 @@ export async function loadDebtors(
 
   const studentById = new Map(students.flatMap((s) => (s.id ? [[s.id, s] as const] : [])));
   const guardianOf = new Map(guardians.map((g) => [g.student_id, g.guardians]));
+  const lastReminder = new Map(reminders.map((r) => [r.student_id, r.last_queued_at]));
   const lastPayment = new Map<string, Payment>();
   for (const p of payments) {
     const seen = lastPayment.get(p.student_id);
@@ -175,6 +188,7 @@ export async function loadDebtors(
       daysOverdue: d.max_days_overdue ?? 0,
       bucket: isBucket(d.aging_bucket) ? d.aging_bucket : "0-30",
       lastPayment: paid ? { paidAt: paid.paid_at, amount: String(paid.amount) } : null,
+      lastReminderAt: lastReminder.get(s.id) ?? null,
     });
   }
 

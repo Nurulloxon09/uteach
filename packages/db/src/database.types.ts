@@ -1322,14 +1322,14 @@ isOneToOne: false
                   ]
                 },"student_overview": {
                   Row: {
-                    "archived_at": string | null,"birth_date": string | null,"branch_id": string | null,"center_id": string | null,"course_ids": (string)[] | null,"created_at": string | null,"external_ref": string | null,"full_name": string | null,"gender": string | null,"group_ids": (string)[] | null,"id": string | null,"is_active": boolean | null,"phone": string | null,"school": string | null,"search_text": string | null
+                    "archived_at": string | null,"birth_date": string | null,"branch_id": string | null,"center_id": string | null,"course_ids": (string)[] | null,"created_at": string | null,"external_ref": string | null,"full_name": string | null,"gender": string | null,"group_ids": (string)[] | null,"id": string | null,"is_active": boolean | null,"phone": string | null,"school": string | null,"search_text": string | null,"telegram_linked": boolean | null
                   }
                   ComputedFields: never
                   Insert: {
-                           "archived_at"?: string | null,"birth_date"?: string | null,"branch_id"?: string | null,"center_id"?: string | null,"course_ids"?: never,"created_at"?: string | null,"external_ref"?: string | null,"full_name"?: string | null,"gender"?: string | null,"group_ids"?: never,"id"?: string | null,"is_active"?: never,"phone"?: string | null,"school"?: string | null,"search_text"?: never
+                           "archived_at"?: string | null,"birth_date"?: string | null,"branch_id"?: string | null,"center_id"?: string | null,"course_ids"?: never,"created_at"?: string | null,"external_ref"?: string | null,"full_name"?: string | null,"gender"?: string | null,"group_ids"?: never,"id"?: string | null,"is_active"?: never,"phone"?: string | null,"school"?: string | null,"search_text"?: never,"telegram_linked"?: never
                          }
                         Update: {
-                           "archived_at"?: string | null,"birth_date"?: string | null,"branch_id"?: string | null,"center_id"?: string | null,"course_ids"?: never,"created_at"?: string | null,"external_ref"?: string | null,"full_name"?: string | null,"gender"?: string | null,"group_ids"?: never,"id"?: string | null,"is_active"?: never,"phone"?: string | null,"school"?: string | null,"search_text"?: never
+                           "archived_at"?: string | null,"birth_date"?: string | null,"branch_id"?: string | null,"center_id"?: string | null,"course_ids"?: never,"created_at"?: string | null,"external_ref"?: string | null,"full_name"?: string | null,"gender"?: string | null,"group_ids"?: never,"id"?: string | null,"is_active"?: never,"phone"?: string | null,"school"?: string | null,"search_text"?: never,"telegram_linked"?: never
                          }
                         Relationships: [
                     {
@@ -1458,6 +1458,9 @@ isOneToOne: false
                            },
 "next_lesson_date":
 { Args: { "p_group_id": string }; Returns: string
+                           },
+"notification_overview":
+{ Args: { "p_center_id": string }; Returns: Json
                            },
 "preview_broadcast":
 { Args: { "p_audience": Json,"p_center_id": string }; Returns: Json

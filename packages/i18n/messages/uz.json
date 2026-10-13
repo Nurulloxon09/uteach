@@ -84,7 +84,11 @@
     "students": "Oʻquvchilar",
     "attendance": "Davomat",
     "payments": "Toʻlovlar",
-    "debtors": "Qarzdorlar"
+    "debtors": "Qarzdorlar",
+    "broadcasts": "Xabarnomalar",
+    "notifications": "Bildirishnomalar",
+    "telegram": "Telegram",
+    "health": "Holat"
   },
   "errors": {
     "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
@@ -107,7 +111,9 @@
       "slots": "Dars vaqtlarini tekshiring.",
       "endBeforeStart": "Tugash sanasi boshlanishdan oldin boʻlmaydi.",
       "percent": "0 dan 100 gacha foiz kiriting.",
-      "branchCode": "2 tadan 6 tagacha lotin harfi yoki raqam."
+      "branchCode": "2 tadan 6 tagacha lotin harfi yoki raqam.",
+      "template": "Bu matnni ishlatib boʻlmaydi: jingalak qavslardagi nomlarni tekshiring.",
+      "confirmBroadcast": "Qabul qiluvchilarni tekshirganingizni belgilang."
     },
     "auth": {
       "invalidCredentials": "Telefon raqami yoki parol notoʻgʻri.",
@@ -356,7 +362,9 @@
     "addStudentsHint": "Birma-bir yoki Exceldan",
     "continueSetup": "Markazni sozlashni yakunlang",
     "continueSetupHint": "{total} bosqichdan {done} tasi bajarildi. Toʻxtagan joyingizdan davom eting.",
-    "continueSetupButton": "Sozlashni davom ettirish"
+    "continueSetupButton": "Sozlashni davom ettirish",
+    "connectTelegram": "Telegramni ulang",
+    "connectTelegramHint": "Ota-onalar xabar va kvitansiyalarni olishi uchun bot havolasini ulashing."
   },
   "today": {
     "title": "Bugun",
@@ -576,6 +584,126 @@
       "added": "Xona qoʻshildi.",
       "emptyHint": "Bu filial xonalarini qoʻshing.",
       "capacityValue": "{count, plural, one {# oʻrin} other {# oʻrin}}"
+    },
+    "notifications": {
+      "title": "Bildirishnomalar",
+      "deliveryTitle": "Eslatmalar va SMS",
+      "deliveryHint": "Toʻlov eslatmalari va xabarlar qachon SMS orqali ketishi mumkin.",
+      "readOnlyHint": "Faqat egasi oʻzgartira oladi.",
+      "quietHours": "{from} dan {to} gacha hech narsa yuborilmaydi.",
+      "quietHoursLink": "Tinch soatlarni oʻzgartirish",
+      "smsUsage": "Bu oy SMS: {cap} dan {sent}.",
+      "reminderEveryDays": "Qarzdorlarga har necha kunda eslatish",
+      "reminderEveryDaysHint": "Toʻlov muddatidan keyingi kundan boshlab.",
+      "smsMonthlyCap": "Oyiga SMS",
+      "smsMonthlyCapHint": "0 = SMS yoʻq. SMS pullik.",
+      "dueSoon": "Toʻlov muddatidan 2 kun oldin eslatish",
+      "dueSoonHint": "Har bir davr uchun bir marta, toʻlanmaguncha.",
+      "smsEnabled": "Telegram ishlamasa SMS yuborish",
+      "smsEnabledHint": "Faqat darsga kelmaslik, toʻlov eslatmasi va bekor qilish, tasdiqlangan matnlar bilan.",
+      "messagesTitle": "Xabarlar",
+      "messagesHint": "Ota-onalar va xodimlar nima oladi. Matnni oʻzgartiring yoki xabarni oʻchiring.",
+      "message": "Xabar",
+      "sms": "SMS",
+      "smsApproved": "Tasdiqlangan",
+      "smsNotApproved": "Tasdiqlanmagan",
+      "on": "Yoqilgan",
+      "off": "Oʻchirilgan",
+      "customized": "Oʻzgartirilgan",
+      "view": "Koʻrish",
+      "preview": "Koʻrinishi",
+      "previewInvalid": "Matnni koʻrsatib boʻlmaydi: jingalak qavslardagi nomlarni tekshiring.",
+      "enabled": "Bu xabarni yuborish",
+      "enabledHint": "Telegram va SMSda toʻxtatish uchun oʻchiring.",
+      "language": "Til",
+      "telegramText": "Telegram matni",
+      "smsText": "SMS matni",
+      "eskizId": "Eskiz shablon ID",
+      "eskizIdHint": "Eskiz aynan shu matnni tasdiqlagandan keyin.",
+      "smsHint": "SMS matni Eskiz tasdiqlagan matn bilan bir xil boʻlishi kerak.",
+      "reset": "Standartga qaytarish",
+      "resetTitle": "Xabar standartga qaytarilsinmi?",
+      "resetHint": "Bu xabar uchun matn va sozlamalaringiz oʻchiriladi; standart matnlar qaytadi.",
+      "keys": {
+        "absence_alert": {
+          "title": "Darsga kelmadi",
+          "hint": "Oʻquvchi darsga kelmaganda ota-onaga."
+        },
+        "late_alert": {
+          "title": "Kechikdi",
+          "hint": "Oʻquvchi kechikkanda ota-onaga (yoqilgan boʻlsa)."
+        },
+        "lesson_cancelled": {
+          "title": "Dars bekor qilindi",
+          "hint": "Dars bekor qilinganda."
+        },
+        "lesson_moved": {
+          "title": "Dars koʻchirildi",
+          "hint": "Dars boshqa vaqtga koʻchirilganda."
+        },
+        "lesson_added": {
+          "title": "Qoʻshimcha dars",
+          "hint": "Qoʻshimcha yoki qayta dars qoʻshilganda."
+        },
+        "payment_received": {
+          "title": "Toʻlov qabul qilindi",
+          "hint": "Toʻlovdan soʻng, PDF kvitansiya bilan."
+        },
+        "charge_created": {
+          "title": "Yangi davr toʻlovi",
+          "hint": "Keyingi dars davri hisoblanganda."
+        },
+        "payment_reminder": {
+          "title": "Toʻlov eslatmasi",
+          "hint": "Qarzdorlarga bir necha kunda bir marta va «Qarzdorlar» sahifasidan."
+        },
+        "payment_due_soon": {
+          "title": "Toʻlov muddati yaqin",
+          "hint": "Toʻlov muddatidan ikki kun oldin."
+        },
+        "broadcast": {
+          "title": "Xabarnoma",
+          "hint": "Xabarnomalaringiz atrofidagi matn."
+        },
+        "substitute_assigned": {
+          "title": "Oʻrinbosar tayinlandi",
+          "hint": "Darsni almashtiradigan oʻqituvchiga."
+        },
+        "schedule_conflict": {
+          "title": "Jadvalda toʻqnashuv",
+          "hint": "Jadvalda toʻqnashuv boʻlsa administratorlarga."
+        }
+      }
+    },
+    "telegram": {
+      "title": "Telegram",
+      "linkTitle": "Bot havolasi",
+      "linkHint": "Ota-onalar va oʻquvchilar havolani ochib, tilni tanlaydi va telefon raqamini yuboradi.",
+      "linkLabel": "Markazingiz bot havolasi",
+      "linkShare": "Guruhlarga yuboring yoki QR kodni qabulxonada chop eting.",
+      "qrLabel": "Bot havolasining QR kodi",
+      "qrHint": "Qabulxona va xonalar uchun chop eting.",
+      "notSetUp": "Telegram bot hali ulanmagan",
+      "notSetUpHint": "uteach botni ulagach, havola va QR kod shu yerda chiqadi.",
+      "reachTitle": "Bot kimlarga yetadi",
+      "reachHint": "Oʻzi yoki ota-onasi orqali ulangan oʻquvchilar.",
+      "reached": "Yetib boriladigan oʻquvchilar",
+      "guardians": "Ulangan ota-onalar",
+      "students": "Ulangan oʻquvchilar",
+      "staff": "Ulangan xodimlar"
+    },
+    "health": {
+      "title": "Holat",
+      "servicesTitle": "Fon xizmatlari",
+      "servicesHint": "Xizmat Telegram xabarlari va SMS yuboradi. Qizil — u javob bermay qoldi.",
+      "never": "Hali hech bir xizmat javob bermagan",
+      "neverHint": "Xizmatni ishga tushiring; u har 30 soniyada javob beradi.",
+      "services": {
+        "worker": "Xabarlar xizmati"
+      },
+      "lastBeat": "Oxirgi javob {when}",
+      "ok": "Ishlayapti",
+      "down": "Javob bermayapti"
     }
   },
   "sms": {
@@ -983,7 +1111,16 @@
       "deleteTitle": "Bu izoh oʻchirilsinmi?",
       "deleted": "Izoh oʻchirildi"
     },
-    "importButton": "Exceldan import"
+    "importButton": "Exceldan import",
+    "telegram": {
+      "linked": "Telegram ulangan",
+      "filter": "Telegram",
+      "yes": "Ulangan",
+      "no": "Ulanmagan",
+      "notLinked": "Telegram ulanmagan"
+    },
+    "broadcast": "Shu roʻyxatga yozish",
+    "broadcastPreset": "Shu roʻyxatdagi oʻquvchilar: {count}"
   },
   "enrollments": {
     "search": "Qidirish…",
@@ -1562,7 +1699,14 @@
     "oldestDue": "Eng eski toʻlanmagan muddat",
     "overdueDays": "Kechikkan kunlar",
     "lastPaymentAmount": "Oxirgi toʻlov summasi",
-    "fileName": "qarzdorlar"
+    "fileName": "qarzdorlar",
+    "lastReminder": "Oxirgi eslatma",
+    "remind": "{name} ga toʻlov eslatmasini yuborish",
+    "reminderQueued": "{name} uchun eslatma yuborilmoqda.",
+    "reminderAlready": "{name} bugun eslatma olgan.",
+    "broadcast": "Shu roʻyxatga yozish",
+    "broadcastPreset": "Shu roʻyxatdagi qarzdorlar: {count}",
+    "noReminder": "Hali yoʻq"
   },
   "bot": {
     "chooseLanguage": "Tilni tanlang",
@@ -1617,5 +1761,74 @@
     "unlinkNo": "Yoʻq",
     "unlinked": "Tayyor. Qayta ulanish uchun /start yuboring.",
     "error": "Nimadir xato ketdi. Qaytadan urinib koʻring."
+  },
+  "broadcasts": {
+    "title": "Xabarnomalar",
+    "new": "Yangi xabarnoma",
+    "newTitle": "Yangi xabarnoma",
+    "newHint": "Ota-onalar yoki oʻquvchilarga Telegramda xabar.",
+    "send": "Yuborish",
+    "queued": "{recipients} ta qabul qiluvchiga navbatga qoʻyildi.",
+    "historyTitle": "Yuborilgan va rejalashtirilgan",
+    "historyHint": "Oxirgi 100 ta xabarnoma.",
+    "emptyTitle": "Hali xabarnoma yoʻq",
+    "emptyHint": "Ota-onalarga yangiliklar, bayramlar va jadval oʻzgarishlarini yuboring.",
+    "whenColumn": "Qachon",
+    "message": "Xabar",
+    "channel": "Kanal",
+    "recipients": "Qabul qiluvchilar",
+    "delivery": "Yetkazish",
+    "delivered": "{count} ta yetkazildi",
+    "waiting": "{count} ta kutmoqda",
+    "notDelivered": "{count} ta yetkazilmadi",
+    "status": {
+      "cancelled": "Bekor qilingan",
+      "scheduled": "Rejalashtirilgan",
+      "sending": "Yuborilmoqda",
+      "done": "Tayyor"
+    },
+    "cancel": "Bekor qilish",
+    "cancelTitle": "Xabarnoma bekor qilinsinmi?",
+    "cancelHint": "Hali yuborilmagan xabarlar toʻxtatiladi. Yuborilganlari qoladi.",
+    "cancelled": "Xabarnoma bekor qilindi.",
+    "summary": {
+      "students": "{count} ta oʻquvchi",
+      "debtors": "Qarzdorlar",
+      "groups": "{count} ta guruh",
+      "courses": "{count} ta kurs",
+      "branches": "{count} ta filial",
+      "everyone": "Hammasi"
+    },
+    "audience": {
+      "branches": "Filiallar",
+      "groups": "Guruhlar",
+      "courses": "Kurslar",
+      "all": "Hammasi",
+      "debtors": "Faqat qarzdorlar",
+      "recipients": "Kimga",
+      "guardians": "Ota-onalarga",
+      "students": "Oʻquvchilarga",
+      "both": "Hammaga",
+      "everyone": "Barcha oʻquvchilar"
+    },
+    "counting": "Qabul qiluvchilar sanalmoqda…",
+    "previewCount": "{recipients} ta qabul qiluvchi ({students} ta oʻquvchi); Telegrami yoʻq {withoutTelegram} tasi olmaydi.",
+    "text": "Xabar",
+    "textHint": "2000 belgigacha. Boshiga markaz nomi qoʻshiladi.",
+    "perLocale": "Har bir til uchun alohida matn",
+    "channels": {
+      "telegram": "Telegram",
+      "sms": "SMS"
+    },
+    "smsCost": "SMS pullik va oylik limitga hisoblanadi.",
+    "smsUnavailable": "SMS xabarnomalar uchun Eskiz tasdiqlagan matn kerak.",
+    "when": "Qachon",
+    "now": "Hozir",
+    "later": "Keyinroq",
+    "date": "Sana",
+    "time": "Vaqt",
+    "confirm": "{recipients} ta qabul qiluvchiga yuborish",
+    "confirmHint": "Xabarni kim olishini tekshirdim.",
+    "perLocaleHide": "Barcha tillar uchun bitta matn"
   }
 }

@@ -8,6 +8,11 @@ const publicSchema = z.object({
   NEXT_PUBLIC_DEFAULT_COUNTRY: z.string().length(2).default("UZ"),
   /** Pre-selected time zone when creating a center. */
   NEXT_PUBLIC_DEFAULT_TIMEZONE: z.string().min(1).default("Asia/Tashkent"),
+  /** The Telegram bot parents use (17), e.g. uteach_bot; unset = the Telegram settings say it isn't set up. */
+  NEXT_PUBLIC_TELEGRAM_BOT_USERNAME: z
+    .string()
+    .regex(/^[A-Za-z][A-Za-z0-9_]{3,31}$/)
+    .optional(),
 });
 
 export const publicEnv = publicSchema.parse({
@@ -15,6 +20,7 @@ export const publicEnv = publicSchema.parse({
   NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,
   NEXT_PUBLIC_DEFAULT_COUNTRY: process.env.NEXT_PUBLIC_DEFAULT_COUNTRY || undefined,
   NEXT_PUBLIC_DEFAULT_TIMEZONE: process.env.NEXT_PUBLIC_DEFAULT_TIMEZONE || undefined,
+  NEXT_PUBLIC_TELEGRAM_BOT_USERNAME: process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || undefined,
 });
 
 /** Server-only env vars. Read lazily so the browser bundle never touches them. */

@@ -7,8 +7,8 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M4 · Telegram & SMS**: ◐ in progress. Plan (#17) and M4a (#18) merged. M4b worker & SMS built and in review;
-next M4c staff screens. The plan and its decisions are in `30-milestones.md` (M4) and the `PROPOSED (M4 plan)` notes
+**M4 · Telegram & SMS**: ◐ in progress. Plan (#17), M4a (#18) and M4b (#19) merged; M4c staff screens built and
+in review. Left for "done": the real-phone checklist and real SMS (need the bot token and an Eskiz account). The plan and its decisions are in `30-milestones.md` (M4) and the `PROPOSED (M4 plan)` notes
 in 01, 02, 03, 05-ui, 10, 15 and 17.
 
 ## Milestones
@@ -19,7 +19,7 @@ in 01, 02, 03, 05-ui, 10, 15 and 17.
 | M1 | Academic core | ☑ done | 2026-10-11 |
 | M2 | Attendance | ☑ done | 2026-10-12 |
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
-| M4 | Telegram & SMS | ◐ in progress (M4a ☑, M4b built) | |
+| M4 | Telegram & SMS | ◐ in progress (M4a ☑, M4b ☑, M4c built) | |
 | M5 | Leads CRM | ☐ | |
 | M6 | Exam scores | ☐ | |
 | M7 | Launch 🚀 | ☐ | |
@@ -63,9 +63,9 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Absence alert in Telegram ~10 min after marking; blocked bot → SMS (Eskiz sandbox) + unlinked | ◐ | Worker integration test (alert delivered; 403 → unlinked, SMS fallback sent through a fake provider); Eskiz sandbox pending (account) |
 | Worker killed mid-send, restarted → every pending message sent exactly once | ☑ | Worker integration test (claimed and abandoned → stale recovery → one delivery); at-least-once after Telegram accepted (17, M4b note) |
 | Two workers never double-send (SKIP LOCKED) | ☑ | `outbox-claim.concurrency.test.ts` (60 rows, two logins); worker integration test (two senders drain 30 rows, each delivered once) |
-| Broadcast to "debtors of branch X" reaches exactly that set; preview count matches | ☐ | |
+| Broadcast to "debtors of branch X" reaches exactly that set; preview count matches | ☑ | e2e `m4-notifications` (branch + only debtors → preview 1 recipient → queued 1, the guardian of the one debtor; a failed send keeps the audience); pgTAP `m4_telegram` |
 | Reminders every `reminder_every_days`, none in quiet hours, none after paying | ☑ | pgTAP `m4_telegram` (first reminder once overdue, none 2 days later, next after 3, cadence follows the setting, quiet hours push `send_after`, paid → skipped as settled and no new reminder) |
-| Heartbeat older than 2 min shows red on the health page | ☐ | |
+| Heartbeat older than 2 min shows red on the health page | ☑ | Settings → Health checked in the browser (the worker's beat from the smoke run, 37 min old → "Not responding") |
 | Sign-up OTP arrives by real SMS in staging | ☐ | |
 
 ## M3 "done when" status
@@ -129,6 +129,26 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M4c staff screens
+- Settings → **Notifications** (reminder cadence, "due soon", SMS on/off and monthly cap with this month's
+  count; every message with on/off, texts per language with a live preview, Eskiz ids, reset), **Telegram**
+  (bot link + QR, who the bot reaches), **Health** (owners; worker heartbeat).
+- **Broadcasts** page (history with delivered / waiting / not delivered, cancel) and the composer
+  (`AudiencePicker` pattern on `/dev/ui`, preview count, translations, Telegram/SMS, now/later, confirmation).
+- **Debtors**: "Send reminder" (once a day), "Last reminder" column, "Message this list". **Students**:
+  Telegram filter and mark, "Message this list", profile chip. **Home**: "Connect Telegram" step.
+- Migration `m4c_screens`: `student_overview.telegram_linked`, `notification_overview()`. `qrcode` in web.
+- Tests: pgTAP `m4c_screens`; e2e `m4-notifications` (4 tests: setup, broadcast to debtors of one branch = preview,
+  reminders + Telegram filter, template edit/preview/reset + Telegram page). Found and fixed on the way: a Radix
+  checkbox inside the composer unticked itself when React reset the form after a failed send, so the retry lost
+  the "only debtors" filter.
+- Screenshots (1440/390): `broadcasts`, `broadcast-composer`, `settings-notifications`, `template-editor`,
+  `settings-telegram` (bot not set up), `settings-health`, `debtors-m4`.
+- Decisions: `PROPOSED (M4c, as built)` in 05-ui and 12.
+- Known gaps: Uzbek dates in browsers without Uzbek locale data (Electron, headless Chromium) show "M10 14" in
+  the template preview; Node (the worker) and desktop Chrome format them properly. The e2e spec was run
+  against a database with dev data, not after `pnpm e2e`'s reset.
 
 ### 2026-10-13 · M4b worker & SMS
 - `apps/worker`: grammY bot (language, contact linking, menu with child picker and center switcher, schedule,

@@ -27,6 +27,8 @@ import {
   AttendanceMatrix,
   AttendanceRow,
   type AttendanceRowValue,
+  type Audience,
+  AudiencePicker,
   BalancePreview,
   type MatrixColumn,
   type MatrixRow,
@@ -248,6 +250,13 @@ export function DevUi() {
   ]);
   const [selected, setSelected] = useState<Set<string>>(new Set(["3", "7"]));
   const [attendance, setAttendance] = useState("present");
+  const [audience, setAudience] = useState<Audience>({
+    branchIds: [],
+    groupIds: ["g2"],
+    courseIds: [],
+    debtors: true,
+    recipients: "guardians",
+  });
   const [sheet, setSheet] = useState<Record<string, AttendanceRowValue>>({
     a: { status: "present", lateMinutes: "", note: "" },
     b: { status: "late", lateMinutes: "10", note: "Bus was late" },
@@ -583,6 +592,39 @@ export function DevUi() {
               }
             />
           </div>
+        </Section>
+      </Kit>
+
+      <Kit id="audience" name="AudiencePicker (Broadcasts → New broadcast)">
+        <Section>
+          <AudiencePicker
+            value={audience}
+            onChange={setAudience}
+            branches={[
+              { value: "b1", label: "Chilonzor" },
+              { value: "b2", label: "Yunusobod" },
+            ]}
+            groups={[
+              { value: "g1", label: "IELTS-2" },
+              { value: "g2", label: "Kids-1" },
+            ]}
+            courses={[
+              { value: "c1", label: "IELTS" },
+              { value: "c2", label: "General English" },
+            ]}
+            labels={{
+              branches: t("broadcasts.audience.branches"),
+              groups: t("broadcasts.audience.groups"),
+              courses: t("broadcasts.audience.courses"),
+              all: t("common.all"),
+              everyone: t("broadcasts.audience.everyone"),
+              debtors: t("broadcasts.audience.debtors"),
+              recipients: t("broadcasts.audience.recipients"),
+              guardians: t("broadcasts.audience.guardians"),
+              students: t("broadcasts.audience.students"),
+              both: t("broadcasts.audience.both"),
+            }}
+          />
         </Section>
       </Kit>
 

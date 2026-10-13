@@ -6,6 +6,7 @@ import {
   GraduationCap,
   HandCoins,
   Home,
+  Megaphone,
   Settings,
   UsersRound,
   Users,
@@ -29,6 +30,7 @@ export const NAV_ICONS = {
   attendance: ClipboardCheck,
   payments: Wallet,
   debtors: HandCoins,
+  broadcasts: Megaphone,
 } satisfies Record<string, LucideIcon>;
 
 export type NavIconName = keyof typeof NAV_ICONS;
