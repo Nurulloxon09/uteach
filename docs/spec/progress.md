@@ -7,9 +7,10 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M5 · Leads CRM**: ◐ plan. Started by the owner on 2026-10-13 while M4's last item (real SMS) waits for Eskiz
-and the hosted Phone provider. The plan and its decisions are in `30-milestones.md` (M5) and the
-`PROPOSED (M5 plan)` notes in 02, 03, 05-ui, 11 and 14. M5a, M5b and M5c built; every M5 "done when" item has its test. M5 is done once #26 (M5c) is merged with CI green (#23, #24 merged).
+**M5 · Leads CRM**: ☑ done 2026-10-13 (plan #22, M5a #23, M5b #24, M5c #26). Next is **M6 · Exam scores**, not
+started: it waits for the owner's go. M4's last item (sign-up OTP by real SMS) is still open: it waits for Eskiz
+and the hosted Phone provider. M5's decisions are in `30-milestones.md` (M5) and the `PROPOSED (M5 …)` notes in
+02, 03, 05-ui, 11 and 14.
 
 ## Milestones
 | # | Milestone | Status | Finished |
@@ -20,7 +21,7 @@ and the hosted Phone provider. The plan and its decisions are in `30-milestones.
 | M2 | Attendance | ☑ done | 2026-10-12 |
 | M3 | Billing | ☑ done 2026-10-12 (#12, #13, #14) | |
 | M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
-| M5 | Leads CRM | ◐ built (M5a, M5b, M5c); done when CI is green | |
+| M5 | Leads CRM | ☑ done (#23, #24, #26) | 2026-10-13 |
 | M6 | Exam scores | ☐ | |
 | M7 | Launch 🚀 | ☐ | |
 | M8 | Online payments | ☐ | |
@@ -141,6 +142,9 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-13 · M5 done
+- Every M5 "done when" item is checked (table above); M5c (#26) merged with CI green, which includes this note.
 
 ### 2026-10-13 · M5c trials & convert
 - Lead page: **Book a trial** (next 3 weeks' lessons of my groups, by course, with teacher and seats; replaces an
