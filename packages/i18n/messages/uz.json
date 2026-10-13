@@ -176,7 +176,13 @@
       "backdate_limit": "7 kundan eski toʻlovni faqat bekor qilish huquqi bor xodim kirita oladi.",
       "financial_rows_permanent": "Moliyaviy yozuvlarni oʻzgartirib yoki oʻchirib boʻlmaydi. Bekor qilib, qaytadan kiriting.",
       "currency_locked": "Birinchi hisobdan keyin valyutani oʻzgartirib boʻlmaydi.",
-      "import_student_not_found": "Fayldagi oʻquvchi topilmadi. Ism va telefonlarni tekshiring."
+      "import_student_not_found": "Fayldagi oʻquvchi topilmadi. Ism va telefonlarni tekshiring.",
+      "invalid_audience": "Xabar kimga yuborilishini tanlang.",
+      "empty_audience": "Bu shartlarga hech kim mos kelmadi.",
+      "sms_not_available": "SMS orqali xabarnoma hozircha mavjud emas: tasdiqlangan SMS shablon kerak.",
+      "invalid_body": "2000 belgigacha xabar yozing.",
+      "invalid_channel": "Telegram yoki SMS ni tanlang.",
+      "no_debt": "Bu oʻquvchining qarzi yoʻq."
     },
     "groupHasStudents": "Arxivlashdan oldin guruh oʻquvchilarining oʻqishini tugating yoki ularni oʻtkazing.",
     "duplicateStudent": "Bunday ism yoki telefonli oʻquvchi allaqachon bor. Roʻyxatni tekshiring yoki baribir qoʻshish uchun yana saqlang."

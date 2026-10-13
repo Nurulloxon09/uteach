@@ -109,6 +109,12 @@ export const DB_ERROR_CODES = [
   "financial_rows_permanent",
   "currency_locked",
   "import_student_not_found",
+  "invalid_audience",
+  "empty_audience",
+  "sms_not_available",
+  "invalid_body",
+  "invalid_channel",
+  "no_debt",
 ] as const;
 
 export type DbErrorCode = (typeof DB_ERROR_CODES)[number];
