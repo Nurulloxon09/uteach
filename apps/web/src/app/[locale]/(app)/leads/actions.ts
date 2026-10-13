@@ -14,6 +14,8 @@ import { getCenterContext } from "@/lib/center";
 import { createClient } from "@/lib/supabase/server";
 import {
   dateField,
+  optionalDateField,
+  optionalPercentField,
   optionalPhoneField,
   optionalText,
   requiredText,
@@ -34,9 +36,9 @@ const telegramUsername = z
   .refine((v) => v === "" || /^[A-Za-z0-9_]{3,32}$/.test(v), { error: "validation.invalid" })
   .transform((v) => v || null);
 
-function refresh(leadId?: string) {
-  revalidatePath("/[locale]/leads", "page");
-  if (leadId) revalidatePath(`/[locale]/leads/${leadId}`, "page");
+/** The board, the list and every lead page (a lead's move also changes the board and Home's widget). */
+function refresh() {
+  revalidatePath("/[locale]/leads", "layout");
   revalidatePath("/[locale]/home", "page");
 }
 
@@ -135,7 +137,7 @@ export async function updateLeadAction(_prev: ActionState, form: FormData): Prom
     .select("id");
   if (error) return fail(dbErrorKey(error), form);
   if (!data?.length) return fail("db.forbidden", form);
-  refresh(v.id);
+  refresh();
   return { ok: true };
 }
 
@@ -151,7 +153,7 @@ export async function archiveLeadAction(_prev: ActionState, form: FormData): Pro
     .select("id");
   if (error) return fail(dbErrorKey(error));
   if (!data?.length) return fail("db.forbidden");
-  refresh(id.data);
+  refresh();
   return { ok: true };
 }
 
@@ -204,8 +206,7 @@ export async function mergeLeadAction(_prev: ActionState, form: FormData): Promi
     p_target_id: parsed.data.targetId,
   });
   if (error) return fail(dbErrorKey(error));
-  refresh(parsed.data.sourceId);
-  refresh(parsed.data.targetId);
+  refresh();
   return { ok: true, data: { id: parsed.data.targetId } };
 }
 
@@ -223,7 +224,7 @@ export async function moveLeadAction(leadId: string, to: string): Promise<Action
     p_to: parsed.data.to,
   });
   if (error) return fail(dbErrorKey(error));
-  refresh(parsed.data.leadId);
+  refresh();
   return { ok: true };
 }
 
@@ -249,7 +250,7 @@ export async function markLostAction(_prev: ActionState, form: FormData): Promis
     p_note: v.note ?? undefined,
   });
   if (error) return fail(dbErrorKey(error), form);
-  refresh(v.leadId);
+  refresh();
   return { ok: true };
 }
 
@@ -322,13 +323,12 @@ export async function addLeadActivityAction(
 
   const { error } = await supabase.rpc("add_lead_activity", args);
   if (error) return fail(dbErrorKey(error), form);
-  refresh(args.p_lead_id);
+  refresh();
   return { ok: true };
 }
 
 export async function setLeadTaskDoneAction(
   activityId: string,
-  leadId: string,
   done: boolean,
 ): Promise<ActionState> {
   const id = uuidField.safeParse(activityId);
@@ -339,6 +339,115 @@ export async function setLeadTaskDoneAction(
     p_done: done,
   });
   if (error) return fail(dbErrorKey(error));
-  refresh(uuidField.safeParse(leadId).success ? leadId : undefined);
+  refresh();
   return { ok: true };
+}
+
+// --- Trials ----------------------------------------------------------------------------
+
+/** Books the lead on an upcoming lesson as a trial guest; an open trial elsewhere is replaced (11). */
+export async function scheduleTrialAction(
+  _prev: ActionState,
+  form: FormData,
+): Promise<ActionState> {
+  const parsed = z
+    .object({
+      leadId: uuidField,
+      lessonId: z.string().pipe(z.uuid({ error: "validation.required" })),
+    })
+    .safeParse({ leadId: str(form, "leadId"), lessonId: str(form, "lessonId") });
+  if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("schedule_trial", {
+    p_lead_id: parsed.data.leadId,
+    p_lesson_id: parsed.data.lessonId,
+  });
+  if (error) return fail(dbErrorKey(error), form);
+  refresh();
+  revalidatePath("/[locale]/attendance", "layout");
+  return { ok: true };
+}
+
+export async function cancelTrialAction(_prev: ActionState, form: FormData): Promise<ActionState> {
+  const parsed = z
+    .object({ trialId: uuidField, leadId: uuidField })
+    .safeParse({ trialId: str(form, "trialId"), leadId: str(form, "leadId") });
+  if (!parsed.success) return fail("generic");
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("cancel_trial", { p_trial_id: parsed.data.trialId });
+  if (error) return fail(dbErrorKey(error));
+  refresh();
+  revalidatePath("/[locale]/attendance", "layout");
+  return { ok: true };
+}
+
+// --- Convert ---------------------------------------------------------------------------
+
+const RELATIONS = ["mother", "father", "parent", "other"] as const;
+
+/**
+ * Convert to student (11): one RPC creates or re-uses the student, links the guardian by phone, enrolls into
+ * the group (first cycle charge) and sets the lead won. Returns the student id for the first-payment step.
+ */
+export async function convertLeadAction(_prev: ActionState, form: FormData): Promise<ActionState> {
+  const ctx = await getCenterContext();
+  const country = ctx.center.countryCode;
+  const existing = str(form, "studentMode") === "existing";
+  const parsed = z
+    .object({
+      leadId: uuidField,
+      studentId: existing
+        ? z.string().pipe(z.uuid({ error: "validation.required" }))
+        : z.literal("").transform(() => null),
+      studentName: existing ? z.string().transform(() => null) : requiredText(160),
+      studentPhone: optionalPhoneField(country),
+      guardianName: optionalText(160),
+      guardianPhone: optionalPhoneField(country),
+      relation: z.enum(RELATIONS),
+      groupId: z.string().pipe(z.uuid({ error: "validation.required" })),
+      startDate: optionalDateField,
+      discountPercent: optionalPercentField,
+      discountReason: optionalText(200),
+    })
+    .refine((v) => !v.guardianPhone || v.guardianName, {
+      path: ["guardianName"],
+      message: "validation.required",
+    })
+    .safeParse({
+      leadId: str(form, "leadId"),
+      studentId: existing ? str(form, "studentId") : "",
+      studentName: str(form, "studentName"),
+      studentPhone: existing ? "" : str(form, "studentPhone"),
+      guardianName: str(form, "guardianName"),
+      guardianPhone: str(form, "guardianPhone"),
+      relation: str(form, "relation") || "parent",
+      groupId: str(form, "groupId"),
+      startDate: str(form, "startDate"),
+      discountPercent: str(form, "discountPercent"),
+      discountReason: str(form, "discountReason"),
+    });
+  if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
+  const v = parsed.data;
+
+  const supabase = await createClient();
+  const { data, error } = await supabase.rpc("convert_lead", {
+    p_lead_id: v.leadId,
+    p_group_id: v.groupId,
+    ...(v.startDate ? { p_start_date: v.startDate } : {}),
+    ...(v.studentId ? { p_student_id: v.studentId } : {}),
+    ...(v.studentName ? { p_student_name: v.studentName } : {}),
+    ...(v.studentPhone ? { p_student_phone: v.studentPhone } : {}),
+    ...(v.guardianPhone && v.guardianName
+      ? { p_guardian_name: v.guardianName, p_guardian_phone: v.guardianPhone }
+      : {}),
+    p_guardian_relation: v.relation,
+    p_discount_bp: v.discountPercent,
+    ...(v.discountReason ? { p_discount_reason: v.discountReason } : {}),
+  });
+  if (error) return fail(dbErrorKey(error), form);
+  const result = (data ?? {}) as { studentId?: string };
+  refresh();
+  revalidatePath("/[locale]/students", "layout");
+  revalidatePath("/[locale]/groups", "layout");
+  return { ok: true, data: { studentId: result.studentId ?? "" } };
 }

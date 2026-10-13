@@ -115,3 +115,26 @@ export function broadcastRecipients(center: string): Promise<string[]> {
     return rows.map((r) => r.name);
   });
 }
+
+/**
+ * M5 leads: an extra lesson of a group starting `minutes` from now (60 minutes long, the group's teacher), so a
+ * trial can be booked on it (still upcoming) and then marked (the sheet opens 30 minutes before the start).
+ */
+export function addLessonSoon(center: string, group: string, minutes: number): Promise<string> {
+  return withDb(async (sql) => {
+    const [row] = await sql<{ id: string }[]>`
+      insert into public.lessons (center_id, branch_id, group_id, local_date, starts_at, ends_at,
+                                  teacher_membership_id, status, is_manually_edited)
+      select g.center_id, g.branch_id, g.id,
+             ((now() + make_interval(mins => ${minutes})) at time zone b.timezone)::date,
+             now() + make_interval(mins => ${minutes}),
+             now() + make_interval(mins => ${minutes + 60}),
+             g.teacher_membership_id, 'scheduled', true
+      from public.groups g
+      join public.centers c on c.id = g.center_id
+      join public.branches b on b.id = g.branch_id
+      where c.name = ${center} and g.name = ${group}
+      returning id`;
+    return row!.id;
+  });
+}

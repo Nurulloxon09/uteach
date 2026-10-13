@@ -5,6 +5,7 @@ import {
   Archive,
   ArchiveRestore,
   ArrowRightLeft,
+  CalendarPlus,
   CheckCircle2,
   Circle,
   GitMerge,
@@ -13,6 +14,7 @@ import {
   Pencil,
   PhoneCall,
   Sparkles,
+  UserCheck,
   type LucideIcon,
 } from "lucide-react";
 import { useTranslations } from "next-intl";
@@ -43,12 +45,29 @@ import { Link, useRouter } from "@/i18n/navigation";
 import {
   addLeadActivityAction,
   archiveLeadAction,
+  cancelTrialAction,
   mergeLeadAction,
   moveLeadAction,
   setLeadTaskDoneAction,
 } from "../actions";
 import { EditLeadDialog, type LeadFormOptions, type LeadValues } from "../lead-dialog";
 import { LostDialog, type ReasonOption } from "../lost-dialog";
+import { ConvertDialog, type ConvertGroup, type PaymentSetup } from "./convert-dialog";
+import { TrialDialog, type TrialLesson } from "./trial-dialog";
+
+export type TrialSetup = {
+  lessons: TrialLesson[];
+  courses: { id: string; name: string }[];
+  defaultCourseId: string | null;
+};
+
+export type ConvertSetup = {
+  students: { id: string; name: string }[];
+  groups: ConvertGroup[];
+  defaultGroupId: string | null;
+  canDiscount: boolean;
+  payment: PaymentSetup | null;
+};
 
 /** The buttons next to the profile: edit, move, lost / reopen, archive (11). */
 export function LeadActions({
@@ -57,18 +76,31 @@ export function LeadActions({
   archived,
   options,
   reasons,
+  trial,
+  convert,
+  autoOpen,
 }: {
   lead: LeadValues;
   status: LeadStatus;
   archived: boolean;
   options: LeadFormOptions;
   reasons: ReasonOption[];
+  trial: TrialSetup;
+  /** Null when the user can't convert (needs `students` too). */
+  convert: ConvertSetup | null;
+  /** `?do=trial|convert` from a board drop opens that dialog once. */
+  autoOpen: "trial" | "convert" | null;
 }) {
   const t = useTranslations("leads");
   const tc = useTranslations("common");
   const te = useTranslations("errors");
   const [lostOpen, setLostOpen] = useState(false);
   const [archiveOpen, setArchiveOpen] = useState(false);
+  const open = status !== "won" && status !== "lost" && !archived;
+  const [trialOpen, setTrialOpen] = useState(autoOpen === "trial" && open);
+  const [convertOpen, setConvertOpen] = useState(
+    autoOpen === "convert" && open && convert !== null,
+  );
   const [pending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -85,6 +117,47 @@ export function LeadActions({
 
   return (
     <div className="flex flex-wrap gap-2" data-testid="lead-actions">
+      {open ? (
+        <>
+          <TrialDialog
+            leadId={lead.id}
+            leadName={lead.fullName}
+            lessons={trial.lessons}
+            courses={trial.courses}
+            defaultCourseId={trial.defaultCourseId}
+            open={trialOpen}
+            onOpenChange={setTrialOpen}
+            trigger={
+              <Button variant="outline" data-testid="lead-schedule-trial">
+                <CalendarPlus />
+                {t("trial.button")}
+              </Button>
+            }
+          />
+        </>
+      ) : null}
+      {convert && (open || convertOpen) ? (
+        <ConvertDialog
+          leadId={lead.id}
+          leadName={lead.fullName}
+          leadPhone={lead.phone}
+          branchId={lead.branchId}
+          students={convert.students}
+          groups={convert.groups}
+          defaultCourseId={lead.courseId}
+          defaultGroupId={convert.defaultGroupId}
+          canDiscount={convert.canDiscount}
+          payment={convert.payment}
+          open={convertOpen}
+          onOpenChange={setConvertOpen}
+          trigger={
+            <Button data-testid="lead-convert">
+              <UserCheck />
+              {t("convert.button")}
+            </Button>
+          }
+        />
+      ) : null}
       {archived ? null : (
         <>
           <EditLeadDialog
@@ -174,7 +247,7 @@ const KIND_ICONS: Record<TimelineEntry["kind"], LucideIcon> = {
   system: Sparkles,
 };
 
-function TaskToggle({ entry, leadId }: { entry: TimelineEntry; leadId: string }) {
+function TaskToggle({ entry }: { entry: TimelineEntry }) {
   const t = useTranslations("leads.timeline");
   const te = useTranslations("errors");
   const router = useRouter();
@@ -188,7 +261,7 @@ function TaskToggle({ entry, leadId }: { entry: TimelineEntry; leadId: string })
       data-testid="task-toggle"
       onClick={() =>
         startTransition(async () => {
-          const result = await setLeadTaskDoneAction(entry.id, leadId, !done);
+          const result = await setLeadTaskDoneAction(entry.id, !done);
           if (result && !result.ok) toast.error(te((result.error ?? "generic") as never));
           else router.refresh();
         })
@@ -422,7 +495,7 @@ export function LeadTimeline({
                       {e.author ? <span>· {e.author}</span> : null}
                     </p>
                   </div>
-                  {e.task && canWrite ? <TaskToggle entry={e} leadId={leadId} /> : null}
+                  {e.task && canWrite ? <TaskToggle entry={e} /> : null}
                 </div>
               </MobileCard>
             );
@@ -494,5 +567,35 @@ export function MergeCandidates({
         />
       ) : null}
     </>
+  );
+}
+
+export type OpenTrial = { id: string; lesson: string; feedback: string | null };
+
+/** The lead's booked trial with "Cancel trial" (11). */
+export function OpenTrialCard({ leadId, trial }: { leadId: string; trial: OpenTrial }) {
+  const t = useTranslations("leads.trial");
+  const [cancelling, setCancelling] = useState(false);
+  return (
+    <div className="space-y-3" data-testid="open-trial">
+      <p className="text-[15px] font-semibold text-foreground">{trial.lesson}</p>
+      {trial.feedback ? (
+        <p className="text-sm text-secondary-foreground">{trial.feedback}</p>
+      ) : null}
+      <Button variant="outline" size="sm" onClick={() => setCancelling(true)}>
+        {t("cancel")}
+      </Button>
+      <ConfirmDialog
+        open={cancelling}
+        onOpenChange={setCancelling}
+        title={t("cancelTitle")}
+        description={t("cancelHint")}
+        confirmLabel={t("cancel")}
+        tone="destructive"
+        action={cancelTrialAction}
+        fields={{ trialId: trial.id, leadId }}
+        successToast={t("cancelled")}
+      />
+    </div>
   );
 }
