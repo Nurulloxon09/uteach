@@ -10,6 +10,10 @@ Tables: `students`, `guardians`, `student_guardians`, `student_notes`, `courses`
 - **Student profile:** name, phone (optional for kids), birth date, gender, school, home branch, guardians, enrollments (current and past), balance (if the viewer has `billing`), attendance summary, scores, notes, Telegram linked ✓/✗.
 - **Guardians:** name, phone, relation, primary, receives notifications/billing. Adding a guardian whose phone already exists in the center **links the existing guardian**, which is how siblings share guardians. The UI shows "also guardian of: …".
 - **Notes:** free text with pin. "Visible to teachers" is off by default.
+> PROPOSED (M4c, as built): `student_overview.telegram_linked` (the student or a guardian has a live link)
+> drives the Students filter "Telegram: linked / not linked", a Telegram mark next to the name, and a chip on
+> the profile.
+
 - **Students list:** search (name, phone, guardian phone), filters (branch, group, course, status active/inactive, debtors, Telegram not linked), bulk actions (broadcast, export).
 - A student counts as **active** if they have at least one `active` or `frozen` enrollment.
 - Archive a student only with no active enrollments; the balance must be 0 or be written off.

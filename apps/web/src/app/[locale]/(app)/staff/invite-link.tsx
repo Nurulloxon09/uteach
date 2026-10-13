@@ -6,8 +6,18 @@ import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
-/** A freshly created invite link, shown once, with a copy button. */
-export function InviteLink({ url, title, hint }: { url: string; title: string; hint: string }) {
+/** A link with a copy button: a freshly created invite (shown once), or the center's bot link. */
+export function InviteLink({
+  url,
+  title,
+  hint,
+  testId = "invite-url",
+}: {
+  url: string;
+  title: string;
+  hint: string;
+  testId?: string;
+}) {
   const t = useTranslations("common");
   const [copied, setCopied] = useState(false);
   return (
@@ -26,7 +36,7 @@ export function InviteLink({ url, title, hint }: { url: string; title: string; h
           readOnly
           value={url}
           aria-label={title}
-          data-testid="invite-url"
+          data-testid={testId}
           onFocus={(e) => e.currentTarget.select()}
           className="text-sm"
         />

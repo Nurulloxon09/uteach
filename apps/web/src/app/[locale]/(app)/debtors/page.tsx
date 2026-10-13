@@ -1,6 +1,7 @@
 import { addDays, todayIn } from "@uteach/core";
 import {
   BookOpen,
+  Megaphone,
   Building2,
   CircleCheck,
   Hourglass,
@@ -35,6 +36,7 @@ import { Button, buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
 import { loadBranches, loadCourses, loadGroupOptions } from "@/lib/academics";
 import { loadAccounts } from "@/lib/billing";
+import { loadComposerOptions } from "@/lib/broadcasts";
 import { requireAdminContext } from "@/lib/center";
 import { dayAsDate } from "@/lib/dates";
 import {
@@ -45,8 +47,10 @@ import {
   type DebtorRow,
 } from "@/lib/debtors";
 import { formatMinor } from "@/lib/money";
+import { BroadcastComposer } from "../broadcasts/broadcast-composer";
 import { RecordPaymentDialog } from "../payments/payment-dialog";
 import { DebtorsExportLink } from "./export-link";
+import { ReminderButton } from "./reminder-button";
 
 export async function generateMetadata() {
   const t = await getTranslations("debtors");
@@ -83,11 +87,12 @@ export default async function DebtorsPage({ searchParams }: PageProps<"/[locale]
   const raw = await searchParams;
   const list = parseListParams(raw, ["branch", "group", "course", "bucket"] as const);
 
-  const [branches, courses, groups, accounts] = await Promise.all([
+  const [branches, courses, groups, accounts, composer] = await Promise.all([
     loadBranches(ctx),
     loadCourses(ctx),
     loadGroupOptions(ctx),
     loadAccounts(ctx),
+    ctx.can.broadcasts ? loadComposerOptions(ctx) : null,
   ]);
   const filters = {
     q: list.q,
@@ -183,10 +188,25 @@ export default async function DebtorsPage({ searchParams }: PageProps<"/[locale]
     ) : (
       <span className="text-muted-foreground">{t("never")}</span>
     );
+  const reminderCell = (d: DebtorRow) =>
+    d.lastReminderAt ? (
+      <span className="text-sm text-muted-foreground" data-testid="last-reminder">
+        {format.dateTime(new Date(d.lastReminderAt), {
+          day: "numeric",
+          month: "short",
+          timeZone: ctx.center.timezone,
+        })}
+      </span>
+    ) : (
+      <span className="text-muted-foreground">{t("noReminder")}</span>
+    );
   const actionsOf = (d: DebtorRow) => {
     const phone = d.guardianPhone ?? d.phone;
     return (
       <div className="flex items-center gap-2">
+        {ctx.can.inBranch(d.branchId) ? (
+          <ReminderButton studentId={d.studentId} name={d.name} />
+        ) : null}
         {phone ? (
           <a
             href={`tel:${phone}`}
@@ -227,7 +247,26 @@ export default async function DebtorsPage({ searchParams }: PageProps<"/[locale]
         title={t("title")}
         breadcrumbLabel={tc("breadcrumb")}
         crumbs={[{ label: tn("home"), href: "/home" }, { label: t("title") }]}
-        action={<DebtorsExportLink label={t("export")} />}
+        action={
+          <div className="flex flex-wrap gap-3">
+            {composer && rows.length > 0 ? (
+              <BroadcastComposer
+                options={composer}
+                preset={{
+                  studentIds: rows.map((r) => r.studentId),
+                  label: t("broadcastPreset", { count: rows.length }),
+                }}
+                trigger={
+                  <Button variant="outline" size="lg" data-testid="broadcast-debtors">
+                    <Megaphone />
+                    {t("broadcast")}
+                  </Button>
+                }
+              />
+            ) : null}
+            <DebtorsExportLink label={t("export")} />
+          </div>
+        }
       />
 
       <StatTiles
@@ -316,7 +355,8 @@ export default async function DebtorsPage({ searchParams }: PageProps<"/[locale]
             { key: "debt", header: t("debt"), cell: debtCell },
             { key: "overdue", header: t("overdue"), cell: overdueCell },
             { key: "last", header: t("lastPayment"), cell: lastPaymentCell },
-            { key: "actions", header: tc("actions"), cell: actionsOf, className: "w-56" },
+            { key: "reminder", header: t("lastReminder"), cell: reminderCell },
+            { key: "actions", header: tc("actions"), cell: actionsOf, className: "w-64" },
           ]}
           mobileCard={(d) => (
             <MobileRecord
@@ -328,6 +368,7 @@ export default async function DebtorsPage({ searchParams }: PageProps<"/[locale]
                 { label: t("overdue"), value: overdueCell(d) },
                 { label: t("contact"), value: contactCell(d) },
                 { label: t("lastPayment"), value: lastPaymentCell(d) },
+                { label: t("lastReminder"), value: reminderCell(d) },
               ]}
               actions={actionsOf(d)}
             />

@@ -61,6 +61,10 @@ export type CenterContext = {
     adjustments: boolean;
     discounts: boolean;
     import: boolean;
+    /** Center settings that admins may get: rooms, notification templates (03). */
+    settings: boolean;
+    /** Send broadcasts (17). */
+    broadcasts: boolean;
     /** Is this branch in the user's scope (owners: every branch). */
     inBranch: (branchId: string) => boolean;
   };
@@ -161,6 +165,8 @@ export const getCenterContext = cache(async (): Promise<CenterContext> => {
       adjustments: has("adjustments"),
       discounts: has("discounts"),
       import: has("import"),
+      settings: has("settings"),
+      broadcasts: has("broadcasts"),
       inBranch,
     },
   };

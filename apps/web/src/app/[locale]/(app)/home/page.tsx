@@ -3,6 +3,7 @@ import {
   Building2,
   DoorOpen,
   GraduationCap,
+  Send,
   Sparkles,
   UserPlus,
   Users,
@@ -34,7 +35,7 @@ export default async function HomePage() {
   const format = await getFormatter();
   const supabase = await createClient();
 
-  const [branches, rooms, staff, students, groups, center] = await Promise.all([
+  const [branches, rooms, staff, students, groups, center, telegram] = await Promise.all([
     supabase
       .from("branches")
       .select("id", { count: "exact", head: true })
@@ -61,6 +62,12 @@ export default async function HomePage() {
       .eq("center_id", ctx.center.id)
       .is("archived_at", null),
     supabase.from("centers").select("settings").eq("id", ctx.center.id).single(),
+    supabase
+      .from("telegram_links")
+      .select("id", { count: "exact", head: true })
+      .eq("center_id", ctx.center.id)
+      .is("unlinked_at", null)
+      .is("membership_id", null),
   ]);
   const counts = {
     branches: branches.count ?? 0,
@@ -68,6 +75,7 @@ export default async function HomePage() {
     staff: staff.count ?? 0,
     students: students.count ?? 0,
     groups: groups.count ?? 0,
+    telegram: telegram.count ?? 0,
   };
   // The owner is never forced back into the wizard; Home offers to continue it (10).
   const progress = readProgress(center.data?.settings);
@@ -113,6 +121,15 @@ export default async function HomePage() {
       description: t("addStudentsHint"),
       meta: stepMeta(counts.students > 0),
       href: "/students",
+    },
+    {
+      key: "telegram",
+      icon: Send,
+      tone: "blue",
+      title: t("connectTelegram"),
+      description: t("connectTelegramHint"),
+      meta: stepMeta(counts.telegram > 0),
+      href: "/settings/telegram",
     },
     ...(ctx.can.manageStaff
       ? [

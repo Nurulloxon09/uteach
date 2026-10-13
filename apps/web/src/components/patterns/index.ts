@@ -20,6 +20,7 @@ export {
   type MatrixRow,
 } from "./attendance-matrix";
 export { AttendanceRow, type AttendanceRowValue } from "./attendance-row";
+export { AudiencePicker, type Audience, type AudienceRecipients } from "./audience-picker";
 export { AuthCard, AuthLayout } from "./auth-layout";
 export { Combobox, type ComboboxOption } from "./combobox";
 export { ConfirmDialog } from "./confirm-dialog";

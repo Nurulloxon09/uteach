@@ -169,6 +169,12 @@ export default async function StudentPage({
     ) : (
       <StatusChip tone="muted">{tb("settled")}</StatusChip>
     );
+  // Telegram (17): the student or a guardian has a live link (student_overview.telegram_linked).
+  const { data: tg } = await supabase
+    .from("student_overview")
+    .select("telegram_linked")
+    .eq("id", student.id)
+    .maybeSingle();
   const payer = guardianRows.find((g) => g.isPrimary)?.fullName ?? "";
   const branchName = branches.find((b) => b.id === student.branch_id)?.name ?? "—";
 
@@ -238,6 +244,9 @@ export default async function StudentPage({
                   <StatusChip tone="muted">{t("status.inactive")}</StatusChip>
                 )}
                 {balanceChip}
+                <StatusChip tone={tg?.telegram_linked ? "primary" : "muted"}>
+                  {tg?.telegram_linked ? t("telegram.linked") : t("telegram.notLinked")}
+                </StatusChip>
               </div>
             }
           />
