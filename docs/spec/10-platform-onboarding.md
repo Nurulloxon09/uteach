@@ -107,6 +107,10 @@ CRUD screens. Archiving a branch requires no active groups. Changing a branch ti
 - **Student limit** = active students (with at least one active enrollment). At the limit, new enrollments are blocked with an upgrade prompt. Existing ones are never touched.
 - uteach invoices are manual at launch: super-admin issues a `platform_invoices` row, the owner pays by bank transfer or Payme, and super-admin marks it paid. Automated billing comes later.
 
+> PROPOSED (M7 plan): the status machine, plan seeds, the student limit and the owner's Subscription page are in
+> 30-milestones (M7 plan). Paying an invoice sets `paid_until`; the hourly `expire_centers` job moves `trial` and
+> `active` centers to `past_due` and, after 7 days, to `read_only`.
+
 ## Super-admin (M7)
 
 > PROPOSED: the actions list (extend trial, change plan, set status), no-login-as-user, health contents. Canvas: centers, plans, invoices, support view (audited), system health.

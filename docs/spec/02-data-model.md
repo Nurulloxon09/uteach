@@ -157,6 +157,7 @@ RLS: select for `authenticated`; writes by service role only.
 | plan_id | uuid references plans | null during trial = trial limits |
 | trial_ends_at | timestamptz | created_at + 14 days |
 | past_due_since | timestamptz | |
+| paid_until | date | PROPOSED (M7 plan): last day covered by a paid uteach invoice; an `active` center past it becomes `past_due` |
 | rounding_unit_amount | bigint not null default 100000 | charges round to this (100000 tiyin = 1 000 UZS) |
 | billing_mode | billing_mode not null default 'lesson_cycle' | ✅ confirmed default; `calendar_month` not built in MVP |
 | leave_credit_policy | leave_credit_policy not null default 'ask' | ✅ center decides what happens to unused lessons when a student leaves mid-cycle (see 15) |
@@ -171,7 +172,12 @@ RLS: select for `authenticated`; writes by service role only.
 | settings | jsonb not null default '{}' | non-critical UI settings only; anything logic depends on gets a real column |
 | archived_at | timestamptz | |
 
-RLS: select **MBR**; update **OWN** (W) except `status`, `plan_id`, `trial_ends_at`, `past_due_since` (service role only). Insert via the `create_center()` RPC only (creates center + owner membership + first branch atomically).
+RLS: select **MBR**; update **OWN** (W) except `status`, `plan_id`, `trial_ends_at`, `past_due_since`, `paid_until` (service role only).
+
+> PROPOSED (M7 plan): read-only is enforced by the trigger `private.guard_center_writes` on every table with a
+> `center_id` (most writes go through `security definer` RPCs, which RLS alone doesn't stop). It raises
+> `center_read_only` for a `read_only` or `cancelled` center unless the writer is the platform (`service_role`,
+> `postgres` for pg_cron jobs, `uteach_worker` for the outbox). A pgTAP check fails if a tenant table lacks it. Insert via the `create_center()` RPC only (creates center + owner membership + first branch atomically).
 
 > PROPOSED (M3 plan): M3 adds `rounding_unit_amount`, `billing_mode` (only `lesson_cycle` accepted),
 > `leave_credit_policy` and `payment_due_days`; `reminder_every_days` comes with reminders in M4 and

@@ -432,6 +432,75 @@ Global "done when" for every milestone:
 
 > PROPOSED: scope additions: 7-day grace, manual uteach invoices, audit log viewer, error monitoring, uptime alerts, restore test, legal pages, landing page, dry run with a friendly center.
 
+
+> PROPOSED (M7 plan, 2026-10-13): started by the owner after M6. Delivered as five PRs; M7d waits for the owner's
+> accounts (see "Needs the owner").
+> - **M7a · subscriptions & limits:** migration `m7_plans`:
+>   - tables `plans` (global, read by everyone signed in, written by the service role) and `platform_invoices`
+>     (owners read their own; service role writes); `centers.plan_id`, `past_due_since`, `paid_until`;
+>     enum `invoice_status` (`draft`, `issued`, `paid`, `void`); invoice numbers `UT-YYYY-NNNNNN` from a sequence;
+>   - seeded plans `starter` (50 students, 1 branch), `growth` (200, 3), `pro` (unlimited). Prices are
+>     placeholders (300 000 / 700 000 / 1 500 000 UZS a month) until the owner sets them in `/admin`;
+>   - **status machine** in `private.center_status_next()` + hourly pg_cron `expire_centers` (01): `trial` past
+>     `trial_ends_at` → `past_due` (`past_due_since` = the trial end); `active` past `paid_until` → `past_due`;
+>     `past_due` for 7 days → `read_only`. Marking an invoice paid sets `paid_until` = max(`paid_until`, period end),
+>     the invoice's plan, and `active`. Every change writes `audit_log` (`actor_kind = 'system'` or `super_admin`);
+>   - **read-only** = the guard trigger `private.guard_center_writes` on every table with `center_id` (02):
+>     `center_read_only` for `read_only` / `cancelled` centers, except platform writers (service role, pg_cron,
+>     the worker). Reads and exports keep working. Background jobs keep running (lessons, charges, reminders),
+>     so nothing is missing when the center pays;
+>   - **student limit:** active students = students with an `active` enrollment. `enroll`, `convert_lead` and
+>     `import_enrollments` refuse a student who would be one over the limit (`student_limit_reached`); a student
+>     who is already active can join more groups. Trial = 50 (✅ confirmed), plan = its `student_limit`.
+>     `branch_limit` blocks new branches (`branch_limit_reached`). Nothing existing is ever removed;
+>   - owner screens: **Settings → Subscription** (plan, status, trial end or paid until, students used / limit
+>     bar, invoices list, how to pay: bank details text from platform settings); an **app banner** for the last
+>     3 trial days, `past_due` (days of grace left) and `read_only` (writes are blocked; link to Subscription).
+>     A write in read-only shows the `center_read_only` message; buttons are not hidden one by one;
+>   - pgTAP `m7_plans` (machine, the 7-day edge, guard on every tenant table, limits, paid → active, RLS);
+>     `packages/core/subscription` (`centerStatusNext`, `trialDaysLeft`) with a parity test.
+> - **M7b · super-admin & audit log:** `/admin` (own layout, not under a center), allowed only when
+>   `profiles.is_super_admin`; server code uses the service role there only (01, 03). The first super-admin is set
+>   by SQL in the dashboard (documented). Pages: **Centers** (status, plan, active students, last activity, trial
+>   end; actions extend trial by N days, change plan, set status), **Plans** (CRUD; a plan in use can't be deleted,
+>   only hidden), **Invoices** (issue, mark paid with a note, void), **Support view** (a read-only summary of one
+>   center: branches, staff, groups, student counts, last payments, failed messages, imports; each open writes
+>   `audit_log(action = 'support_view')`; no "log in as"), **Health** (worker heartbeats, outbox backlog and 24 h
+>   failure rate, pg_cron last runs from `cron.job_run_details`, SMS failures). Every super-admin action is
+>   audited. Owners get **Settings → Audit log**: filters (table, person, dates), before/after per change.
+> - **M7c · role dashboards** (20): one RPC per role, run as the caller, all numbers in the center/branch
+>   timezone:
+>   - owner (all branches, a branch filter): today (lessons, attendance % of marks so far, payments today),
+>     month to date (charged = charges dated this month; collected = payments this month not voided; collection
+>     rate = collected ÷ charged; debt total with aging 0–30 / 31–60 / 60+ days by due date), active students
+>     with Δ vs the last day of the previous month, new leads and won leads this month, a card per branch;
+>   - admin (their branches): today's lessons marked ✓ / not yet, top 10 debtors, follow-ups due today, trials
+>     today, students without a linked Telegram, schedule conflicts;
+>   - teacher (on Today): today's lessons with "Mark attendance", unmarked lessons still in the edit window,
+>     their groups, groups with no score in 30 days ("scores to enter"); no money.
+>   Home becomes the owner/admin dashboard; pgTAP checks every number against a fixture center.
+> - **M7d · production** (after the owner's accounts exist): compose on the VPS (`web`, `worker`, `caddy`;
+>   `restart: unless-stopped`), a deploy workflow on `main` (build → GHCR → SSH `docker compose pull && up -d`,
+>   then `supabase db push`), `/api/health`, Sentry in web and worker, UptimeRobot → Telegram, a weekly off-site
+>   `pg_dump` from the VPS and a written restore test (restore into a scratch database, count rows). The Vercel
+>   project stays a team preview.
+> - **M7e · public pages & the full loop:** a landing page at `/` for visitors (what uteach does, plans from
+>   `plans.is_public`, sign-up, a Telegram contact) in uz/ru/en; `/terms` and `/privacy` drafted in three
+>   languages and marked "draft" until a lawyer reads them; the full-loop E2E (lead → trial → convert →
+>   attendance → charge → payment → `payment_received` with the receipt queued for the parent; the worker test
+>   already proves the Telegram delivery); a dry-run checklist for the friendly center.
+>
+> Order: M7a → M7b → M7c → M7e; M7d whenever the accounts are ready.
+>
+> Needs the owner (nothing here is bought or opened without a yes):
+> - a VPS (about €5 a month) and a domain; Supabase **Pro** ($25 a month) before the first paying center;
+> - accounts for Sentry, UptimeRobot and backup storage (free tiers), and a Telegram chat for alerts;
+> - the real plan prices, the bank details for invoices, a lawyer's read of the legal pages;
+> - **open question:** Uzbekistan's personal-data law asks for citizens' data to be stored on servers in
+>   Uzbekistan. Supabase has no region there. The owner should ask a lawyer whether that applies and, if it does,
+>   choose between a local host for Postgres or another arrangement before real centers go live;
+> - a friendly center for the dry run.
+
 **Scope:** plans + 14-day trial + past_due (7-day grace) → read_only, student limit enforcement; uteach invoices (manual); super-admin (centers, plans, invoices, support view audited, system health); role dashboards (owner, admin, teacher); audit log viewer (owner); production infra (VPS, Docker Compose, Caddy TLS, Supabase Pro, backups, error monitoring, uptime check), legal pages (terms, privacy), landing page.
 **Tables:** plans, platform_invoices.
 **Done when:**
