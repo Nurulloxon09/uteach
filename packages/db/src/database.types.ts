@@ -1462,6 +1462,9 @@ isOneToOne: false
 "preview_broadcast":
 { Args: { "p_audience": Json,"p_center_id": string }; Returns: Json
                            },
+"record_otp_send":
+{ Args: { "p_phone_hash": string }; Returns: boolean
+                           },
 "record_payment":
 { Args: { "p_account_id"?: string,"p_amount": number,"p_branch_id"?: string,"p_method": Database["public"]['Enums']["payment_method"],"p_note"?: string,"p_paid_at"?: string,"p_payer_name"?: string,"p_student_id": string }; Returns: Json
                            },

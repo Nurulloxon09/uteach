@@ -1,6 +1,6 @@
 /**
  * SMS adapter (04-rules §5). Business code depends on `SmsProvider` only.
- * M0 ships the console provider for local development; Eskiz arrives in M4.
+ * The console provider is for local development and tests; Eskiz (M4) for staging and production.
  */
 export interface SmsMessage {
   /** E.164 phone number. */
@@ -30,13 +30,32 @@ export class ConsoleSmsProvider implements SmsProvider {
   }
 }
 
-export type SmsProviderName = "console";
+export type SmsProviderName = "console" | "eskiz";
 
-export function createSmsProvider(name: string | undefined): SmsProvider {
+import { EskizSmsProvider } from "./eskiz";
+
+export { EskizError, EskizSmsProvider, type EskizConfig } from "./eskiz";
+
+/** Provider settings read from the environment (only the chosen provider's are needed). */
+export type SmsEnv = {
+  ESKIZ_EMAIL?: string | undefined;
+  ESKIZ_PASSWORD?: string | undefined;
+  ESKIZ_FROM?: string | undefined;
+  ESKIZ_BASE_URL?: string | undefined;
+};
+
+export function createSmsProvider(name: string | undefined, env: SmsEnv = {}): SmsProvider {
   switch (name ?? "console") {
     case "console":
       return new ConsoleSmsProvider();
+    case "eskiz":
+      return new EskizSmsProvider({
+        email: env.ESKIZ_EMAIL ?? "",
+        password: env.ESKIZ_PASSWORD ?? "",
+        ...(env.ESKIZ_FROM ? { from: env.ESKIZ_FROM } : {}),
+        ...(env.ESKIZ_BASE_URL ? { baseUrl: env.ESKIZ_BASE_URL } : {}),
+      });
     default:
-      throw new Error(`SMS provider "${name}" is not available yet (Eskiz arrives in M4)`);
+      throw new Error(`unknown SMS provider "${name}"`);
   }
 }

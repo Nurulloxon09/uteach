@@ -22,10 +22,22 @@ export function serverEnv() {
   return z
     .object({
       SEND_SMS_HOOK_SECRET: z.string().startsWith("v1,whsec_"),
-      SMS_PROVIDER: z.string().default("console"),
+      SMS_PROVIDER: z.enum(["console", "eskiz"]).default("console"),
+      /** The secret (service-role) key, used only by the SMS hook's per-phone limit; required with Eskiz. */
+      SUPABASE_SECRET_KEY: z.string().min(1).optional(),
+      ESKIZ_EMAIL: z.string().optional(),
+      ESKIZ_PASSWORD: z.string().optional(),
+      ESKIZ_FROM: z.string().optional(),
+    })
+    .refine((env) => env.SMS_PROVIDER !== "eskiz" || env.SUPABASE_SECRET_KEY, {
+      message: "SMS_PROVIDER=eskiz needs SUPABASE_SECRET_KEY (per-phone OTP limit)",
     })
     .parse({
       SEND_SMS_HOOK_SECRET: process.env.SEND_SMS_HOOK_SECRET,
       SMS_PROVIDER: process.env.SMS_PROVIDER || undefined,
+      SUPABASE_SECRET_KEY: process.env.SUPABASE_SECRET_KEY || undefined,
+      ESKIZ_EMAIL: process.env.ESKIZ_EMAIL || undefined,
+      ESKIZ_PASSWORD: process.env.ESKIZ_PASSWORD || undefined,
+      ESKIZ_FROM: process.env.ESKIZ_FROM || undefined,
     });
 }

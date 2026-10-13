@@ -12,6 +12,10 @@ services:
     environment:
       SEND_SMS_HOOK_SECRET: ${SEND_SMS_HOOK_SECRET}
       SMS_PROVIDER: ${SMS_PROVIDER:-console}
+      SUPABASE_SECRET_KEY: ${SUPABASE_SECRET_KEY:-}
+      ESKIZ_EMAIL: ${ESKIZ_EMAIL:-}
+      ESKIZ_PASSWORD: ${ESKIZ_PASSWORD:-}
+      ESKIZ_FROM: ${ESKIZ_FROM:-}
       SITE_URL: https://${SITE_DOMAIN}
     restart: unless-stopped
 
@@ -20,6 +24,13 @@ services:
       context: ..
       dockerfile: docker/worker.Dockerfile
     restart: unless-stopped
+    environment:
+      WORKER_DATABASE_URL: ${WORKER_DATABASE_URL}
+      TELEGRAM_BOT_TOKEN: ${TELEGRAM_BOT_TOKEN}
+      SMS_PROVIDER: ${SMS_PROVIDER:-console}
+      ESKIZ_EMAIL: ${ESKIZ_EMAIL:-}
+      ESKIZ_PASSWORD: ${ESKIZ_PASSWORD:-}
+      ESKIZ_FROM: ${ESKIZ_FROM:-}
 
   caddy:
     image: caddy:2.10-alpine
