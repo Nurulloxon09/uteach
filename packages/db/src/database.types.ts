@@ -1847,6 +1847,15 @@ isOneToOne: false
 "create_makeup_lesson":
 { Args: { "p_duration_minutes": number,"p_for_lesson_id"?: string,"p_group_id": string,"p_is_billable"?: boolean,"p_notify"?: boolean,"p_room_id"?: string,"p_starts_at": string,"p_teacher_membership_id"?: string }; Returns: string
                            },
+"dashboard_admin":
+{ Args: { "p_center_id": string }; Returns: Json
+                           },
+"dashboard_owner":
+{ Args: { "p_branch_id"?: string,"p_center_id": string }; Returns: Json
+                           },
+"dashboard_teacher":
+{ Args: { "p_center_id": string }; Returns: Json
+                           },
 "delete_exam_result":
 { Args: { "p_result_id": string }; Returns: undefined
                            },

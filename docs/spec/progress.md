@@ -7,7 +7,7 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M7 · Launch**: ◐ in progress (plan #31; M7a subscriptions & limits and M7b super-admin & audit log built; next M7c dashboards). M6 · Exam scores is ☑ done (#27, #28, #29, #30). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
+**M7 · Launch**: ◐ in progress (plan #31; M7a subscriptions & limits, M7b super-admin & audit log and M7c dashboards built; next M7e public pages & full loop; M7d waits for the owner's accounts). M6 · Exam scores is ☑ done (#27, #28, #29, #30). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
 Eskiz and the hosted Phone provider. M6's decisions are in `30-milestones.md` (M6) and the `PROPOSED (M6 plan)`
 notes in 02, 03, 05-ui, 16 and 17.
 
@@ -22,7 +22,7 @@ notes in 02, 03, 05-ui, 16 and 17.
 | M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
 | M5 | Leads CRM | ☑ done (#23, #24, #26) | 2026-10-13 |
 | M6 | Exam scores | ☑ done (#27, #28, #29, M6c) | 2026-10-13 |
-| M7 | Launch 🚀 | ◐ in progress (plan #31, M7a and M7b built) | |
+| M7 | Launch 🚀 | ◐ in progress (plan #31, M7a, M7b and M7c built) | |
 | M8 | Online payments | ☐ | |
 | M9 | Mini App | ☐ | |
 | M10 | Payroll | ☐ | |
@@ -152,6 +152,16 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-14 · M7c role dashboards
+- Migration `m7c_dashboards`: `dashboard_owner` (branch filter), `dashboard_admin`, `dashboard_teacher`, security
+  invoker, one jsonb each; helpers `private.dashboard_active_students` and `private.group_active_students`.
+- `packages/core/dashboard`: attendance %, collection rate (exact for big sums), change since last month.
+- Home: the owner dashboard (today, this month, debt by age, branch cards, branch filter) or the admin one (today's
+  lessons marked or not, debtors to call, trials, follow-ups / no Telegram / conflicts counts). Today: still to mark,
+  scores to enter, my groups.
+- Tests: pgTAP `m7c_dashboards` (41 checks), core unit tests. Owner Home checked in the browser; screenshots 1440/390.
+- Known gaps: admin and teacher views not opened in the browser (no local admin/teacher password); covered by pgTAP.
 
 ### 2026-10-14 · M7c plan
 - The owner said to start M7c. Plan recorded as `PROPOSED (M7c plan)` in 30, with a note in 20: three RPCs
