@@ -76,6 +76,10 @@ import {
   type ChipTone,
   type NavEntry,
   type TimetableLesson,
+  FeatureCard,
+  LegalDocument,
+  PlanCard,
+  StepCard,
 } from "@/components/patterns";
 import { Button } from "@/components/ui/button";
 import type { ActionState } from "@/lib/actions";
@@ -1110,6 +1114,50 @@ export function DevUi() {
             accept=".xlsx,.csv"
             onFile={(file) => toast(file.name)}
           />
+        </Kit>
+        <Kit
+          id="public"
+          name="FeatureCard + StepCard + PlanCard + LegalDocument (landing, terms; PublicLayout wraps them)"
+        >
+          <div className="grid gap-4 sm:grid-cols-2">
+            <FeatureCard
+              icon={Wallet}
+              tone="orange"
+              title={t("public.features.payments.title")}
+              body={t("public.features.payments.body")}
+            />
+            <StepCard
+              n={1}
+              title={t("public.start.step1.title")}
+              body={t("public.start.step1.body")}
+            />
+            <PlanCard
+              name="Growth"
+              highlighted
+              price={<MoneyAmount minor={70000000} currency="UZS" />}
+              period={t("public.plans.perMonth")}
+              items={[
+                t("public.plans.students", { count: 200 }),
+                t("public.plans.branches", { count: 3 }),
+                t("public.plans.allFeatures"),
+              ]}
+              action={<Button className="w-full">{t("public.plans.cta")}</Button>}
+            />
+          </div>
+          <Section>
+            <LegalDocument
+              title={t("legal.terms.title")}
+              notice={{ title: t("legal.draftTitle"), body: t("legal.draftBody") }}
+              updated={t("legal.updated", { date: "14.10.2026" })}
+              sections={[
+                {
+                  id: "about",
+                  title: t("legal.terms.about.title"),
+                  body: t("legal.terms.about.body"),
+                },
+              ]}
+            />
+          </Section>
         </Kit>
       </div>
     </AppShell>

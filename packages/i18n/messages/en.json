@@ -2633,5 +2633,193 @@
     "scoresTitle": "Scores to enter",
     "scoresHint": "Your groups with no score in the last 30 days.",
     "groupsTitle": "My groups"
+  },
+  "public": {
+    "metaTitle": "uteach: software for learning centers",
+    "metaDescription": "Students, groups, schedule, attendance, payments and debts in one place, with Telegram messages to parents. Free for 14 days.",
+    "nav": {
+      "login": "Log in",
+      "signup": "Start free",
+      "features": "Features",
+      "plans": "Plans",
+      "contact": "Contact"
+    },
+    "hero": {
+      "eyebrow": "For language schools and exam prep centers",
+      "title": "Run your learning center in one place",
+      "subtitle": "Groups and schedule, attendance in 30 seconds, payments and debts, and Telegram messages to parents. Built for centers in Uzbekistan.",
+      "cta": "Start the free trial",
+      "secondary": "See the plans",
+      "note": "14 days free, up to 50 students. No card needed."
+    },
+    "features": {
+      "title": "Everything a center does every day",
+      "subtitle": "Owners, administrators and teachers each see what they need.",
+      "students": {
+        "title": "Students and groups",
+        "body": "Profiles with parents and siblings, enrollments, freezes and transfers. Import from Excel in minutes."
+      },
+      "schedule": {
+        "title": "Schedule",
+        "body": "Lessons are generated from the group's days and times. Room and teacher clashes are caught before they happen."
+      },
+      "attendance": {
+        "title": "Attendance",
+        "body": "Teachers mark a lesson from their phone: all present, then the exceptions. Parents hear about absences."
+      },
+      "payments": {
+        "title": "Payments and debts",
+        "body": "Charges per lesson cycle, receipts, and a debtors list by age, so nobody is forgotten."
+      },
+      "telegram": {
+        "title": "Telegram for parents",
+        "body": "Absences, receipts, reminders and scores go to parents through the center's Telegram bot."
+      },
+      "leads": {
+        "title": "Leads and trial lessons",
+        "body": "Every call and message on one board, trial lessons on the schedule, and one click to enroll."
+      },
+      "scores": {
+        "title": "Exam scores",
+        "body": "IELTS, SAT, CEFR and your own mock tests, with progress charts per student."
+      },
+      "dashboards": {
+        "title": "Dashboards",
+        "body": "Today's lessons, money collected this month, debt and new students at a glance."
+      }
+    },
+    "start": {
+      "title": "How to start",
+      "step1": {
+        "title": "Create your center",
+        "body": "Sign up with your phone number and add your branches and rooms."
+      },
+      "step2": {
+        "title": "Bring your students",
+        "body": "Import students and groups from Excel, or add them by hand."
+      },
+      "step3": {
+        "title": "Invite your team",
+        "body": "Send administrators and teachers a link. Each sees only what their role allows."
+      }
+    },
+    "plans": {
+      "title": "Plans",
+      "subtitle": "Every center starts with a free 14-day trial. Pick a plan when it ends.",
+      "perMonth": "per month",
+      "students": "{count, plural, one {Up to # active student} other {Up to # active students}}",
+      "unlimitedStudents": "Unlimited students",
+      "branches": "{count, plural, one {# branch} other {Up to # branches}}",
+      "unlimitedBranches": "Unlimited branches",
+      "allFeatures": "All features above",
+      "cta": "Start free",
+      "empty": "Plans will be published soon. Start with the free trial."
+    },
+    "contact": {
+      "title": "Questions?",
+      "body": "Write to us on Telegram. We'll help you set up your center and move your data.",
+      "button": "Write on Telegram"
+    },
+    "footer": {
+      "rights": "© {year} uteach",
+      "terms": "Terms",
+      "privacy": "Privacy"
+    }
+  },
+  "legal": {
+    "draftTitle": "Draft",
+    "draftBody": "This text is a draft and has not yet been reviewed by a lawyer. It may change before uteach launches.",
+    "updated": "Last updated: {date}",
+    "back": "Home",
+    "terms": {
+      "title": "Terms of service",
+      "about": {
+        "title": "About these terms",
+        "body": "uteach is an online service for running learning centers: students, groups, schedule, attendance, payments and messages to parents. These terms are an agreement between uteach and the learning center (the center) that creates an account. The person who creates the center accepts them on the center's behalf."
+      },
+      "trial": {
+        "title": "Trial and plans",
+        "body": "Every new center gets a free 14-day trial with up to 50 active students; no card is needed. After the trial the center chooses a plan. Each plan has a monthly price and limits on active students and branches, shown on the home page and in Settings → Subscription. If prices change, we tell centers at least 30 days before the change applies to them."
+      },
+      "paying": {
+        "title": "Paying",
+        "body": "uteach issues an invoice for each paid period. The center pays by bank transfer using the details in Settings → Subscription. A period counts as paid once uteach marks the invoice paid."
+      },
+      "late": {
+        "title": "If a payment is late",
+        "body": "When the trial or a paid period ends without payment, the center keeps full access for 7 more days. After that the account becomes read-only: nothing new can be recorded, but everything can still be viewed and exported. Paying the invoice restores full access. We never delete data because a payment is late."
+      },
+      "duties": {
+        "title": "The center's responsibilities",
+        "body": "The center decides what data about its students, parents and staff it enters, and is responsible for having a legal basis and any consent required for it, including a parent's consent for a child's data. The center keeps its staff logins safe and is responsible for what its staff do in the account."
+      },
+      "use": {
+        "title": "Acceptable use",
+        "body": "Do not use uteach to send messages people have not agreed to receive, to break the law, to try to reach other centers' data, or to disrupt the service. We may suspend an account that does so. We tell the center first unless the harm is urgent."
+      },
+      "availability": {
+        "title": "Availability and changes",
+        "body": "We work to keep uteach available and back up data regularly, but we do not yet promise uninterrupted service. We improve and change features over time and tell centers in advance before removing something they use."
+      },
+      "ending": {
+        "title": "Ending the service",
+        "body": "A center can stop using uteach at any time, and the owner can export its data before leaving. After an account is closed we keep the data for 90 days in case the center comes back, then delete it, except what the law requires us to keep."
+      },
+      "liability": {
+        "title": "Liability",
+        "body": "uteach helps the center keep its records; the center stays responsible for its own decisions, fees and communication with families. As far as the law allows, our liability is limited to what the center paid uteach in the last 3 months."
+      },
+      "law": {
+        "title": "Law and disputes",
+        "body": "These terms are governed by the laws of the Republic of Uzbekistan. We first try to settle any dispute by talking; otherwise it goes to the competent court in Tashkent."
+      },
+      "contact": {
+        "title": "Contact",
+        "body": "Questions about these terms: write to uteach using the contact on the home page."
+      }
+    },
+    "privacy": {
+      "title": "Privacy policy",
+      "roles": {
+        "title": "Who is responsible",
+        "body": "Each learning center decides what data about its students, parents and staff it keeps in uteach, so the center is responsible for that data. uteach stores and processes it only to provide the service to the center. For the accounts of center owners and staff, uteach itself is responsible."
+      },
+      "data": {
+        "title": "What we store",
+        "body": "Staff: name, phone number, role and a password (stored only as a secure hash). Students and parents: names, phone numbers, groups, attendance, payments and debts, exam scores, notes the center writes, and the Telegram chat id when a parent links the bot. Technical: sign-in times and the logs needed to keep the service secure."
+      },
+      "purposes": {
+        "title": "Why we use it",
+        "body": "To keep the center's records; to send the messages the center turns on (absences, payments, reminders, scores) by Telegram or SMS; to bill the center; to keep the service secure; and to fix problems. We do not sell data and do not use it for advertising."
+      },
+      "processors": {
+        "title": "Who else processes it",
+        "body": "Supabase (database and sign-in), Telegram (messages to parents who link the bot), an SMS provider (sign-up codes and messages), our hosting provider and an error-tracking service. Each receives only what it needs for its part."
+      },
+      "location": {
+        "title": "Where the data is stored",
+        "body": "The database is hosted by Supabase in a data center outside Uzbekistan. Whether Uzbekistan's law on personal data requires storing it inside the country is being reviewed, and this section will be updated with the result."
+      },
+      "retention": {
+        "title": "How long we keep it",
+        "body": "As long as the center uses uteach. Payment records can't be deleted, only voided, so the accounts stay correct. After a center closes its account its data is deleted within 90 days, and backups roll over within 30 days after that."
+      },
+      "rights": {
+        "title": "Your rights",
+        "body": "You can ask for a copy of your data, a correction or its deletion. Students and parents should ask their learning center first, because the center manages their records; we help the center answer. Owners and staff can write to uteach directly."
+      },
+      "security": {
+        "title": "Security",
+        "body": "Each center's data is kept apart in the database, connections are encrypted, staff see only what their role allows, and changes are recorded in an audit log. uteach support can open a read-only view of a center only to help it; every such view is logged and visible to the owner."
+      },
+      "children": {
+        "title": "Children",
+        "body": "Many students are children. Their data is entered by the center, and messages go to their parents. uteach does not ask children to sign up."
+      },
+      "changes": {
+        "title": "Changes and contact",
+        "body": "We publish changes on this page and tell center owners about important ones. Questions: write to uteach using the contact on the home page."
+      }
+    }
   }
 }

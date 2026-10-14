@@ -172,3 +172,65 @@ export function seedScoreGroup(
     return { groupId: g!.id, studentIds: ids };
   });
 }
+
+/**
+ * M7e full loop: an extra lesson of a group starting `minutes` from now and lasting `length` minutes (the group's
+ * teacher). Two short lessons back to back don't clash, unlike two of `addLessonSoon`'s hour-long ones.
+ */
+export function addLesson(
+  center: string,
+  group: string,
+  minutes: number,
+  length: number,
+): Promise<string> {
+  return withDb(async (sql) => {
+    const [row] = await sql<{ id: string }[]>`
+      insert into public.lessons (center_id, branch_id, group_id, local_date, starts_at, ends_at,
+                                  teacher_membership_id, status, is_manually_edited)
+      select g.center_id, g.branch_id, g.id,
+             ((now() + make_interval(mins => ${minutes})) at time zone b.timezone)::date,
+             now() + make_interval(mins => ${minutes}),
+             now() + make_interval(mins => ${minutes + length}),
+             g.teacher_membership_id, 'scheduled', true
+      from public.groups g
+      join public.centers c on c.id = g.center_id
+      join public.branches b on b.id = g.branch_id
+      where c.name = ${center} and g.name = ${group}
+      returning id`;
+    return row!.id;
+  });
+}
+
+/** M7e: the `payment_received` notices of a center: who they go to and the payment they carry. */
+export function paymentNotices(
+  center: string,
+): Promise<{ guardian: string | null; receiptNo: string; paymentId: string; status: string }[]> {
+  return withDb(async (sql) => {
+    return sql<{ guardian: string | null; receiptNo: string; paymentId: string; status: string }[]>`
+      select g.full_name as guardian, o.payload ->> 'receiptNo' as "receiptNo",
+             o.payload ->> 'paymentId' as "paymentId", o.status::text as status
+      from public.notification_outbox o
+      join public.centers c on c.id = o.center_id
+      left join public.guardians g on g.id = o.guardian_id
+      where c.name = ${center} and o.template_key = 'payment_received'
+      order by o.created_at`;
+  });
+}
+
+/**
+ * M7e: moves a center onto a paid plan that allows `limit` active students (a hidden test plan), so the next
+ * enrollment hits the student limit. Done in SQL: super-admin's screens are tested in pgTAP.
+ */
+export function capStudents(center: string, limit: number): Promise<void> {
+  return withDb(async (sql) => {
+    await sql`
+      insert into public.plans (code, name, student_limit, branch_limit, price_amount, is_public, sort_order)
+      values (${`e2e_cap_${limit}`}, ${`E2E cap ${limit}`}, ${limit}, null, 0, false, 99)
+      on conflict (code) do nothing`;
+    await sql`
+      update public.centers
+      set plan_id = (select id from public.plans where code = ${`e2e_cap_${limit}`}),
+          status = 'active', paid_until = current_date + 30, past_due_since = null
+      where name = ${center}`;
+  });
+}

@@ -1,5 +1,17 @@
-/** Routes reachable without signing in (paths without the locale prefix). */
-export const PUBLIC_PATHS = ["/login", "/signup", "/verify", "/forgot-password", "/invite"];
+/**
+ * Routes reachable without signing in (paths without the locale prefix). "/" is the landing page for visitors
+ * (M7e); signed-in people are sent on from it by the page itself.
+ */
+export const PUBLIC_PATHS = [
+  "/",
+  "/login",
+  "/signup",
+  "/verify",
+  "/forgot-password",
+  "/invite",
+  "/terms",
+  "/privacy",
+];
 
 /**
  * Developer pages reachable without signing in, only outside production (05-ui §7).

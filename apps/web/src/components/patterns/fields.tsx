@@ -15,9 +15,11 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Link } from "@/i18n/navigation";
 import type { ActionState } from "@/lib/actions";
 import { cn } from "@/lib/utils";
 import { Combobox, type ComboboxOption } from "./combobox";
+import { PLAN_ERRORS, useCanOpenSubscription } from "./plan-link";
 
 /** The translated field error and the echoed value for `name` from an ActionState. */
 function fieldState(state: ActionState, name: string) {
@@ -56,9 +58,27 @@ export function FormMessage({ state, success }: { state: ActionState; success?: 
   }
   if (!state.error) return null;
   return (
-    <Alert variant="destructive">
-      <AlertDescription>{t(state.error as never)}</AlertDescription>
+    <Alert variant="destructive" data-testid="form-error">
+      <AlertDescription>
+        {t(state.error as never)}
+        {PLAN_ERRORS.has(state.error) ? <SubscriptionLink /> : null}
+      </AlertDescription>
     </Alert>
+  );
+}
+
+/** Under a plan error: the owner's way to Settings → Subscription. */
+function SubscriptionLink() {
+  const t = useTranslations("subscription.banner");
+  if (!useCanOpenSubscription()) return null;
+  return (
+    <Link
+      href="/settings/subscription"
+      className="mt-1 block font-semibold underline"
+      data-testid="plan-error-link"
+    >
+      {t("open")}
+    </Link>
   );
 }
 

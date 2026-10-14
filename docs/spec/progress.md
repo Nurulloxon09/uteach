@@ -7,7 +7,7 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M7 · Launch**: ◐ in progress (plan #31; M7a subscriptions & limits, M7b super-admin & audit log and M7c dashboards built; next M7e public pages & full loop; M7d waits for the owner's accounts). M6 · Exam scores is ☑ done (#27, #28, #29, #30). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
+**M7 · Launch**: ◐ in progress (plan #31; M7a subscriptions & limits, M7b super-admin & audit log, M7c dashboards and M7e public pages & full loop built; M7d and the dry run wait for the owner's accounts and a friendly center). M6 · Exam scores is ☑ done (#27, #28, #29, #30). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
 Eskiz and the hosted Phone provider. M6's decisions are in `30-milestones.md` (M6) and the `PROPOSED (M6 plan)`
 notes in 02, 03, 05-ui, 16 and 17.
 
@@ -22,7 +22,7 @@ notes in 02, 03, 05-ui, 16 and 17.
 | M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
 | M5 | Leads CRM | ☑ done (#23, #24, #26) | 2026-10-13 |
 | M6 | Exam scores | ☑ done (#27, #28, #29, M6c) | 2026-10-13 |
-| M7 | Launch 🚀 | ◐ in progress (plan #31, M7a, M7b and M7c built) | |
+| M7 | Launch 🚀 | ◐ in progress (plan #31, M7a, M7b, M7c and M7e built) | |
 | M8 | Online payments | ☐ | |
 | M9 | Mini App | ☐ | |
 | M10 | Payroll | ☐ | |
@@ -152,6 +152,18 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-14 · M7e public pages & the full loop
+- Migration `m7e_public`: `public_plans()` for visitors (public, unarchived plans only; `plans` stays closed to anon).
+- Landing page at `/` for signed-out visitors (features, how to start, public plans, sign-up, Telegram contact from
+  `NEXT_PUBLIC_CONTACT_TELEGRAM`), draft `/terms` and `/privacy`, all in uz/ru/en; `robots.txt` blocks indexing
+  unless `NEXT_PUBLIC_SITE_INDEXABLE=true`. New patterns on `/dev/ui` (05-ui).
+- Owners see an "Open Subscription" link under plan errors (student / branch limit, read-only).
+- Tests: pgTAP `m7e_public` (8 checks); e2e `m7e-full-loop` (lead → trial → convert → charge → attendance →
+  payment → `payment_received` queued for the parent, then the student-limit message → Subscription) and
+  `m7e-public`. Dry-run checklist in `docs/launch/dry-run.md`.
+- Decisions: `PROPOSED (M7e, as built)` in 30, a note in 05-ui.
+- Known gaps: the legal text needs a lawyer (draft notice until then); the localisation question is still open.
 
 ### 2026-10-14 · M7e plan
 - The owner said to start M7e. Plan recorded as `PROPOSED (M7e plan)` in 30, with notes in 02 (`public_plans()`)
