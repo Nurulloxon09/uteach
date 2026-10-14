@@ -88,6 +88,7 @@
     "broadcasts": "Xabarnomalar",
     "notifications": "Bildirishnomalar",
     "telegram": "Telegram",
+    "subscription": "Obuna",
     "health": "Holat",
     "leads": "Lidlar",
     "lostReasons": "Rad etish sabablari",
@@ -210,7 +211,10 @@
       "exam_type_in_use": "Bu imtihon turi boʻyicha ballar bor, shuning uchun boʻlimlari va umumiy ball qoidasini oʻzgartirib boʻlmaydi. Nomini oʻzgartiring yoki arxivlang.",
       "exam_score_invalid": "Baʼzi ballar ruxsat etilgan oraliq yoki qadamdan tashqarida.",
       "invalid_exam_result": "Natijani tekshiring: turi, sanasi va sertifikati.",
-      "invalid_target": "Maqsad imtihon shkalasi doirasida boʻlishi kerak."
+      "invalid_target": "Maqsad imtihon shkalasi doirasida boʻlishi kerak.",
+      "student_limit_reached": "Tarif boʻyicha oʻquvchilar chegarasiga yetildi. Yana oʻquvchi qoʻshish uchun «Sozlamalar → Obuna» boʻlimida tarifni oʻzgartiring.",
+      "branch_limit_reached": "Tarif boshqa filial qoʻshishga ruxsat bermaydi. «Sozlamalar → Obuna» boʻlimida tarifni oʻzgartiring.",
+      "invalid_invoice": "Bu hisobni hozirgi holatida oʻzgartirib boʻlmaydi."
     },
     "groupHasStudents": "Arxivlashdan oldin guruh oʻquvchilarining oʻqishini tugating yoki ularni oʻtkazing.",
     "duplicateStudent": "Bunday ism yoki telefonli oʻquvchi allaqachon bor. Roʻyxatni tekshiring yoki baribir qoʻshish uchun yana saqlang."
@@ -2117,6 +2121,51 @@
     "archiveTitle": "«{label}» arxivlansinmi?",
     "archiveHint": "U boshqa taklif qilinmaydi; uni tanlagan lidlarda saqlanib qoladi.",
     "restoreTitle": "«{label}» tiklansinmi?"
+  },
+  "subscription": {
+    "title": "Obuna",
+    "planTitle": "Sizning tarifingiz",
+    "plan": "Tarif",
+    "trialPlan": "Bepul sinov davri",
+    "students": "Faol oʻquvchilar",
+    "branches": "Filiallar",
+    "used": "{used} / {limit}",
+    "unlimited": "cheklovsiz",
+    "trialEnds": "Sinov davri tugaydi",
+    "paidThrough": "Toʻlangan muddat",
+    "trialUntil": "Barcha imkoniyatlar bilan bepul sinov davri {date} gacha.",
+    "paidUntil": "{date} gacha toʻlangan.",
+    "graceUntil": "Toʻlov muddati oʻtdi. {date} gacha hammasi ishlaydi, keyin markaz faqat koʻrish rejimiga oʻtadi.",
+    "readOnlyHint": "Markaz faqat koʻrish rejimida: hammasini koʻrish va yuklab olish mumkin, lekin oʻzgartirib boʻlmaydi. Toʻlov toʻliq kirishni qaytaradi.",
+    "payTitle": "Qanday toʻlash kerak",
+    "payHint": "uteach tanlangan tarif uchun hisob yuboradi. Uni bank oʻtkazmasi yoki Payme orqali toʻlang — toʻlovni bir ish kuni ichida belgilaymiz.",
+    "payFallback": "Tarif tanlash va hisob olish uchun Telegramda uteach jamoasiga yozing.",
+    "plansTitle": "Tariflar",
+    "plansHint": "Narxlar oyiga. Tarifni oʻzgartirish uchun uteach jamoasidan hisob soʻrang.",
+    "current": "Joriy",
+    "pricePerMonth": "Oylik narx",
+    "invoicesTitle": "Hisoblar",
+    "noInvoices": "Hozircha hisoblar yoʻq",
+    "noInvoicesHint": "uteach hisoblari shu yerda paydo boʻladi.",
+    "number": "Raqam",
+    "periodLabel": "Davr",
+    "period": "{from} – {to}",
+    "amount": "Summa",
+    "status": "Holat",
+    "paidOn": "Toʻlangan sana",
+    "invoiceStatus": {
+      "draft": "Qoralama",
+      "issued": "Toʻlanishi kerak",
+      "paid": "Toʻlangan",
+      "void": "Bekor qilingan"
+    },
+    "banner": {
+      "trialEnding": "{days, plural, =0 {Bepul sinov davri bugun tugaydi.} other {Bepul sinov davri # kundan keyin tugaydi.}}",
+      "pastDue": "{days, plural, =0 {Toʻlov muddati oʻtdi: markaz bugun faqat koʻrish rejimiga oʻtadi.} other {Toʻlov muddati oʻtdi: markaz # kundan keyin faqat koʻrish rejimiga oʻtadi.}}",
+      "readOnly": "Obuna toʻlanmaguncha markaz faqat koʻrish rejimida. Maʼlumotlarni koʻrish va yuklab olish mumkin.",
+      "open": "«Obuna»ni ochish",
+      "askOwner": "Markaz egasidan toʻlashni soʻrang."
+    }
   },
   "exams": {
     "title": "Imtihonlar",

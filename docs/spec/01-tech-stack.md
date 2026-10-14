@@ -191,3 +191,8 @@ Migrations are applied with `supabase db push` from CI on deploy, never by hand 
 - Docker Compose services: `web` (Next.js standalone), `worker`, `caddy` (TLS, reverse proxy).
 - Deploys: CI builds images, pushes them to GHCR, then SSH runs `docker compose pull && up -d`.
 - Backups: Supabase Pro daily backups, plus a weekly `pg_dump` to off-site storage.
+
+> PROPOSED (M7 plan): error tracking with **Sentry** (free tier; `@sentry/nextjs` in web, `@sentry/node` in the
+> worker, no PII in events); uptime with **UptimeRobot** (free; 5-minute checks of `/api/health`, alerts to a
+> Telegram chat). `/api/health` checks the database and the worker heartbeat. Off-site weekly `pg_dump` goes to
+> S3-compatible storage. Each needs an account the owner opens (M7d); nothing is added until then.

@@ -326,7 +326,7 @@ describe.skipIf(!enabled)("worker with a fake Telegram API", () => {
       { id: string },
     ];
     await asOwner(async (tx) => {
-      await tx`select public.set_student_target(${ctx.student}, ${ielts}, 7.0, current_date + 30)`;
+      await tx`select public.set_student_target(${ctx.student}, ${ielts}, 7.0, (now() at time zone 'Asia/Tashkent')::date + 30)`;
       await tx`
         select public.save_group_scores(${ctx.group}, ${ielts}, 'mock', current_date,
           ${tx.json([{ studentId: ctx.student, scores: { listening: 6.5, reading: 7, writing: 6, speaking: 6.5 } }])})`;

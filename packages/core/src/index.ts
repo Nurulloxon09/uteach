@@ -8,4 +8,5 @@ export * from "./names";
 export * from "./notifications";
 export * from "./phone";
 export * from "./schedule";
+export * from "./subscription";
 export * from "./time";

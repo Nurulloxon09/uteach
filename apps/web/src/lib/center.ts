@@ -30,6 +30,7 @@ export type CenterContext = {
     defaultLocale: string;
     status: CenterStatus;
     trialEndsAt: string | null;
+    pastDueSince: string | null;
     countryCode: string;
     currency: string;
   };
@@ -112,7 +113,9 @@ export const getCenterContext = cache(async (): Promise<CenterContext> => {
   const [{ data: center }, { data: membership }] = await Promise.all([
     supabase
       .from("centers")
-      .select("id, name, timezone, default_locale, status, trial_ends_at, country_code, currency")
+      .select(
+        "id, name, timezone, default_locale, status, trial_ends_at, past_due_since, country_code, currency",
+      )
       .eq("id", current.centerId)
       .single(),
     supabase
@@ -143,6 +146,7 @@ export const getCenterContext = cache(async (): Promise<CenterContext> => {
       defaultLocale: center.default_locale,
       status: center.status,
       trialEndsAt: center.trial_ends_at,
+      pastDueSince: center.past_due_since,
       countryCode: center.country_code,
       currency: center.currency,
     },

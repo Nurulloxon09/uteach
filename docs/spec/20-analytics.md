@@ -11,6 +11,9 @@ Data: live queries for dashboards; **materialised views** refreshed nightly by `
 **Admin (their branches):** today's lessons (marked ✓ / not yet), debtors to call (top 10), follow-ups due today, trials today, unlinked Telegram count, conflicts inbox.
 **Teacher:** today's lessons with a "mark attendance" button, unmarked lessons within the edit window, groups list, latest scores to enter. No money.
 
+> PROPOSED (M7 plan): metric definitions for the dashboards are in 30-milestones (M7 plan, M7c). Each dashboard is
+> one RPC that runs as the caller (RLS applies), tested against fixture data in pgTAP.
+
 ## Analytics (M12) 🟨
 
 > PROPOSED: materialised views with RLS wrappers, the metric definitions (collection rate, churn, cohort retention, 3-month teacher retention), date/branch filters, export. Canvas: collection rate, churn, funnel by source, teacher retention, score uplift, heatmap, at-risk.

@@ -267,17 +267,23 @@ isOneToOne: false
                   ]
                 },"centers": {
                   Row: {
-                    "absence_alert_delay_min": number,"archived_at": string | null,"attendance_edit_hours": number,"billing_mode": Database["public"]['Enums']["billing_mode"],"country_code": string,"created_at": string,"currency": string,"default_locale": string,"due_soon_reminder_enabled": boolean,"id": string,"late_alert_enabled": boolean,"leave_credit_policy": Database["public"]['Enums']["leave_credit_policy"],"logo_path": string | null,"name": string,"payment_due_days": number,"quiet_hours_end": string,"quiet_hours_start": string,"reminder_every_days": number,"rounding_unit_amount": number,"settings": NonNullable<Json>,"slug": string,"sms_enabled": boolean,"sms_monthly_cap": number,"status": Database["public"]['Enums']["center_status"],"timezone": string,"trial_ends_at": string | null,"updated_at": string
+                    "absence_alert_delay_min": number,"archived_at": string | null,"attendance_edit_hours": number,"billing_mode": Database["public"]['Enums']["billing_mode"],"country_code": string,"created_at": string,"currency": string,"default_locale": string,"due_soon_reminder_enabled": boolean,"id": string,"late_alert_enabled": boolean,"leave_credit_policy": Database["public"]['Enums']["leave_credit_policy"],"logo_path": string | null,"name": string,"paid_until": string | null,"past_due_since": string | null,"payment_due_days": number,"plan_id": string | null,"quiet_hours_end": string,"quiet_hours_start": string,"reminder_every_days": number,"rounding_unit_amount": number,"settings": NonNullable<Json>,"slug": string,"sms_enabled": boolean,"sms_monthly_cap": number,"status": Database["public"]['Enums']["center_status"],"timezone": string,"trial_ends_at": string | null,"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"billing_mode"?: Database["public"]['Enums']["billing_mode"],"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"due_soon_reminder_enabled"?: boolean,"id"?: string,"late_alert_enabled"?: boolean,"leave_credit_policy"?: Database["public"]['Enums']["leave_credit_policy"],"logo_path"?: string | null,"name": string,"payment_due_days"?: number,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"reminder_every_days"?: number,"rounding_unit_amount"?: number,"settings"?: NonNullable<Json>,"slug": string,"sms_enabled"?: boolean,"sms_monthly_cap"?: number,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
+                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"billing_mode"?: Database["public"]['Enums']["billing_mode"],"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"due_soon_reminder_enabled"?: boolean,"id"?: string,"late_alert_enabled"?: boolean,"leave_credit_policy"?: Database["public"]['Enums']["leave_credit_policy"],"logo_path"?: string | null,"name": string,"paid_until"?: string | null,"past_due_since"?: string | null,"payment_due_days"?: number,"plan_id"?: string | null,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"reminder_every_days"?: number,"rounding_unit_amount"?: number,"settings"?: NonNullable<Json>,"slug": string,"sms_enabled"?: boolean,"sms_monthly_cap"?: number,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
                   }
                   Update: {
-                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"billing_mode"?: Database["public"]['Enums']["billing_mode"],"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"due_soon_reminder_enabled"?: boolean,"id"?: string,"late_alert_enabled"?: boolean,"leave_credit_policy"?: Database["public"]['Enums']["leave_credit_policy"],"logo_path"?: string | null,"name"?: string,"payment_due_days"?: number,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"reminder_every_days"?: number,"rounding_unit_amount"?: number,"settings"?: NonNullable<Json>,"slug"?: string,"sms_enabled"?: boolean,"sms_monthly_cap"?: number,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
+                    "absence_alert_delay_min"?: number,"archived_at"?: string | null,"attendance_edit_hours"?: number,"billing_mode"?: Database["public"]['Enums']["billing_mode"],"country_code"?: string,"created_at"?: string,"currency"?: string,"default_locale"?: string,"due_soon_reminder_enabled"?: boolean,"id"?: string,"late_alert_enabled"?: boolean,"leave_credit_policy"?: Database["public"]['Enums']["leave_credit_policy"],"logo_path"?: string | null,"name"?: string,"paid_until"?: string | null,"past_due_since"?: string | null,"payment_due_days"?: number,"plan_id"?: string | null,"quiet_hours_end"?: string,"quiet_hours_start"?: string,"reminder_every_days"?: number,"rounding_unit_amount"?: number,"settings"?: NonNullable<Json>,"slug"?: string,"sms_enabled"?: boolean,"sms_monthly_cap"?: number,"status"?: Database["public"]['Enums']["center_status"],"timezone"?: string,"trial_ends_at"?: string | null,"updated_at"?: string
                   }
                   Relationships: [
-                    
+                    {
+      foreignKeyName: "centers_plan_id_fkey"
+      columns: ["plan_id"]
+isOneToOne: false
+      referencedRelation: "plans"
+      referencedColumns: ["id"]
+    }
                   ]
                 },"charges": {
                   Row: {
@@ -1175,6 +1181,60 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"plans": {
+                  Row: {
+                    "archived_at": string | null,"branch_limit": number | null,"code": string,"created_at": string,"currency": string,"features": NonNullable<Json>,"id": string,"is_public": boolean,"name": string,"price_amount": number,"sort_order": number,"student_limit": number | null,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "archived_at"?: string | null,"branch_limit"?: number | null,"code": string,"created_at"?: string,"currency"?: string,"features"?: NonNullable<Json>,"id"?: string,"is_public"?: boolean,"name": string,"price_amount": number,"sort_order"?: number,"student_limit"?: number | null,"updated_at"?: string
+                  }
+                  Update: {
+                    "archived_at"?: string | null,"branch_limit"?: number | null,"code"?: string,"created_at"?: string,"currency"?: string,"features"?: NonNullable<Json>,"id"?: string,"is_public"?: boolean,"name"?: string,"price_amount"?: number,"sort_order"?: number,"student_limit"?: number | null,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
+                },"platform_invoices": {
+                  Row: {
+                    "amount": number,"center_id": string,"created_at": string,"currency": string,"id": string,"issued_at": string | null,"number": string,"paid_at": string | null,"payment_note": string | null,"period_end": string,"period_start": string,"plan_id": string,"status": Database["public"]['Enums']["invoice_status"],"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "amount": number,"center_id": string,"created_at"?: string,"currency": string,"id"?: string,"issued_at"?: string | null,"number": string,"paid_at"?: string | null,"payment_note"?: string | null,"period_end": string,"period_start": string,"plan_id": string,"status"?: Database["public"]['Enums']["invoice_status"],"updated_at"?: string
+                  }
+                  Update: {
+                    "amount"?: number,"center_id"?: string,"created_at"?: string,"currency"?: string,"id"?: string,"issued_at"?: string | null,"number"?: string,"paid_at"?: string | null,"payment_note"?: string | null,"period_end"?: string,"period_start"?: string,"plan_id"?: string,"status"?: Database["public"]['Enums']["invoice_status"],"updated_at"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "platform_invoices_center_id_fkey"
+      columns: ["center_id"]
+isOneToOne: false
+      referencedRelation: "centers"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "platform_invoices_plan_id_fkey"
+      columns: ["plan_id"]
+isOneToOne: false
+      referencedRelation: "plans"
+      referencedColumns: ["id"]
+    }
+                  ]
+                },"platform_settings": {
+                  Row: {
+                    "key": string,"updated_at": string,"value": NonNullable<Json>
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "key": string,"updated_at"?: string,"value"?: NonNullable<Json>
+                  }
+                  Update: {
+                    "key"?: string,"updated_at"?: string,"value"?: NonNullable<Json>
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"profiles": {
                   Row: {
                     "created_at": string,"full_name": string,"id": string,"is_super_admin": boolean,"locale": string,"phone": string,"updated_at": string
@@ -1704,6 +1764,9 @@ isOneToOne: false
 "cancel_trial":
 { Args: { "p_trial_id": string }; Returns: undefined
                            },
+"center_usage":
+{ Args: { "p_center_id": string }; Returns: Json
+                           },
 "check_schedule_conflicts":
 { Args: { "p_group_id": string,"p_rules": Json }; Returns: {
               "conflict_kind": string,"local_date": string,"other_group_name": string,"starts_at": string
@@ -1780,6 +1843,9 @@ isOneToOne: false
 "import_students":
 { Args: { "p_job_id": string,"p_rows": Json }; Returns: Json
                            },
+"issue_platform_invoice":
+{ Args: { "p_amount"?: number,"p_center_id": string,"p_period_end": string,"p_period_start": string,"p_plan_id": string }; Returns: string
+                           },
 "lead_duplicates":
 { Args: { "p_center_id": string,"p_exclude_lead_id"?: string,"p_phone": string }; Returns: {
               "full_name": string,"is_archived": boolean,"kind": string,"lead_id": string,"lead_status": Database["public"]['Enums']["lead_status"],"student_id": string
@@ -1794,6 +1860,9 @@ isOneToOne: false
 { Args: { "p_lesson_id": string,"p_room_id"?: string,"p_starts_at": string }; Returns: {
               "conflict_kind": string,"other_group_name": string,"other_starts_at": string
             }[]
+                           },
+"mark_platform_invoice_paid":
+{ Args: { "p_invoice_id": string,"p_note"?: string }; Returns: undefined
                            },
 "merge_leads":
 { Args: { "p_source_id": string,"p_target_id": string }; Returns: undefined
@@ -1900,6 +1969,9 @@ isOneToOne: false
 "void_payment":
 { Args: { "p_payment_id": string,"p_reason": string }; Returns: undefined
                            },
+"void_platform_invoice":
+{ Args: { "p_invoice_id": string }; Returns: undefined
+                           },
 "worker_health":
 { Args: Record<PropertyKey, never>; Returns: {
               "last_beat_at": string,"service": string
@@ -1907,7 +1979,7 @@ isOneToOne: false
                            }
           }
           Enums: {
-            "account_kind": "cash"|"terminal"|"bank"|"online","adjustment_kind": "opening_balance"|"waive"|"write_off"|"correction"|"refund"|"promo"|"unused_lessons","attendance_status": "present"|"late"|"absent"|"excused","billing_mode": "lesson_cycle"|"calendar_month","center_status": "trial"|"active"|"past_due"|"read_only"|"cancelled","charge_status": "open"|"void","enrollment_end_reason": "completed"|"dropped"|"transferred"|"moved_level","enrollment_status": "active"|"frozen"|"ended","exam_result_kind": "diagnostic"|"mock"|"official","group_status": "forming"|"active"|"finished","lead_activity_kind": "note"|"call"|"status_change"|"task"|"message"|"system","lead_source": "instagram"|"telegram"|"walk_in"|"call"|"referral"|"web_form"|"meta_ads"|"other","lead_status": "new"|"contacted"|"trial_scheduled"|"trial_done"|"won"|"lost","leave_credit_policy": "ask"|"credit"|"no_credit","lesson_status": "scheduled"|"held"|"cancelled","membership_role": "owner"|"admin"|"teacher","membership_status": "invited"|"active"|"disabled","notification_channel": "telegram"|"sms"|"whatsapp"|"email","outbox_status": "pending"|"sending"|"sent"|"failed"|"cancelled"|"skipped","payment_method": "cash"|"card"|"transfer"|"online","trial_status": "scheduled"|"attended"|"no_show"|"cancelled"
+            "account_kind": "cash"|"terminal"|"bank"|"online","adjustment_kind": "opening_balance"|"waive"|"write_off"|"correction"|"refund"|"promo"|"unused_lessons","attendance_status": "present"|"late"|"absent"|"excused","billing_mode": "lesson_cycle"|"calendar_month","center_status": "trial"|"active"|"past_due"|"read_only"|"cancelled","charge_status": "open"|"void","enrollment_end_reason": "completed"|"dropped"|"transferred"|"moved_level","enrollment_status": "active"|"frozen"|"ended","exam_result_kind": "diagnostic"|"mock"|"official","group_status": "forming"|"active"|"finished","invoice_status": "draft"|"issued"|"paid"|"void","lead_activity_kind": "note"|"call"|"status_change"|"task"|"message"|"system","lead_source": "instagram"|"telegram"|"walk_in"|"call"|"referral"|"web_form"|"meta_ads"|"other","lead_status": "new"|"contacted"|"trial_scheduled"|"trial_done"|"won"|"lost","leave_credit_policy": "ask"|"credit"|"no_credit","lesson_status": "scheduled"|"held"|"cancelled","membership_role": "owner"|"admin"|"teacher","membership_status": "invited"|"active"|"disabled","notification_channel": "telegram"|"sms"|"whatsapp"|"email","outbox_status": "pending"|"sending"|"sent"|"failed"|"cancelled"|"skipped","payment_method": "cash"|"card"|"transfer"|"online","trial_status": "scheduled"|"attended"|"no_show"|"cancelled"
           }
           CompositeTypes: {
             [_ in never]: never
@@ -2023,7 +2095,7 @@ export type CompositeTypes<
 export const Constants = {
   "public": {
           Enums: {
-            "account_kind": ["cash", "terminal", "bank", "online"],"adjustment_kind": ["opening_balance", "waive", "write_off", "correction", "refund", "promo", "unused_lessons"],"attendance_status": ["present", "late", "absent", "excused"],"billing_mode": ["lesson_cycle", "calendar_month"],"center_status": ["trial", "active", "past_due", "read_only", "cancelled"],"charge_status": ["open", "void"],"enrollment_end_reason": ["completed", "dropped", "transferred", "moved_level"],"enrollment_status": ["active", "frozen", "ended"],"exam_result_kind": ["diagnostic", "mock", "official"],"group_status": ["forming", "active", "finished"],"lead_activity_kind": ["note", "call", "status_change", "task", "message", "system"],"lead_source": ["instagram", "telegram", "walk_in", "call", "referral", "web_form", "meta_ads", "other"],"lead_status": ["new", "contacted", "trial_scheduled", "trial_done", "won", "lost"],"leave_credit_policy": ["ask", "credit", "no_credit"],"lesson_status": ["scheduled", "held", "cancelled"],"membership_role": ["owner", "admin", "teacher"],"membership_status": ["invited", "active", "disabled"],"notification_channel": ["telegram", "sms", "whatsapp", "email"],"outbox_status": ["pending", "sending", "sent", "failed", "cancelled", "skipped"],"payment_method": ["cash", "card", "transfer", "online"],"trial_status": ["scheduled", "attended", "no_show", "cancelled"]
+            "account_kind": ["cash", "terminal", "bank", "online"],"adjustment_kind": ["opening_balance", "waive", "write_off", "correction", "refund", "promo", "unused_lessons"],"attendance_status": ["present", "late", "absent", "excused"],"billing_mode": ["lesson_cycle", "calendar_month"],"center_status": ["trial", "active", "past_due", "read_only", "cancelled"],"charge_status": ["open", "void"],"enrollment_end_reason": ["completed", "dropped", "transferred", "moved_level"],"enrollment_status": ["active", "frozen", "ended"],"exam_result_kind": ["diagnostic", "mock", "official"],"group_status": ["forming", "active", "finished"],"invoice_status": ["draft", "issued", "paid", "void"],"lead_activity_kind": ["note", "call", "status_change", "task", "message", "system"],"lead_source": ["instagram", "telegram", "walk_in", "call", "referral", "web_form", "meta_ads", "other"],"lead_status": ["new", "contacted", "trial_scheduled", "trial_done", "won", "lost"],"leave_credit_policy": ["ask", "credit", "no_credit"],"lesson_status": ["scheduled", "held", "cancelled"],"membership_role": ["owner", "admin", "teacher"],"membership_status": ["invited", "active", "disabled"],"notification_channel": ["telegram", "sms", "whatsapp", "email"],"outbox_status": ["pending", "sending", "sent", "failed", "cancelled", "skipped"],"payment_method": ["cash", "card", "transfer", "online"],"trial_status": ["scheduled", "attended", "no_show", "cancelled"]
           }
         }
 } as const

@@ -131,6 +131,9 @@ export const DB_ERROR_CODES = [
   "exam_score_invalid",
   "invalid_exam_result",
   "invalid_target",
+  "student_limit_reached",
+  "branch_limit_reached",
+  "invalid_invoice",
 ] as const;
 
 export type DbErrorCode = (typeof DB_ERROR_CODES)[number];
