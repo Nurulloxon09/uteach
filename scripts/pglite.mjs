@@ -25,6 +25,7 @@ create table auth.users (
   phone text unique,
   phone_confirmed_at timestamptz,
   raw_user_meta_data jsonb,
+  last_sign_in_at timestamptz,
   created_at timestamptz,
   updated_at timestamptz
 );

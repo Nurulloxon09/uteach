@@ -522,7 +522,24 @@ Global "done when" for every milestone:
 > - Banner days are calendar days in the center's timezone ("ends today", "in 2 days"), matching the dates shown.
 - [x] A trial center flips to `past_due` at trial end and to `read_only` 7 days later (job test); in read_only every write is rejected by RLS and every read still works; marking an invoice paid restores `active`. (M7a: pgTAP `m7_plans`: the machine's edges, `expire_centers`, read-only inserts/RPCs/updates rejected and reads working, platform writes passing, the guard on every tenant table, paid → active with `paid_until`; SQL and `centerStatusNext` agree on `subscription.fixtures.json`; banners and a refused write checked in the browser.)
 - [x] Enrolling beyond the plan's student limit is blocked with an upgrade message. (M7a: pgTAP `m7_plans`: the student over the limit is refused with `student_limit_reached`, an active student can join another group; the message points to Settings → Subscription in uz/ru/en. Not yet clicked through in the browser: the full-loop E2E in M7e covers it.)
-- [ ] Super-admin can list centers, extend a trial, issue and mark invoices, and open the read-only support view; each open is in `audit_log`.
+> PROPOSED (M7b, as built, 2026-10-14):
+> - /admin calls only `admin_*` functions with the service role (plans and platform settings, readable by everyone
+>   signed in, are read with the person's session). Each function takes `p_actor`, refuses anyone who isn't a
+>   super-admin (`forbidden`), and sets the transaction-local `uteach.super_admin`; `private.audit_row` then writes
+>   `actor_kind = 'super_admin'` and that person. Signed-in users can't call them at all.
+> - Extend trial: 1–90 days, added to the trial end (or to now, if it has ended); only for centers that never paid
+>   (`paid_until` empty); the center goes back to `trial`. Set status refuses `trial` with an ended trial and
+>   `active` with an ended paid period (`invalid_status`), since the hourly job would undo them.
+> - Plans: the code is fixed once created; the trial plan can't be hidden, deleted or made public; a plan any center
+>   or invoice uses can only be hidden (`plan_in_use`); nobody can be moved onto a hidden plan.
+> - "How to pay" (`platform_settings.payment_instructions`) is edited on /admin/plans and audited by hand.
+> - Support view: center, branches, staff (name, role, status, last sign-in), student counts, groups with active
+>   students, the last 10 payments (amount, method; no names), the last 10 failed messages and imports.
+> - Health: worker heartbeats (red after 2 min), the outbox (due now, waiting, oldest due, sent / failed in 24 h,
+>   SMS failures), each pg_cron job's last run.
+> - Settings → Audit log (owners): newest first, 30 days by default, filters for what (table or support view), who
+>   (staff, uteach support, automatic) and dates; ids and timestamps are left out of the changes.
+- [x] Super-admin can list centers, extend a trial, issue and mark invoices, and open the read-only support view; each open is in `audit_log`. (M7b: pgTAP `m7b_admin`, 75 checks: service role only, non-super-admins refused, every action audited as `super_admin`, the support view writes `support_view`, which the owner reads; checked in the browser on local data; /admin is a 404 for everyone else.)
 - [ ] Owner/admin/teacher dashboards show the numbers defined in 20, verified against fixture data.
 - [ ] Prod: `docker compose up` on the VPS serves HTTPS; deploy from CI; worker and web restart automatically; daily DB backup verified by a restore test; error tracking receives a test error; an uptime alert reaches Telegram.
 - [ ] A full dry run with real data from a friendly center (import → a week of attendance → month-start charges → payments → reminders) is completed with no blocking bugs.

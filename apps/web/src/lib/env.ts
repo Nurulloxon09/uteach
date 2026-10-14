@@ -47,3 +47,11 @@ export function serverEnv() {
       ESKIZ_FROM: process.env.ESKIZ_FROM || undefined,
     });
 }
+
+/**
+ * The secret (service-role) key for /admin (01: super-admin pages are on the service-role allow-list). Read on its
+ * own so /admin doesn't need the SMS hook's settings. Null when it isn't set: /admin then says so.
+ */
+export function adminSecretKey(): string | null {
+  return process.env.SUPABASE_SECRET_KEY || null;
+}

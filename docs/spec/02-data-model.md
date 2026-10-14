@@ -1381,6 +1381,11 @@ RLS: PERM(finance) or ADM(branch) with PERM(cash_closing). A closing locks that 
 | at | timestamptz not null default now() | |
 
 Audited tables: payments, charges, balance_adjustments, attendance (edits after the window), enrollments, memberships, group_prices, refunds, expenses, payroll_*, centers.
+
+> PROPOSED (M7b, as built): also `plans` and `platform_invoices` (platform rows; `center_id` is null for plans) and
+> `platform_settings` (written by `admin_set_payment_instructions`). `actor_kind = 'super_admin'` when the
+> transaction-local setting `uteach.super_admin` is set; only `private.act_as_super_admin` (service role) sets it.
+> Owners read the log in Settings → Audit log.
 RLS: select OWN; no update/delete for anyone (append-only, also enforced by trigger).
 
 ### `import_jobs` 🟩 [M1]

@@ -12,7 +12,8 @@ import { Sidebar } from "./sidebar";
 /**
  * The app frame from the reference (`DashboardShell`): sticky sidebar on `lg+`, a left drawer below that,
  * top bar with the "Go to…" pill, center switcher, language and user menus, and the main area.
- * Presentational: the (app) layout passes real data, /dev/ui passes fake data.
+ * Presentational: the (app) layout passes real data, /dev/ui passes fake data. /admin passes no centers, so the
+ * center switcher is left out.
  */
 export function AppShell({
   nav,
@@ -73,12 +74,14 @@ export function AppShell({
           </button>
           <GoToPalette nav={nav} />
           <div className="ml-auto flex items-center gap-2 sm:gap-3">
-            <CenterMenu
-              centers={centers}
-              currentCenterId={currentCenterId}
-              chip={centerChip}
-              switchCenter={switchCenter}
-            />
+            {centers.length > 0 ? (
+              <CenterMenu
+                centers={centers}
+                currentCenterId={currentCenterId}
+                chip={centerChip}
+                switchCenter={switchCenter}
+              />
+            ) : null}
             <LanguageMenu />
             <UserMenu user={user} logout={logout} />
           </div>
