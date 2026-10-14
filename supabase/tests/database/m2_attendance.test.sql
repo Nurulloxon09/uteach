@@ -614,7 +614,7 @@ select throws_ok(
   'P0001', 'invalid_dates', 'the matrix covers at most about two months');
 select pg_temp.login(pg_temp.id('t1'));
 select is(
-  (select status::text from public.attendance_matrix(pg_temp.id('g1'), pg_temp.d('today'), pg_temp.d('today')) m
+  (select status::text from public.attendance_matrix(pg_temp.id('g1'), pg_temp.d('today') - 1, pg_temp.d('today')) m
    where m.student_id = pg_temp.id('s3') and m.lesson_id = pg_temp.id('now_l')),
   'absent', 'teachers read their group''s matrix with the marks');
 

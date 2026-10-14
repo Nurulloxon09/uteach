@@ -270,7 +270,7 @@ select is(
 );
 select ok(
   (select bool_and(send_after between now() + interval '9 minutes' and now() + interval '11 minutes')
-   from public.notification_outbox where template_key = 'score_posted'),
+   from public.notification_outbox where template_key = 'score_posted' and center_id = pg_temp.id('center_a')),
   'messages wait 10 minutes'
 );
 select is(
@@ -285,7 +285,8 @@ select is(
   0, 'nothing waits for the cleared row'
 );
 select is(
-  (select count(*)::int from public.notification_outbox where template_key = 'score_posted' and status = 'pending'),
+  (select count(*)::int from public.notification_outbox where template_key = 'score_posted' and status = 'pending'
+     and center_id = pg_temp.id('center_a')),
   15, '15 waiting messages: 14 students + the mother'
 );
 
