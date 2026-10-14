@@ -1942,6 +1942,11 @@ isOneToOne: false
 "preview_broadcast":
 { Args: { "p_audience": Json,"p_center_id": string }; Returns: Json
                            },
+"public_plans":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "branch_limit": number,"code": string,"currency": string,"name": string,"price_amount": number,"sort_order": number,"student_limit": number
+            }[]
+                           },
 "record_otp_send":
 { Args: { "p_phone_hash": string }; Returns: boolean
                            },

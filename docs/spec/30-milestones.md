@@ -521,7 +521,7 @@ Global "done when" for every milestone:
 >   on `branches` inserts.
 > - Banner days are calendar days in the center's timezone ("ends today", "in 2 days"), matching the dates shown.
 - [x] A trial center flips to `past_due` at trial end and to `read_only` 7 days later (job test); in read_only every write is rejected by RLS and every read still works; marking an invoice paid restores `active`. (M7a: pgTAP `m7_plans`: the machine's edges, `expire_centers`, read-only inserts/RPCs/updates rejected and reads working, platform writes passing, the guard on every tenant table, paid → active with `paid_until`; SQL and `centerStatusNext` agree on `subscription.fixtures.json`; banners and a refused write checked in the browser.)
-- [x] Enrolling beyond the plan's student limit is blocked with an upgrade message. (M7a: pgTAP `m7_plans`: the student over the limit is refused with `student_limit_reached`, an active student can join another group; the message points to Settings → Subscription in uz/ru/en. Not yet clicked through in the browser: the full-loop E2E in M7e covers it.)
+- [x] Enrolling beyond the plan's student limit is blocked with an upgrade message. (M7a: pgTAP `m7_plans`: the student over the limit is refused with `student_limit_reached`, an active student can join another group; the message points to Settings → Subscription in uz/ru/en. M7e: the full-loop E2E converts one student too many on a full plan, sees the message and follows its link to Settings → Subscription.)
 > PROPOSED (M7b, as built, 2026-10-14):
 > - /admin calls only `admin_*` functions with the service role (plans and platform settings, readable by everyone
 >   signed in, are read with the person's session). Each function takes `p_actor`, refuses anyone who isn't a
@@ -620,11 +620,22 @@ Global "done when" for every milestone:
 > - **Tests:** pgTAP `m7e_public` (anon gets only public, unarchived plans and no other columns; `plans` still
 >   refuses anon); the two e2e specs; screenshots of the landing and legal pages at 1440 / 390.
 > - Not in M7e: the production domain, Sentry and analytics (M7d); a lawyer's text (owner); a contact form.
+> PROPOSED (M7e, as built, 2026-10-14):
+> - The visitor pages live in a `(public)` route group (`/`, `/terms`, `/privacy`) with `PublicLayout`; `/` keeps
+>   sending signed-in people to Home or Today. `public_plans()` also leaves out the `trial` row by code.
+> - Legal text: one title and one paragraph per section in the catalogs (`legal.terms.*`, `legal.privacy.*`); the
+>   draft notice is a `DRAFT` flag in `(public)/legal.tsx`, with the "last updated" date next to it.
+> - Owners get an "Open Subscription" link under the student-limit, branch-limit and read-only errors in every form
+>   (05-ui); the full-loop E2E clicks it.
+> - The full-loop E2E has one owner who also teaches the group (every test phone is taken), books the trial and the
+>   first class on two short lessons added by the test helper, and fills the plan up by moving the center onto a
+>   hidden one-student test plan in SQL. The receipt check is the `payment_received` outbox row for the guardian
+>   (receipt number and payment id); the worker test covers sending it.
 - [x] Owner/admin/teacher dashboards show the numbers defined in 20, verified against fixture data. (M7c: pgTAP `m7c_dashboards`, 41 checks on a fixture center with 2 branches: every owner number for all branches and each branch, an admin of one branch with and without permissions, both teachers, and refusals for other roles and centers; passes on real Postgres and PGlite. Owner Home checked in the browser on local data; screenshots at 1440/390.)
 - [ ] Prod: `docker compose up` on the VPS serves HTTPS; deploy from CI; worker and web restart automatically; daily DB backup verified by a restore test; error tracking receives a test error; an uptime alert reaches Telegram.
 - [ ] A full dry run with real data from a friendly center (import → a week of attendance → month-start charges → payments → reminders) is completed with no blocking bugs.
 - [ ] Supabase project is on **Pro** before the first paying center.
-**E2E:** the full loop: lead → trial → convert → attendance → charge → payment → receipt in Telegram.
+**E2E:** the full loop: lead → trial → convert → attendance → charge → payment → receipt in Telegram. (M7e: `m7e-full-loop.spec.ts` up to the receipt queued for the parent, plus the student-limit message; `m7e-public.spec.ts` for the landing and legal pages in uz/ru/en.)
 
 ---
 

@@ -43,4 +43,14 @@ describe("publicPathsFor", () => {
     expect(matchesPath("/dev/ui", publicPathsFor("production"))).toBe(false);
     expect(matchesPath("/login", publicPathsFor("production"))).toBe(true);
   });
+
+  it("lets visitors open the landing and legal pages, and nothing else by accident", () => {
+    const paths = publicPathsFor("production");
+    expect(matchesPath("/", paths)).toBe(true);
+    expect(matchesPath("/terms", paths)).toBe(true);
+    expect(matchesPath("/privacy", paths)).toBe(true);
+    expect(matchesPath("/home", paths)).toBe(false);
+    expect(matchesPath("/students", paths)).toBe(false);
+    expect(matchesPath("/admin", paths)).toBe(false);
+  });
 });

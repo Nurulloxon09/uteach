@@ -13,6 +13,16 @@ const publicSchema = z.object({
     .string()
     .regex(/^[A-Za-z][A-Za-z0-9_]{3,31}$/)
     .optional(),
+  /** uteach's own Telegram username for the landing page contact (M7e); unset = the contact block is hidden. */
+  NEXT_PUBLIC_CONTACT_TELEGRAM: z
+    .string()
+    .regex(/^[A-Za-z][A-Za-z0-9_]{3,31}$/)
+    .optional(),
+  /** "true" lets search engines index the public pages (production only, M7d); anything else blocks them. */
+  NEXT_PUBLIC_SITE_INDEXABLE: z
+    .string()
+    .optional()
+    .transform((v) => v === "true"),
 });
 
 export const publicEnv = publicSchema.parse({
@@ -21,6 +31,8 @@ export const publicEnv = publicSchema.parse({
   NEXT_PUBLIC_DEFAULT_COUNTRY: process.env.NEXT_PUBLIC_DEFAULT_COUNTRY || undefined,
   NEXT_PUBLIC_DEFAULT_TIMEZONE: process.env.NEXT_PUBLIC_DEFAULT_TIMEZONE || undefined,
   NEXT_PUBLIC_TELEGRAM_BOT_USERNAME: process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || undefined,
+  NEXT_PUBLIC_CONTACT_TELEGRAM: process.env.NEXT_PUBLIC_CONTACT_TELEGRAM || undefined,
+  NEXT_PUBLIC_SITE_INDEXABLE: process.env.NEXT_PUBLIC_SITE_INDEXABLE || undefined,
 });
 
 /** Server-only env vars. Read lazily so the browser bundle never touches them. */

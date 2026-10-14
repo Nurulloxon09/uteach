@@ -2633,5 +2633,193 @@
     "scoresTitle": "Natija kiritish kerak",
     "scoresHint": "Oxirgi 30 kunda natija kiritilmagan guruhlaringiz.",
     "groupsTitle": "Mening guruhlarim"
+  },
+  "public": {
+    "metaTitle": "uteach — oʻquv markazlari uchun dastur",
+    "metaDescription": "Oʻquvchilar, guruhlar, dars jadvali, davomat, toʻlovlar va qarzlar bir joyda, ota-onalarga Telegram xabarlari bilan. 14 kun bepul.",
+    "nav": {
+      "login": "Kirish",
+      "signup": "Bepul boshlash",
+      "features": "Imkoniyatlar",
+      "plans": "Tariflar",
+      "contact": "Aloqa"
+    },
+    "hero": {
+      "eyebrow": "Til maktablari va imtihonga tayyorlov markazlari uchun",
+      "title": "Oʻquv markazingizni bir joydan boshqaring",
+      "subtitle": "Guruhlar va dars jadvali, 30 soniyada davomat, toʻlovlar va qarzlar, ota-onalarga Telegram xabarlari. Oʻzbekistondagi markazlar uchun yaratilgan.",
+      "cta": "Bepul sinov davrini boshlash",
+      "secondary": "Tariflarni koʻrish",
+      "note": "14 kun bepul, 50 tagacha oʻquvchi. Karta kerak emas."
+    },
+    "features": {
+      "title": "Markaz har kuni qiladigan hamma ish",
+      "subtitle": "Rahbar, administratorlar va oʻqituvchilar har biri oʻziga keraklisini koʻradi.",
+      "students": {
+        "title": "Oʻquvchilar va guruhlar",
+        "body": "Ota-onalar va aka-ukalar bilan profillar, guruhga qoʻshish, muzlatish va koʻchirish. Exceldan bir necha daqiqada import."
+      },
+      "schedule": {
+        "title": "Dars jadvali",
+        "body": "Darslar guruhning kunlari va vaqti boʻyicha yaratiladi. Xona va oʻqituvchi toʻqnashuvlari oldindan koʻrinadi."
+      },
+      "attendance": {
+        "title": "Davomat",
+        "body": "Oʻqituvchi darsni telefondan belgilaydi: hamma keldi, keyin istisnolar. Ota-onalar dars qoldirilganini bilib oladi."
+      },
+      "payments": {
+        "title": "Toʻlovlar va qarzlar",
+        "body": "Darslar sikli uchun hisob, kvitansiyalar va muddat boʻyicha qarzdorlar roʻyxati — hech kim unutilmaydi."
+      },
+      "telegram": {
+        "title": "Ota-onalar uchun Telegram",
+        "body": "Qoldirilgan darslar, kvitansiyalar, eslatmalar va ballar ota-onalarga markazning Telegram boti orqali boradi."
+      },
+      "leads": {
+        "title": "Murojaatlar va sinov darslari",
+        "body": "Barcha qoʻngʻiroq va xabarlar bitta doskada, sinov darslari jadvalda, guruhga qoʻshish bir bosishda."
+      },
+      "scores": {
+        "title": "Imtihon natijalari",
+        "body": "IELTS, SAT, CEFR va oʻz sinov testlaringiz, har bir oʻquvchining oʻsish grafigi bilan."
+      },
+      "dashboards": {
+        "title": "Umumiy koʻrinish",
+        "body": "Bugungi darslar, oy davomida yigʻilgan pul, qarzlar va yangi oʻquvchilar bir qarashda."
+      }
+    },
+    "start": {
+      "title": "Qanday boshlanadi",
+      "step1": {
+        "title": "Markazingizni yarating",
+        "body": "Telefon raqamingiz bilan roʻyxatdan oʻting, filial va xonalarni qoʻshing."
+      },
+      "step2": {
+        "title": "Oʻquvchilarni olib keling",
+        "body": "Oʻquvchi va guruhlarni Exceldan import qiling yoki qoʻlda qoʻshing."
+      },
+      "step3": {
+        "title": "Jamoangizni taklif qiling",
+        "body": "Administrator va oʻqituvchilarga havola yuboring. Har kim faqat oʻz roli ruxsat bergan narsani koʻradi."
+      }
+    },
+    "plans": {
+      "title": "Tariflar",
+      "subtitle": "Har bir markaz 14 kunlik bepul sinovdan boshlaydi. Tarif undan keyin tanlanadi.",
+      "perMonth": "oyiga",
+      "students": "{count, plural, other {# tagacha faol oʻquvchi}}",
+      "unlimitedStudents": "Oʻquvchilar soni cheklanmagan",
+      "branches": "{count, plural, one {# filial} other {# tagacha filial}}",
+      "unlimitedBranches": "Filiallar soni cheklanmagan",
+      "allFeatures": "Yuqoridagi barcha imkoniyatlar",
+      "cta": "Bepul boshlash",
+      "empty": "Tariflar tez orada eʼlon qilinadi. Bepul sinov davridan boshlang."
+    },
+    "contact": {
+      "title": "Savollaringiz bormi?",
+      "body": "Bizga Telegramda yozing. Markazni sozlash va maʼlumotlarni koʻchirishda yordam beramiz.",
+      "button": "Telegramda yozish"
+    },
+    "footer": {
+      "rights": "© {year} uteach",
+      "terms": "Shartlar",
+      "privacy": "Maxfiylik"
+    }
+  },
+  "legal": {
+    "draftTitle": "Qoralama",
+    "draftBody": "Bu matn qoralama, uni hali yurist koʻrib chiqmagan. uteach ishga tushgunga qadar oʻzgarishi mumkin.",
+    "updated": "Yangilangan sana: {date}",
+    "back": "Bosh sahifa",
+    "terms": {
+      "title": "Foydalanish shartlari",
+      "about": {
+        "title": "Ushbu shartlar haqida",
+        "body": "uteach — oʻquv markazlarini boshqarish uchun onlayn xizmat: oʻquvchilar, guruhlar, dars jadvali, davomat, toʻlovlar va ota-onalarga xabarlar. Ushbu shartlar uteach va akkaunt ochgan oʻquv markazi (keyingi oʻrinlarda — markaz) oʻrtasidagi kelishuvdir. Markazni yaratgan shaxs ularni markaz nomidan qabul qiladi."
+      },
+      "trial": {
+        "title": "Sinov davri va tariflar",
+        "body": "Har bir yangi markaz 14 kunlik bepul sinov davri va 50 tagacha faol oʻquvchi oladi; karta kerak emas. Sinovdan keyin markaz tarif tanlaydi. Har bir tarifning oylik narxi hamda faol oʻquvchilar va filiallar soniga cheklovi bor — ular bosh sahifada va Sozlamalar → Obuna boʻlimida koʻrsatilgan. Narxlar oʻzgarsa, oʻzgarish markazga taalluqli boʻlishidan kamida 30 kun oldin xabar beramiz."
+      },
+      "paying": {
+        "title": "Toʻlov",
+        "body": "uteach har bir toʻlov davri uchun hisob-faktura chiqaradi. Markaz uni Sozlamalar → Obuna boʻlimidagi rekvizitlar boʻyicha bank orqali toʻlaydi. uteach hisob-fakturani toʻlangan deb belgilaganidan keyin davr toʻlangan hisoblanadi."
+      },
+      "late": {
+        "title": "Toʻlov kechiksa",
+        "body": "Sinov yoki toʻlangan davr toʻlovsiz tugasa, markaz yana 7 kun toʻliq foydalana oladi. Shundan keyin akkaunt faqat oʻqish rejimiga oʻtadi: yangi narsa yozib boʻlmaydi, lekin hammasini koʻrish va yuklab olish mumkin. Hisob-faktura toʻlangach, toʻliq kirish qaytadi. Toʻlov kechikkani uchun maʼlumotlarni hech qachon oʻchirmaymiz."
+      },
+      "duties": {
+        "title": "Markazning majburiyatlari",
+        "body": "Oʻquvchilar, ota-onalar va xodimlar haqida qaysi maʼlumotlarni kiritishni markaz oʻzi hal qiladi va buning uchun qonuniy asos hamda zarur rozilikka, jumladan bola maʼlumotlari uchun ota-onaning roziligiga ega boʻlishga javob beradi. Markaz xodimlarining kirish maʼlumotlarini xavfsiz saqlaydi va ularning akkauntdagi harakatlari uchun javob beradi."
+      },
+      "use": {
+        "title": "Ruxsat etilgan foydalanish",
+        "body": "uteachdan rozilik bermagan odamlarga xabar yuborish, qonunni buzish, boshqa markazlar maʼlumotlariga kirishga urinish yoki xizmat ishini buzish uchun foydalanmang. Bunday akkauntni toʻxtatib qoʻyishimiz mumkin; zarar shoshilinch boʻlmasa, avval markazni ogohlantiramiz."
+      },
+      "availability": {
+        "title": "Ishlash va oʻzgarishlar",
+        "body": "uteach uzluksiz ishlashi uchun harakat qilamiz va maʼlumotlarning zaxira nusxasini muntazam olamiz, lekin hozircha uzluksiz ishlashni kafolatlamaymiz. Imkoniyatlarni yaxshilab, oʻzgartirib boramiz va markaz foydalanadigan narsani olib tashlashdan oldin oldindan xabar beramiz."
+      },
+      "ending": {
+        "title": "Xizmatdan foydalanishni toʻxtatish",
+        "body": "Markaz uteachdan istalgan vaqtda foydalanishni toʻxtatishi mumkin, rahbar esa ketishdan oldin maʼlumotlarni yuklab olishi mumkin. Akkaunt yopilgach, markaz qaytib kelishi ehtimoli uchun maʼlumotlarni 90 kun saqlaymiz, keyin qonun saqlashni talab qiladigan narsalardan tashqari hammasini oʻchiramiz."
+      },
+      "liability": {
+        "title": "Javobgarlik",
+        "body": "uteach markazga hisob yuritishda yordam beradi; markaz oʻz qarorlari, narxlari va oilalar bilan muloqoti uchun oʻzi javob beradi. Qonun ruxsat bergan darajada javobgarligimiz markaz oxirgi 3 oyda uteachga toʻlagan summa bilan cheklanadi."
+      },
+      "law": {
+        "title": "Qonun va nizolar",
+        "body": "Ushbu shartlar Oʻzbekiston Respublikasi qonunchiligi bilan tartibga solinadi. Har qanday nizoni avval muzokara yoʻli bilan hal qilishga harakat qilamiz; boʻlmasa, u Toshkentdagi vakolatli sudga oshiriladi."
+      },
+      "contact": {
+        "title": "Aloqa",
+        "body": "Ushbu shartlar boʻyicha savollar: bosh sahifadagi aloqa orqali uteachga yozing."
+      }
+    },
+    "privacy": {
+      "title": "Maxfiylik siyosati",
+      "roles": {
+        "title": "Maʼlumotlar uchun kim javob beradi",
+        "body": "Har bir oʻquv markazi oʻquvchilar, ota-onalar va xodimlar haqida uteachda qanday maʼlumot saqlashni oʻzi hal qiladi, shuning uchun bu maʼlumotlar uchun markaz javob beradi. uteach ularni faqat markazga xizmat koʻrsatish uchun saqlaydi va qayta ishlaydi. Markaz rahbarlari va xodimlarining akkauntlari uchun uteach oʻzi javob beradi."
+      },
+      "data": {
+        "title": "Nimalarni saqlaymiz",
+        "body": "Xodimlar: ism, telefon raqami, rol va parol (faqat xavfsiz xesh koʻrinishida saqlanadi). Oʻquvchilar va ota-onalar: ismlar, telefon raqamlari, guruhlar, davomat, toʻlovlar va qarzlar, imtihon natijalari, markaz yozgan izohlar hamda ota-ona botni ulaganida Telegram chat identifikatori. Texnik maʼlumotlar: kirish vaqtlari va xizmat xavfsizligi uchun zarur jurnallar."
+      },
+      "purposes": {
+        "title": "Nima uchun foydalanamiz",
+        "body": "Markaz hisobini yuritish; markaz yoqqan xabarlarni (qoldirilgan darslar, toʻlovlar, eslatmalar, ballar) Telegram yoki SMS orqali yuborish; markazga hisob-faktura chiqarish; xizmat xavfsizligini taʼminlash va xatolarni tuzatish uchun. Maʼlumotlarni sotmaymiz va reklama uchun ishlatmaymiz."
+      },
+      "processors": {
+        "title": "Yana kim qayta ishlaydi",
+        "body": "Supabase (maʼlumotlar bazasi va kirish), Telegram (botni ulagan ota-onalarga xabarlar), SMS provayderi (roʻyxatdan oʻtish kodlari va xabarlar), hosting provayderimiz va xatolarni kuzatish xizmati. Har biri faqat oʻz ishi uchun keraklisini oladi."
+      },
+      "location": {
+        "title": "Maʼlumotlar qayerda saqlanadi",
+        "body": "Maʼlumotlar bazasi Supabaseda, Oʻzbekistondan tashqaridagi maʼlumotlar markazida joylashgan. Oʻzbekistonning shaxsga doir maʼlumotlar toʻgʻrisidagi qonuni ularni mamlakat ichida saqlashni talab qiladimi — hozir oʻrganilmoqda; natijaga koʻra bu boʻlim yangilanadi."
+      },
+      "retention": {
+        "title": "Qancha vaqt saqlaymiz",
+        "body": "Markaz uteachdan foydalanar ekan. Hisob toʻgʻri qolishi uchun toʻlov yozuvlarini oʻchirib boʻlmaydi, faqat bekor qilish mumkin. Markaz akkauntini yopgach, uning maʼlumotlari 90 kun ichida oʻchiriladi, zaxira nusxalari esa keyingi 30 kun ichida yangilanadi."
+      },
+      "rights": {
+        "title": "Sizning huquqlaringiz",
+        "body": "Maʼlumotlaringiz nusxasini, ularni tuzatish yoki oʻchirishni soʻrashingiz mumkin. Oʻquvchilar va ota-onalar avval oʻz oʻquv markaziga murojaat qilgani maʼqul, chunki ularning yozuvlarini markaz yuritadi; biz markazga javob berishda yordam beramiz. Rahbarlar va xodimlar uteachga toʻgʻridan-toʻgʻri yozishi mumkin."
+      },
+      "security": {
+        "title": "Xavfsizlik",
+        "body": "Har bir markaz maʼlumotlari bazada alohida saqlanadi, ulanishlar shifrlangan, xodimlar faqat roli ruxsat bergan narsani koʻradi, oʻzgarishlar esa jurnalga yoziladi. uteach yordam xizmati markazni faqat oʻqish rejimida va faqat unga yordam berish uchun ochishi mumkin; har bir bunday koʻrish yozib qoʻyiladi va rahbarga koʻrinadi."
+      },
+      "children": {
+        "title": "Bolalar",
+        "body": "Koʻp oʻquvchilar — bolalar. Ularning maʼlumotlarini markaz kiritadi, xabarlarni esa ota-onalar oladi. uteach bolalardan roʻyxatdan oʻtishni soʻramaydi."
+      },
+      "changes": {
+        "title": "Oʻzgarishlar va aloqa",
+        "body": "Oʻzgarishlarni shu sahifada eʼlon qilamiz va muhimlari haqida markaz rahbarlariga xabar beramiz. Savollar: bosh sahifadagi aloqa orqali uteachga yozing."
+      }
+    }
   }
 }

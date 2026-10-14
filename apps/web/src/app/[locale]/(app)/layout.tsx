@@ -2,7 +2,7 @@ import { subscriptionBanner } from "@uteach/core";
 import type { CenterStatus } from "@uteach/db";
 import { CircleAlert } from "lucide-react";
 import { getTranslations } from "next-intl/server";
-import { AppShell, type NavEntry, type ShellChip } from "@/components/patterns";
+import { AppShell, PlanLinkProvider, type NavEntry, type ShellChip } from "@/components/patterns";
 import { Alert } from "@/components/ui/alert";
 import { Link } from "@/i18n/navigation";
 import { teachesLessons } from "@/lib/academics";
@@ -147,7 +147,7 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
           </p>
         </Alert>
       ) : null}
-      {children}
+      <PlanLinkProvider owner={ctx.membership.role === "owner"}>{children}</PlanLinkProvider>
     </AppShell>
   );
 }
