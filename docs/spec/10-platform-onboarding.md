@@ -121,5 +121,11 @@ CRUD screens. Archiving a branch requires no active groups. Changing a branch ti
 - **Support view:** read-only browse of one center's screens. Each open writes `audit_log(action='support_view')`.
 - System health: worker heartbeats, outbox backlog/failure rate, pg_cron last runs, provider callback errors.
 
+## Public pages (M7e)
+
+> PROPOSED (M7e plan): a signed-out visitor at `/` sees the landing page; a signed-in person is still sent to
+> Home or Today. `/terms` and `/privacy` are public and show a "Draft, not yet reviewed by a lawyer" notice until
+> the owner removes it. Details in `30-milestones.md` (M7e plan).
+
 ## Done-when checklists
 See `30-milestones.md` M0, M1, M7.

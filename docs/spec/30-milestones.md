@@ -580,6 +580,46 @@ Global "done when" for every milestone:
 >   unit tests; the database returns counts and sums.
 > - Home keeps "Finish setting up" and "My follow-ups"; the old count tiles are replaced by the dashboard, and the
 >   setup steps card hides once every step is done.
+> PROPOSED (M7e plan, 2026-10-14): public pages, the full loop and the dry run. One build PR after this plan.
+> - **Landing page** at `/[locale]` for signed-out visitors (signed-in people are redirected as today). Sections:
+>   what uteach does (students & groups, schedule & attendance, payments & debts, Telegram to parents, leads,
+>   exam scores), how it starts (14-day trial, 50 students, no card), the plans, a sign-up button (`/signup`) and
+>   "Log in", a Telegram contact, links to Terms and Privacy, and a language switcher (uz / ru / en). Built from
+>   `components/ui` and `components/patterns` like the app; every string in the three catalogs. Server-rendered,
+>   with a title, description and `hreflang` alternates per language.
+> - **Plans for visitors:** a small migration `m7e_public` adds `public.public_plans()` (security definer, for
+>   `anon` and `authenticated`; only public, not archived plans: code, name, limits, price, currency, order) so
+>   `plans` itself stays closed to `anon`. Prices are shown as a monthly UZS amount; the trial plan never appears.
+> - **Telegram contact:** `NEXT_PUBLIC_CONTACT_TELEGRAM` (a username, without `@`). When it's empty the contact
+>   block is hidden, so nothing points to a wrong account before the owner sets it.
+> - **`/terms` and `/privacy`** in uz / ru / en, public, with a "Draft: not yet reviewed by a lawyer" notice at
+>   the top. Content lives as text in the message catalogs (one key per paragraph), not hard-coded.
+>   - Terms: who provides uteach, the trial and plans, paying by invoice, past due → read-only after 7 days (data
+>     kept, exports still work), the center's duties (it collects its students' and parents' data and has their
+>     consent), acceptable use, availability (no SLA yet), ending the service and getting data out, liability,
+>     the law of Uzbekistan, contact.
+>   - Privacy: the center is the controller of its students' and parents' data; uteach processes it for the
+>     center. What is stored (staff and parent phone numbers, children's names, attendance, payments, scores,
+>     Telegram chat ids), why, the processors (Supabase, Telegram, SMS provider, hosting, error tracking), where
+>     the data is stored (Supabase's region, outside Uzbekistan; the localisation question stays open for the
+>     lawyer), how long it is kept, the rights of the people in it and how to use them, contact.
+> - **Public paths:** `/` (signed out), `/terms`, `/privacy` are added to `PUBLIC_PATHS`; `/` stays usable when
+>   signed in. `robots.txt` allows indexing only when `NEXT_PUBLIC_SITE_INDEXABLE=true` (off on the Vercel
+>   preview, turned on in M7d production).
+> - **Full-loop E2E** `m7e-full-loop.spec.ts` on a fresh center: add a lead → book a trial on a lesson → mark the
+>   trial guest present → convert to a student with a guardian (enrolled in the group) → cycle 1 charge appears
+>   → mark attendance → record a cash payment → balance 0 → the `payment_received` outbox row exists for the
+>   guardian with the receipt attached (checked through the e2e DB helper; Telegram delivery itself is proven by
+>   the worker test). Then the **student-limit message**: the helper moves the center onto a test plan with a
+>   limit of 1, converting a second lead shows the limit message, and its link opens Settings → Subscription.
+>   A short public-pages spec opens `/`, `/terms`, `/privacy` signed out in the three languages.
+> - **Dry-run checklist** `docs/launch/dry-run.md`: before (center created, trial extended, import files
+>   prepared, Telegram bot linked by a few parents), week 1 (import, daily attendance, the first charges,
+>   payments and receipts, reminders), what to watch on /admin → Health, how to report a bug, and the
+>   pass / fail list that matches the M7 "done when" dry-run item.
+> - **Tests:** pgTAP `m7e_public` (anon gets only public, unarchived plans and no other columns; `plans` still
+>   refuses anon); the two e2e specs; screenshots of the landing and legal pages at 1440 / 390.
+> - Not in M7e: the production domain, Sentry and analytics (M7d); a lawyer's text (owner); a contact form.
 - [x] Owner/admin/teacher dashboards show the numbers defined in 20, verified against fixture data. (M7c: pgTAP `m7c_dashboards`, 41 checks on a fixture center with 2 branches: every owner number for all branches and each branch, an admin of one branch with and without permissions, both teachers, and refusals for other roles and centers; passes on real Postgres and PGlite. Owner Home checked in the browser on local data; screenshots at 1440/390.)
 - [ ] Prod: `docker compose up` on the VPS serves HTTPS; deploy from CI; worker and web restart automatically; daily DB backup verified by a restore test; error tracking receives a test error; an uptime alert reaches Telegram.
 - [ ] A full dry run with real data from a friendly center (import → a week of attendance → month-start charges → payments → reminders) is completed with no blocking bugs.

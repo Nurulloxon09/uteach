@@ -139,6 +139,10 @@ RLS: select for `authenticated`; writes by service role only.
 > PROPOSED (M7a, as built): also `sort_order smallint`, `archived_at timestamptz`; a hidden `trial` row holds the
 > trial limits (centers with `plan_id` null use it).
 
+> PROPOSED (M7e plan): visitors (`anon`) still can't select `plans`. The landing page reads them through
+> `public.public_plans()` (security definer, granted to `anon` and `authenticated`), which returns only
+> `is_public` rows that aren't archived: code, name, limits, price, currency, sort order.
+
 ### `platform_settings` 🟩 [M7]
 
 > PROPOSED (M7a): uteach-wide settings. `key text pk`, `value jsonb not null default '{}'`, `updated_at`.

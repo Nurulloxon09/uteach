@@ -153,6 +153,14 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 ## Log
 
+### 2026-10-14 · M7e plan
+- The owner said to start M7e. Plan recorded as `PROPOSED (M7e plan)` in 30, with notes in 02 (`public_plans()`)
+  and 10 (public pages): a landing page at `/` for signed-out visitors (public plans, sign-up, Telegram contact,
+  uz/ru/en), draft `/terms` and `/privacy`, the full-loop e2e with the student-limit message, a dry-run checklist.
+- Decisions: visitors read plans through a security-definer `public_plans()` (the table stays closed to `anon`);
+  the Telegram contact comes from `NEXT_PUBLIC_CONTACT_TELEGRAM` and is hidden when unset; legal text lives in the
+  message catalogs; `robots.txt` blocks indexing unless `NEXT_PUBLIC_SITE_INDEXABLE=true`.
+
 ### 2026-10-14 · M7c role dashboards
 - Migration `m7c_dashboards`: `dashboard_owner` (branch filter), `dashboard_admin`, `dashboard_teacher`, security
   invoker, one jsonb each; helpers `private.dashboard_active_students` and `private.group_active_students`.
