@@ -153,6 +153,12 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 ## Log
 
+### 2026-10-14 · M7c plan
+- The owner said to start M7c. Plan recorded as `PROPOSED (M7c plan)` in 30, with a note in 20: three RPCs
+  (owner, admin, teacher) running as the caller; exact metric definitions; Home becomes the owner/admin dashboard,
+  Today gets the teacher's "to mark" and "scores to enter".
+- Changed from the M7 plan: debt aging uses the Debtors page's buckets (0–30 / 31–60 / 61–90 / 90+).
+
 ### 2026-10-14 · M7b super-admin & audit log
 - Migration `m7b_admin`: service-role-only `admin_*` functions (centers list, extend trial, plan, status, plans
   CRUD, payment instructions, invoices issue / paid / void and list, support view, health). Each takes the acting

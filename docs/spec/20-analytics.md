@@ -13,6 +13,11 @@ Data: live queries for dashboards; **materialised views** refreshed nightly by `
 
 > PROPOSED (M7 plan): metric definitions for the dashboards are in 30-milestones (M7 plan, M7c). Each dashboard is
 > one RPC that runs as the caller (RLS applies), tested against fixture data in pgTAP.
+>
+> PROPOSED (M7c plan): the exact definitions (attendance %, charged / collected by due date and payment date,
+> active students by enrollment dates, debt buckets as on the Debtors page) are in 30-milestones, `PROPOSED (M7c
+> plan)`. The M7 dashboard's collection rate is "collected ÷ charged this month"; M12's stricter "collected for the
+> month's charges" comes later.
 
 ## Analytics (M12) 🟨
 
