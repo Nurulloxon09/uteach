@@ -109,6 +109,12 @@ Rules:
    > id (from the update, verified by Telegram) and return only that user's linked subjects.
 6. **Super-admin support view:** opening a center writes `audit_log(action='support_view')`. The support UI is read-only; there is no "log in as user".
 
+> PROPOSED (M7b, as built): **making a super-admin.** There is no screen for it. The person signs up like anyone
+> (phone + password), then in the Supabase dashboard → SQL editor run
+> `update public.profiles set is_super_admin = true where phone = '+998XXXXXXXXX';`
+> (`select phone, full_name from public.profiles;` lists the phones). They then open `/uz/admin` (or `/ru`, `/en`).
+> The server needs `SUPABASE_SECRET_KEY`; without it /admin says so. To remove: the same update with `false`.
+
 ## Student / parent identity
 
 > PROPOSED: everything except "share contact → linked to students/guardians/staff": rejecting forwarded contacts, matching across all centers, guardian sees all linked children, no-match message, unlink behaviour.

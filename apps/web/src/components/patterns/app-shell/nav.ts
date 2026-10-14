@@ -1,4 +1,5 @@
 import {
+  Activity,
   Building2,
   CalendarCheck,
   CalendarDays,
@@ -6,8 +7,10 @@ import {
   GraduationCap,
   HandCoins,
   Home,
+  Layers,
   Megaphone,
   NotebookPen,
+  ReceiptText,
   Settings,
   Target,
   UsersRound,
@@ -35,6 +38,9 @@ export const NAV_ICONS = {
   debtors: HandCoins,
   broadcasts: Megaphone,
   exams: NotebookPen,
+  plans: Layers,
+  invoices: ReceiptText,
+  health: Activity,
 } satisfies Record<string, LucideIcon>;
 
 export type NavIconName = keyof typeof NAV_ICONS;

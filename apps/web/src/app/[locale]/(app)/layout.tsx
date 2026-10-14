@@ -88,6 +88,7 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
               ? [
                   { key: "subscription", label: t("subscription"), href: "/settings/subscription" },
                   { key: "health", label: t("health"), href: "/settings/health" },
+                  { key: "auditLog", label: t("auditLog"), href: "/settings/audit-log" },
                 ]
               : []),
           ],

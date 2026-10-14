@@ -134,6 +134,10 @@ export const DB_ERROR_CODES = [
   "student_limit_reached",
   "branch_limit_reached",
   "invalid_invoice",
+  "invalid_status",
+  "plan_in_use",
+  "invalid_plan",
+  "invalid_days",
 ] as const;
 
 export type DbErrorCode = (typeof DB_ERROR_CODES)[number];

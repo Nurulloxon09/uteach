@@ -7,7 +7,7 @@ Claude updates this file at the end of every work session and when a milestone's
 Format: newest first. Keep it short and factual.
 
 ## Current milestone
-**M7 · Launch**: ◐ in progress (plan #31; M7a subscriptions & limits built; next M7b super-admin). M6 · Exam scores is ☑ done (#27, #28, #29, #30). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
+**M7 · Launch**: ◐ in progress (plan #31; M7a subscriptions & limits and M7b super-admin & audit log built; next M7c dashboards). M6 · Exam scores is ☑ done (#27, #28, #29, #30). M5 is ☑ done (#22, #23, #24, #26). M4's last item (sign-up OTP by real SMS) is still open: it waits for
 Eskiz and the hosted Phone provider. M6's decisions are in `30-milestones.md` (M6) and the `PROPOSED (M6 plan)`
 notes in 02, 03, 05-ui, 16 and 17.
 
@@ -22,7 +22,7 @@ notes in 02, 03, 05-ui, 16 and 17.
 | M4 | Telegram & SMS | ◐ all built and merged (#17–#21); real SMS skipped for now | |
 | M5 | Leads CRM | ☑ done (#23, #24, #26) | 2026-10-13 |
 | M6 | Exam scores | ☑ done (#27, #28, #29, M6c) | 2026-10-13 |
-| M7 | Launch 🚀 | ◐ in progress (plan #31, M7a built) | |
+| M7 | Launch 🚀 | ◐ in progress (plan #31, M7a and M7b built) | |
 | M8 | Online payments | ☐ | |
 | M9 | Mini App | ☐ | |
 | M10 | Payroll | ☐ | |
@@ -152,6 +152,20 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 | Typecheck, lint, unit, i18n, existing M0 e2e pass | ☑ | `pnpm typecheck && pnpm lint && pnpm test && pnpm check:i18n && pnpm db:test:lite && pnpm e2e` all green (2026-10-11); `next build` passes |
 
 ## Log
+
+### 2026-10-14 · M7b super-admin & audit log
+- Migration `m7b_admin`: service-role-only `admin_*` functions (centers list, extend trial, plan, status, plans
+  CRUD, payment instructions, invoices issue / paid / void and list, support view, health). Each takes the acting
+  super-admin's id, checks `profiles.is_super_admin` and marks the transaction, so `audit_row` writes
+  `actor_kind = 'super_admin'` with that person. `plans` is now audited; the support view writes `support_view`.
+- /admin (own layout, no center switcher, 404 for everyone else): Centers, the support view, Plans (with "How to
+  pay"), Invoices, Health. Settings → Audit log for owners (what / who / dates filters, changed columns before → after).
+- Tests: pgTAP `m7b_admin` (75 checks, real Postgres and PGlite). Browser, local data: extend trial, add / delete a
+  plan, issue and mark an invoice paid, support view (one audit row per open, seen by the owner), health, the 404;
+  screenshots at 1440/390.
+- Also: the CI-unblocking test fixes are in #33 (m2/m6 pgTAP midnight and leftover data, m5 e2e feedback race).
+- Decisions: `PROPOSED (M7b, as built)` in 30, notes in 01, 02 and 03 (how to make the first super-admin).
+- Known gaps: the owners' Settings → Health page (M4 stand-in) stays; the audit log shows raw column names and values.
 
 ### 2026-10-14 · M7a subscriptions & limits
 - Migration `m7_plans`: `plans` (trial, starter, growth, pro; placeholder prices), `platform_invoices`,

@@ -1735,6 +1735,52 @@ isOneToOne: false
 "add_lead_activity":
 { Args: { "p_assigned_membership_id"?: string,"p_body"?: string,"p_call_outcome"?: string,"p_due_at"?: string,"p_kind": Database["public"]['Enums']["lead_activity_kind"],"p_lead_id": string }; Returns: string
                            },
+"admin_archive_plan":
+{ Args: { "p_actor": string,"p_archived": boolean,"p_plan_id": string }; Returns: undefined
+                           },
+"admin_centers":
+{ Args: { "p_actor": string }; Returns: {
+              "active_students": number,"created_at": string,"id": string,"last_activity_at": string,"name": string,"owner_name": string,"owner_phone": string,"paid_until": string,"past_due_since": string,"plan_id": string,"plan_name": string,"status": Database["public"]['Enums']["center_status"],"student_limit": number,"trial_ends_at": string
+            }[]
+                           },
+"admin_delete_plan":
+{ Args: { "p_actor": string,"p_plan_id": string }; Returns: undefined
+                           },
+"admin_extend_trial":
+{ Args: { "p_actor": string,"p_center_id": string,"p_days": number }; Returns: string
+                           },
+"admin_health":
+{ Args: { "p_actor": string }; Returns: Json
+                           },
+"admin_invoices":
+{ Args: { "p_actor": string }; Returns: {
+              "amount": number,"center_id": string,"center_name": string,"currency": string,"id": string,"issued_at": string,"number": string,"paid_at": string,"payment_note": string,"period_end": string,"period_start": string,"plan_name": string,"status": Database["public"]['Enums']["invoice_status"]
+            }[]
+                           },
+"admin_issue_invoice":
+{ Args: { "p_actor": string,"p_amount"?: number,"p_center_id": string,"p_period_end": string,"p_period_start": string,"p_plan_id": string }; Returns: string
+                           },
+"admin_mark_invoice_paid":
+{ Args: { "p_actor": string,"p_invoice_id": string,"p_note"?: string }; Returns: undefined
+                           },
+"admin_save_plan":
+{ Args: { "p_actor": string,"p_branch_limit": number,"p_code": string,"p_is_public": boolean,"p_name": string,"p_plan_id": string,"p_price_amount": number,"p_sort_order": number,"p_student_limit": number }; Returns: string
+                           },
+"admin_set_center_plan":
+{ Args: { "p_actor": string,"p_center_id": string,"p_plan_id": string }; Returns: undefined
+                           },
+"admin_set_center_status":
+{ Args: { "p_actor": string,"p_center_id": string,"p_status": Database["public"]['Enums']["center_status"] }; Returns: undefined
+                           },
+"admin_set_payment_instructions":
+{ Args: { "p_actor": string,"p_value": Json }; Returns: undefined
+                           },
+"admin_support_view":
+{ Args: { "p_actor": string,"p_center_id": string }; Returns: Json
+                           },
+"admin_void_invoice":
+{ Args: { "p_actor": string,"p_invoice_id": string }; Returns: undefined
+                           },
 "attendance_lesson":
 { Args: { "p_lesson_id": string }; Returns: {
               "branch_id": string,"closes_at": string,"ends_at": string,"group_id": string,"group_name": string,"is_substitute": boolean,"lesson_id": string,"local_date": string,"mode": string,"opens_at": string,"room_name": string,"starts_at": string,"status": Database["public"]['Enums']["lesson_status"],"teacher_name": string,"timezone": string,"topic": string

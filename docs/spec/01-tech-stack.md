@@ -113,6 +113,10 @@ Pure business logic (money maths, proration, schedule expansion, rounding, payro
 - Staff app: owner and admin on desktop, teacher pages optimised for mobile.
 - Server Components read with the **user's session**, so RLS applies. Server Actions mutate with the user's session too.
 - The **service role** is used only in: `/tg/api` (Mini App, after `initData` verification), `/api/pay/*` (provider callbacks), `/admin` (super-admin; every tenant read is audited) and auth hooks. Each such use is scoped explicitly in code, and these paths are covered by tests.
+
+> PROPOSED (M7b, as built): `/admin` reaches the database with the service role only through the `admin_*`
+> functions (`lib/super-admin.ts`), each called with the signed-in super-admin's id; the functions check
+> `is_super_admin` again and audit. The key is `SUPABASE_SECRET_KEY` in apps/web.
 - Routes: `/[locale]/(app)/…` staff app, `/[locale]/tg/…` Mini App (🟨 M9), `/admin/…` super-admin, `/api/pay/{payme|click|uzum}` (🟨 M8), `/api/leads/capture` (🟨 M13), `/api/v1/…` public API (⬜ M16).
 
 ### apps/worker
