@@ -540,6 +540,38 @@ Global "done when" for every milestone:
 > - Settings → Audit log (owners): newest first, 30 days by default, filters for what (table or support view), who
 >   (staff, uteach support, automatic) and dates; ids and timestamps are left out of the changes.
 - [x] Super-admin can list centers, extend a trial, issue and mark invoices, and open the read-only support view; each open is in `audit_log`. (M7b: pgTAP `m7b_admin`, 75 checks: service role only, non-super-admins refused, every action audited as `super_admin`, the support view writes `support_view`, which the owner reads; checked in the browser on local data; /admin is a 404 for everyone else.)
+> PROPOSED (M7c plan, 2026-10-14): the exact numbers, building on the M7 plan above.
+> - **Three RPCs, security invoker** (RLS decides what the caller sees; an admin sees only their branches):
+>   `dashboard_owner(p_center_id, p_branch_id default null)`, `dashboard_admin(p_center_id)`,
+>   `dashboard_teacher(p_center_id)`, each returning one jsonb. "Today" and "this month" are taken in each
+>   branch's timezone (lessons, payments) or the center's (leads). `dashboard_owner` refuses non-owners (`forbidden`).
+> - **Owner** (all branches, or one with the branch filter):
+>   - today: lessons not cancelled; how many are fully marked; **attendance %** = (present + late) ÷ (present + late +
+>     absent) of today's marks (excused left out; "—" before the first mark); payments today = sum and count of
+>     payments not voided, `paid_at` today;
+>   - month to date: **charged** = charges not voided with `due_date` in this month; **collected** = payments not
+>     voided with `paid_at` in this month; **collection rate** = collected ÷ charged ("—" when nothing is charged);
+>     **debt** = total of the `debtors` view, by its existing buckets 0–30 / 31–60 / 61–90 / 90+ days (changed
+>     from the plan's 0–30 / 31–60 / 60+ so the dashboard matches the Debtors page);
+>   - **active students** = distinct students with an enrollment covering the day (`start_date ≤ day`, `end_date`
+>     empty or ≥ day), today and on the last day of last month, and the difference;
+>   - leads: **new** = leads created this month; **won** = moves to Won this month (`lead_activities`
+>     status_change → won);
+>   - a card per branch: lessons today, active students, collected this month, debt.
+> - **Admin** (their branches): today's lessons with "marked ✓ / not yet" (every expected student has a mark);
+>   the **top 10 debtors** by debt with days overdue (only with the `billing` permission); **follow-ups** = open lead
+>   tasks due by the end of today, overdue ones first; **trials today** (scheduled trials on today's lessons);
+>   **no Telegram** = active students for whom neither the student nor any guardian has a live link (count, link
+>   to the Students list); **schedule conflicts** = open `schedule_conflicts` (count, link to Schedule).
+> - **Teacher** (on Today, above the week): lessons still to mark = their lessons that have ended, are inside the
+>   48 h edit window and miss marks; their groups with active students; **scores to enter** = their groups with no
+>   exam result in the last 30 days. No money anywhere.
+> - **Home:** owners get the owner dashboard, admins the admin one; the setup steps card stays while setup is
+>   incomplete. Owners who teach still get Today in the menu.
+> - **Tests:** pgTAP `m7c_dashboards` builds a fixture center (2 branches, lessons today and yesterday, marks,
+>   charges and payments this month and last, debts in several buckets, leads and a won move, a trial, an
+>   unlinked student, a conflict) and checks every number for the owner (both filters), an admin of one branch,
+>   and a teacher; a member of another center gets nothing. Browser check and screenshots at 1440 / 390.
 - [ ] Owner/admin/teacher dashboards show the numbers defined in 20, verified against fixture data.
 - [ ] Prod: `docker compose up` on the VPS serves HTTPS; deploy from CI; worker and web restart automatically; daily DB backup verified by a restore test; error tracking receives a test error; an uptime alert reaches Telegram.
 - [ ] A full dry run with real data from a friendly center (import → a week of attendance → month-start charges → payments → reminders) is completed with no blocking bugs.
