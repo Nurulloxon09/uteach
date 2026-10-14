@@ -8,7 +8,6 @@ import {
   Send,
   Sparkles,
   UserPlus,
-  Users,
   UsersRound,
 } from "lucide-react";
 import { getFormatter, getTranslations } from "next-intl/server";
@@ -16,24 +15,38 @@ import {
   ActivityList,
   EmptyState,
   Section,
-  StatTiles,
   StatusChip,
   type ActivityItem,
 } from "@/components/patterns";
 import { buttonVariants } from "@/components/ui/button";
 import { Link } from "@/i18n/navigation";
+import { parseListParams } from "@/components/patterns/list-params";
+import { loadBranches } from "@/lib/academics";
 import { requireAdminContext } from "@/lib/center";
+import { loadAdminDashboard, loadOwnerDashboard } from "@/lib/dashboards";
 import { LATER_STEPS, nextStep, readProgress } from "@/lib/onboarding";
 import { createClient } from "@/lib/supabase/server";
+import { AdminDashboard } from "./admin-dashboard";
+import { OwnerDashboard } from "./owner-dashboard";
 
 export async function generateMetadata() {
   const t = await getTranslations("home");
   return { title: t("title") };
 }
 
-/** Owner/admin landing page: stat tiles + next steps. Real dashboards come in M7 (20-analytics). */
-export default async function HomePage() {
+/**
+ * Owner/admin landing page: the role dashboard (20 · M7c), my follow-ups, and the setup steps until they are done.
+ */
+export default async function HomePage({ searchParams }: PageProps<"/[locale]/home">) {
   const ctx = await requireAdminContext();
+  const isOwner = ctx.membership.role === "owner";
+  const branchParam = parseListParams(await searchParams, ["branch"] as const).filters.branch;
+  const branchList = isOwner ? await loadBranches(ctx) : [];
+  const branch = branchList.some((b) => b.id === branchParam) ? (branchParam ?? null) : null;
+  const [ownerData, adminData] = await Promise.all([
+    isOwner ? loadOwnerDashboard(ctx, branch) : null,
+    isOwner ? null : loadAdminDashboard(ctx),
+  ]);
   const t = await getTranslations("home");
   const format = await getFormatter();
   const supabase = await createClient();
@@ -172,6 +185,15 @@ export default async function HomePage() {
       : []),
   ];
 
+  // Setup steps disappear once every one of them is done.
+  const setupDone =
+    counts.branches > 0 &&
+    counts.rooms > 0 &&
+    counts.groups > 0 &&
+    counts.students > 0 &&
+    counts.telegram > 0 &&
+    (!ctx.can.manageStaff || counts.staff > 1);
+
   return (
     <>
       {resume ? (
@@ -206,44 +228,15 @@ export default async function HomePage() {
               })
             : undefined
         }
-      >
-        <StatTiles
-          items={[
-            {
-              key: "students",
-              label: t("students"),
-              value: format.number(counts.students),
-              icon: GraduationCap,
-              tone: "green",
-              href: "/students",
-            },
-            {
-              key: "groups",
-              label: t("groups"),
-              value: format.number(counts.groups),
-              icon: UsersRound,
-              tone: "purple",
-              href: "/groups",
-            },
-            {
-              key: "branches",
-              label: t("branches"),
-              value: format.number(counts.branches),
-              icon: Building2,
-              tone: "blue",
-              href: "/settings/branches",
-            },
-            {
-              key: "staff",
-              label: t("staff"),
-              value: format.number(counts.staff),
-              icon: Users,
-              tone: "orange",
-              href: ctx.can.manageStaff ? "/staff" : undefined,
-            },
-          ]}
+      ></Section>
+      {ownerData ? (
+        <OwnerDashboard
+          ctx={ctx}
+          data={ownerData}
+          branches={branchList.map((b) => ({ id: b.id, name: b.name }))}
         />
-      </Section>
+      ) : null}
+      {adminData ? <AdminDashboard ctx={ctx} data={adminData} /> : null}
 
       {ctx.can.leads ? (
         <Section
@@ -262,9 +255,11 @@ export default async function HomePage() {
         </Section>
       ) : null}
 
-      <Section title={t("nextSteps")} titleSize="card" description={t("nextStepsHint")}>
-        <ActivityList items={steps} />
-      </Section>
+      {setupDone ? null : (
+        <Section title={t("nextSteps")} titleSize="card" description={t("nextStepsHint")}>
+          <ActivityList items={steps} />
+        </Section>
+      )}
     </>
   );
 }

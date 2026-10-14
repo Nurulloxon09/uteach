@@ -572,7 +572,15 @@ Global "done when" for every milestone:
 >   charges and payments this month and last, debts in several buckets, leads and a won move, a trial, an
 >   unlinked student, a conflict) and checks every number for the owner (both filters), an admin of one branch,
 >   and a teacher; a member of another center gets nothing. Browser check and screenshots at 1440 / 390.
-- [ ] Owner/admin/teacher dashboards show the numbers defined in 20, verified against fixture data.
+> PROPOSED (M7c, as built, 2026-10-14):
+> - Teachers can't read enrollments (03), so their group sizes come from `private.group_active_students`
+>   (security definer, answers only for groups the caller teaches or administers).
+> - The edit window for "still to mark" is the center's `attendance_edit_hours` (48 by default), not a fixed 48 h.
+> - The ratios (attendance %, collection rate, change since last month) live in `packages/core/dashboard` with
+>   unit tests; the database returns counts and sums.
+> - Home keeps "Finish setting up" and "My follow-ups"; the old count tiles are replaced by the dashboard, and the
+>   setup steps card hides once every step is done.
+- [x] Owner/admin/teacher dashboards show the numbers defined in 20, verified against fixture data. (M7c: pgTAP `m7c_dashboards`, 41 checks on a fixture center with 2 branches: every owner number for all branches and each branch, an admin of one branch with and without permissions, both teachers, and refusals for other roles and centers; passes on real Postgres and PGlite. Owner Home checked in the browser on local data; screenshots at 1440/390.)
 - [ ] Prod: `docker compose up` on the VPS serves HTTPS; deploy from CI; worker and web restart automatically; daily DB backup verified by a restore test; error tracking receives a test error; an uptime alert reaches Telegram.
 - [ ] A full dry run with real data from a friendly center (import → a week of attendance → month-start charges → payments → reminders) is completed with no blocking bugs.
 - [ ] Supabase project is on **Pro** before the first paying center.
