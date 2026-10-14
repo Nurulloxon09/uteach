@@ -132,13 +132,17 @@ test.describe.serial("M5 · leads: lead → trial → convert", () => {
     await sheet.getByTestId("all-present").click();
     await sheet.getByTestId("attendance-save").click();
     await expect(sheet.getByTestId("attendance-save")).toBeDisabled();
-    await sheet
-      .getByLabel(en.attendance.trialFeedback.replace("{name}", LEAD.name))
-      .fill("Level B1");
-    await sheet
+    // The save's refresh can re-render the sheet and wipe the box, so refill until the text sticks.
+    const feedbackSave = sheet
       .getByTestId("trial-feedback")
-      .getByRole("button", { name: en.attendance.trialFeedbackSave })
-      .click();
+      .getByRole("button", { name: en.attendance.trialFeedbackSave });
+    await expect(async () => {
+      await sheet
+        .getByLabel(en.attendance.trialFeedback.replace("{name}", LEAD.name))
+        .fill("Level B1");
+      await expect(feedbackSave).toBeEnabled({ timeout: 2_000 });
+    }).toPass({ timeout: 20_000 });
+    await feedbackSave.click();
     await expect(sheet.getByText(en.attendance.trialFeedbackSaved)).toBeVisible();
     await teacher.close();
 
