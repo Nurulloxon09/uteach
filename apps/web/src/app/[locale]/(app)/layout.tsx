@@ -125,7 +125,13 @@ export default async function AppLayout({ children }: LayoutProps<"/[locale]">) 
       user={{ name: ctx.user.fullName, roleLabel: tr(ctx.membership.role) }}
       centers={ctx.memberships.map((m) => ({ id: m.centerId, name: m.centerName }))}
       currentCenterId={ctx.center.id}
-      centerChip={tone ? { label: ts(ctx.center.status), tone } : undefined}
+      centerChip={
+        ctx.user.isDemo
+          ? { label: ts("demo"), tone: "primary" }
+          : tone
+            ? { label: ts(ctx.center.status), tone }
+            : undefined
+      }
       switchCenter={switchCenterAction}
       logout={logoutAction}
     >

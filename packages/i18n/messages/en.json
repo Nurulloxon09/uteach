@@ -24,7 +24,8 @@
     "active": "Active",
     "past_due": "Payment overdue",
     "read_only": "Read-only",
-    "cancelled": "Cancelled"
+    "cancelled": "Cancelled",
+    "demo": "Demo"
   },
   "common": {
     "save": "Save",
@@ -130,7 +131,8 @@
       "otpInvalid": "The code is wrong or has expired.",
       "rateLimited": "Too many attempts. Wait a few minutes and try again.",
       "smsFailed": "We couldn't send the SMS. Try again later.",
-      "otpSessionExpired": "This step has expired. Start again."
+      "otpSessionExpired": "This step has expired. Start again.",
+      "demoLocked": "The demo account's password can't be changed."
     },
     "db": {
       "not_authenticated": "Please log in again.",
@@ -241,7 +243,8 @@
       "description": "Staff of a learning center log in with phone and password.",
       "submit": "Log in",
       "forgot": "Forgot your password?",
-      "toSignup": "No account yet? Sign up"
+      "toSignup": "No account yet? Sign up",
+      "demo": "Try the teacher demo"
     },
     "signup": {
       "title": "Create an account",
@@ -268,6 +271,12 @@
       "title": "Choose a new password",
       "description": "You'll use it to log in from now on.",
       "submit": "Save password"
+    },
+    "demo": {
+      "title": "Try uteach as a teacher",
+      "description": "You'll be signed in as a demo teacher in a sample center: today's lessons, attendance and mock exam scores. The students and scores are made up.",
+      "submit": "Open the teacher demo",
+      "toLogin": "Have an account? Log in"
     }
   },
   "onboarding": {

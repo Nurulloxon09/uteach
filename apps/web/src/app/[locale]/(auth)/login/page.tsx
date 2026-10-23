@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { AuthCard } from "@/components/patterns";
+import { demoTeacherLogin } from "@/lib/env";
 import { safeNextPath } from "@/lib/paths";
 import { LoginForm } from "./login-form";
 
@@ -13,7 +14,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/[locale]/l
   const next = safeNextPath((await searchParams).next);
   return (
     <AuthCard title={t("title")} description={<>{t("description")}</>}>
-      <LoginForm next={next} />
+      <LoginForm next={next} demo={demoTeacherLogin() !== null} />
     </AuthCard>
   );
 }

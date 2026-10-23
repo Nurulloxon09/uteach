@@ -6,7 +6,7 @@ import { Field, FormMessage, SubmitButton } from "@/components/patterns";
 import { Link } from "@/i18n/navigation";
 import { loginAction } from "../actions";
 
-export function LoginForm({ next }: { next: string | null }) {
+export function LoginForm({ next, demo }: { next: string | null; demo: boolean }) {
   const t = useTranslations("auth");
   const [state, action] = useActionState(loginAction, null);
 
@@ -46,6 +46,14 @@ export function LoginForm({ next }: { next: string | null }) {
         >
           {t("login.toSignup")}
         </Link>
+        {demo ? (
+          <Link
+            href="/demo"
+            className="text-muted-foreground underline-offset-4 hover:text-primary hover:underline"
+          >
+            {t("login.demo")}
+          </Link>
+        ) : null}
       </div>
     </form>
   );

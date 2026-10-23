@@ -4,16 +4,22 @@ import { defaultLocale, isLocale } from "@uteach/i18n";
 import { createTranslator } from "next-intl";
 import { Webhook } from "standardwebhooks";
 import { messagesByLocale } from "@/i18n/messages";
+import { isDemoAccount } from "@/lib/demo";
 import { serverEnv } from "@/lib/env";
 import { createServiceClient } from "@/lib/supabase/service";
 
 /**
  * Supabase Auth "Send SMS" hook: Auth calls this with the OTP, we send it through the SMS adapter: the console
  * provider locally (the code appears in the server log), Eskiz in staging and production (M4). Each phone gets
- * at most 5 codes an hour (10), counted by `record_otp_send` with the secret key when it is configured.
+ * at most 5 codes an hour (10), counted by `record_otp_send` with the secret key when it is configured. The teacher
+ * demo's accounts never get a code (10), so nobody can reset their password or move them to another phone.
  */
 type SendSmsEvent = {
-  user: { phone: string; user_metadata?: { locale?: string } };
+  user: {
+    phone: string;
+    user_metadata?: { locale?: string };
+    app_metadata?: Record<string, unknown>;
+  };
   sms: { otp: string };
 };
 
@@ -28,6 +34,13 @@ export async function POST(request: Request) {
     return Response.json(
       { error: { http_code: 401, message: "invalid signature" } },
       { status: 401 },
+    );
+  }
+
+  if (isDemoAccount(event.user)) {
+    return Response.json(
+      { error: { http_code: 403, message: "demo accounts don't receive codes" } },
+      { status: 403 },
     );
   }
 

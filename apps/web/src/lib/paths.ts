@@ -11,6 +11,7 @@ export const PUBLIC_PATHS = [
   "/invite",
   "/terms",
   "/privacy",
+  "/demo",
 ];
 
 /**
@@ -24,7 +25,7 @@ export function publicPathsFor(nodeEnv: string | undefined): string[] {
 }
 
 /** Signed-in users are sent away from these. */
-export const GUEST_ONLY_PATHS = ["/login", "/signup", "/forgot-password"];
+export const GUEST_ONLY_PATHS = ["/login", "/signup", "/forgot-password", "/demo"];
 
 export function matchesPath(pathname: string, prefixes: readonly string[]): boolean {
   return prefixes.some((p) => pathname === p || pathname.startsWith(`${p}/`));

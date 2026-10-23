@@ -49,6 +49,7 @@ describe("publicPathsFor", () => {
     expect(matchesPath("/", paths)).toBe(true);
     expect(matchesPath("/terms", paths)).toBe(true);
     expect(matchesPath("/privacy", paths)).toBe(true);
+    expect(matchesPath("/demo", paths)).toBe(true);
     expect(matchesPath("/home", paths)).toBe(false);
     expect(matchesPath("/students", paths)).toBe(false);
     expect(matchesPath("/admin", paths)).toBe(false);

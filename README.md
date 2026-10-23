@@ -40,6 +40,7 @@ The numbers `+998 99 000 00 01` … `09` always use the code `123456` and never 
 | `pnpm db:test:lite`                 | Same tests in PGlite, no Docker needed (lower fidelity)                                 |
 | `pnpm db:types`                     | Regenerate `packages/db/src/database.types.ts` from the local DB                        |
 | `pnpm dev:access`                   | Local only: one login (`+998990000099` / `uteach-owner`) as owner of every local center |
+| `pnpm demo:seed --url <db url>`     | Builds or resets the public teacher demo (`/demo`); see `scripts/demo-seed.mjs`         |
 | `pnpm e2e`                          | Resets the local DB, then runs Playwright e2e (needs `.env.local`)                      |
 
 ## Layout

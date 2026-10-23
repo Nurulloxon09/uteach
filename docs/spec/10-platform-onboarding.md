@@ -127,5 +127,25 @@ CRUD screens. Archiving a branch requires no active groups. Changing a branch ti
 > Home or Today. `/terms` and `/privacy` are public and show a "Draft, not yet reviewed by a lawyer" notice until
 > the owner removes it. Details in `30-milestones.md` (M7e plan).
 
+## Teacher demo (outside the milestones, asked for by the owner)
+
+> PROPOSED (2026-10-23, as built): a public demo so people can see the teacher's screens without an account.
+> - `pnpm demo:seed --url <database URL>` (`scripts/demo-seed.mjs` + `.sql`) builds a made-up center: 4 SAT and
+>   IELTS groups that together meet every day, 27 students (no phones, no guardians, so nothing reaches a real
+>   person), five weeks of held lessons with topics and attendance, mock scores and targets. Groups have no price,
+>   so no charges. The center is `active` and paid for ten years; `centers.settings.demo = true` marks it.
+> - Two accounts, both with `app_metadata.demo = true` (only the service role can set it): the demo **teacher**
+>   (`--phone`, `--password`) and a demo **owner** with a random password, because every center keeps an owner.
+> - Running it again archives the old demo center (status `cancelled`, the teacher's membership disabled) and
+>   builds a fresh one; nothing is deleted. The teacher gets its password back and is signed out everywhere.
+> - `/[locale]/demo` (public, guest-only) has one button that signs in as the demo teacher and opens Today, while
+>   `DEMO_TEACHER_PHONE` and `DEMO_TEACHER_PASSWORD` are set; the login page links to it then. Without them it
+>   sends visitors to the login page, so outside links never break. The top bar shows a "Demo" chip for demo
+>   accounts.
+> - Visitors share one account, so: the SMS hook sends no codes to demo accounts (no password reset, no phone
+>   change), and `resetPasswordAction` refuses them. Supabase Auth's own API still lets a signed-in user set a new
+>   password; if a visitor does, run `pnpm demo:seed` again.
+> - Not for production centers: the demo runs on the team's preview project (`01-tech-stack`, Vercel).
+
 ## Done-when checklists
 See `30-milestones.md` M0, M1, M7.

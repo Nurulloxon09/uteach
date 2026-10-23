@@ -61,6 +61,16 @@ export function serverEnv() {
 }
 
 /**
+ * The public teacher demo's sign-in (10, "Teacher demo"; `pnpm demo:seed` prints both values). Null when either is
+ * missing: the /demo page and its link on the login page are then hidden.
+ */
+export function demoTeacherLogin(): { phone: string; password: string } | null {
+  const phone = process.env.DEMO_TEACHER_PHONE;
+  const password = process.env.DEMO_TEACHER_PASSWORD;
+  return phone && password ? { phone, password } : null;
+}
+
+/**
  * The secret (service-role) key for /admin (01: super-admin pages are on the service-role allow-list). Read on its
  * own so /admin doesn't need the SMS hook's settings. Null when it isn't set: /admin then says so.
  */

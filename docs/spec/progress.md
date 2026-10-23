@@ -153,6 +153,20 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 ## Log
 
+### 2026-10-23 · Teacher demo
+- The owner asked for a way to show the teacher's screens without an account (for a portfolio). Built outside the
+  milestones, decisions in `PROPOSED (2026-10-23, as built)` in 10 ("Teacher demo").
+- `pnpm demo:seed` (`scripts/demo-seed.mjs` + `scripts/demo-seed.sql`): demo teacher and owner accounts, a made-up
+  center (4 groups, 27 students, past attendance, mock scores), re-runnable. `/[locale]/demo` signs visitors in as
+  the teacher when `DEMO_TEACHER_PHONE` / `DEMO_TEACHER_PASSWORD` are set; "Demo" chip in the top bar.
+- Guards: the SMS hook sends no codes to demo accounts; reset-password refuses them.
+- Tests: `packages/db/src/demo-seed.test.ts` (PGlite: counts, held lessons with topics, lessons every day of the
+  week, no outbox rows or charges, the teacher sees 4 groups and marks an open lesson, a second run starts over);
+  unit test for `isDemoAccount`; `/demo` in the public paths test.
+- Known gaps: not tried against the hosted project from here (no access); the `auth.users` insert is the one
+  `dev:access` uses. Supabase Auth's API still lets a signed-in visitor change the shared password; re-run the
+  seed if that happens.
+
 ### 2026-10-14 · M7e public pages & the full loop
 - Migration `m7e_public`: `public_plans()` for visitors (public, unarchived plans only; `plans` stays closed to anon).
 - Landing page at `/` for signed-out visitors (features, how to start, public plans, sign-up, Telegram contact from

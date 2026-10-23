@@ -24,7 +24,8 @@
     "active": "Faol",
     "past_due": "Toʻlov muddati oʻtgan",
     "read_only": "Faqat koʻrish",
-    "cancelled": "Bekor qilingan"
+    "cancelled": "Bekor qilingan",
+    "demo": "Demo"
   },
   "common": {
     "save": "Saqlash",
@@ -130,7 +131,8 @@
       "otpInvalid": "Kod notoʻgʻri yoki muddati tugagan.",
       "rateLimited": "Urinishlar juda koʻp. Bir necha daqiqadan soʻng qayta urinib koʻring.",
       "smsFailed": "SMS yuborib boʻlmadi. Keyinroq urinib koʻring.",
-      "otpSessionExpired": "Bu bosqich muddati tugadi. Qaytadan boshlang."
+      "otpSessionExpired": "Bu bosqich muddati tugadi. Qaytadan boshlang.",
+      "demoLocked": "Demo akkaunt parolini oʻzgartirib boʻlmaydi."
     },
     "db": {
       "not_authenticated": "Iltimos, qaytadan tizimga kiring.",
@@ -241,7 +243,8 @@
       "description": "Oʻquv markazi xodimlari telefon va parol bilan kiradi.",
       "submit": "Kirish",
       "forgot": "Parolni unutdingizmi?",
-      "toSignup": "Akkauntingiz yoʻqmi? Roʻyxatdan oʻting"
+      "toSignup": "Akkauntingiz yoʻqmi? Roʻyxatdan oʻting",
+      "demo": "Oʻqituvchi demosini sinab koʻring"
     },
     "signup": {
       "title": "Akkaunt yaratish",
@@ -268,6 +271,12 @@
       "title": "Yangi parol oʻrnating",
       "description": "Bundan buyon shu parol bilan kirasiz.",
       "submit": "Parolni saqlash"
+    },
+    "demo": {
+      "title": "uteachni oʻqituvchi sifatida sinab koʻring",
+      "description": "Siz namunaviy markazga demo oʻqituvchi sifatida kirasiz: bugungi darslar, davomat va sinov imtihonlari ballari. Oʻquvchilar va ballar oʻylab topilgan.",
+      "submit": "Oʻqituvchi demosini ochish",
+      "toLogin": "Akkauntingiz bormi? Kiring"
     }
   },
   "onboarding": {

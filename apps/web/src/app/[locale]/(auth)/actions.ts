@@ -8,6 +8,8 @@ import { redirect } from "@/i18n/navigation";
 import { routing } from "@/i18n/routing";
 import { fieldErrorsFrom, fail, str, type ActionState } from "@/lib/actions";
 import { clearCurrentCenter } from "@/lib/current-center";
+import { isDemoAccount } from "@/lib/demo";
+import { demoTeacherLogin } from "@/lib/env";
 import { safeNextPath, splitLocale } from "@/lib/paths";
 import { createClient } from "@/lib/supabase/server";
 import { otpField, passwordField, phoneField, requiredText } from "@/lib/validation";
@@ -172,6 +174,17 @@ export async function loginAction(_prev: ActionState, form: FormData): Promise<A
   return goTo(next ?? "/");
 }
 
+/** The public teacher demo (10, "Teacher demo"): signs in as the demo teacher and opens their Today page. */
+export async function demoLoginAction(_prev: ActionState): Promise<ActionState> {
+  const login = demoTeacherLogin();
+  if (!login) return fail("generic");
+
+  const supabase = await createClient();
+  const { error } = await supabase.auth.signInWithPassword(login);
+  if (error) return fail(authErrorKey(error.code));
+  return goTo("/today");
+}
+
 const forgotSchema = z.object({ phone: phoneField() });
 
 export async function forgotPasswordAction(
@@ -214,6 +227,8 @@ export async function resetPasswordAction(
   const supabase = await createClient();
   const { data } = await supabase.auth.getUser();
   if (!data.user) return fail("auth.otpSessionExpired");
+  // Everyone shares the demo account; a new password would lock the next visitor out.
+  if (isDemoAccount(data.user)) return fail("auth.demoLocked");
 
   const { error } = await supabase.auth.updateUser({ password: parsed.data.password });
   if (error) return fail(authErrorKey(error.code), form);
