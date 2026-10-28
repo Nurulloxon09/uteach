@@ -5,6 +5,9 @@ Tables: `profiles`, `centers`, `branches`, `rooms`, `memberships`, `plans`, `pla
 
 ## Auth (M0)
 
+> ✅ CONFIRMED by owner (2026-10-28), replaces the note below: login is **login name + password**; everyone picks
+> their own login; no SMS code at sign-up or for passwords. Details in 30 (M7f plan).
+
 > ✅ CONFIRMED by owner (2026-10-10): login is **phone + password**; SMS OTP only for sign-up verification and password reset.
 
 > PROPOSED: console OTP in dev; cookie sessions; +998 mask; rate limits 5/phone/h and 10/IP/h.

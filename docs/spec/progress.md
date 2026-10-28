@@ -153,6 +153,12 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 ## Log
 
+### 2026-10-28 · M7f plan: username login
+- The owner asked for login name + password instead of phone, everyone picking their own login, no SMS. Plan in
+  `30-milestones.md` (M7f) and the auth note in 10: hidden Auth email per login, server-side sign-up, phone kept
+  as contact only, invites proven by the link, password resets by the owner (staff) and the super-admin (owners),
+  existing accounts get `u` + phone digits.
+
 ### 2026-10-14 · M7e public pages & the full loop
 - Migration `m7e_public`: `public_plans()` for visitors (public, unarchived plans only; `plans` stays closed to anon).
 - Landing page at `/` for signed-out visitors (features, how to start, public plans, sign-up, Telegram contact from
