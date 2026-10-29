@@ -22,13 +22,23 @@ export function SignupForm({ next }: { next: string | null }) {
         required
       />
       <Field
+        name="username"
+        autoComplete="username"
+        autoCapitalize="none"
+        spellCheck={false}
+        label={t("fields.username")}
+        hint={t("fields.usernameHint")}
+        state={state}
+        required
+      />
+      <Field
         name="phone"
         type="tel"
         inputMode="tel"
         autoComplete="tel"
         label={t("fields.phone")}
         placeholder={t("fields.phonePlaceholder")}
-        hint={t("signup.phoneHint")}
+        hint={t("fields.phoneContact")}
         state={state}
         required
       />

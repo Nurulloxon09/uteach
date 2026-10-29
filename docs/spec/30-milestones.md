@@ -667,6 +667,16 @@ Global "done when" for every milestone:
 >   `supabase config push`), then `supabase db push`. Asked before doing it.
 > - Not in M7f: changing your login, sign-in by phone, SMS anywhere in auth (the Eskiz SMS for parents stays M4),
 >   a CAPTCHA on sign-up (until abuse is seen; the server action keeps Supabase's per-IP limits).
+>
+> PROPOSED (M7f, as built, 2026-10-29):
+> - Supabase fills `app_metadata` only after the user row is inserted, so the trigger takes the login from the
+>   hidden email instead (the part before `@login.uteach.invalid`); anything else without a phone is refused.
+> - The owner's Staff list shows each member's login under the name (`member_logins`); /admin's support view lists
+>   the center's people with their logins and "Set new password" (`admin_center_logins`, service role only).
+> - "Change password" is in the account menu (`/reset-password`); `/verify` and the OTP actions are gone. The SMS
+>   hook route stays for later SMS use, but Auth no longer sends codes.
+> - The PGlite stand-in for `auth` gained `email_confirmed_at`, `encrypted_password`, `raw_app_meta_data` and
+>   `auth.sessions`.
 - [x] Owner/admin/teacher dashboards show the numbers defined in 20, verified against fixture data. (M7c: pgTAP `m7c_dashboards`, 41 checks on a fixture center with 2 branches: every owner number for all branches and each branch, an admin of one branch with and without permissions, both teachers, and refusals for other roles and centers; passes on real Postgres and PGlite. Owner Home checked in the browser on local data; screenshots at 1440/390.)
 - [ ] Prod: `docker compose up` on the VPS serves HTTPS; deploy from CI; worker and web restart automatically; daily DB backup verified by a restore test; error tracking receives a test error; an uptime alert reaches Telegram.
 - [ ] A full dry run with real data from a friendly center (import → a week of attendance → month-start charges → payments → reminders) is completed with no blocking bugs.

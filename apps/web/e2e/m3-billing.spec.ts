@@ -13,7 +13,12 @@ import { addRoom, createCenter, createGroup, en, logIn, settled } from "./helper
  * cycle already due, so lesson 13 (23 days ago) is added only after the marking; cycle 2 starts there and its
  * due date (start + 10 days) has passed.
  */
-const OWNER = { name: "Nodira Owner", phone: "+998990000015", password: "owner-pass-15" };
+const OWNER = {
+  name: "Nodira Owner",
+  login: "nodira.owner15",
+  phone: "+998990000015",
+  password: "owner-pass-15",
+};
 const CENTER = "Debt Academy";
 const GROUP = "Morning B";
 const PAYER = { name: "Sardor Aliyev", phone: "+998931110001" };
@@ -143,7 +148,7 @@ test.describe.serial("M3 · billing happy path, debtors and opening balances", (
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
 
     await openStudentPayments(page, PAYER.name);
@@ -169,7 +174,7 @@ test.describe.serial("M3 · billing happy path, debtors and opening balances", (
   test("marking 12 lessons ends cycle 1; the hourly job charges cycle 2", async ({ page }) => {
     test.setTimeout(240_000);
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
 
     const lessons = await lessonIds(CENTER, GROUP);
@@ -207,7 +212,7 @@ test.describe.serial("M3 · billing happy path, debtors and opening balances", (
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
 
     await page.getByRole("link", { name: en.nav.debtors }).first().click();
@@ -249,7 +254,7 @@ test.describe.serial("M3 · billing happy path, debtors and opening balances", (
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
 
     const file = await workbook(

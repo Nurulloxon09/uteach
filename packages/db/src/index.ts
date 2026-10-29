@@ -58,7 +58,7 @@ export const DB_ERROR_CODES = [
   "already_invited",
   "invite_invalid",
   "invite_expired",
-  "invite_phone_mismatch",
+  "password_weak",
   "cannot_change_own_role",
   "use_accept_invite",
   "last_owner",

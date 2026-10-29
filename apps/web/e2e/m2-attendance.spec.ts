@@ -16,8 +16,18 @@ import {
  * marks the exceptions and saves in one request; the lesson is held and the admin sees the marks in the
  * Attendance list and the group's matrix, edits a cell there and exports the month to Excel.
  */
-const OWNER = { name: "Shahnoza Owner", phone: "+998990000012", password: "owner-pass-12" };
-const TEACHER = { name: "Jasur Teacher", phone: "+998990000013", password: "teach-pass-13" };
+const OWNER = {
+  name: "Shahnoza Owner",
+  login: "shahnoza.owner12",
+  phone: "+998990000012",
+  password: "owner-pass-12",
+};
+const TEACHER = {
+  name: "Jasur Teacher",
+  login: "jasur.teacher13",
+  phone: "+998990000013",
+  password: "teach-pass-13",
+};
 const GROUP = "Morning English";
 const STUDENTS = Array.from({ length: 15 }, (_, i) => ({
   name: `Pupil ${String(i + 1).padStart(2, "0")} Karimov`,
@@ -145,7 +155,7 @@ test.describe.serial("M2 · attendance", () => {
   test("teacher on a 375 px phone marks 15 students in one request", async ({ browser }) => {
     const context = await browser.newContext({ viewport: { width: 375, height: 812 } });
     const page = await context.newPage();
-    await logIn(page, TEACHER.phone, TEACHER.password);
+    await logIn(page, TEACHER.login, TEACHER.password);
     await expect(page).toHaveURL(/\/en\/today$/);
 
     const lesson = page.getByTestId("today-lesson").filter({ hasText: GROUP });
@@ -199,7 +209,7 @@ test.describe.serial("M2 · attendance", () => {
 
   test("the admin sees the marks", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
     await page
       .getByRole("complementary", { name: en.nav.menu })
@@ -221,7 +231,7 @@ test.describe.serial("M2 · attendance", () => {
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
     await page.goto("/en/groups");
     await settled(page);

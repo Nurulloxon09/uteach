@@ -1,6 +1,6 @@
 "use client";
 
-import { Building2, ChevronDown, Languages, LogOut, Plus } from "lucide-react";
+import { Building2, ChevronDown, KeyRound, Languages, LogOut, Plus } from "lucide-react";
 import { useLocale, useTranslations } from "next-intl";
 import { useTransition } from "react";
 import {
@@ -146,6 +146,12 @@ export function UserMenu({ user, logout }: { user: ShellUser; logout?: () => Pro
           <span className="block text-muted-foreground">{user.roleLabel}</span>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
+        <DropdownMenuItem asChild>
+          <Link href="/reset-password">
+            <KeyRound />
+            {t("changePassword")}
+          </Link>
+        </DropdownMenuItem>
         <DropdownMenuItem
           onSelect={() => {
             if (logout) startTransition(() => logout());

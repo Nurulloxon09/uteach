@@ -8,7 +8,12 @@ import { createCenter, en, settled } from "./helpers";
  * "Telegram: not linked"; Settings → Notifications: edit a message with a live preview, then reset it; Settings
  * → Telegram without a bot shows how to set it up. The worker side (delivery) is tested in apps/worker.
  */
-const OWNER = { name: "Nargiza Owner", phone: "+998990000016", password: "owner-pass-16" };
+const OWNER = {
+  name: "Nargiza Owner",
+  login: "nargiza.owner16",
+  phone: "+998990000016",
+  password: "owner-pass-16",
+};
 const CENTER = "Notify Academy";
 const BRANCHES = { first: "Chilonzor", second: "Yunusobod" };
 

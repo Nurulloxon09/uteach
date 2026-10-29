@@ -15,12 +15,11 @@ export function LoginForm({ next }: { next: string | null }) {
       {next ? <input type="hidden" name="next" value={next} /> : null}
       <FormMessage state={state} />
       <Field
-        name="phone"
-        type="tel"
-        inputMode="tel"
-        autoComplete="tel"
-        label={t("fields.phone")}
-        placeholder={t("fields.phonePlaceholder")}
+        name="username"
+        autoComplete="username"
+        autoCapitalize="none"
+        spellCheck={false}
+        label={t("fields.username")}
         state={state}
         required
       />

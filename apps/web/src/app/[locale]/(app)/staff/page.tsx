@@ -96,6 +96,14 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
       .order("created_at"),
   ]);
   const members = (data ?? []) as Member[];
+  // Owners see each person's login (M7f), to tell someone who forgot it.
+  const { data: logins } =
+    ctx.membership.role === "owner"
+      ? await supabase.rpc("member_logins", { p_center_id: ctx.center.id })
+      : { data: null };
+  const loginOf = new Map((logins ?? []).map((l) => [l.membership_id, l.username]));
+  const subOf = (m: Member) =>
+    m.status === "invited" ? m.invited_phone : (loginOf.get(m.id) ?? undefined);
   const filtered = Boolean(role || status || pattern);
 
   const branchName = new Map((branches ?? []).map((b) => [b.id, b.name]));
@@ -131,6 +139,7 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
         membershipId={m.id}
         name={m.display_name}
         status={m.status}
+        canSetPassword={isOwner}
         edit={{
           member: {
             id: m.id,
@@ -208,7 +217,7 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
                 <NameCell
                   avatar={<InitialsAvatar name={m.display_name} />}
                   name={m.display_name}
-                  sub={m.status === "invited" ? m.invited_phone : undefined}
+                  sub={subOf(m)}
                 />
               ),
             },

@@ -14,8 +14,18 @@ import {
  * M1c E2E (30-milestones M1): students with guardians (siblings share one) → enroll, freeze, transfer and
  * end → the teacher sees the roster with names only.
  */
-const OWNER = { name: "Nodira Owner", phone: "+998990000009", password: "owner-pass-9" };
-const TEACHER = { name: "Bekzod Teacher", phone: "+998990000010", password: "teach-pass-10" };
+const OWNER = {
+  name: "Nodira Owner",
+  login: "nodira.owner09",
+  phone: "+998990000009",
+  password: "owner-pass-9",
+};
+const TEACHER = {
+  name: "Bekzod Teacher",
+  login: "bekzod.teacher10",
+  phone: "+998990000010",
+  password: "teach-pass-10",
+};
 const GROUP = "General English · Mon/Wed/Fri 18:00";
 
 function tashkentDate(days = 0): string {
@@ -183,7 +193,7 @@ test.describe.serial("M1 · students and enrollments", () => {
   test("the teacher sees the roster with names only", async ({ browser }) => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await context.newPage();
-    await logIn(page, TEACHER.phone, TEACHER.password);
+    await logIn(page, TEACHER.login, TEACHER.password);
     await expect(page).toHaveURL(/\/en\/today$/);
 
     // No students pages for teachers.

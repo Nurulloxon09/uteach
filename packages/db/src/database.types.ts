@@ -1237,14 +1237,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "created_at": string,"full_name": string,"id": string,"is_super_admin": boolean,"locale": string,"phone": string,"updated_at": string
+                    "created_at": string,"full_name": string,"id": string,"is_super_admin": boolean,"locale": string,"phone": string,"updated_at": string,"username": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"full_name": string,"id": string,"is_super_admin"?: boolean,"locale"?: string,"phone": string,"updated_at"?: string
+                    "created_at"?: string,"full_name": string,"id": string,"is_super_admin"?: boolean,"locale"?: string,"phone": string,"updated_at"?: string,"username": string
                   }
                   Update: {
-                    "created_at"?: string,"full_name"?: string,"id"?: string,"is_super_admin"?: boolean,"locale"?: string,"phone"?: string,"updated_at"?: string
+                    "created_at"?: string,"full_name"?: string,"id"?: string,"is_super_admin"?: boolean,"locale"?: string,"phone"?: string,"updated_at"?: string,"username"?: string
                   }
                   Relationships: [
                     
@@ -1738,6 +1738,11 @@ isOneToOne: false
 "admin_archive_plan":
 { Args: { "p_actor": string,"p_archived": boolean,"p_plan_id": string }; Returns: undefined
                            },
+"admin_center_logins":
+{ Args: { "p_actor": string,"p_center_id": string }; Returns: {
+              "last_sign_in_at": string,"name": string,"profile_id": string,"role": Database["public"]['Enums']["membership_role"],"status": Database["public"]['Enums']["membership_status"],"username": string
+            }[]
+                           },
 "admin_centers":
 { Args: { "p_actor": string }; Returns: {
               "active_students": number,"created_at": string,"id": string,"last_activity_at": string,"name": string,"owner_name": string,"owner_phone": string,"paid_until": string,"past_due_since": string,"plan_id": string,"plan_name": string,"status": Database["public"]['Enums']["center_status"],"student_limit": number,"trial_ends_at": string
@@ -1771,6 +1776,9 @@ isOneToOne: false
                            },
 "admin_set_center_status":
 { Args: { "p_actor": string,"p_center_id": string,"p_status": Database["public"]['Enums']["center_status"] }; Returns: undefined
+                           },
+"admin_set_password":
+{ Args: { "p_actor": string,"p_password": string,"p_profile_id": string }; Returns: undefined
                            },
 "admin_set_payment_instructions":
 { Args: { "p_actor": string,"p_value": Json }; Returns: undefined
@@ -1919,6 +1927,11 @@ isOneToOne: false
 "mark_platform_invoice_paid":
 { Args: { "p_invoice_id": string,"p_note"?: string }; Returns: undefined
                            },
+"member_logins":
+{ Args: { "p_center_id": string }; Returns: {
+              "membership_id": string,"username": string
+            }[]
+                           },
 "merge_leads":
 { Args: { "p_source_id": string,"p_target_id": string }; Returns: undefined
                            },
@@ -1993,6 +2006,9 @@ isOneToOne: false
                            },
 "set_lesson_topic":
 { Args: { "p_lesson_id": string,"p_topic": string }; Returns: undefined
+                           },
+"set_member_password":
+{ Args: { "p_membership_id": string,"p_password": string }; Returns: undefined
                            },
 "set_student_target":
 { Args: { "p_baseline_total"?: number,"p_exam_date"?: string,"p_exam_type_id": string,"p_student_id": string,"p_target_sections"?: Json,"p_target_total": number }; Returns: string

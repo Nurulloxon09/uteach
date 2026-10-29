@@ -16,8 +16,18 @@ import {
  * warning) → contacted → book a trial on an upcoming lesson → the teacher sees the guest on the sheet and marks
  * them present → the lead is "Trial done" → convert → the student is in the group with the first charge.
  */
-const OWNER = { name: "Malika Owner", phone: "+998990000019", password: "owner-pass-19" };
-const TEACHER = { name: "Aziz Teacher", phone: "+998990000018", password: "teacher-pass-18" };
+const OWNER = {
+  name: "Malika Owner",
+  login: "malika.owner19",
+  phone: "+998990000019",
+  password: "owner-pass-19",
+};
+const TEACHER = {
+  name: "Aziz Teacher",
+  login: "aziz.teacher18",
+  phone: "+998990000018",
+  password: "teacher-pass-18",
+};
 const CENTER = "Lead Academy";
 const BRANCH = "Chilonzor";
 const GROUP = "Evening A";
@@ -65,7 +75,7 @@ test.describe.serial("M5 · leads: lead → trial → convert", () => {
 
   test("a new lead, the duplicate warning, and the move to Contacted", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
 
     await page.goto("/en/leads");
@@ -104,7 +114,7 @@ test.describe.serial("M5 · leads: lead → trial → convert", () => {
 
   test("booking a trial puts the lead on the lesson's sheet", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
     await openLead(page);
 
@@ -121,7 +131,7 @@ test.describe.serial("M5 · leads: lead → trial → convert", () => {
   test("the teacher marks the guest present; the lead is Trial done", async ({ page, browser }) => {
     const teacher = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const sheet = await teacher.newPage();
-    await logIn(sheet, TEACHER.phone, TEACHER.password);
+    await logIn(sheet, TEACHER.login, TEACHER.password);
     await expect(sheet).toHaveURL(/\/en\/today$/);
     await sheet.goto(`/en/attendance/${lessonId}`);
     await settled(sheet);
@@ -147,7 +157,7 @@ test.describe.serial("M5 · leads: lead → trial → convert", () => {
     await teacher.close();
 
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
     await openLead(page);
     await expect(page.getByTestId("lead-status")).toContainText(en.leads.status.trial_done);
@@ -156,7 +166,7 @@ test.describe.serial("M5 · leads: lead → trial → convert", () => {
 
   test("convert: the student is in the group with the first charge", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
     await openLead(page);
 

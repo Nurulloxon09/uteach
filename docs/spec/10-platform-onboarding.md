@@ -69,7 +69,7 @@ Done → dashboard with a checklist (create first group, connect the Telegram bo
 > PROPOSED: invite mechanics (hashed token, 7-day expiry, single use, phone must match), branch + flag choices, colour, disable behaviour, last-owner rule. Canvas: invites by link; owner / admin (+flags, branches) / teacher.
 
 - Owner invites by phone and role. This creates `memberships(status='invited')` with a hashed token, and returns an **invite link** (`/invite/{token}`) to copy or send through Telegram/SMS.
-- Opening the link: if signed in with the same phone, accept; otherwise sign up/in with that phone (OTP), then accept. The link expires in 7 days and is single-use.
+- Opening the link: if signed in, accept; otherwise sign up or log in with your own login, then accept (M7f: the link is the proof, phones aren't compared). The link expires in 7 days and is single-use.
 - Admins: choose branches + permission flags (see 03; defaults pre-ticked).
 - Teachers: choose branches + timetable color.
 - Disable a member: status `disabled`. They lose access immediately (RLS checks `active`). History is kept.

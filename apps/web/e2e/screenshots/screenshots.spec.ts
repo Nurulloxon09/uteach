@@ -23,16 +23,22 @@ const OUT = path.join(ROOT, "uteach");
 const REF = path.join(ROOT, "reference");
 const COMPARE = path.join(ROOT, "compare");
 
-const OWNER: Person = { name: "Malika Karimova", phone: "+998990000005", password: "shots-pass-5" };
+const OWNER: Person = {
+  name: "Malika Karimova",
+  login: "malika",
+  phone: "+998990000005",
+  password: "shots-pass-5",
+};
 const TEACHER: Person = {
   name: "Jasur Toshmatov",
+  login: "jasur",
   phone: "+998990000006",
   password: "shots-pass-6",
 };
 const INVITED: Person[] = [
-  { name: "Анна Смирнова", phone: "+998931234567", password: "" },
-  { name: "Dilnoza Rahimova", phone: "+998941234567", password: "" },
-  { name: "Emily Carter", phone: "+998951234567", password: "" },
+  { name: "Анна Смирнова", login: "anna", phone: "+998931234567", password: "" },
+  { name: "Dilnoza Rahimova", login: "dilnoza", phone: "+998941234567", password: "" },
+  { name: "Emily Carter", login: "emily", phone: "+998951234567", password: "" },
 ];
 
 const DESKTOP = { width: 1440, height: 900 };
@@ -52,7 +58,7 @@ async function shoot(page: Page, name: string, fullPage = true) {
 async function ownerPage(browser: Browser, viewport: typeof DESKTOP) {
   const context = await browser.newContext({ viewport, locale: "en-US" });
   const page = await context.newPage();
-  await logIn(page, OWNER.phone, OWNER.password);
+  await logIn(page, OWNER.login, OWNER.password);
   await expect(page).toHaveURL(/\/en\/home$/);
   return { context, page };
 }
@@ -255,7 +261,7 @@ test("capture uteach", async ({ browser }) => {
   const page = await context.newPage();
   await page.goto("/uz/login");
   await shoot(page, "login-uz-390");
-  await logIn(page, TEACHER.phone, TEACHER.password);
+  await logIn(page, TEACHER.login, TEACHER.password);
   await expect(page).toHaveURL(/\/en\/today$/);
   await shoot(page, "today-390");
   await page.getByRole("button", { name: en.nav.openMenu }).click();

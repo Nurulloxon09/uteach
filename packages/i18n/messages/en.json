@@ -95,7 +95,8 @@
     "exams": "Exams",
     "scores": "Scores",
     "examTypes": "Exam types",
-    "auditLog": "Audit log"
+    "auditLog": "Audit log",
+    "changePassword": "Change password"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -106,7 +107,6 @@
       "passwordShort": "At least 8 characters.",
       "passwordWeak": "Use letters and numbers.",
       "passwordMismatch": "Passwords don't match.",
-      "otp": "Enter the 6-digit code.",
       "timezone": "Choose a time zone.",
       "invalid": "Invalid value.",
       "branchRequired": "Choose at least one branch.",
@@ -122,15 +122,13 @@
       "template": "This text can't be used: check the names in curly braces.",
       "confirmBroadcast": "Tick the box to confirm who gets this message.",
       "score": "Enter a score, e.g. 6.5.",
-      "planCode": "Use 2 to 40 lowercase Latin letters, digits or _, starting with a letter."
+      "planCode": "Use 2 to 40 lowercase Latin letters, digits or _, starting with a letter.",
+      "username": "3–32 characters: Latin letters, digits, dot or underscore."
     },
     "auth": {
-      "invalidCredentials": "Wrong phone number or password.",
-      "phoneTaken": "This phone number already has an account. Log in instead.",
-      "otpInvalid": "The code is wrong or has expired.",
+      "invalidCredentials": "Wrong login or password.",
       "rateLimited": "Too many attempts. Wait a few minutes and try again.",
-      "smsFailed": "We couldn't send the SMS. Try again later.",
-      "otpSessionExpired": "This step has expired. Start again."
+      "usernameTaken": "This login is taken. Choose another one."
     },
     "db": {
       "not_authenticated": "Please log in again.",
@@ -141,7 +139,6 @@
       "already_invited": "This phone number already has a pending invite. Create a new link from the staff list.",
       "invite_invalid": "This invite link is not valid anymore.",
       "invite_expired": "This invite link has expired. Ask for a new one.",
-      "invite_phone_mismatch": "This invite is for a different phone number.",
       "cannot_change_own_role": "You can't change your own role.",
       "use_accept_invite": "The invited person has to accept the invite themselves.",
       "last_owner": "A center must keep at least one owner.",
@@ -220,7 +217,8 @@
       "invalid_status": "That status can't be set now: its dates have run out. Extend the trial or issue an invoice instead.",
       "plan_in_use": "This plan is in use. You can hide it instead.",
       "invalid_plan": "Check the plan: it may be hidden, or a field is out of range.",
-      "invalid_days": "Choose between 1 and 90 days."
+      "invalid_days": "Choose between 1 and 90 days.",
+      "password_weak": "Use at least 8 characters with letters and numbers."
     },
     "groupHasStudents": "End or transfer the group's students before archiving it.",
     "duplicateStudent": "A student with this name or phone already exists. Check the list, or save again to add anyway."
@@ -232,13 +230,15 @@
       "password": "Password",
       "passwordHint": "At least 8 characters, with letters and numbers.",
       "fullName": "Full name",
-      "code": "SMS code",
       "newPassword": "New password",
-      "confirmPassword": "Repeat the new password"
+      "confirmPassword": "Repeat the new password",
+      "username": "Login",
+      "usernameHint": "You'll log in with it. Latin letters, digits, dot or underscore, e.g. dilnoza.k",
+      "phoneContact": "So your center can reach you. No code is sent."
     },
     "login": {
       "title": "Log in",
-      "description": "Staff of a learning center log in with phone and password.",
+      "description": "Log in with your login and password.",
       "submit": "Log in",
       "forgot": "Forgot your password?",
       "toSignup": "No account yet? Sign up"
@@ -247,27 +247,31 @@
       "title": "Create an account",
       "description": "For center owners and invited staff.",
       "submit": "Continue",
-      "toLogin": "Already have an account? Log in",
-      "phoneHint": "We'll send a confirmation code by SMS."
-    },
-    "verify": {
-      "title": "Enter the code",
-      "description": "We sent a 6-digit code to {phone}.",
-      "expired": "This step has expired. Start again.",
-      "backToLogin": "Back to log in",
-      "submit": "Confirm",
-      "resend": "Send a new code",
-      "resent": "A new code is on its way."
+      "toLogin": "Already have an account? Log in"
     },
     "forgot": {
-      "title": "Reset your password",
-      "description": "Enter your phone number and we'll send you a code.",
-      "submit": "Send code"
+      "title": "Forgot your password?",
+      "description": "We don't send codes. Here's how to get a new password.",
+      "staffTitle": "Staff of a center",
+      "staffBody": "Ask your center's owner. They open Staff, choose you and set a new password.",
+      "ownerTitle": "Center owners",
+      "ownerBody": "Write to uteach on Telegram from the phone you signed up with. We'll set a new password for you.",
+      "writeUs": "Write to uteach on Telegram",
+      "backToLogin": "Back to log in"
     },
     "reset": {
-      "title": "Choose a new password",
-      "description": "You'll use it to log in from now on.",
+      "title": "Change password",
+      "description": "Choose a new password. You'll use it to log in from now on.",
       "submit": "Save password"
+    },
+    "setPassword": {
+      "row": "Set a new password for {name}",
+      "title": "New password for {name}",
+      "description": "Give them this password. They can change it later from their account menu.",
+      "password": "New password",
+      "hint": "At least 8 characters, with letters and numbers.",
+      "submit": "Set password",
+      "done": "New password set for {name}."
     }
   },
   "onboarding": {
@@ -361,12 +365,12 @@
   "invite": {
     "title": "You're invited",
     "description": "{center} invited {name} to join as {role}.",
-    "phoneHint": "Sign in with the invited phone number ({phone}).",
     "invalidTitle": "Invite not valid",
     "invalidDescription": "This link has expired or was already used. Ask the center for a new one.",
     "signupToAccept": "Create an account to accept",
     "loginToAccept": "I already have an account",
-    "accept": "Accept invite"
+    "accept": "Accept invite",
+    "loginHint": "Create an account with your own login and password, or log in, then accept."
   },
   "home": {
     "title": "Home",
@@ -410,7 +414,7 @@
   "staff": {
     "title": "Staff",
     "inviteTitle": "Invite a staff member",
-    "inviteDescription": "You get a link to send them. It works once, for their phone number, for 7 days.",
+    "inviteDescription": "You get a link to send them. It works once, for 7 days: whoever opens it picks their own login and password.",
     "listTitle": "Staff list",
     "columns": {
       "name": "Name",
@@ -424,7 +428,7 @@
     "fields": {
       "name": "Name",
       "phone": "Phone number",
-      "phoneHint": "They must sign in with this number.",
+      "phoneHint": "For contact only.",
       "role": "Role",
       "branches": "Branches",
       "permissions": "Permissions",
@@ -2452,7 +2456,9 @@
       "importsTitle": "Imports",
       "kind": "Kind",
       "rows": "Rows",
-      "rowsErrors": "{rows} rows · {errors} errors"
+      "rowsErrors": "{rows} rows · {errors} errors",
+      "login": "Login",
+      "actions": "Actions"
     },
     "plans": {
       "title": "Plans",

@@ -153,6 +153,19 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 ## Log
 
+### 2026-10-29 · M7f username login built
+- Migration `m7f_username_login`: `profiles.username` (existing accounts `u` + phone digits, with the matching hidden
+  Auth email), phone no longer unique, the trigger reads the login from the Auth email, `accept_invite` without the
+  phone check, `set_member_password`, `admin_set_password`, `member_logins`, `admin_center_logins`.
+- Sign-up creates the account on the server (service role; public Auth sign-ups off); log in with login +
+  password; the forgot-password page explains owner / uteach resets; Staff → Set new password (owners); /admin
+  support view → Set new password; account menu → Change password. `/verify` removed.
+- Tests: pgTAP `m7f_username_login`; `packages/core` `login.test.ts`; every e2e spec logs in by login; the m0 e2e
+  covers change password, case-insensitive login, the forgot page, a taken login and the owner's reset.
+- Known gaps: e2e not run locally (Playwright browsers missing, offline); CI runs them. `m1_academic` test 36 fails
+  on Thursdays (weekday order; unrelated, flagged separately). The hosted project needs sign-ups off, the email
+  provider on and `supabase db push`: owner's yes first.
+
 ### 2026-10-28 · M7f plan: username login
 - The owner asked for login name + password instead of phone, everyone picking their own login, no SMS. Plan in
   `30-milestones.md` (M7f) and the auth note in 10: hidden Auth email per login, server-side sign-up, phone kept

@@ -1,11 +1,21 @@
 "use client";
 
-import { Ban, CalendarPlus, CircleCheck, Eye, Layers, ReceiptText, ToggleLeft } from "lucide-react";
+import {
+  Ban,
+  CalendarPlus,
+  CircleCheck,
+  Eye,
+  KeyRound,
+  Layers,
+  ReceiptText,
+  ToggleLeft,
+} from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useState, type ReactNode } from "react";
 import { ConfirmDialog, Field, FormDialog, RowActions, SelectField } from "@/components/patterns";
 import { Textarea } from "@/components/ui/textarea";
 import {
+  adminSetPasswordAction,
   extendTrialAction,
   issueInvoiceAction,
   markInvoicePaidAction,
@@ -331,6 +341,52 @@ export function InvoiceRowActions({
         fields={{ invoiceId: invoice.id }}
         successToast={t("voided")}
       />
+    </>
+  );
+}
+
+/** "Set new password" for one person of a center on the support view (M7f). */
+export function AdminPasswordAction({ profileId, name }: { profileId: string; name: string }) {
+  const t = useTranslations("auth.setPassword");
+  const [open, setOpen] = useState(false);
+
+  return (
+    <>
+      <RowActions
+        actions={[
+          {
+            key: "password",
+            label: t("row", { name }),
+            icon: KeyRound,
+            onSelect: () => setOpen(true),
+          },
+        ]}
+      />
+      <FormDialog
+        open={open}
+        onOpenChange={setOpen}
+        title={t("title", { name })}
+        description={t("description")}
+        action={adminSetPasswordAction}
+        submitLabel={t("submit")}
+        successToast={t("done", { name })}
+        testId="set-password-dialog"
+      >
+        {(state) => (
+          <>
+            <input type="hidden" name="profileId" value={profileId} />
+            <Field
+              name="password"
+              type="text"
+              autoComplete="off"
+              label={t("password")}
+              hint={t("hint")}
+              state={state}
+              required
+            />
+          </>
+        )}
+      </FormDialog>
     </>
   );
 }

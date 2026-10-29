@@ -108,6 +108,9 @@ Pure business logic (money maths, proration, schedule expansion, rounding, payro
 
 ### apps/web
 
+> PROPOSED (M7f): the sign-up server action joins the allow-list: it creates the Auth account with the service role
+> (public Auth sign-ups are off), and does nothing else with it.
+
 > PROPOSED: the service-role allow-list (`/tg/api`, `/api/pay/*`, `/admin`, auth hooks) and the routes `/[locale]/(app)`, `/[locale]/tg`, `/admin`, `/api/leads/capture`, `/api/v1`. Canvas only names `/tg`, `/tg/api` and `/api/pay/*`.
 
 - Staff app: owner and admin on desktop, teacher pages optimised for mobile.

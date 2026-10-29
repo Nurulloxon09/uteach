@@ -1,4 +1,4 @@
-import { Building2, Phone } from "lucide-react";
+import { Building2 } from "lucide-react";
 import { getTranslations } from "next-intl/server";
 import { AuthCard, AuthLayout, InitialsAvatar, StatusChip } from "@/components/patterns";
 import { buttonVariants } from "@/components/ui/button";
@@ -56,10 +56,7 @@ export default async function InvitePage({ params }: PageProps<"/[locale]/invite
             </div>
             <StatusChip tone="primary">{tr(invite.role)}</StatusChip>
           </div>
-          <p className="flex items-center gap-2 text-[15px] text-secondary-foreground">
-            <Phone className="size-4 shrink-0 text-primary" strokeWidth={1.8} aria-hidden />
-            {t("phoneHint", { phone: invite.phone_hint })}
-          </p>
+          <p className="text-[15px] text-secondary-foreground">{t("loginHint")}</p>
           {user ? (
             <AcceptInviteForm token={token} />
           ) : (

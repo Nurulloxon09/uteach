@@ -17,8 +17,18 @@ import {
  * (Tab across, values typed); 7.3 and 10 are rejected inline and Save refuses while a cell is red; after saving,
  * the student profile chart shows the new point against the target line and the exam day.
  */
-const OWNER = { name: "Nodira Owner", phone: "+998990000005", password: "owner-pass-05" };
-const TEACHER = { name: "Bekzod Teacher", phone: "+998990000020", password: "teacher-pass-20" };
+const OWNER = {
+  name: "Nodira Owner",
+  login: "nodira.owner05",
+  phone: "+998990000005",
+  password: "owner-pass-05",
+};
+const TEACHER = {
+  name: "Bekzod Teacher",
+  login: "bekzod.teacher20",
+  phone: "+998990000020",
+  password: "teacher-pass-20",
+};
 const CENTER = "Score Academy";
 const BRANCH = "Yunusobod";
 const GROUP = "IELTS Morning";
@@ -75,7 +85,7 @@ test.describe.serial("M6 · exams: teacher enters a mock → the chart shows it 
   test("teacher types a 15-student mock with the keyboard only", async ({ page }) => {
     test.setTimeout(180_000);
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, TEACHER.phone, TEACHER.password);
+    await logIn(page, TEACHER.login, TEACHER.password);
     await expect(page).toHaveURL(/\/en\/today$/);
     await page.goto(`/en/groups/${groupId}?tab=scores`);
     await settled(page);
@@ -146,7 +156,7 @@ test.describe.serial("M6 · exams: teacher enters a mock → the chart shows it 
 
   test("the student profile chart shows the new point against the target", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
     await page.goto(`/en/students/${studentIds[0]}?tab=scores`);
     await settled(page);

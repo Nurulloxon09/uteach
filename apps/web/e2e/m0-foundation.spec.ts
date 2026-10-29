@@ -1,5 +1,5 @@
 import { expect, test } from "@playwright/test";
-import { TEST_CODE, en, inviteTeacher, logIn, logOut, settled, signUp } from "./helpers";
+import { en, inviteTeacher, logIn, logOut, settled, signUp } from "./helpers";
 
 /**
  * M0 E2E (30-milestones): sign up → create center → add branch and room → invite a teacher →
@@ -8,9 +8,20 @@ import { TEST_CODE, en, inviteTeacher, logIn, logOut, settled, signUp } from "./
  * Selectors use the English catalog, so copy changes don't break the test.
  * Needs a fresh database: `pnpm e2e` from the repo root resets it first.
  */
-const OWNER = { name: "Olim Owner", phone: "+998990000001", password: "owner-pass-1" };
-const TEACHER = { name: "Tamara Teacher", phone: "+998990000002", password: "teach-pass-1" };
+const OWNER = {
+  name: "Olim Owner",
+  login: "olim.owner01",
+  phone: "+998990000001",
+  password: "owner-pass-1",
+};
+const TEACHER = {
+  name: "Tamara Teacher",
+  login: "tamara.teacher02",
+  phone: "+998990000002",
+  password: "teach-pass-1",
+};
 const NEW_OWNER_PASSWORD = "owner-pass-2";
+const NEW_TEACHER_PASSWORD = "teach-pass-2";
 
 test.describe.serial("M0 foundation", () => {
   test("owner sets up a center and a teacher joins by invite", async ({ page, context }) => {
@@ -71,21 +82,13 @@ test.describe.serial("M0 foundation", () => {
     await expect(page.getByRole("link", { name: en.nav.staff })).toHaveCount(0);
   });
 
-  test("owner logs out, logs back in and resets the password", async ({ page }) => {
-    await logIn(page, OWNER.phone, OWNER.password);
+  test("owner logs out, logs back in and changes the password", async ({ page }) => {
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
-    await logOut(page);
 
-    // Forgot password: SMS code, then a new password.
-    await page.getByRole("link", { name: en.auth.login.forgot }).click();
-    await expect(page).toHaveURL(/\/en\/forgot-password$/);
-    await settled(page);
-    await page.getByLabel(en.auth.fields.phone).fill(OWNER.phone);
-    await page.getByRole("button", { name: en.auth.forgot.submit }).click();
-    await expect(page).toHaveURL(/\/en\/verify$/);
-    await settled(page);
-    await page.getByLabel(en.auth.fields.code).fill(TEST_CODE);
-    await page.getByRole("button", { name: en.auth.verify.submit }).click();
+    // Change password from the account menu.
+    await page.getByRole("button", { name: en.nav.account }).click();
+    await page.getByRole("menuitem", { name: en.nav.changePassword }).click();
     await expect(page).toHaveURL(/\/en\/reset-password$/);
     await settled(page);
     await page.getByLabel(en.auth.fields.newPassword, { exact: true }).fill(NEW_OWNER_PASSWORD);
@@ -94,18 +97,30 @@ test.describe.serial("M0 foundation", () => {
     await expect(page).toHaveURL(/\/en\/home$/);
     await logOut(page);
 
-    // The old password no longer works; the new one does.
-    await logIn(page, OWNER.phone, OWNER.password);
+    // The old password no longer works; the new one does. Logins aren't case-sensitive.
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page.getByText(en.errors.auth.invalidCredentials, { exact: true })).toBeVisible();
-    await logIn(page, OWNER.phone, NEW_OWNER_PASSWORD);
+    await logIn(page, OWNER.login.toUpperCase(), NEW_OWNER_PASSWORD);
     await expect(page).toHaveURL(/\/en\/home$/);
+    await logOut(page);
+
+    // "Forgot password" explains who sets a new one (no SMS).
+    await page.getByRole("link", { name: en.auth.login.forgot }).click();
+    await expect(page).toHaveURL(/\/en\/forgot-password$/);
+    await expect(page.getByTestId("forgot-help")).toContainText(en.auth.forgot.staffBody);
+
+    // A taken login is refused on the field.
+    await page.goto("/en/signup");
+    await signUp(page, { ...OWNER, name: "Someone Else", phone: "+998901234567" });
+    await expect(page.getByText(en.errors.auth.usernameTaken, { exact: true })).toBeVisible();
+    await expect(page).toHaveURL(/\/en\/signup$/);
   });
 
   test("owner archives a room and disables the teacher, who loses access", async ({
     page,
     browser,
   }) => {
-    await logIn(page, OWNER.phone, NEW_OWNER_PASSWORD);
+    await logIn(page, OWNER.login, NEW_OWNER_PASSWORD);
     await expect(page).toHaveURL(/\/en\/home$/);
 
     // Archive the room (with the confirm dialog).
@@ -120,9 +135,19 @@ test.describe.serial("M0 foundation", () => {
       page.getByTestId("room-row").getByText(en.common.archived, { exact: true }),
     ).toBeVisible();
 
-    // Disable the teacher.
+    // The teacher forgot their password: the owner sets a new one (the row shows the teacher's login).
     await page.goto("/en/staff");
     const teacherRow = page.getByTestId("staff-row").filter({ hasText: TEACHER.name });
+    await expect(teacherRow).toContainText(TEACHER.login);
+    await teacherRow
+      .getByRole("button", { name: en.auth.setPassword.row.replace("{name}", TEACHER.name) })
+      .click();
+    const setPassword = page.getByTestId("set-password-dialog");
+    await setPassword.getByLabel(en.auth.setPassword.password).fill(NEW_TEACHER_PASSWORD);
+    await setPassword.getByRole("button", { name: en.auth.setPassword.submit }).click();
+    await expect(setPassword).toBeHidden();
+
+    // Disable the teacher.
     await teacherRow
       .getByRole("button", { name: en.staff.rowDisable.replace("{name}", TEACHER.name) })
       .click();
@@ -132,7 +157,7 @@ test.describe.serial("M0 foundation", () => {
     // The teacher can still log in, but has no center any more.
     const teacherContext = await browser.newContext();
     const teacherPage = await teacherContext.newPage();
-    await logIn(teacherPage, TEACHER.phone, TEACHER.password);
+    await logIn(teacherPage, TEACHER.login, NEW_TEACHER_PASSWORD);
     await expect(teacherPage).toHaveURL(/\/en\/onboarding$/);
     await teacherPage.goto("/en/today");
     await expect(teacherPage).toHaveURL(/\/en\/onboarding$/);
