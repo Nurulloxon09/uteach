@@ -162,8 +162,8 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
   support view → Set new password; account menu → Change password. `/verify` removed.
 - Tests: pgTAP `m7f_username_login`; `packages/core` `login.test.ts`; every e2e spec logs in by login; the m0 e2e
   covers change password, case-insensitive login, the forgot page, a taken login and the owner's reset.
-- Known gaps: e2e not run locally (Playwright browsers missing, offline); CI runs them. `m1_academic` test 36 fails
-  on Thursdays (weekday order; unrelated, flagged separately). The hosted project needs sign-ups off, the email
+- Known gaps: e2e not run locally (Playwright browsers missing, offline); CI runs them. `m1_academic` test 36 failed
+  on Thursdays (it ordered the next Wednesday and Friday by date); fixed to compare them by id. The hosted project needs sign-ups off, the email
   provider on and `supabase db push`: owner's yes first.
 
 ### 2026-10-28 · M7f plan: username login

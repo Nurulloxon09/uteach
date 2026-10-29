@@ -344,7 +344,8 @@ select pg_temp.put('makeup2', public.create_makeup_lesson(
   p_for_lesson_id => pg_temp.id('fri'))::text);
 select pg_temp.as_admin();
 select is(
-  (select string_agg(is_billable::text, ',' order by starts_at) from public.lessons
+  -- Wednesday first, whatever today's weekday (the next Friday can come before the next Wednesday).
+  (select string_agg(is_billable::text, ',' order by id = pg_temp.id('fri')) from public.lessons
    where id in (pg_temp.id('wed'), pg_temp.id('fri'))),
   'false,true', 'a center-fault cancellation is not billable; another cancellation still counts'
 );
