@@ -677,6 +677,26 @@ Global "done when" for every milestone:
 >   hook route stays for later SMS use, but Auth no longer sends codes.
 > - The PGlite stand-in for `auth` gained `email_confirmed_at`, `encrypted_password`, `raw_app_meta_data` and
 >   `auth.sessions`.
+>
+> PROPOSED (M7g plan, 2026-10-29): **staff profile and my profile.** ✅ Asked by the owner: a manager opens a staff
+> member's profile and edits their information there (students already work this way: Students → name → Edit), and
+> everyone gets a "My profile" page. One build PR after this plan.
+> - **Staff profile** `/staff/[membershipId]`, opened by clicking a name on the Staff list. Same people can open it
+>   as can see the list (owners; admins with `staff`). It shows the name, role and status, phone, login (owners),
+>   branches, permissions (admins), colour (teachers), the groups a teacher teaches, and when they joined. Actions in
+>   the header: **Edit** (the existing dialog plus **phone**), **Set new password** (owners), disable / enable, new
+>   invite link (invited). Who may edit stays as today (RLS `memberships_update`).
+> - **Staff phone:** new column `memberships.phone`, the center's contact phone for that person (each center keeps
+>   its own, like `display_name`). Filled on insert from the invite phone or the person's profile; existing rows
+>   back-filled the same way. Editable with the update grant; shown on the list and the profile.
+> - **My profile** `/profile` (account menu → "My profile", for every role): your login (read-only), full name,
+>   phone and language, which you can change; your centers and roles; a link to Change password. `profiles.phone`
+>   becomes updatable by its owner (contact only since M7f).
+> - **Tests:** pgTAP `m7g_profiles` (phone default and back-fill; owner edits any member's phone; an admin with
+>   `staff` edits only teachers in their branches; a teacher can't; another center can't; you edit your own profile
+>   phone and nobody else's); e2e: the owner opens a teacher's profile and changes the phone, the teacher edits
+>   their own name on My profile.
+> - Not in M7g: photos, documents, custom student fields, staff editing their center-specific name themselves.
 - [x] Owner/admin/teacher dashboards show the numbers defined in 20, verified against fixture data. (M7c: pgTAP `m7c_dashboards`, 41 checks on a fixture center with 2 branches: every owner number for all branches and each branch, an admin of one branch with and without permissions, both teachers, and refusals for other roles and centers; passes on real Postgres and PGlite. Owner Home checked in the browser on local data; screenshots at 1440/390.)
 - [ ] Prod: `docker compose up` on the VPS serves HTTPS; deploy from CI; worker and web restart automatically; daily DB backup verified by a restore test; error tracking receives a test error; an uptime alert reaches Telegram.
 - [ ] A full dry run with real data from a friendly center (import → a week of attendance → month-start charges → payments → reminders) is completed with no blocking bugs.
