@@ -631,6 +631,42 @@ Global "done when" for every milestone:
 >   first class on two short lessons added by the test helper, and fills the plan up by moving the center onto a
 >   hidden one-student test plan in SQL. The receipt check is the `payment_received` outbox row for the guardian
 >   (receipt number and payment id); the worker test covers sending it.
+>
+> PROPOSED (M7f plan, 2026-10-28): **username login**. ✅ Asked by the owner: people log in with a login name and a
+> password instead of a phone number; everyone picks their own login; no SMS code anywhere. One build PR after this
+> plan.
+> - **Identity:** each account gets a `username` (3–32 characters: `a–z`, `0–9`, `.`, `_`, starting with a letter or
+>   digit; stored lower-case, unique, case-insensitive). Supabase Auth keeps working on email + password: the
+>   account's Auth email is the hidden address `{username}@login.uteach.invalid` (`.invalid` never delivers mail).
+>   The helper `loginEmail()` in `packages/core` is the only place that builds it. People never see it.
+> - **Sign-up** (`/signup`): full name, login, phone (contact only), password. A server action creates the account
+>   with the service role (confirmed at once, the login in `app_metadata`, which users can't set themselves),
+>   then signs in. Public Auth sign-ups are turned off (`[auth] enable_signup = false`), so the server action is
+>   the only way in; the new-user trigger also refuses an account without a login (other than the phone fallback
+>   below). "This login is taken" is shown on the field.
+> - **Log in** (`/login`): login + password. Wrong login and wrong password give the same message.
+> - **Phone** stays on the profile as contact information: required, `+998` format, **no longer unique and no
+>   longer verified**. The `/verify` code step goes away.
+> - **Invites:** the link (secret, single use, 7 days) is the proof. `accept_invite` no longer compares phones, so
+>   the person signs up with their own login and accepts. The invite card shows the name and role, not the phone.
+> - **Forgot password** without SMS: `/forgot-password` explains what to do. Staff ask their center's owner; the
+>   owner gets **Staff → member → "Set new password"** (owner only, members of the same center, written to
+>   `audit_log`). Owners ask uteach on Telegram, and the super-admin sets it in **/admin → Centers → center →
+>   owner → "Set new password"** (audited). Signed-in people change their own password on `/reset-password`
+>   (renamed in the menu "Change password").
+> - **Existing accounts:** the migration gives every current account the login `u` + its phone digits (for example
+>   `u998990000099`) and the matching Auth email, so nobody is locked out; they can keep it. Changing a login
+>   later is not in M7f.
+> - **Migration `m7f_username_login`:** `profiles.username` (citext, unique, check), phone unique dropped, new-user
+>   trigger, `accept_invite` without the phone check, backfill. pgTAP `m7f_username_login`: the trigger takes
+>   the login from `app_metadata` and ignores `user_metadata`; the refusal without one; case-insensitive
+>   uniqueness; the backfill; invite accepted with another phone; still single use and 7 days.
+> - **E2E:** every spec signs up and logs in with a login; one new check: a taken login, a wrong password, the
+>   owner sets a teacher's new password and the teacher logs in with it.
+> - **The hosted project** needs "Allow new users to sign up" off and the email provider on (dashboard or
+>   `supabase config push`), then `supabase db push`. Asked before doing it.
+> - Not in M7f: changing your login, sign-in by phone, SMS anywhere in auth (the Eskiz SMS for parents stays M4),
+>   a CAPTCHA on sign-up (until abuse is seen; the server action keeps Supabase's per-IP limits).
 - [x] Owner/admin/teacher dashboards show the numbers defined in 20, verified against fixture data. (M7c: pgTAP `m7c_dashboards`, 41 checks on a fixture center with 2 branches: every owner number for all branches and each branch, an admin of one branch with and without permissions, both teachers, and refusals for other roles and centers; passes on real Postgres and PGlite. Owner Home checked in the browser on local data; screenshots at 1440/390.)
 - [ ] Prod: `docker compose up` on the VPS serves HTTPS; deploy from CI; worker and web restart automatically; daily DB backup verified by a restore test; error tracking receives a test error; an uptime alert reaches Telegram.
 - [ ] A full dry run with real data from a friendly center (import → a week of attendance → month-start charges → payments → reminders) is completed with no blocking bugs.
