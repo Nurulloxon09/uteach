@@ -22,7 +22,7 @@ import {
   parseListParams,
   type ChipTone,
 } from "@/components/patterns";
-import { redirect } from "@/i18n/navigation";
+import { Link, redirect } from "@/i18n/navigation";
 import { requireAdminContext } from "@/lib/center";
 import { isPaletteKey } from "@/lib/palette";
 import { ilikePattern } from "@/lib/search";
@@ -52,6 +52,7 @@ type Member = {
   branch_ids: string[];
   permissions: string[];
   invited_phone: string | null;
+  phone: string | null;
   color: string | null;
 };
 
@@ -73,7 +74,7 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
   let query = supabase
     .from("memberships")
     .select(
-      "id, profile_id, display_name, role, status, branch_ids, permissions, invited_phone, color",
+      "id, profile_id, display_name, role, status, branch_ids, permissions, invited_phone, phone, color",
       {
         count: "exact",
       },
@@ -84,7 +85,7 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
   if (role) query = query.eq("role", role);
   if (status) query = query.eq("status", status);
   const pattern = ilikePattern(list.q);
-  if (pattern) query = query.or(`display_name.ilike.${pattern},invited_phone.ilike.${pattern}`);
+  if (pattern) query = query.or(`display_name.ilike.${pattern},phone.ilike.${pattern}`);
 
   const [{ data, count }, { data: branches }] = await Promise.all([
     query.order("created_at").range(list.from, list.to),
@@ -102,8 +103,16 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
       ? await supabase.rpc("member_logins", { p_center_id: ctx.center.id })
       : { data: null };
   const loginOf = new Map((logins ?? []).map((l) => [l.membership_id, l.username]));
-  const subOf = (m: Member) =>
-    m.status === "invited" ? m.invited_phone : (loginOf.get(m.id) ?? undefined);
+  const subOf = (m: Member) => loginOf.get(m.id) ?? undefined;
+  const profileLink = (m: Member) => (
+    <Link
+      href={`/staff/${m.id}`}
+      className="underline-offset-4 hover:text-primary hover:underline"
+      data-testid="staff-profile-link"
+    >
+      {m.display_name}
+    </Link>
+  );
   const filtered = Boolean(role || status || pattern);
 
   const branchName = new Map((branches ?? []).map((b) => [b.id, b.name]));
@@ -144,6 +153,7 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
           member: {
             id: m.id,
             name: m.display_name,
+            phone: m.phone,
             role: m.role,
             branchIds: m.branch_ids,
             permissions: m.permissions,
@@ -216,11 +226,12 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
               cell: (m) => (
                 <NameCell
                   avatar={<InitialsAvatar name={m.display_name} />}
-                  name={m.display_name}
+                  name={profileLink(m)}
                   sub={subOf(m)}
                 />
               ),
             },
+            { key: "phone", header: t("fields.phone"), cell: (m) => m.phone ?? "—" },
             { key: "role", header: t("columns.role"), cell: roleOf },
             {
               key: "branches",
@@ -234,8 +245,8 @@ export default async function StaffPage({ searchParams }: PageProps<"/[locale]/s
           mobileCard={(m) => (
             <MobileRecord
               avatar={<InitialsAvatar name={m.display_name} />}
-              title={m.display_name}
-              subtitle={m.status === "invited" ? m.invited_phone : tr(m.role)}
+              title={profileLink(m)}
+              subtitle={m.phone ?? tr(m.role)}
               status={statusOf(m)}
               fields={[
                 { label: t("columns.role"), value: roleOf(m) },

@@ -1,6 +1,7 @@
 "use client";
 
 import { useTranslations } from "next-intl";
+import { useState } from "react";
 import {
   CheckboxField,
   CheckboxGroup,
@@ -8,12 +9,14 @@ import {
   FormDialog,
   PaletteField,
 } from "@/components/patterns";
+import { Button } from "@/components/ui/button";
 import type { PaletteKey } from "@/lib/palette";
 import { updateMemberAction } from "./actions";
 
 export type EditableMember = {
   id: string;
   name: string;
+  phone: string | null;
   role: "owner" | "admin" | "teacher";
   branchIds: string[];
   permissions: string[];
@@ -21,7 +24,7 @@ export type EditableMember = {
 };
 
 /**
- * Edit a staff member: name, branches, admin flags (owners only, 03) and timetable color.
+ * Edit a staff member: name, phone, branches, admin flags (owners only, 03) and timetable color.
  * Role changes aren't offered here.
  */
 export function EditMemberDialog({
@@ -42,6 +45,7 @@ export function EditMemberDialog({
   const t = useTranslations("staff");
   const tf = useTranslations("flags");
   const tc = useTranslations("common");
+  const tAuth = useTranslations("auth");
   return (
     <FormDialog
       open={open}
@@ -62,6 +66,16 @@ export function EditMemberDialog({
             defaultValue={member.name}
             state={state}
             required
+          />
+          <Field
+            name="phone"
+            type="tel"
+            inputMode="tel"
+            autoComplete="off"
+            label={t("fields.phone")}
+            placeholder={tAuth("fields.phonePlaceholder")}
+            defaultValue={member.phone ?? ""}
+            state={state}
           />
           {member.role !== "owner" ? (
             <CheckboxGroup legend={t("fields.branches")} name="branchIds" state={state}>
@@ -94,5 +108,26 @@ export function EditMemberDialog({
         </>
       )}
     </FormDialog>
+  );
+}
+
+/** "Edit" button for the staff profile header (M7g): opens the same dialog. */
+export function EditMemberButton(
+  props: Omit<Parameters<typeof EditMemberDialog>[0], "open" | "onOpenChange">,
+) {
+  const tc = useTranslations("common");
+  const [open, setOpen] = useState(false);
+  return (
+    <>
+      <Button
+        variant="outline-primary"
+        size="lg"
+        onClick={() => setOpen(true)}
+        data-testid="member-edit"
+      >
+        {tc("edit")}
+      </Button>
+      <EditMemberDialog {...props} open={open} onOpenChange={setOpen} />
+    </>
   );
 }

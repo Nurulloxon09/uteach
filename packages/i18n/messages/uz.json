@@ -96,7 +96,8 @@
     "scores": "Ballar",
     "examTypes": "Imtihon turlari",
     "auditLog": "Oʻzgarishlar jurnali",
-    "changePassword": "Parolni oʻzgartirish"
+    "changePassword": "Parolni oʻzgartirish",
+    "profile": "Mening profilim"
   },
   "errors": {
     "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
@@ -460,7 +461,14 @@
     "rowDisable": "{name}ni oʻchirish",
     "rowEnable": "{name}ni yoqish",
     "editTitle": "Xodimni tahrirlash",
-    "editHint": "{name}: filiallar, ruxsatlar va jadval rangi."
+    "editHint": "{name}: ism, telefon, filiallar, ruxsatlar va jadval rangi.",
+    "profile": {
+      "groups": "Guruhlar",
+      "noGroups": "Hozircha guruhlar yoʻq.",
+      "noPermissions": "Qoʻshimcha ruxsatlar yoʻq.",
+      "noPhone": "Telefon raqami yoʻq",
+      "since": "Jamoaga qoʻshilgan: {date}"
+    }
   },
   "flags": {
     "students": {
@@ -2827,5 +2835,13 @@
         "body": "Oʻzgarishlarni shu sahifada eʼlon qilamiz va muhimlari haqida markaz rahbarlariga xabar beramiz. Savollar: bosh sahifadagi aloqa orqali uteachga yozing."
       }
     }
+  },
+  "profile": {
+    "title": "Mening profilim",
+    "details": "Maʼlumotlaringiz",
+    "phoneHint": "Markaz siz bilan bogʻlanishi uchun.",
+    "language": "Til",
+    "languageHint": "uteach sizga yuboradigan xabarlar uchun.",
+    "loginHint": "Shu login bilan kirasiz. Uni oʻzgartirib boʻlmaydi."
   }
 }

@@ -1001,14 +1001,14 @@ isOneToOne: false
                   ]
                 },"memberships": {
                   Row: {
-                    "branch_ids": (string)[],"center_id": string,"color": string | null,"created_at": string,"display_name": string,"id": string,"invite_expires_at": string | null,"invite_token_hash": string | null,"invited_phone": string | null,"permissions": (string)[],"profile_id": string | null,"role": Database["public"]['Enums']["membership_role"],"status": Database["public"]['Enums']["membership_status"],"updated_at": string
+                    "branch_ids": (string)[],"center_id": string,"color": string | null,"created_at": string,"display_name": string,"id": string,"invite_expires_at": string | null,"invite_token_hash": string | null,"invited_phone": string | null,"permissions": (string)[],"phone": string | null,"profile_id": string | null,"role": Database["public"]['Enums']["membership_role"],"status": Database["public"]['Enums']["membership_status"],"updated_at": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "branch_ids"?: (string)[],"center_id": string,"color"?: string | null,"created_at"?: string,"display_name": string,"id"?: string,"invite_expires_at"?: string | null,"invite_token_hash"?: string | null,"invited_phone"?: string | null,"permissions"?: (string)[],"profile_id"?: string | null,"role": Database["public"]['Enums']["membership_role"],"status"?: Database["public"]['Enums']["membership_status"],"updated_at"?: string
+                    "branch_ids"?: (string)[],"center_id": string,"color"?: string | null,"created_at"?: string,"display_name": string,"id"?: string,"invite_expires_at"?: string | null,"invite_token_hash"?: string | null,"invited_phone"?: string | null,"permissions"?: (string)[],"phone"?: string | null,"profile_id"?: string | null,"role": Database["public"]['Enums']["membership_role"],"status"?: Database["public"]['Enums']["membership_status"],"updated_at"?: string
                   }
                   Update: {
-                    "branch_ids"?: (string)[],"center_id"?: string,"color"?: string | null,"created_at"?: string,"display_name"?: string,"id"?: string,"invite_expires_at"?: string | null,"invite_token_hash"?: string | null,"invited_phone"?: string | null,"permissions"?: (string)[],"profile_id"?: string | null,"role"?: Database["public"]['Enums']["membership_role"],"status"?: Database["public"]['Enums']["membership_status"],"updated_at"?: string
+                    "branch_ids"?: (string)[],"center_id"?: string,"color"?: string | null,"created_at"?: string,"display_name"?: string,"id"?: string,"invite_expires_at"?: string | null,"invite_token_hash"?: string | null,"invited_phone"?: string | null,"permissions"?: (string)[],"phone"?: string | null,"profile_id"?: string | null,"role"?: Database["public"]['Enums']["membership_role"],"status"?: Database["public"]['Enums']["membership_status"],"updated_at"?: string
                   }
                   Relationships: [
                     {

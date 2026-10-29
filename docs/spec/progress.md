@@ -153,6 +153,13 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 ## Log
 
+### 2026-10-29 · M7g staff profile and my profile built
+- Migration `m7g_profiles` (`memberships.phone`, phone update grants); `/staff/[membershipId]` with Edit (now with
+  phone), Groups / Permissions tabs; Staff list links names, Phone column; `/profile` (name, phone, language, login,
+  centers) from the account menu.
+- Tests: pgTAP `m7g_profiles` (16 checks); e2e `m7g-profiles.spec.ts` (not run locally: no Playwright browser).
+  Checked in the browser on local data, also at 375 px (no sideways scroll).
+
 ### 2026-10-29 · M7g plan: staff profile and my profile
 - The owner asked that managers edit staff information from a profile page (as for students) and for a "My profile"
   page. Plan in `30-milestones.md` (M7g): `/staff/[membershipId]`, `memberships.phone`, `/profile`.

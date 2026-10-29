@@ -96,7 +96,8 @@
     "scores": "Scores",
     "examTypes": "Exam types",
     "auditLog": "Audit log",
-    "changePassword": "Change password"
+    "changePassword": "Change password",
+    "profile": "My profile"
   },
   "errors": {
     "generic": "Something went wrong. Please try again.",
@@ -460,7 +461,14 @@
     "rowDisable": "Disable {name}",
     "rowEnable": "Enable {name}",
     "editTitle": "Edit staff member",
-    "editHint": "Branches, permissions and timetable color of {name}."
+    "editHint": "{name}: name, phone, branches, permissions and timetable color.",
+    "profile": {
+      "groups": "Groups",
+      "noGroups": "No groups yet.",
+      "noPermissions": "No extra permissions.",
+      "noPhone": "No phone number",
+      "since": "In the team since {date}"
+    }
   },
   "flags": {
     "students": {
@@ -2827,5 +2835,13 @@
         "body": "We publish changes on this page and tell center owners about important ones. Questions: write to uteach using the contact on the home page."
       }
     }
+  },
+  "profile": {
+    "title": "My profile",
+    "details": "Your details",
+    "phoneHint": "So your center can reach you.",
+    "language": "Language",
+    "languageHint": "For messages uteach sends you.",
+    "loginHint": "You log in with this login. It can't be changed."
   }
 }
