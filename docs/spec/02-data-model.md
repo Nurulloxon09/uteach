@@ -121,7 +121,7 @@ One row per `auth.users` row, created by trigger on sign-up.
 | locale | text not null default 'uz' | `check in ('uz','ru','en')` |
 | is_super_admin | boolean not null default false | settable only by the service role |
 
-RLS: select/update own row (`id = auth.uid()`); `is_super_admin` and `phone` are not updatable by the user (column grant). Staff can select profiles of people sharing a center (for names), via the `staff_directory` view.
+RLS: select/update own row (`id = auth.uid()`); `is_super_admin` and `username` are not updatable by the user (column grant); `full_name`, `phone` (since M7g, contact only) and `locale` are. Staff can select profiles of people sharing a center (for names), via the `staff_directory` view.
 
 ### `plans` 🟩 [M7]
 
@@ -260,6 +260,7 @@ A staff user's role in a center. One row per (center, person).
 | status | membership_status not null default 'invited' | |
 | display_name | text not null | name shown before the invite is accepted |
 | invited_phone | text | E.164 |
+| phone | text | M7g: the center's contact phone for this person (E.164); set on insert from `invited_phone` or the profile phone; owners / staff admins edit it |
 | invite_token_hash | text | sha256 of the one-time token; cleared on accept |
 | invite_expires_at | timestamptz | 7 days |
 | branch_ids | uuid[] not null default '{}' | admins and teachers: branches in scope. Ignored for owners (all branches). |

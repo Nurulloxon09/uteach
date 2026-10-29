@@ -697,6 +697,15 @@ Global "done when" for every milestone:
 >   phone and nobody else's); e2e: the owner opens a teacher's profile and changes the phone, the teacher edits
 >   their own name on My profile.
 > - Not in M7g: photos, documents, custom student fields, staff editing their center-specific name themselves.
+>
+> PROPOSED (M7g, as built, 2026-10-29):
+> - Migration `m7g_profiles`: `memberships.phone` (back-filled; a before-insert trigger fills it), update grants on
+>   `memberships.phone` and `profiles.phone`. No new functions: the existing `memberships_update` policy decides.
+> - The Staff list links each name to the profile, shows a Phone column and searches by it. The profile header has
+>   Edit and the same ⋯ menu as the list row (set password, disable, new link); admins get a Permissions tab,
+>   everyone a Groups tab (groups they teach).
+> - My profile shows your login and every center you belong to with your role; the language there is the one
+>   uteach uses for messages to you. Account menu order: My profile, Change password, Log out.
 - [x] Owner/admin/teacher dashboards show the numbers defined in 20, verified against fixture data. (M7c: pgTAP `m7c_dashboards`, 41 checks on a fixture center with 2 branches: every owner number for all branches and each branch, an admin of one branch with and without permissions, both teachers, and refusals for other roles and centers; passes on real Postgres and PGlite. Owner Home checked in the browser on local data; screenshots at 1440/390.)
 - [ ] Prod: `docker compose up` on the VPS serves HTTPS; deploy from CI; worker and web restart automatically; daily DB backup verified by a restore test; error tracking receives a test error; an uptime alert reaches Telegram.
 - [ ] A full dry run with real data from a friendly center (import → a week of attendance → month-start charges → payments → reminders) is completed with no blocking bugs.
