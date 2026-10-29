@@ -3,34 +3,27 @@ import en from "@uteach/i18n/messages/en.json";
 
 export { en };
 
-/** Fixed SMS code for test phones +99899000000x (supabase/config.toml [auth.sms.test_otp]). */
-export const TEST_CODE = "123456";
-
-export type Person = { name: string; phone: string; password: string };
+export type Person = { name: string; login: string; phone: string; password: string };
 
 /** Wait until the page is loaded and idle, so typing isn't lost to a dev-mode compile/re-render. */
 export async function settled(page: Page) {
   await page.waitForLoadState("networkidle");
 }
 
-/** Fill the sign-up form (already open) and confirm the SMS code. */
+/** Fill the sign-up form (already open) and send it: login + password, the phone is contact only (M7f). */
 export async function signUp(page: Page, person: Person) {
   await settled(page);
   await page.getByLabel(en.auth.fields.fullName).fill(person.name);
+  await page.getByLabel(en.auth.fields.username).fill(person.login);
   await page.getByLabel(en.auth.fields.phone).fill(person.phone);
   await page.getByLabel(en.auth.fields.password).fill(person.password);
   await page.getByRole("button", { name: en.auth.signup.submit }).click();
-
-  await expect(page.getByRole("heading", { name: en.auth.verify.title })).toBeVisible();
-  await settled(page);
-  await page.getByLabel(en.auth.fields.code).fill(TEST_CODE);
-  await page.getByRole("button", { name: en.auth.verify.submit }).click();
 }
 
-export async function logIn(page: Page, phone: string, password: string) {
+export async function logIn(page: Page, login: string, password: string) {
   await page.goto("/en/login");
   await settled(page);
-  await page.getByLabel(en.auth.fields.phone).fill(phone);
+  await page.getByLabel(en.auth.fields.username).fill(login);
   await page.getByLabel(en.auth.fields.password).fill(password);
   await page.getByRole("button", { name: en.auth.login.submit }).click();
 }

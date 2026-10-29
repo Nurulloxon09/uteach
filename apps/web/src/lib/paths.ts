@@ -6,7 +6,6 @@ export const PUBLIC_PATHS = [
   "/",
   "/login",
   "/signup",
-  "/verify",
   "/forgot-password",
   "/invite",
   "/terms",

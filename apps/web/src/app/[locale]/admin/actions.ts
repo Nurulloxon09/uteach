@@ -12,6 +12,7 @@ import {
   optionalIntField,
   optionalMoneyField,
   optionalText,
+  passwordField,
   requiredText,
   uuidField,
 } from "@/lib/validation";
@@ -239,5 +240,24 @@ export async function savePaymentInstructionsAction(
   if (error) return fail(dbErrorKey(error), form);
   refresh();
   revalidatePath("/[locale]/settings/subscription", "page");
+  return { ok: true };
+}
+
+/** "Set new password" for anyone in a center (owners who forgot theirs ask uteach; M7f). Audited by the function. */
+export async function adminSetPasswordAction(
+  _prev: ActionState,
+  form: FormData,
+): Promise<ActionState> {
+  const parsed = z
+    .object({ profileId: uuidField, password: passwordField })
+    .safeParse({ profileId: str(form, "profileId"), password: form.get("password") });
+  if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
+  const { actor, db } = await superAdminDb();
+  const { error } = await db.rpc("admin_set_password", {
+    p_actor: actor,
+    p_profile_id: parsed.data.profileId,
+    p_password: parsed.data.password,
+  });
+  if (error) return fail(dbErrorKey(error), form);
   return { ok: true };
 }

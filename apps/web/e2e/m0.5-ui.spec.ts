@@ -5,8 +5,18 @@ import { acceptInvite, createCenter, en, inviteTeacher, logIn, settled } from ".
  * M0.5 E2E (30-milestones): the app shell and patterns work with keyboard and on a phone.
  * Uses its own center so it doesn't depend on the M0 test's state.
  */
-const OWNER = { name: "Umida Owner", phone: "+998990000003", password: "owner-pass-3" };
-const TEACHER = { name: "Timur Teacher", phone: "+998990000004", password: "teach-pass-4" };
+const OWNER = {
+  name: "Umida Owner",
+  login: "umida.owner03",
+  phone: "+998990000003",
+  password: "owner-pass-3",
+};
+const TEACHER = {
+  name: "Timur Teacher",
+  login: "timur.teacher04",
+  phone: "+998990000004",
+  password: "teach-pass-4",
+};
 
 /** True when keyboard focus is inside an open dialog. */
 const focusInDialog = (page: Page) =>
@@ -62,7 +72,7 @@ test.describe.serial("M0.5 UI foundation", () => {
   });
 
   test("/dev/ui is available in development and 404 in production", async ({ page }) => {
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
     const response = await page.goto("/en/dev/ui");
     if (process.env.CI) {
@@ -77,7 +87,7 @@ test.describe.serial("M0.5 UI foundation", () => {
   test("teacher on a phone: drawer menu with Today and My groups", async ({ browser }) => {
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const page = await context.newPage();
-    await logIn(page, TEACHER.phone, TEACHER.password);
+    await logIn(page, TEACHER.login, TEACHER.password);
     await expect(page).toHaveURL(/\/en\/today$/);
     await expect(page.getByTestId("today-title")).toHaveText(en.today.title);
 

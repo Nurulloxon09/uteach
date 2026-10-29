@@ -21,11 +21,20 @@ create table auth.users (
   instance_id uuid,
   aud text,
   role text,
-  email text,
+  email text unique,
+  email_confirmed_at timestamptz,
+  encrypted_password text,
   phone text unique,
   phone_confirmed_at timestamptz,
   raw_user_meta_data jsonb,
+  raw_app_meta_data jsonb,
   last_sign_in_at timestamptz,
+  created_at timestamptz,
+  updated_at timestamptz
+);
+create table auth.sessions (
+  id uuid primary key,
+  user_id uuid not null references auth.users (id) on delete cascade,
   created_at timestamptz,
   updated_at timestamptz
 );

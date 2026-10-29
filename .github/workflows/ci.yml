@@ -89,9 +89,12 @@ jobs:
         run: |
           API_URL=$(supabase status -o json | jq -r '.API_URL')
           ANON_KEY=$(supabase status -o json | jq -r '.ANON_KEY')
+          SERVICE_KEY=$(supabase status -o json | jq -r '.SERVICE_ROLE_KEY')
           {
             echo "NEXT_PUBLIC_SUPABASE_URL=$API_URL"
             echo "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=$ANON_KEY"
+            # Sign-up creates accounts with the service role (M7f); this is the local CI stack's key.
+            echo "SUPABASE_SECRET_KEY=$SERVICE_KEY"
             grep '^SEND_SMS_HOOK_SECRET=' apps/web/.env.example
             echo "SMS_PROVIDER=console"
           } > apps/web/.env.local

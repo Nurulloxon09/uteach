@@ -15,8 +15,18 @@ import {
  * a room clash lands in the conflicts inbox → the timetable refuses a clashing drop and accepts a free one →
  * cancel and substitute; the substitute sees the lesson in their Today.
  */
-const OWNER = { name: "Otabek Owner", phone: "+998990000007", password: "owner-pass-7" };
-const TEACHER = { name: "Sevara Teacher", phone: "+998990000008", password: "teach-pass-8" };
+const OWNER = {
+  name: "Otabek Owner",
+  login: "otabek.owner07",
+  phone: "+998990000007",
+  password: "owner-pass-7",
+};
+const TEACHER = {
+  name: "Sevara Teacher",
+  login: "sevara.teacher08",
+  phone: "+998990000008",
+  password: "teach-pass-8",
+};
 
 /** "YYYY-MM-DD" in Tashkent, `days` from today. */
 function tashkentDate(days = 0): string {
@@ -139,7 +149,7 @@ test.describe.serial("M1 · courses, groups and the timetable", () => {
     browser,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
     await page.goto("/en/groups");
     await settled(page);
@@ -176,7 +186,7 @@ test.describe.serial("M1 · courses, groups and the timetable", () => {
     // The substitute (a teacher of another group) sees it in Today, on a phone.
     const context = await browser.newContext({ viewport: { width: 390, height: 844 } });
     const teacherPage = await context.newPage();
-    await logIn(teacherPage, TEACHER.phone, TEACHER.password);
+    await logIn(teacherPage, TEACHER.login, TEACHER.password);
     await expect(teacherPage).toHaveURL(/\/en\/today$/);
     const lesson = teacherPage.getByTestId("today-lesson").filter({ hasText: "07:00" });
     await expect(lesson).toContainText("IELTS · Mon/Wed/Fri 18:00");

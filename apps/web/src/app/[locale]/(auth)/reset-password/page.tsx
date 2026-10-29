@@ -8,7 +8,7 @@ export async function generateMetadata() {
   return { title: t("title") };
 }
 
-/** Reached after verifying the SMS code from "forgot password", which signs the user in. */
+/** "Change password" for the signed-in person (account menu; M7f). */
 export default async function ResetPasswordPage() {
   await requireUser();
   const t = await getTranslations("auth.reset");

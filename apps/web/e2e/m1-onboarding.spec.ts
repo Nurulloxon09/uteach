@@ -7,7 +7,12 @@ import { createGroup, en, logIn, settled, signUp } from "./helpers";
  * enroll a student with a guardian → the lessons are in the timetable. Then Excel import: a 300-row students
  * file, the same file again (no duplicates), and a broken file (row/column errors, nothing written).
  */
-const OWNER = { name: "Ziyoda Owner", phone: "+998990000011", password: "owner-pass-11" };
+const OWNER = {
+  name: "Ziyoda Owner",
+  login: "ziyoda.owner11",
+  phone: "+998990000011",
+  password: "owner-pass-11",
+};
 
 function nextMonday(): string {
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: "Asia/Tashkent" }).format(new Date());
@@ -125,7 +130,7 @@ test.describe.serial("M1 · onboarding wizard, happy path and Excel import", () 
     page,
   }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
 
     // Column names in Uzbek, Russian and English mixed, as real files are: the mapping is guessed.

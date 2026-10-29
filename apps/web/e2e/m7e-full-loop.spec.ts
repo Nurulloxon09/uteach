@@ -8,7 +8,12 @@ import { addRoom, createCenter, createGroup, en, logIn, settled } from "./helper
  * Then the student-limit message on a center whose plan is full, clicked through to Settings → Subscription.
  * The owner teaches the group, so one login covers every step.
  */
-const OWNER = { name: "Sardor Owner", phone: "+998990000017", password: "owner-pass-17" };
+const OWNER = {
+  name: "Sardor Owner",
+  login: "sardor.owner17",
+  phone: "+998990000017",
+  password: "owner-pass-17",
+};
 const CENTER = "Loop Academy";
 const BRANCH = "Yunusobod";
 const GROUP = "Morning A";
@@ -18,7 +23,7 @@ const SECOND = { name: "Jasur Aliyev", phone: "+998931117702" };
 
 async function home(page: Page) {
   await page.setViewportSize({ width: 1440, height: 900 });
-  await logIn(page, OWNER.phone, OWNER.password);
+  await logIn(page, OWNER.login, OWNER.password);
   await expect(page).toHaveURL(/\/en\/home$/);
 }
 

@@ -143,10 +143,7 @@ select results_eq(
   $$ values ('Center A'::text, 'teacher'::text, false) $$,
   'get_invite shows the center and role'
 );
-select throws_ok(
-  $$ select public.accept_invite(pg_temp.get('teacher_token')) $$,
-  'P0001', 'invite_phone_mismatch', 'an invite only works for the invited phone'
-);
+-- Since M7f the link itself is the proof (no phone check): m7f_username_login covers it.
 
 select pg_temp.login(pg_temp.id('admin_a'));
 select is(public.accept_invite(pg_temp.get('admin_token')), pg_temp.id('center_a'), 'the invited admin can accept');

@@ -61,9 +61,12 @@ export function serverEnv() {
 }
 
 /**
- * The secret (service-role) key for /admin (01: super-admin pages are on the service-role allow-list). Read on its
- * own so /admin doesn't need the SMS hook's settings. Null when it isn't set: /admin then says so.
+ * The secret (service-role) key. Read on its own so its users don't need the SMS hook's settings. Allowed only where
+ * 01 lists the service role: /admin and the sign-up server action (M7f). Null when it isn't set.
  */
-export function adminSecretKey(): string | null {
+export function serviceSecretKey(): string | null {
   return process.env.SUPABASE_SECRET_KEY || null;
 }
+
+/** The secret key for /admin (null: /admin says it isn't set up). */
+export const adminSecretKey = serviceSecretKey;

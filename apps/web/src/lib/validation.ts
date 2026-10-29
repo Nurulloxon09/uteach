@@ -1,4 +1,4 @@
-import { isValidTimeZone, normalizePhone, parseMajorUnits } from "@uteach/core";
+import { isValidTimeZone, normalizePhone, normalizeUsername, parseMajorUnits } from "@uteach/core";
 import { locales } from "@uteach/i18n";
 import { z } from "zod";
 import { publicEnv } from "@/lib/env";
@@ -54,10 +54,19 @@ export const passwordField = z
   .regex(/[a-zA-Z]/, { error: "validation.passwordWeak" })
   .regex(/[0-9]/, { error: "validation.passwordWeak" });
 
-export const otpField = z
+/** A login name (M7f): trimmed and lower-cased, the rules of `normalizeUsername`. */
+export const usernameField = z
   .string()
   .trim()
-  .regex(/^\d{6}$/, { error: "validation.otp" });
+  .min(1, { error: "validation.required" })
+  .transform((value, ctx) => {
+    const username = normalizeUsername(value);
+    if (!username) {
+      ctx.addIssue({ code: "custom", message: "validation.username" });
+      return z.NEVER;
+    }
+    return username;
+  });
 
 export const timezoneField = z
   .string()

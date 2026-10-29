@@ -7,7 +7,12 @@ import { addRoom, createCenter, createGroup, en, logIn, settled } from "./helper
  * settled → the payment shows on the Payments page, is voided there, and the debt comes back. The full M3 happy
  * path (12 lessons, next cycle, debtors) comes with M3c.
  */
-const OWNER = { name: "Malika Owner", phone: "+998990000014", password: "owner-pass-14" };
+const OWNER = {
+  name: "Malika Owner",
+  login: "malika.owner14",
+  phone: "+998990000014",
+  password: "owner-pass-14",
+};
 const GROUP = "Evening A";
 const STUDENT = "Aziz Rahimov";
 
@@ -98,7 +103,7 @@ test.describe.serial("M3b · payments and receipts", () => {
 
   test("cycle 1 is charged; a cash payment settles it and prints receipts", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
 
     await openStudentPayments(page);
@@ -136,7 +141,7 @@ test.describe.serial("M3b · payments and receipts", () => {
 
   test("the Payments page lists it; voiding brings the debt back", async ({ page }) => {
     await page.setViewportSize({ width: 1440, height: 900 });
-    await logIn(page, OWNER.phone, OWNER.password);
+    await logIn(page, OWNER.login, OWNER.password);
     await expect(page).toHaveURL(/\/en\/home$/);
 
     await page.getByRole("link", { name: en.nav.payments }).first().click();

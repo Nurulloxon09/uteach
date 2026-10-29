@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { broadcastRecipients, seedNotifyCenter } from "./db";
-import { createCenter, en, settled } from "./helpers";
+import { createCenter, en, logIn, settled } from "./helpers";
 
 /**
  * M4 staff screens (30-milestones M4): a broadcast to "debtors of branch X" reaches exactly that set and the
@@ -8,7 +8,12 @@ import { createCenter, en, settled } from "./helpers";
  * "Telegram: not linked"; Settings → Notifications: edit a message with a live preview, then reset it; Settings
  * → Telegram without a bot shows how to set it up. The worker side (delivery) is tested in apps/worker.
  */
-const OWNER = { name: "Nargiza Owner", phone: "+998990000016", password: "owner-pass-16" };
+const OWNER = {
+  name: "Nargiza Owner",
+  login: "nargiza.owner16",
+  phone: "+998990000016",
+  password: "owner-pass-16",
+};
 const CENTER = "Notify Academy";
 const BRANCHES = { first: "Chilonzor", second: "Yunusobod" };
 
@@ -25,11 +30,7 @@ test("owner sets up the center with debtors in two branches", async ({ page }) =
 test("a broadcast to debtors of one branch reaches exactly them, as previewed", async ({
   page,
 }) => {
-  await page.goto("/en/login");
-  await settled(page);
-  await page.getByLabel(en.auth.fields.phone).fill(OWNER.phone);
-  await page.getByLabel(en.auth.fields.password).fill(OWNER.password);
-  await page.getByRole("button", { name: en.auth.login.submit }).click();
+  await logIn(page, OWNER.login, OWNER.password);
   await expect(page).toHaveURL(/\/en\/home$/);
 
   await page.goto("/en/broadcasts");
@@ -67,11 +68,7 @@ test("a broadcast to debtors of one branch reaches exactly them, as previewed", 
 });
 
 test("Debtors: send a reminder once a day; the last reminder shows", async ({ page }) => {
-  await page.goto("/en/login");
-  await settled(page);
-  await page.getByLabel(en.auth.fields.phone).fill(OWNER.phone);
-  await page.getByLabel(en.auth.fields.password).fill(OWNER.password);
-  await page.getByRole("button", { name: en.auth.login.submit }).click();
+  await logIn(page, OWNER.login, OWNER.password);
   await expect(page).toHaveURL(/\/en\/home$/);
 
   await page.goto("/en/debtors");
@@ -99,11 +96,7 @@ test("Debtors: send a reminder once a day; the last reminder shows", async ({ pa
 test("Settings: edit a message with a live preview, reset it; Telegram without a bot", async ({
   page,
 }) => {
-  await page.goto("/en/login");
-  await settled(page);
-  await page.getByLabel(en.auth.fields.phone).fill(OWNER.phone);
-  await page.getByLabel(en.auth.fields.password).fill(OWNER.password);
-  await page.getByRole("button", { name: en.auth.login.submit }).click();
+  await logIn(page, OWNER.login, OWNER.password);
   await expect(page).toHaveURL(/\/en\/home$/);
 
   await page.goto("/en/settings/notifications");

@@ -106,12 +106,18 @@ create type invoice_status    as enum ('draft','issued','paid','void');
 
 > PROPOSED: columns, types, defaults, constraints, RLS policies and the [M#] tag. The canvas only lists this table's name.
 
+> PROPOSED (M7f): `username` added (existing rows got `u` + phone digits); `phone` lost its unique constraint. The new-user
+> trigger reads the login from the hidden Auth email, so the two can't disagree. Owners read their staff's logins
+> through `member_logins(center)`; `set_member_password` (owner → member) and `admin_set_password` (super-admin)
+> reset passwords and write `audit_log`.
+
 One row per `auth.users` row, created by trigger on sign-up.
 | column | type | notes |
 |---|---|---|
 | id | uuid pk | `references auth.users(id) on delete cascade` |
 | full_name | text not null | |
-| phone | text unique not null | E.164; same as the auth phone |
+| username | citext unique not null | M7f: the login; `^[a-z0-9][a-z0-9._]{2,31}$`; the Auth email is `{username}@login.uteach.invalid` |
+| phone | text not null | E.164; contact only since M7f (not unique, not verified) |
 | locale | text not null default 'uz' | `check in ('uz','ru','en')` |
 | is_super_admin | boolean not null default false | settable only by the service role |
 

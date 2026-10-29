@@ -9,7 +9,7 @@ import { dbErrorKey, fail, fieldErrorsFrom, str, type ActionState } from "@/lib/
 import { getCenterContext } from "@/lib/center";
 import { PALETTE } from "@/lib/palette";
 import { createClient } from "@/lib/supabase/server";
-import { phoneField, requiredText, uuidField } from "@/lib/validation";
+import { passwordField, phoneField, requiredText, uuidField } from "@/lib/validation";
 
 const colorField = z.union([z.enum(PALETTE), z.literal("")]).transform((v) => v || null);
 
@@ -143,5 +143,24 @@ export async function updateMemberAction(_prev: ActionState, form: FormData): Pr
 
   revalidatePath("/[locale]/staff", "page");
   revalidatePath("/[locale]/schedule", "page");
+  return { ok: true };
+}
+
+/** Owner sets a new password for a staff member who forgot theirs (no SMS, 10 "Auth" M7f). */
+export async function setMemberPasswordAction(
+  _prev: ActionState,
+  form: FormData,
+): Promise<ActionState> {
+  const parsed = z
+    .object({ membershipId: uuidField, password: passwordField })
+    .safeParse({ membershipId: str(form, "membershipId"), password: form.get("password") });
+  if (!parsed.success) return fieldErrorsFrom(parsed.error, form);
+
+  const supabase = await createClient();
+  const { error } = await supabase.rpc("set_member_password", {
+    p_membership_id: parsed.data.membershipId,
+    p_password: parsed.data.password,
+  });
+  if (error) return fail(dbErrorKey(error), form);
   return { ok: true };
 }

@@ -95,7 +95,8 @@
     "exams": "Imtihonlar",
     "scores": "Ballar",
     "examTypes": "Imtihon turlari",
-    "auditLog": "Oʻzgarishlar jurnali"
+    "auditLog": "Oʻzgarishlar jurnali",
+    "changePassword": "Parolni oʻzgartirish"
   },
   "errors": {
     "generic": "Nimadir xato ketdi. Qaytadan urinib koʻring.",
@@ -106,7 +107,6 @@
       "passwordShort": "Kamida 8 ta belgi.",
       "passwordWeak": "Harf va raqamlardan foydalaning.",
       "passwordMismatch": "Parollar mos kelmadi.",
-      "otp": "6 xonali kodni kiriting.",
       "timezone": "Vaqt mintaqasini tanlang.",
       "invalid": "Notoʻgʻri qiymat.",
       "branchRequired": "Kamida bitta filialni tanlang.",
@@ -122,15 +122,13 @@
       "template": "Bu matnni ishlatib boʻlmaydi: jingalak qavslardagi nomlarni tekshiring.",
       "confirmBroadcast": "Qabul qiluvchilarni tekshirganingizni belgilang.",
       "score": "Ballni kiriting, masalan 6.5.",
-      "planCode": "Harf bilan boshlanadigan 2–40 ta kichik lotin harfi, raqam yoki _."
+      "planCode": "Harf bilan boshlanadigan 2–40 ta kichik lotin harfi, raqam yoki _.",
+      "username": "3–32 ta belgi: lotin harflari, raqamlar, nuqta yoki pastki chiziq."
     },
     "auth": {
-      "invalidCredentials": "Telefon raqami yoki parol notoʻgʻri.",
-      "phoneTaken": "Bu raqam bilan akkaunt allaqachon bor. Tizimga kiring.",
-      "otpInvalid": "Kod notoʻgʻri yoki muddati tugagan.",
+      "invalidCredentials": "Login yoki parol notoʻgʻri.",
       "rateLimited": "Urinishlar juda koʻp. Bir necha daqiqadan soʻng qayta urinib koʻring.",
-      "smsFailed": "SMS yuborib boʻlmadi. Keyinroq urinib koʻring.",
-      "otpSessionExpired": "Bu bosqich muddati tugadi. Qaytadan boshlang."
+      "usernameTaken": "Bu login band. Boshqasini tanlang."
     },
     "db": {
       "not_authenticated": "Iltimos, qaytadan tizimga kiring.",
@@ -141,7 +139,6 @@
       "already_invited": "Bu raqamga taklif allaqachon yuborilgan. Xodimlar roʻyxatidan yangi havola yarating.",
       "invite_invalid": "Bu taklif havolasi endi yaroqsiz.",
       "invite_expired": "Taklif havolasining muddati tugagan. Yangisini soʻrang.",
-      "invite_phone_mismatch": "Bu taklif boshqa telefon raqami uchun.",
       "cannot_change_own_role": "Oʻz rolingizni oʻzgartira olmaysiz.",
       "use_accept_invite": "Taklif qilingan odam taklifni oʻzi qabul qilishi kerak.",
       "last_owner": "Markazda kamida bitta egasi qolishi kerak.",
@@ -220,7 +217,8 @@
       "invalid_status": "Bu holatni hozir qoʻyib boʻlmaydi: muddati tugagan. Sinov davrini uzaytiring yoki hisob chiqaring.",
       "plan_in_use": "Bu tarif ishlatilmoqda. Uni yashirish mumkin.",
       "invalid_plan": "Tarifni tekshiring: u yashirilgan boʻlishi yoki maydon chegaradan chiqqan boʻlishi mumkin.",
-      "invalid_days": "1 dan 90 kungacha tanlang."
+      "invalid_days": "1 dan 90 kungacha tanlang.",
+      "password_weak": "Kamida 8 ta belgi, harf va raqamlar bilan."
     },
     "groupHasStudents": "Arxivlashdan oldin guruh oʻquvchilarining oʻqishini tugating yoki ularni oʻtkazing.",
     "duplicateStudent": "Bunday ism yoki telefonli oʻquvchi allaqachon bor. Roʻyxatni tekshiring yoki baribir qoʻshish uchun yana saqlang."
@@ -232,13 +230,15 @@
       "password": "Parol",
       "passwordHint": "Kamida 8 ta belgi, harf va raqamlar bilan.",
       "fullName": "Ism va familiya",
-      "code": "SMS kod",
       "newPassword": "Yangi parol",
-      "confirmPassword": "Yangi parolni takrorlang"
+      "confirmPassword": "Yangi parolni takrorlang",
+      "username": "Login",
+      "usernameHint": "U bilan kirasiz. Lotin harflari, raqamlar, nuqta yoki pastki chiziq, masalan dilnoza.k",
+      "phoneContact": "Markaz siz bilan bogʻlanishi uchun. Kod yuborilmaydi."
     },
     "login": {
       "title": "Kirish",
-      "description": "Oʻquv markazi xodimlari telefon va parol bilan kiradi.",
+      "description": "Login va parolingiz bilan kiring.",
       "submit": "Kirish",
       "forgot": "Parolni unutdingizmi?",
       "toSignup": "Akkauntingiz yoʻqmi? Roʻyxatdan oʻting"
@@ -247,27 +247,31 @@
       "title": "Akkaunt yaratish",
       "description": "Markaz egalari va taklif qilingan xodimlar uchun.",
       "submit": "Davom etish",
-      "toLogin": "Akkauntingiz bormi? Kirish",
-      "phoneHint": "Tasdiqlash kodini SMS orqali yuboramiz."
-    },
-    "verify": {
-      "title": "Kodni kiriting",
-      "description": "{phone} raqamiga 6 xonali kod yubordik.",
-      "expired": "Bu bosqich muddati tugadi. Qaytadan boshlang.",
-      "backToLogin": "Kirish sahifasiga qaytish",
-      "submit": "Tasdiqlash",
-      "resend": "Yangi kod yuborish",
-      "resent": "Yangi kod yuborildi."
+      "toLogin": "Akkauntingiz bormi? Kirish"
     },
     "forgot": {
-      "title": "Parolni tiklash",
-      "description": "Telefon raqamingizni kiriting, sizga kod yuboramiz.",
-      "submit": "Kod yuborish"
+      "title": "Parolni unutdingizmi?",
+      "description": "Biz kod yubormaymiz. Yangi parolni shunday olasiz.",
+      "staffTitle": "Markaz xodimlari",
+      "staffBody": "Markaz egasidan soʻrang. U «Xodimlar» boʻlimida sizni tanlab, yangi parol oʻrnatadi.",
+      "ownerTitle": "Markaz egalari",
+      "ownerBody": "Roʻyxatdan oʻtgan raqamingizdan uteachga Telegramda yozing. Sizga yangi parol oʻrnatamiz.",
+      "writeUs": "uteachga Telegramda yozish",
+      "backToLogin": "Kirishga qaytish"
     },
     "reset": {
-      "title": "Yangi parol oʻrnating",
-      "description": "Bundan buyon shu parol bilan kirasiz.",
+      "title": "Parolni oʻzgartirish",
+      "description": "Yangi parol oʻylab toping. Endi u bilan kirasiz.",
       "submit": "Parolni saqlash"
+    },
+    "setPassword": {
+      "row": "Yangi parol oʻrnatish: {name}",
+      "title": "Yangi parol: {name}",
+      "description": "Bu parolni xodimga bering. Keyin u profil menyusidan uni oʻzgartirishi mumkin.",
+      "password": "Yangi parol",
+      "hint": "Kamida 8 ta belgi, harf va raqamlar bilan.",
+      "submit": "Parolni oʻrnatish",
+      "done": "Yangi parol oʻrnatildi: {name}."
     }
   },
   "onboarding": {
@@ -361,12 +365,12 @@
   "invite": {
     "title": "Sizni taklif qilishdi",
     "description": "{center} {name}ni {role} sifatida taklif qildi.",
-    "phoneHint": "Taklif qilingan raqam bilan kiring ({phone}).",
     "invalidTitle": "Taklif yaroqsiz",
     "invalidDescription": "Havola muddati tugagan yoki allaqachon ishlatilgan. Markazdan yangisini soʻrang.",
     "signupToAccept": "Qabul qilish uchun akkaunt yarating",
     "loginToAccept": "Menda akkaunt bor",
-    "accept": "Taklifni qabul qilish"
+    "accept": "Taklifni qabul qilish",
+    "loginHint": "Oʻz login va parolingiz bilan akkaunt yarating yoki kiring, soʻng taklifni qabul qiling."
   },
   "home": {
     "title": "Bosh sahifa",
@@ -410,7 +414,7 @@
   "staff": {
     "title": "Xodimlar",
     "inviteTitle": "Xodim taklif qilish",
-    "inviteDescription": "Unga yuborish uchun havola olasiz. Havola bir marta, uning raqami uchun, 7 kun ishlaydi.",
+    "inviteDescription": "Unga yuborish uchun havola olasiz. Havola bir marta, 7 kun ishlaydi: uni ochgan kishi login va parolni oʻzi tanlaydi.",
     "listTitle": "Xodimlar roʻyxati",
     "columns": {
       "name": "Ism",
@@ -424,7 +428,7 @@
     "fields": {
       "name": "Ism",
       "phone": "Telefon raqami",
-      "phoneHint": "U shu raqam bilan kirishi kerak.",
+      "phoneHint": "Faqat bogʻlanish uchun.",
       "role": "Rol",
       "branches": "Filiallar",
       "permissions": "Ruxsatlar",
@@ -2452,7 +2456,9 @@
       "importsTitle": "Importlar",
       "kind": "Turi",
       "rows": "Qatorlar",
-      "rowsErrors": "{rows} qator · {errors} xato"
+      "rowsErrors": "{rows} qator · {errors} xato",
+      "login": "Login",
+      "actions": "Amallar"
     },
     "plans": {
       "title": "Tariflar",

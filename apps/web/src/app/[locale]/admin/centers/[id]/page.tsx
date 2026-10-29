@@ -12,8 +12,9 @@ import {
   StatusChip,
 } from "@/components/patterns";
 import { Alert } from "@/components/ui/alert";
-import { uuidField } from "@/lib/validation";
 import { requireSuperAdmin } from "@/lib/super-admin";
+import { uuidField } from "@/lib/validation";
+import { AdminPasswordAction } from "../../admin-dialogs";
 
 export async function generateMetadata() {
   const t = await getTranslations("admin.support");
@@ -81,6 +82,12 @@ export default async function SupportViewPage({
   });
   if (error || !data) notFound();
   const v = data as unknown as Support;
+  // People with their logins (M7f): who to give a new password to.
+  const { data: people } = await admin.db!.rpc("admin_center_logins", {
+    p_actor: admin.id,
+    p_center_id: id,
+  });
+  const staff = people ?? [];
   const tz = v.center.timezone;
   const when = (d: string | null) =>
     d
@@ -137,20 +144,39 @@ export default async function SupportViewPage({
 
         <Section title={t("staffTitle")}>
           <DataTable
-            rows={v.staff}
-            rowKey={(s) => `${s.name}-${s.role}`}
+            testId="support-staff-row"
+            rows={staff}
+            rowKey={(s) => `${s.name}-${s.role}-${s.profile_id ?? "invited"}`}
             empty={empty}
             columns={[
               { key: "name", header: t("name"), cell: (s) => s.name },
+              { key: "login", header: t("login"), cell: (s) => s.username ?? "—" },
               { key: "role", header: t("role"), cell: (s) => tr(s.role) },
               { key: "status", header: t("status"), cell: (s) => tm(s.status) },
               { key: "seen", header: t("lastSignIn"), cell: (s) => when(s.last_sign_in_at) },
+              {
+                key: "actions",
+                header: t("actions"),
+                cell: (s) =>
+                  s.profile_id ? (
+                    <AdminPasswordAction profileId={s.profile_id} name={s.name} />
+                  ) : null,
+                className: "w-24",
+              },
             ]}
             mobileCard={(s) => (
               <MobileRecord
                 title={s.name}
                 subtitle={`${tr(s.role)} · ${tm(s.status)}`}
-                fields={[{ label: t("lastSignIn"), value: when(s.last_sign_in_at) }]}
+                fields={[
+                  { label: t("login"), value: s.username ?? "—" },
+                  { label: t("lastSignIn"), value: when(s.last_sign_in_at) },
+                ]}
+                actions={
+                  s.profile_id ? (
+                    <AdminPasswordAction profileId={s.profile_id} name={s.name} />
+                  ) : undefined
+                }
               />
             )}
           />

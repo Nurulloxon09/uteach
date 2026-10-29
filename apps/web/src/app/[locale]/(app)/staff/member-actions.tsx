@@ -1,11 +1,13 @@
 "use client";
 
-import { Link2, Pencil, UserCheck, UserX } from "lucide-react";
+import { KeyRound, Link2, Pencil, UserCheck, UserX } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useActionState, useState, useTransition } from "react";
 import { toast } from "sonner";
 import {
   ConfirmDialog,
+  Field,
+  FormDialog,
   FormMessage,
   RowActions,
   SubmitButton,
@@ -21,20 +23,26 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/components/ui/dialog";
-import { regenerateInviteAction, setMemberStatusAction } from "./actions";
+import { regenerateInviteAction, setMemberPasswordAction, setMemberStatusAction } from "./actions";
 import { EditMemberDialog, type EditableMember } from "./edit-member-dialog";
 import { InviteLink } from "./invite-link";
 
-/** Row actions on the staff list: new invite link (invited), disable (with confirmation) or enable. */
+/**
+ * Row actions on the staff list: new invite link (invited), disable (with confirmation) or enable, and for owners
+ * "Set new password" for someone who forgot theirs (M7f, no SMS).
+ */
 export function MemberActions({
   membershipId,
   name,
   status,
+  canSetPassword = false,
   edit,
 }: {
   membershipId: string;
   name: string;
   status: "invited" | "active" | "disabled";
+  /** Owners only, for members who have an account. */
+  canSetPassword?: boolean;
   /** Present when the viewer may edit this member. */
   edit?: {
     member: EditableMember;
@@ -48,6 +56,8 @@ export function MemberActions({
   const [editOpen, setEditOpen] = useState(false);
   const [linkOpen, setLinkOpen] = useState(false);
   const [confirmOpen, setConfirmOpen] = useState(false);
+  const [passwordOpen, setPasswordOpen] = useState(false);
+  const tp = useTranslations("auth.setPassword");
   const [pending, startTransition] = useTransition();
 
   const editAction: RowAction[] = edit
@@ -97,7 +107,19 @@ export function MemberActions({
             },
           ];
 
-  const actions = [...editAction, ...statusActions];
+  const passwordAction: RowAction[] =
+    canSetPassword && status !== "invited"
+      ? [
+          {
+            key: "password",
+            label: tp("row", { name }),
+            icon: KeyRound,
+            onSelect: () => setPasswordOpen(true),
+          },
+        ]
+      : [];
+
+  const actions = [...editAction, ...passwordAction, ...statusActions];
 
   return (
     <>
@@ -122,6 +144,33 @@ export function MemberActions({
             {linkOpen ? <NewLinkBody membershipId={membershipId} /> : null}
           </DialogContent>
         </Dialog>
+      ) : null}
+      {passwordAction.length ? (
+        <FormDialog
+          open={passwordOpen}
+          onOpenChange={setPasswordOpen}
+          title={tp("title", { name })}
+          description={tp("description")}
+          action={setMemberPasswordAction}
+          submitLabel={tp("submit")}
+          successToast={tp("done", { name })}
+          testId="set-password-dialog"
+        >
+          {(state) => (
+            <>
+              <input type="hidden" name="membershipId" value={membershipId} />
+              <Field
+                name="password"
+                type="text"
+                autoComplete="off"
+                label={tp("password")}
+                hint={tp("hint")}
+                state={state}
+                required
+              />
+            </>
+          )}
+        </FormDialog>
       ) : null}
       {status === "active" ? (
         <ConfirmDialog
