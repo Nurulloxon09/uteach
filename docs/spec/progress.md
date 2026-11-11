@@ -153,6 +153,10 @@ Status values: ☐ not started · ◐ in progress · ☑ done (all "done when" i
 
 ## Log
 
+### 2026-10-29 · M7g plan: staff profile and my profile
+- The owner asked that managers edit staff information from a profile page (as for students) and for a "My profile"
+  page. Plan in `30-milestones.md` (M7g): `/staff/[membershipId]`, `memberships.phone`, `/profile`.
+
 ### 2026-10-29 · M7f username login built
 - Migration `m7f_username_login`: `profiles.username` (existing accounts `u` + phone digits, with the matching hidden
   Auth email), phone no longer unique, the trigger reads the login from the Auth email, `accept_invite` without the
