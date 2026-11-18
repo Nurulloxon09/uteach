@@ -1,10 +1,14 @@
 import { createServerClient } from "@supabase/ssr";
 import type { Database } from "@uteach/db";
 import type { NextRequest, NextResponse } from "next/server";
-import { publicEnv } from "@/lib/env";
+import { publicEnv, hasSupabaseConfig } from "@/lib/env";
+import { MOCK_AUTH_COOKIE } from "@/lib/supabase/mock-data";
 
 /** Refreshes the Supabase session cookies on `response` and returns whether a user is signed in. */
 export async function refreshSession(request: NextRequest, response: NextResponse) {
+  if (!hasSupabaseConfig) {
+    return { signedIn: Boolean(request.cookies.get(MOCK_AUTH_COOKIE)?.value) };
+  }
   const supabase = createServerClient<Database>(
     publicEnv.NEXT_PUBLIC_SUPABASE_URL,
     publicEnv.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY,

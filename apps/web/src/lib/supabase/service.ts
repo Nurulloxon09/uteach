@@ -1,7 +1,8 @@
 import "server-only";
 import { createClient } from "@supabase/supabase-js";
 import type { Database } from "@uteach/db";
-import { publicEnv } from "@/lib/env";
+import { publicEnv, hasSupabaseConfig } from "@/lib/env";
+import { createMockSupabaseClient } from "@/lib/supabase/mock";
 
 /**
  * Supabase client with the secret (service-role) key. Allowed only where 01-tech-stack lists it: the auth SMS hook
@@ -9,6 +10,7 @@ import { publicEnv } from "@/lib/env";
  * functions, which check the super-admin again and audit). Never use it in staff code.
  */
 export function createServiceClient(secretKey: string) {
+  if (!hasSupabaseConfig) return createMockSupabaseClient();
   return createClient<Database>(publicEnv.NEXT_PUBLIC_SUPABASE_URL, secretKey, {
     auth: { persistSession: false, autoRefreshToken: false },
   });

@@ -14,10 +14,10 @@
   "dependencies": {
     "@date-fns/tz": "1.5.0",
     "@react-pdf/renderer": "4.9.0",
-    "@uteach/adapters": "workspace:*",
-    "@uteach/core": "workspace:*",
-    "@uteach/i18n": "workspace:*",
-    "@uteach/receipts": "workspace:*",
+    "@uteach/adapters": "*",
+    "@uteach/core": "*",
+    "@uteach/i18n": "*",
+    "@uteach/receipts": "*",
     "grammy": "1.46.0",
     "intl-messageformat": "11.2.15",
     "libphonenumber-js": "1.13.15",
@@ -27,7 +27,7 @@
   },
   "devDependencies": {
     "@types/node": "22.20.5",
-    "@uteach/config": "workspace:*",
+    "@uteach/config": "*",
     "eslint": "9.39.5",
     "tsup": "8.5.1",
     "tsx": "4.23.15",

@@ -2,7 +2,7 @@ import "server-only";
 import { notFound } from "next/navigation";
 import { cache } from "react";
 import { requireUser, type CurrentUser } from "@/lib/auth";
-import { adminSecretKey } from "@/lib/env";
+import { adminSecretKey, hasSupabaseConfig } from "@/lib/env";
 import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 
@@ -27,7 +27,10 @@ export const requireSuperAdmin = cache(async (): Promise<SuperAdmin> => {
     .single();
   if (!data?.is_super_admin) notFound();
   const key = adminSecretKey();
-  return { ...user, db: key ? createServiceClient(key) : null };
+  return {
+    ...user,
+    db: key ? createServiceClient(key) : !hasSupabaseConfig ? createServiceClient("mock") : null,
+  };
 });
 
 /** For Server Actions: the super-admin and a client that exists (an action can't run without the key). */

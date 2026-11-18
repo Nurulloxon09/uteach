@@ -1,17 +1,17 @@
 {
   "name": "uteach",
   "private": true,
-  "packageManager": "pnpm@12.10.1",
   "engines": {
     "node": ">=22"
   },
   "scripts": {
-    "dev": "pnpm --filter @uteach/web dev",
-    "build": "pnpm -r build",
-    "typecheck": "pnpm -r typecheck",
-    "lint": "pnpm -r lint",
-    "test": "pnpm -r test",
-    "check:i18n": "pnpm --filter @uteach/i18n check",
+    "dev": "npm run dev --workspace=apps/web",
+    "build": "npm run build --workspace=apps/web",
+    "start": "npm run start --workspace=apps/web",
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "check:i18n": "npm run check --workspace=@uteach/i18n",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "db:start": "supabase start",
@@ -19,8 +19,8 @@
     "db:reset": "supabase db reset",
     "db:test": "supabase test db",
     "db:types": "supabase gen types typescript --local --schema public > packages/db/src/database.types.ts",
-    "e2e": "supabase db reset && pnpm --filter @uteach/web e2e",
-    "screenshots": "supabase db reset && pnpm --filter @uteach/web screenshots",
+    "e2e": "supabase db reset && npm run e2e --workspace=apps/web",
+    "screenshots": "supabase db reset && npm run screenshots --workspace=apps/web",
     "db:test:lite": "node scripts/db-test-lite.mjs supabase",
     "dev:access": "node scripts/dev-owner-access.mjs"
   },
@@ -30,5 +30,9 @@
     "prettier": "3.9.9",
     "supabase": "2.120.0",
     "typescript": "5.9.3"
-  }
+  },
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ]
 }
